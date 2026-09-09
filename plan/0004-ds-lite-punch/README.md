@@ -1,0 +1,376 @@
+# Milestone: ds-lite-punch — CGNAT-aware UDP relay for the Virgin Media line
+
+**Status:** P1 built, deployed, and formally verified (2026-08-29); P2 and P3
+not started. Crate in `tools/ds-lite-punch/`; musl-static binary running under
+procd on the router, holding a live CGNAT mapping and forwarding inbound UDP to
+a br-lan target with source preserved. Two P1 acceptance items remain unsigned
+(console NAT-type test, keepalive-pause soak) — see *Where we stand*. Ground
+truth from the 2026-08-28/29 experiments — see MEMORY.md "UDP HOLE PUNCHING
+WORKS" and "CGNAT UDP timeout measured".
+
+## What this is
+
+A single-binary Rust daemon on the router that makes UDP services behind br-lan
+reachable from the internet through the VM Ireland ds-lite CGNAT, with zero ISP
+cooperation. It exists because the AFTR's UDP idle timeout is **(5,10) s,
+node-dependent** — an order of magnitude under RFC 6888's 120 s floor — and
+Virgin will not change it. The relay is built around that number, not in spite
+of it.
+
+```
+ internet peer ──UDP──> PUB_IP:EXT_PORT          (AFTR CGNAT, EIM+EIF — measured)
+                          │  softwire via Hub 6 (B4)
+                          ▼
+ router eth1 ──> ds-lite-punch socket S on 192.168.0.21:R
+                    │            ▲
+                    │            └─ STUN Binding Request every 2 s
+                    │               response XOR-MAPPED-ADDRESS = (PUB_IP, EXT_PORT)
+                    ▼
+ console/service 192.168.21.x:C  ◄── nft SNAT sends its replies back out via (192.168.0.21:R)
+```
+
+Two jobs, one process: **(1) keep the mapping alive and observe it** (STUN
+loop), **(2) move datagrams** (forwarding + endpoint consistency).
+
+## Port detection in practice (the core question)
+
+The relay never configures, guesses, or scrapes its external port. It **asks the
+CGNAT, every cycle, and believes the answer** — via STUN self-discovery on the
+forwarding socket itself:
+
+1. **One socket, one mapping.** S is bound to `(192.168.0.21, R)`. Keepalives
+   and forwarded traffic all egress from S, so there is exactly one CGNAT
+   mapping that matters, and STUN observes exactly that mapping.
+2. **Keepalive = discovery.** Every 2 s S sends a STUN Binding Request (RFC
+   5389) to a server from a rotation list (`stun.l.google.com:19302`,
+   `stun.cloudflare.com:3478`, + fallbacks). The request refreshes the mapping;
+   the response reports it. One packet, both jobs.
+3. **Parse:** magic cookie `0x2112A442`, attribute `0x0020` XOR-MAPPED-ADDRESS
+   (fallback `0x0001`), unmask port with `0x2112`, address with the cookie.
+   Trivial to implement — no crate needed (~80 lines).
+4. **Compare → three states:**
+   - **same tuple** → healthy, no action;
+   - **different tuple** → *churn event*: the mapping died and was re-created,
+     or the pool/port-block rotated. Update state, re-publish, log. Churn
+     during steady 2 s keepalives should be near-zero; if it isn't, raise the
+     cadence or suspect packet loss;
+   - **N consecutive STUN timeouts** → *blind*: rotate to the next STUN
+     server. Crucially, **refresh still works while blind** — any outbound UDP
+     refreshes the mapping; STUN is only needed for observation. Keep sending.
+5. **Demux on receive:** a datagram from a known STUN-server IP that parses as
+   a STUN response → observation path. Everything else → forwarding path.
+   Anti-spoof is pragmatic: accept STUN only from IPs we actually sent
+   requests to in the last few seconds (STUN itself is unauthenticated).
+6. **Startup:** bind S → first STUN round → first tuple → publish → open
+   forwarding. No forwarding before the first tuple exists.
+
+Cadence math: worst-case node timeout ~5 s → 2 s keepalive; STUN RTT expected
+< 300 ms; a STUN server is declared dead after 3 silent cycles (~6 s) and
+rotated. Mapping declared healthy if a response arrived within the last 3
+cycles.
+
+## Forwarding model (endpoint consistency without TPROXY)
+
+The CGNAT mapping is keyed to `(192.168.0.21, R)`. Peers must see **that**
+tuple in both directions:
+
+- **Inbound:** datagram on S from peer P → `sendto(console:C)`, source address
+  untouched — the console must see real peer addresses (its own NAT-traversal
+  logic depends on it).
+- **Outbound:** an nft rule does the consistency work, no userspace involved:
+  ```
+  nft add rule ... postrouting oifname eth1 udp saddr <console> sport C \
+      snat to 192.168.0.21:R
+  ```
+  Console egress leaves as `(192.168.0.21, R)` → same CGNAT mapping (EIM).
+  conntrack then carries established flows kernel-side in both directions;
+  userspace S only handles first-contact inbound per peer. (TPROXY is the
+  fallback if the SNAT-to-a-bound-port trick misbehaves; it shouldn't — NATted
+  egress never touches S's socket.)
+- **Firewall:** input accept for `udp dport R` on eth1 (learned the hard way:
+  wan-input drops UDP to the router itself).
+
+## Shape of the Rust binary
+
+- `tools/ds-lite-punch/` crate; single `main.rs` (~400–600 lines). Edition 2021,
+  tokio (rt/net/time/macros), **no TLS, no openssl** — musl-static
+  x86_64-unknown-linux-musl, `opt-level="z" + lto` (pal-run convention).
+- Config via CLI flags/env: `--bind 192.168.0.21:R --target 192.168.21.x:C
+  --stun a:1,b:2 --interval 2`. No config file parsing — keep it lean.
+- Tasks: keepalive loop (timer + server rotation + tuple state) ‖ recv loop
+  (classify + forward), sharing `Arc<UdpSocket>`; STUN responses cross via
+  mpsc.
+- Publication on tuple change: write `/run/ds-lite-punch/tuple`, emit a JSON line
+  to stdout (journald), optional exec hook (e.g., DDNS update later).
+- Logs state *transitions* only (churn, blind/recovered, tuple change) — never
+  per-keepalive, or the journal drowns.
+- systemd unit, `Restart=always` — router reboots recreate mappings; the
+  daemon re-discovers and re-publishes within one cycle.
+
+## Scope per phase — generic relay, PSN as the test app
+
+ds-lite-punch is a **workload-agnostic** UDP exposure primitive: one instance =
+one CGNAT mapping = one `(local port ↔ internal endpoint)` pair. It knows
+nothing about what it carries. PSN is the first acceptance workload, not the
+product — the design must not grow PSN-shaped branches.
+
+- **v1:** static configuration. Acceptance: two instances for PSN's UDP
+  3478/3479 (console on br-lan), verified by external probes **and** a live
+  PSN NAT-type test — but the same config serves any UDP service.
+- **v2:** dynamic mappings — a UPnP-IGD control plane that spawns/retires
+  instances on `AddPortMapping` (consoles speak UPnP, not PCP; any UPnP
+  client benefits equally). Advertises **IGDv1 / `WANIPConnection:1`** — see
+  the control-plane section below; v2-only breaks old clients (PS3).
+- **Explicitly out:** inbound TCP — the relay is UDP-only by decision, and the
+  CGNAT-side justification for that changed on **2026-08-31**: TCP EIF through
+  the AFTR is now **PROVEN** (see *Where we stand*) — "unreachable" is no
+  longer why TCP is out; it is a product-scope choice, and a TCP variant would
+  be net-new work that the CGNAT does not block. Hub-LAN placement (NAK'd —
+  everything stays behind our router).
+
+## UPnP control plane (v2 phase)
+
+**Version — advertise IGDv1 (`WANIPConnection:1`), deliberately.** Researched
+2026-08-29; this is the decision behind "PS3 doesn't work with UPnP v2":
+
+- The UPnP IGD **v2** spec REQUIRES an `InternetGatewayDevice:2` to advertise
+  only `WANIPConnection:2` — *"earlier versions must not be used if newer
+  version exists."* A `WANIPConnection:1` control point therefore cannot
+  discover a v2-only gateway.
+- The **PS3 (2006, UPnP 1.0 era) is a `WANIPConnection:1` client.** Against a
+  v2-only IGD it finds no service it can use → no mappings → UPnP "doesn't
+  work." That's the failure David recalled.
+- v2 also changes semantics v1 clients don't handle: lease-duration `0`
+  becomes capped at 604800 s (no infinite UPnP mappings), access control
+  restricts unauthenticated control points to their own IP + ports ≥1024, and
+  several v1 error codes are deprecated.
+- Corroboration: **miniupnpd defaults to IGDv1** — IGDv2 support exists but
+  "is still not enabled by default because of interoperability issues."
+  Wikipedia likewise notes v1 clients (Windows-XP-era, Xbox) break against
+  v2-only gateways.
+
+Decision: ds-lite-punch advertises `WANIPConnection:1` (IGDv1). It may add
+`:2` alongside later, but `:1` must be present; v1-only is the safe default.
+
+**Policy — always permit, report granted, let STUN reconcile.**
+`AddPortMapping` is a void action, and the external port is unchoosable on
+this CGNAT (AFTR assigns a random high port). So the control plane accepts
+every request, spawns the instance, and reports success. The client learns its
+real external tuple via STUN discovery — which is what PSN actually uses for
+connectivity (STUN/ICE candidates, not the UPnP-reported port). Residual risk
+is narrow: a game doing naive fixed-port P2P ("connect to me at :X") without
+STUN exchange — and that breaks whether we report truth or lie, since the real
+port Z≠X either way.
+
+**Lease durations are advisory.** v1 clients often request lease `0` (static);
+there are no static mappings on this CGNAT (they die in 5–10 s without
+keepalive). ds-lite-punch accepts any lease value and keeps the instance alive
+with its own 2–3 s keepalives regardless — mapping lifetime is decoupled from
+the requested lease.
+
+**Multi-console.** One instance per `(console, port)`; consoles are
+distinguished by UPnP `InternalClient` source IP. Instances are independent
+(distinct bind ports → distinct CGNAT tuples), sharing only the AFTR
+subscriber port block (thousands of ports; `session-limit-per-prefix`
+configurable to 16384) — fine for a handful of consoles. Keepalive load stays
+trivial (one small STUN per instance per 2–3 s).
+
+## Console traversal behavior (researched 2026-08-29)
+
+ds-lite-punch is workload-agnostic, but the acceptance workloads have different
+traversal models, and they set expectations for what the relay can and cannot
+achieve on this CGNAT. Two measured CGNAT facts shape everything:
+
+- **EIM + EIF for UDP** (full-cone-ish): consistent mapping, and unsolicited
+  inbound to the mapped tuple is delivered.
+- **No source-port preservation:** an internal source port `P` appears
+  externally as a random high port `EXT ≠ P` (AFTR-chosen, from the port
+  block).
+
+**PlayStation 3 / 4 / 5 — UPnP + STUN, not source-port-sensitive.**
+- Ports: UDP 3478/3479 (core PSN); TCP 80/443/3478-3480 sign-in. Connectivity
+  runs on STUN/ICE-discovered candidates, not fixed external ports.
+- Model: console requests mappings via UPnP (IGD), then discovers its real
+  external tuple via STUN and uses *that* — so the external port differing
+  from the source port is fine.
+- Result on our CGNAT: **NAT Type 2 is achievable.** EIF delivers inbound,
+  STUN gives the console the correct tuple. This is the acceptance workload
+  and it is expected to work.
+- PS3 caveat: must advertise IGDv1 (previous section) — the PS3 is a
+  `WANIPConnection:1` client and cannot use a v2-only gateway.
+
+**Nintendo Switch / Switch 2 — wide UDP range, possibly source-port-sensitive.**
+- Ports: effectively UDP 1–65535 (+ TCP 6667/12400/28910/29900/29901). Too
+  broad to forward statically; the console relies on UPnP/DMZ and is a
+  UPnP/NAT-PMP client requesting wide high-port ranges.
+- The open question (the "big if"): whether the Switch requires
+  external-port == source-port, or whether it is satisfied by EIM/EIF + STUN
+  discovery like the PS5. The source-port-preservation claim traces to a
+  single pfSense forum thread, whose "Static Port" fix may actually have been
+  achieving endpoint-*independence* (EIM) rather than literal port
+  preservation — and our CGNAT already provides EIM+EIF.
+- So the Switch's real NAT type on our CGNAT is **unknown — measure on the
+  hardware.** Best case B (full-cone is the most permissive class); worst
+  case D. This is a hardware test, not a design blocker, and not something the
+  relay can change either way.
+- Switch 2: same as Switch on IPv4 (per the same sources); may also use IPv6,
+  which bypasses the v4 CGNAT entirely on our line (we have native IPv6).
+
+**Design stance.** The relay provides EIM+EIF reachability + keepalive and
+knows nothing about the workload. STUN/UPnP-discovery consoles (PS3/4/5)
+benefit fully. Any console that truly requires source-port preservation is
+bounded by the AFTR (which we don't control) — recorded as a known boundary to
+resolve on hardware, not in the relay.
+
+## Build plan
+
+Target runs on the **ImmortalWrt router itself** — it must bind `192.168.0.21`
+(the hub-LAN address) and is where the nft rules live. The Arch LXC container
+is on br-lan, so it cannot host the relay. Deliverable is a **musl-static
+Rust binary cross-compiled** (`x86_64-unknown-linux-musl`, `opt-level="z"`,
+`lto`) and `scp`'d to the router; no Rust toolchain needed on-box.
+
+- **P0 — toolchain smoke test.** Cross-compile a hello-world, run it on the
+  router. Confirms musl-static runs on ImmortalWrt before writing real code.
+- **P1 — v1 core, one static mapping.** STUN codec; keepalive/discovery loop
+  (interval timer + server rotation + tuple state machine); recv/forward loop
+  on the same socket (classify STUN-response vs data, forward data with source
+  untouched); nft SNAT + input-accept; publish tuple file + JSON line.
+  *Acceptance:* Globalping UDP to the published tuple from ≥4 countries; pause
+  keepalive ~10 s → churn detected + re-publish on resume.
+- **P2 — multi-instance.** Config-driven list of `(bind-port, target)`; spawn
+  the P1 core per instance; shared STUN-server rotation. *Acceptance:* two
+  concurrent instances (PSN 3478/3479) probed independently.
+- **P3 — v2 UPnP-IGDv1 control plane.** SSDP responder + `WANIPConnection:1`
+  SOAP (`AddPortMapping` / `DeletePortMapping` / `GetExternalIPAddress` /
+  `GetSpecificPortMappingEntry`); always-permit; spawn/retire instances on
+  demand; leases advisory. *Acceptance:* PS4/PS5 UPnP request creates a live
+  mapping; PS3 discovers the IGDv1 service.
+
+Module sketch (single crate `tools/ds-lite-punch/`, edition 2021, tokio
+rt/net/time/macros, no TLS):
+
+| Module | Responsibility | ~Lines |
+|---|---|---|
+| `stun.rs` | codec, magic cookie, XOR-MAPPED/MAPPED unmask, txn-id bookkeeping | ~120 |
+| `mapping.rs` | per-instance state machine (tuple, healthy/churn/blind), owns socket | ~150 |
+| `forward.rs` | recv classify (STUN vs data) + forward with source untouched | ~80 |
+| `publish.rs` | `/run/ds-lite-punch/tuple` + JSON log lines + optional exec hook | ~40 |
+| `upnp.rs` (P3) | SSDP + IGDv1 SOAP | ~200 |
+| `main.rs` | config, task wiring, supervision | ~120 |
+
+Config is CLI/env only (no file): `--bind 192.168.0.21:R --target
+192.168.21.x:C --stun stun.l.google.com:19302,stun.cloudflare.com:3478
+--interval 2`; P2 adds repeatable `--map R=C`; P3 adds `--upnp`.
+
+Deployment: the router host is ImmortalWrt → **procd, not systemd**. Ship a
+`/etc/init.d/ds-lite-punch` procd script (`USE_PROCD=1`, `respawn`) plus
+`/etc/ds-lite-punch.env` config; the script also idempotently inserts the
+wan-zone input-accept rule for the bind port. nft SNAT for the console reply
+path is console-specific config, added per target (P1 uses a sink target; a
+real console adds the SNAT + `ip rule` for its egress).
+
+## Where we stand
+
+Ledger of what is actually built and signed off, as against the build plan
+above. Update it whenever a phase or an acceptance item moves.
+
+| Phase | State | Evidence |
+|---|---|---|
+| P0 toolchain smoke test | **done** | musl-static x86_64 cross-compile runs on ImmortalWrt |
+| P1 v1 core, one static mapping | **built + deployed; acceptance partial** | live tuple `37.228.213.52:24258` held stable under 2 s keepalive; external UDP probes from 4+ countries forwarded with peer source preserved |
+| P1 formal verification | **done** | `cargo kani` 8 harnesses / 192 checks / 0 failures (~21 s, Kani 0.67.0); 5 unit tests |
+| P2 multi-instance | **not started** | CLI is still scalar `--bind` / `--target`; no `--map` |
+| P3 UPnP-IGDv1 control plane | **not started** | `upnp.rs` does not exist |
+| TCP EIF characterization | **done (2026-08-31)** | TCP EIF through the AFTR is proven: 5/5 globalping HTTP-200 probes (DE/BR/JP/US/AU) forwarded to the mapped inner tuple via a dual-homed source-port oracle (our vdsl4 line as third party); 1:1 accept-log/IP cross-match; unmapped port RSTs on control. Full method in `MEMORY.md` (TCP EIF) |
+
+Shipped in P1: `stun.rs`, `mapping.rs`, `forward.rs`, `publish.rs`, `main.rs`
+(~640 KB stripped, tokio + libc, no TLS), plus `deploy/ds-lite-punch.init`
+(procd, `respawn`), `deploy/ds-lite-punch.env`, and `deploy/install.sh`.
+
+> **2026-08-31 — scope-relevant measurement (TCP EIF).** The one genuinely
+> untested DS-Lite capability — whether the AFTR's endpoint-independent
+> filtering also applies to TCP — was tested and **confirmed working**:
+> with the client holding a mapping open (inner `(192.168.0.21, 32014)`,
+> external `37.228.213.83:59390`), 5/5 globalping HTTP probes from five
+> continents returned **HTTP 200** from the router-side twin listener, each
+> response body echoing the exact post-AFTR source IP the AFTR forwarded,
+> matching the twin's accept log 1:1. Control to an unmapped port in the
+> same batch: 5/5 `ECONNREFUSED` (AFTR RST, unchanged behavior). So:
+> **endpoint-independent filtering holds for TCP as well as UDP; a TCP
+> mapping reachable by any external address.** Consequence for scope: the
+> relay stays UDP-only by decision, not by CGNAT limitation (see "Explicitly
+> out"); a future TCP variant is unblocked at the AFTR level. Not re-measured:
+> TCP mapping *idle* lifetime (UDP is 5–10 s, node-dependent; TCP untested).
+
+### P1 acceptance still unsigned
+
+Both are prerequisites for calling v1 complete; neither blocks starting P2.
+
+- **Live PSN NAT-type test on a real console.** The end-to-end probes passed
+  against a **sink target**, not a console. The console path additionally needs
+  its own nft SNAT + `ip rule` for the egress, which is per-target config that
+  has never been exercised. This is the one remaining item that could still
+  invalidate the forwarding model.
+- **Keepalive-pause soak.** Pause keepalives ~10 s → expect churn detected and
+  re-publish on resume. Only the initial discovery churn has been observed so
+  far.
+
+### What is deliberately not covered
+
+- `forward.rs` is `libc` FFI (`IP_TRANSPARENT` bind + `sendto`) and is not
+  Kani-modelable; `Instant`/`SystemTime` keep `note_response` out of the proofs
+  too. Both stay covered by the on-box PoC and end-to-end probes.
+- EIF loss remains invisible in v1 (external prober deferred to v2).
+- The TPROXY-fallback question for the SNAT-to-bound-port trick is still open
+  (see *Open questions*).
+
+### Next step
+
+Take **P2** next: it is a pure refactor of code that is already proven — hoist
+the scalar `--bind`/`--target` into a repeatable `--map R=C`, spawn the P1 core
+per instance, share STUN-server rotation. *But* if a console is physically
+available, close the PSN NAT-type test first — it retires strictly more risk
+than P2 does, because P2 multiplies a forwarding model that test could still
+falsify.
+
+## Failure modes
+
+| Mode | Detection | Response |
+|---|---|---|
+| Mapping expiry (idle gap) | churn on next STUN response | auto re-publish; cadence already ≤ ½ worst-case timeout |
+| Pool IP / port-block rotation (CPE restart) | churn | same path — tuple publication tracks IP **and** port |
+| STUN fleet outage | blind state | keepalives keep refreshing (any outbound UDP); observation degrades, mapping doesn't |
+| EIF switched off upstream | STUN stays healthy (responses are solicited) but unsolicited inbound stops | v1: invisible (noted); v2: external prober |
+| Router reboot | procd `respawn` | fresh mapping + re-publish in one cycle |
+
+## Testing
+
+- Unit (example-based): STUN parser vectors; tuple-compare/churn state machine.
+- **Formal (Kani, `cargo kani`)**: bit-precise proofs over ALL inputs for the
+  parser and the pure state machine — parse never panics on any byte stream,
+  (XOR-)MAPPED-ADDRESS decode is an exact inverse of encode, the Binding
+  Request always has the RFC 5389 layout, a `Some` implies a genuine Binding
+  Success Response, and STUN-server rotation fires exactly at its threshold.
+  `forward.rs` is `libc` FFI (not Kani-modelable) and stays covered by the
+  on-box PoC + end-to-end probes. Green on Kani 0.67.0: 8 harnesses, 0
+  failures (~21 s). Unwind bounds must cover the 4-iteration XOR loop as well
+  as the attribute loop — `#[kani::unwind]` is per-harness, not per-loop.
+- On-router soak: reuse the 2026-08-29 harness (port stability under
+  keepalives; pause keepalives 10 s → expect churn + re-publish on resume).
+- End-to-end: Globalping UDP to the published tuple from ≥4 countries; then a
+  real PSN NAT test on the console.
+
+## Open questions
+
+- EIF-loss detection (needs an external prober; deferred to v2).
+- Whether the SNAT-to-bound-port trick needs the TPROXY fallback on this
+  kernel (verify in integration; cheap either way).
+- PS3-specific acceptance: v1 advertisement makes discovery work, but real-
+  world PS3 NAT-type behavior needs a physical PS3 to confirm (PS3's UPnP
+  stack is older/quirkier than PS4's).
+- **Switch / Switch 2 NAT type on this CGNAT** (the "big if"): is it satisfied
+  by EIM+EIF (→ NAT B) or does it truly need source-port preservation (→ NAT
+  D)? Cannot be settled from sources — measure on the hardware via
+  Settings → Internet → Test Connection, VM-line vs vdsl4 as control. Does not
+  block the build; it bounds expectations for one workload class.
