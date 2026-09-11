@@ -30,9 +30,22 @@ jobs:
       - name: Set up the pinned toolchain
         if: hashFiles('.host-software') != ''
         run: 'echo "Install the toolchain pinned in .host-software (project-specific)"'
+      # The component (slartibardfast/ds-lite-punch) is a private repo, so the
+      # job's GITHUB_TOKEN (scoped to this host repo) cannot clone it. The lane
+      # reads it with a fine-grained PAT (Contents: read-only, that repo only)
+      # supplied as the DSLITE_READ_TOKEN secret. Without the secret the step
+      # fails loudly: never hollow-green (software --check attest).
       - name: Materialize the software (bare store + worktrees)
         if: hashFiles('.host-software') != ''
-        run: ./tools/host-lifecycle/target/release/host-lifecycle software --materialize .
+        env:
+          COMPONENT_READ_TOKEN: ${{ secrets.DSLITE_READ_TOKEN }}
+        run: |
+          if [ -z "$COMPONENT_READ_TOKEN" ]; then
+            echo "::error::ds-lite-punch is a private repo; set the DSLITE_READ_TOKEN secret (fine-grained PAT, Contents: read, on slartibardfast/ds-lite-punch) to materialize it."
+            exit 1
+          fi
+          git config --global http.https://github.com/.extraheader "Authorization: Bearer ${COMPONENT_READ_TOKEN}"
+          ./tools/host-lifecycle/target/release/host-lifecycle software --materialize .
       - name: Verify reproducibility (rebuild from the pin; compare the artifact)
         if: hashFiles('.host-software') != ''
         run: ./tools/host-lifecycle/target/release/host-lifecycle software --verify-build .
