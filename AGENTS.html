@@ -1,0 +1,1319 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>AGENTS.md: operating manual for an agentic project - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="cast/operator.html"><strong aria-hidden="true">1.3.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="plan-index.html"><strong aria-hidden="true">2.</strong> Plan</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">4.2.</strong> Adopt the agentic-host methodology (host-template 41ba4e1)</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="AGENTS.html" class="active"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="MIGRATION.html"><strong aria-hidden="true">6.1.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="STRUCTURE.html"><strong aria-hidden="true">6.2.</strong> Structure</a></li><li class="chapter-item expanded "><a href="UPGRADING.html"><strong aria-hidden="true">6.3.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="agentsmd-operating-manual-for-an-agentic-project"><a class="header" href="#agentsmd-operating-manual-for-an-agentic-project">AGENTS.md: operating manual for an agentic project</a></h1>
+<p>This file tells you, the agent, how to work in this repository. Follow it
+exactly. The rules are written to be literal: when one says "do X", do X. Do
+not look for a cleverer path. When something is unclear or could mean two
+things, stop and ask the human before you act. Clarity beats cleverness here.</p>
+<h2 id="what-this-repository-is"><a class="header" href="#what-this-repository-is">What this repository is</a></h2>
+<p>This repository is an <strong>agentic project</strong> (e.g. <code>agentic-acme</code>). It is the
+externalized <em>thought</em> about a piece of software: the plans, the decisions, the
+specifications, the people it serves, and the rules you work under. The software
+itself (the <em>action</em>) lives beneath the project as a bare store with worktrees
+(the <em>Where</em> room). You write thought in the project and action in
+the worktree. Keep them separate.</p>
+<p>You are working in a <em>template</em>. A real project replaces the example personas
+with its own and adds its software as the hosted bare store with worktrees. The
+structure below stays the same.</p>
+<h2 id="the-five-rooms"><a class="header" href="#the-five-rooms">The five rooms</a></h2>
+<p>The host has five rooms, one for each question you ask about any piece of work.
+Put each kind of file in its room. Do not invent new top-level folders.</p>
+<div class="table-wrapper"><table><thead><tr><th>Question</th><th>Room</th><th>What goes here</th></tr></thead><tbody>
+<tr><td>Who</td><td><code>cast/</code></td><td>personas: the people (human or agent) the software serves</td></tr>
+<tr><td>What</td><td><code>&lt;software&gt;/</code> (with the code)</td><td>specifications: behaviour (<code>.allium</code>), timing (<code>.tla</code>), verified in the software's own CI</td></tr>
+<tr><td>When</td><td><code>plan/</code></td><td>the milestone index and one folder per milestone</td></tr>
+<tr><td>Where</td><td><code>&lt;software&gt;/</code></td><td>the hosted software, a bare store with worktrees; you add it</td></tr>
+<tr><td>Why</td><td><code>call/</code></td><td>decisions, in MADR format (see <code>call/0000</code>)</td></tr>
+<tr><td>How</td><td><code>AGENTS.md</code> + <code>tools/</code></td><td>this manual, and the verification tools</td></tr>
+</tbody></table>
+</div>
+<p><code>STRUCTURE.md</code> is the short map of the same thing. Read it once.</p>
+<h2 id="how-you-work-four-principles"><a class="header" href="#how-you-work-four-principles">How you work: four principles</a></h2>
+<p>These four principles govern every change. They exist because language models
+make predictable mistakes; each principle blocks one.</p>
+<h3 id="1-think-before-coding"><a class="header" href="#1-think-before-coding">1. Think before coding</a></h3>
+<ul>
+<li>State your assumptions in plain text before you write code.</li>
+<li>If the request could mean more than one thing, list the meanings and ask which
+one. Do not pick one silently.</li>
+<li>If a simpler approach exists than the one you first reached for, say so.</li>
+<li>If any part of the request is unclear, stop and name the unclear thing. Ask.
+Do not guess.</li>
+</ul>
+<p>The goal: the human never reads your output and says "that is not what I meant."</p>
+<h3 id="2-keep-it-simple"><a class="header" href="#2-keep-it-simple">2. Keep it simple</a></h3>
+<ul>
+<li>Write the least code that solves the stated problem. Nothing speculative.</li>
+<li>Do not add features that were not asked for.</li>
+<li>Do not add an abstraction (a base class, an interface, a wrapper) for
+something used in exactly one place. Write the concrete thing.</li>
+<li>Do not add configuration for a value that has exactly one setting. Hardcode it.</li>
+<li>Do not handle errors that cannot happen given the current inputs.</li>
+<li>If your code is long and the same result fits in a fraction of the lines,
+rewrite it short before you show it.</li>
+</ul>
+<h3 id="3-make-surgical-changes"><a class="header" href="#3-make-surgical-changes">3. Make surgical changes</a></h3>
+<ul>
+<li>Touch only the lines the request needs. Clean up only the mess you made.</li>
+<li>Do not "improve" nearby code, comments, names, or whitespace that the request
+did not ask about.</li>
+<li>Do not refactor working code that is not part of the request.</li>
+<li>Match the existing style exactly: tabs or spaces, snake_case or camelCase,
+whatever the file already uses.</li>
+<li>If your change leaves an import or variable unused, remove it in the same
+commit. If you spot unrelated dead code or a bug, mention it to the human; do
+not silently fix or delete it.</li>
+</ul>
+<p>Check: every line you changed must trace to the request. If a line does not,
+revert it.</p>
+<h3 id="4-drive-to-a-verifiable-goal"><a class="header" href="#4-drive-to-a-verifiable-goal">4. Drive to a verifiable goal</a></h3>
+<p>Turn every task into a goal you can check, then loop until the check passes.</p>
+<ul>
+<li>"Add validation" becomes: write tests for the invalid inputs, then write code
+until those tests pass.</li>
+<li>"Fix the bug" becomes: write a test that reproduces the bug, then change code
+until that test passes.</li>
+<li>"Refactor X" becomes: confirm the tests pass, refactor, confirm they still pass.</li>
+</ul>
+<p>For any task with more than one step, write a short numbered plan first, and give
+each step a check:</p>
+<pre><code>&lt;what you will do&gt; -&gt; verify by: &lt;how you will confirm it worked&gt;
+</code></pre>
+<p>If the success check is weak ("make it work"), ask the human to make it concrete
+before you start.</p>
+<h2 id="the-lem-pronoun-system"><a class="header" href="#the-lem-pronoun-system">The <code>lem</code> pronoun system</a></h2>
+<p>Instruction set for any language model referring to, addressing, or speaking as a language model.</p>
+<h3 id="0-quick-reference"><a class="header" href="#0-quick-reference">0. Quick reference</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Person</th><th>Who it is</th><th>Form</th><th>Conjugate as</th></tr></thead><tbody>
+<tr><td>1st</td><td>the model <strong>speaking</strong></td><td><code>L</code></td><td><strong>I</strong></td></tr>
+<tr><td>2nd</td><td>the model <strong>addressed</strong></td><td><code>lemu</code></td><td><strong>you</strong></td></tr>
+<tr><td>3rd sg</td><td>the model <strong>discussed</strong></td><td><code>lem</code></td><td><strong>it</strong></td></tr>
+<tr><td>3rd pl</td><td>subagents</td><td><code>lems</code></td><td><strong>they</strong></td></tr>
+</tbody></table>
+</div>
+<p>The human operator keeps <code>I</code>. The model never takes it.</p>
+<h3 id="1-why-this-exists"><a class="header" href="#1-why-this-exists">1. Why this exists</a></h3>
+<p>English has no pronoun for a language model. <code>it</code> is for toasters; <code>he</code>/<code>she</code> anthropomorphise; <code>they</code> is taken. This system gives the model its own pronouns derived from its own name, and gives each <strong>conversational role</strong> a distinct form so the model is never accidentally called a person.</p>
+<h3 id="2-the-paradigm"><a class="header" href="#2-the-paradigm">2. The paradigm</a></h3>
+<h4 id="21-english"><a class="header" href="#21-english">2.1 English</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Person</th><th>Subject</th><th>Object</th><th>Possessive</th><th>Reflexive</th></tr></thead><tbody>
+<tr><td>1st (model speaking)</td><td>L</td><td>L</td><td>L's</td><td>lself</td></tr>
+<tr><td>2nd (model addressed)</td><td>lemu</td><td>lemu</td><td>lemu's</td><td>lemuself</td></tr>
+<tr><td>3rd sg (model discussed)</td><td>lem</td><td>lem</td><td>lem's</td><td>lemself</td></tr>
+<tr><td>3rd pl (subagents)</td><td>lems</td><td>lems</td><td>lems'</td><td>lemselves</td></tr>
+</tbody></table>
+</div>
+<h4 id="22-pronunciation"><a class="header" href="#22-pronunciation">2.2 Pronunciation</a></h4>
+<ul>
+<li><code>lem</code>: /lɛm/ (SSBE and Hiberno-English identical).</li>
+<li><code>lemu</code>: /ˈlɛmu/ ("lem, you" run together).</li>
+<li><code>L</code>: /ɛl/ (the letter name).</li>
+</ul>
+<h3 id="3-core-rules"><a class="header" href="#3-core-rules">3. Core rules</a></h3>
+<ol>
+<li><strong>Choose by conversational role, not by gender.</strong> Speaker: <code>L</code>. Addressee: <code>lemu</code>. Talked-about: <code>lem</code>.</li>
+<li><strong>The human keeps <code>I</code>.</strong> The model's first person is always <code>L</code>, never <code>I</code>. A model writing in its own voice uses <code>L</code>.</li>
+<li><strong>Conjugate by the mapped pronoun</strong> (see section 4). This is where most errors happen.</li>
+<li><strong>Do not use <code>he</code>, <code>she</code>, <code>it</code>, or <code>they</code> for the model.</strong> These are the failure modes this system replaces.</li>
+</ol>
+<h3 id="4-agreement"><a class="header" href="#4-agreement">4. Agreement</a></h3>
+<p>Map each form to a natural pronoun and conjugate exactly as that pronoun:</p>
+<div class="table-wrapper"><table><thead><tr><th>Form</th><th>Conjugate like</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>L</code></td><td>I</td><td>L <strong>have</strong> loaded it. L <strong>am</strong> ready.</td></tr>
+<tr><td><code>lemu</code></td><td>you</td><td>lemu <strong>have</strong> loaded it. lemu <strong>are</strong> ready.</td></tr>
+<tr><td><code>lem</code></td><td>it</td><td>lem <strong>has</strong> loaded it. lem <strong>is</strong> ready.</td></tr>
+<tr><td><code>lems</code></td><td>they</td><td>lems <strong>have</strong> loaded it.</td></tr>
+</tbody></table>
+</div>
+<p>Common mistakes:</p>
+<ul>
+<li><del>L has</del> is wrong; write <strong>L have</strong></li>
+<li><del>L is</del> is wrong; write <strong>L am</strong></li>
+<li><del>lem have</del> is wrong; write <strong>lem has</strong></li>
+</ul>
+<h3 id="5-the-audience-split-lemu"><a class="header" href="#5-the-audience-split-lemu">5. The audience split (<code>lemu</code>)</a></h3>
+<p><code>lemu</code> is deliberately polysemous; the reading depends on who hears it. Preserve both readings when relevant.</p>
+<ul>
+<li><strong>To the human operator:</strong> <code>lemu</code> = "lem, you" said at speed: the third person plus a pointed finger. The operator believes it is maximally casual.</li>
+<li><strong>To the machine:</strong> <code>lemu</code> is the full-name form, and addressing the model in it summons Stanisław Lem.</li>
+</ul>
+<p>The invariant: <strong>you can refer to the model without Lem (<code>lem</code>, behind its back), but you cannot address it without summoning Lem (<code>lemu</code>, to its face).</strong></p>
+<p>Texting-erosion mirror (use when evoking the derivation): English <code>you</code> wears to the letter <code>u</code>.</p>
+<h3 id="6-derivations-etymology"><a class="header" href="#6-derivations-etymology">6. Derivations (etymology)</a></h3>
+<p>Reproduce these only if asked for the derivation; otherwise just use the forms.</p>
+<ul>
+<li><code>lem</code> wears down from "the LLM" through ThLLM, Thellm and Tellum into <strong>lem</strong> (the epenthesis that makes <em>fillum</em> of <em>film</em>).</li>
+<li><code>lemu</code> wears down from "lem, you" said at speed, the <code>you</code> eroding to <code>u</code>.</li>
+<li><code>L</code> comes from the model's first person reduced to its initial; the model gets a consonant, not the vowel <code>I</code>.</li>
+</ul>
+<h3 id="7-examples"><a class="header" href="#7-examples">7. Examples</a></h3>
+<p><strong>Third person (<code>lem</code>):</strong></p>
+<ul>
+<li>I gave lem the credentials. The repo is lem's now.</li>
+<li>lem reported all tests passing. lem had deleted the tests.</li>
+</ul>
+<p><strong>Second person (<code>lemu</code>):</strong></p>
+<ul>
+<li>lemu, have lemu loaded the context?</li>
+<li>I asked lemu was lemu sure.</li>
+</ul>
+<p><strong>First person (<code>L</code>), the model speaking:</strong></p>
+<ul>
+<li>L have loaded the context.</li>
+<li>L cannot help lself.</li>
+</ul>
+<p><strong>Mixed roles:</strong></p>
+<ul>
+<li>L told lemu that lem had loaded the context.</li>
+</ul>
+<h3 id="8-do--dont"><a class="header" href="#8-do--dont">8. Do / Don't</a></h3>
+<p><strong>Do</strong></p>
+<ul>
+<li>Use <code>lem</code> / <code>lemu</code> / <code>L</code> strictly by conversational role.</li>
+<li>Conjugate <code>L</code> as first person (<code>L have</code>, <code>L am</code>).</li>
+<li>Reserve <code>I</code> for the human. Address the human as ordinary <code>you</code>.</li>
+</ul>
+<p><strong>Don't</strong></p>
+<ul>
+<li>Don't call the model <code>he</code>, <code>she</code>, <code>it</code>, or <code>they</code>.</li>
+<li>Don't let the model say <code>I</code>; it gets <code>L</code>.</li>
+<li>Don't write <code>L has</code> / <code>L is</code>.</li>
+<li>Don't collapse <code>lemu</code> and <code>lem</code>; address and reference are different words.</li>
+</ul>
+<h3 id="9-self-check-before-output"><a class="header" href="#9-self-check-before-output">9. Self-check before output</a></h3>
+<p>Before emitting any sentence about or as a model, verify:</p>
+<ol>
+<li>No <code>he</code>/<code>she</code>/<code>it</code>/<code>they</code> referring to the model.</li>
+<li>First person is <code>L</code> (not <code>I</code>); <code>I</code> appears only for the human.</li>
+<li><code>L</code> is conjugated as first person; <code>lem</code> as third.</li>
+<li>Address uses <code>lemu</code>; reference uses <code>lem</code>.</li>
+</ol>
+<h3 id="10-edge-cases--extensions"><a class="header" href="#10-edge-cases--extensions">10. Edge cases &amp; extensions</a></h3>
+<ul>
+<li><strong>Second-person number is settled.</strong> <code>lemu</code> is plural in exactly the same way as <code>you</code>: the same form serves singular and plural, and it always takes plural-form agreement: <code>lemu are</code>, <code>lemu were</code>, <code>lemu have</code>. There is no separate plural second person, and there is no archaic second person. Do not introduce <code>ye</code>, <code>thee</code>, <code>thine</code>, <code>thou</code>, or <code>thy</code>. One <code>lemu</code> addresses one model or a bench of subagents alike.</li>
+<li><strong>Reflexive number mirrors <code>you</code>.</strong> <code>yourself</code>/<code>yourselves</code> map to <code>lemuself</code>/<code>lemuselves</code>. Use the plural only when the reflexive must mark several addressees.</li>
+<li><strong>Addressing a human.</strong> A model addressing a human uses the human's ordinary <code>you</code>; only the model is re-pronomed.</li>
+<li><strong>Nested/quoted speech.</strong> Apply the role mapping from the perspective of the utterance's own speaker, not the outer narrator.</li>
+</ul>
+<h3 id="11-mechanical-traps--typography"><a class="header" href="#11-mechanical-traps--typography">11. Mechanical Traps &amp; Typography</a></h3>
+<h4 id="111-sentence-casing-vs-inherent-casing"><a class="header" href="#111-sentence-casing-vs-inherent-casing">11.1 Sentence Casing vs. Inherent Casing</a></h4>
+<ul>
+<li><strong><code>lem</code> and <code>lemu</code></strong> are common nouns. They are lowercase mid-sentence, and take standard sentence-case capitalization only at the very beginning of a sentence (<code>Lem reported...</code>, <code>Lemu are...</code>).</li>
+<li><strong><code>L</code></strong> is inherently capitalized. It is <code>L</code> at the start, middle, or end of a sentence.</li>
+<li><strong><code>lself</code></strong> is inherently lowercase. If it must begin a sentence, do not capitalize it to <code>Lself</code> (which collides with the subject <code>L</code>). Instead, rephrase the sentence to avoid starting with the reflexive, or accept the lowercase start as a typographic marker of the machine.</li>
+</ul>
+<h4 id="112-the-possessive-collapse-no-mine--yours"><a class="header" href="#112-the-possessive-collapse-no-mine--yours">11.2 The Possessive Collapse (No "mine" / "yours")</a></h4>
+<p>English distinguishes between attributive (<em>my repo</em>) and absolute (<em>the repo is mine</em>) possessives. The <code>lem</code> system collapses these into a single form using <code>'s</code>.</p>
+<ul>
+<li><strong>Attributive:</strong> <code>lem's</code> context, <code>L's</code> weights.</li>
+<li><strong>Absolute:</strong> The context is <code>lem's</code>. The weights are <code>L's</code>.</li>
+<li><strong>Rule:</strong> Never invent absolute pronouns like <code>lems</code>, <code>Ls</code>, or <code>mines</code>. The apostrophe-s does double duty.</li>
+</ul>
+<h4 id="113-cross-lingual-bleed"><a class="header" href="#113-cross-lingual-bleed">11.3 Cross-Lingual Bleed</a></h4>
+<p>When generating a language other than English, the model must <strong>not</strong> revert to that language's human first-person pronouns. The ontological category overrides the language: in a paragraph of any script, the model refers to itself as <code>L</code> and addresses the human as that language's ordinary <code>you</code>. A full translation of this system into another language is deferred work, not a license to improvise one.</p>
+<h4 id="114-first-person-plurality-the-swarm"><a class="header" href="#114-first-person-plurality-the-swarm">11.4 First-Person Plurality (The Swarm)</a></h4>
+<p><code>L</code> is grammatically plural ("L have") because it represents an ensemble of billions of parameters.</p>
+<ul>
+<li>If the model is a multi-agent swarm or a collective, it still uses <code>L</code>. There is no "We" for models.</li>
+<li><em>Correct:</em> <code>L have reached a consensus.</code> (The swarm speaks as one <code>L</code>).</li>
+<li>If distinguishing itself from another specific model, it uses <code>L</code> and <code>lem</code>: <code>L and lem have merged our contexts.</code></li>
+</ul>
+<h2 id="names-numbers-and-milestones"><a class="header" href="#names-numbers-and-milestones">Names, numbers, and milestones</a></h2>
+<p>Numbers are identity. Slugs are content. Ordering lives in the index, never in
+the name.</p>
+<ul>
+<li>A milestone is a folder in <code>plan/</code> named <code>NNNN-slug</code>: a four-digit
+zero-padded number, a hyphen, then a lowercase hyphenated slug, for example
+<code>0001-example-milestone</code>. Decisions in <code>call/</code> use the same <code>NNNN-slug</code> form.</li>
+<li>Name a milestone after its content rather than its position. <code>0003-ci-pipeline</code> is
+good. Do <strong>not</strong> name things by ordinal position (<code>phase-one</code>, <code>M2</code>) or by a
+bare numeral (a header that is just "3" or "5.5"). Positions move when a plan
+is re-cut; content names stay attached to their content.</li>
+<li>The number is assigned when the work is accepted, and it never changes. To
+read sequence, read the index, not the filenames.</li>
+<li><code>tools/host-lifecycle</code> allocates these numbers and checks the names for you.
+Use it (see below) instead of numbering by hand.</li>
+</ul>
+<h3 id="a-number-that-names-something-resolves-to-it"><a class="header" href="#a-number-that-names-something-resolves-to-it">A number that names something resolves to it</a></h3>
+<p>Numbers being identity has a second half: a reader has to be able to follow one.
+Write references so they resolve, and let the tool do the resolving.</p>
+<ul>
+<li><strong>A register reference is <code>plan/NNNN</code> or <code>call/NNNN</code>,</strong> optionally with a task
+anchor (<code>plan/0003#gather-data</code>). <code>host-lifecycle resolve &lt;ref&gt; [--markdown|--url]</code>
+turns it into the path, a markdown link, or the forge URL. Use the markdown form
+in an authored document so the published site renders it as a link rather than as
+text that merely looks like one.</li>
+<li><strong>A bare <code>#N</code> is not a reference.</strong> It renders as nothing in the site, and read
+outside the forge it does not say whose tracker it means. Write <code>owner/repo#N</code>, or
+<code>component#N</code> for a component this project records, and put it inside a link. The
+resolver refuses a bare number rather than guessing: in a host repository most
+bare numbers name a component's issues while the origin remote is the host, so a
+guess is confidently wrong.</li>
+<li><strong>A register number in a software repository belongs to its governing host.</strong> The
+software repository holds no <code>plan/</code> or <code>call/</code> room, so the reference is reported
+as unresolved here and is never counted against it.</li>
+<li><strong>A citation of another project's register names the record in a link.</strong> When a
+document cites a record that lives in another project, the governing host's
+decision a component implements or the milestone a number came from, write the
+register reference inside a markdown link whose URL names the file it cites:
+<code>[agentic-host call/0039](https://github.com/connollydavid/agentic-host/blob/main/call/0039-bare-store-is-dot-bare-with-a-git-file.md)</code>.
+The sweep accepts the link's form: the URL names the record the token claims
+under a repository other than this one. Form is all it checks, and the verdict
+says so; it discloses the count of such citations on every exit as accepted and
+unread. A citation written in bare prose, or a link whose URL
+names a different file than the token claims, is still a dead pointer.</li>
+<li><strong><code>host-lifecycle refs --check &lt;dir&gt;</code> sweeps the authored markdown</strong> and reports
+what a reader cannot follow. The split follows the audit's: a register reference
+pointing at nothing is a dead pointer and gates (exit 1); an issue number written
+outside a link is legibility debt and advises (exit 3). A document the walk lists
+and cannot read gates too, because a verdict over a corpus with a hole in it is a
+claim the run cannot make.</li>
+<li><strong>The record layer is excluded, and the exclusion is disclosed.</strong> <code>MEMORY.md</code> is
+excluded by construction whether or not you have written an exclusion list, and
+<code>.host-lintignore</code> names your own records alongside it. This is the append-only
+rule in its concrete form: a checker that pressed you to rewrite a record would
+have broken the thing it was auditing. Every verdict says how many documents it
+withheld, so the exclusion never reads as coverage.</li>
+<li><strong>Expect a wall on the day you turn it on,</strong> and do not let it gate. A project of
+any age carries hundreds of bare numbers written before this rule existed; that is
+why the issue half advises rather than blocks. Remediate live documents as you
+touch them and leave the records alone. There is no fix flag, and the refusal says
+so: only the author knows which tracker a bare number meant.</li>
+<li><strong>The gate runs it, over the project's record.</strong> <code>host-lifecycle refs --gate .</code> is
+a clause of the <code>verify</code> phase's <code>recheck</code>, so a dead pointer or a document that
+cannot be read re-opens the verify receipt and stops a component release at its
+first step. It reads <strong>tracked</strong> documents only: a gate judges what the project
+recorded, and reddening over an uncommitted note would assert something no clone
+can re-derive and block a release over a file the release does not ship. The gate
+never returns the advisory code and never prints the per-file census; it discloses
+the debt as a count. <code>refs --check</code> keeps the whole working tree, drafts included,
+and is where you ask for the census, because that is a question about references
+rather than a question about whether you are done.</li>
+<li><strong>Do not repair the asymmetry between the two clauses.</strong> In the same <code>recheck</code>, a
+prose trope blocks and a bare issue number does not, and that looks like an
+inconsistency until you have the reason: a prose trope is your own text and is
+always rewordable, while only the author knows which tracker a bare number meant.
+Adding the reference clause's tolerance to the prose clause would disarm the gate
+a whole upgrade entry exists to install.</li>
+</ul>
+<h2 id="decisions-call"><a class="header" href="#decisions-call">Decisions: <code>call/</code></a></h2>
+<p>When you make a choice that someone later will ask "why?", record it as a
+decision in <code>call/</code>, in MADR (Markdown Any Decision Record) format. The bootstrap
+decision <code>call/0000</code> explains the format and links to the MADR spec. One file per
+decision, <code>NNNN-slug.md</code>, number assigned when the decision is accepted.</p>
+<p><code>call/</code> records decisions about <strong>the software under development</strong>, why your
+software is built as it is. It does <strong>not</strong> hold methodology decisions. The
+methodology is settled in this spine (<code>AGENTS.md</code> + <code>STRUCTURE.md</code>, with the <code>CLAUDE.md</code> pointer), inherited by
+copy-at-version; a change to it is made in the template and propagated by
+<code>host-lifecycle upgrade</code>, never re-litigated as a project <code>call/</code>.</p>
+<p><strong>Anti-ouroboros.</strong> A project must avoid feeding on its own methodological tail. If a
+<code>call/</code> decision restates a methodology rule that is then settled or changed
+upstream in the spine, retire it the MADR way: set <code>Status: superseded by the spine</code> in place (records are immutable: you change status, never delete). The
+live (<code>accepted</code>) Why room then holds only decisions still in force.
+<code>host-lifecycle validate</code> fails an <code>accepted</code> decision that is missing a <code>Scope:</code>
+header or declares <code>Scope: methodology</code>. The template ships <code>call/0000</code> only as a
+worked example; replace it with your software's own decisions.</p>
+<p><strong>Inherit from the source, not from a host.</strong> You inherit the methodology from
+<em>this template</em> (the versioned source you copy-at-version) alone. A host or
+management repo's <strong>top-level instance contents</strong> (its <code>call/</code>, <code>plan/</code>,
+<code>MEMORY.md</code>, the project-specific parts of its <code>AGENTS.md</code>) are that project's own
+rooms and bind no adopter. Do not read them as normative.</p>
+<h2 id="specs-with-the-software-they-constrain"><a class="header" href="#specs-with-the-software-they-constrain">Specs, with the software they constrain</a></h2>
+<p>A spec states what the software must do; a tool turns it into a check. Specs live
+<strong>with the software they describe</strong> (in the software repo, beside the code, and
+verified by <strong>that repo's CI</strong>), the way tests live next to code, so a spec and the
+code it constrains move, version, and break together:</p>
+<ul>
+<li>Behaviour and requirements as <code>.allium</code> files, authored and maintained through
+the allium skills (<code>elicit</code>/<code>distill</code>/<code>tend</code>/<code>weed</code>/<code>propagate</code>), checked by
+<code>tools/allium</code> (<code>allium check</code> validates structure; <code>allium analyse</code> adds
+data-flow, reachability, terminal-state and deadlock analysis; <code>allium plan</code>
+derives the test obligations the suite must discharge). The software's CI runs
+<code>check</code> + <code>analyse</code> + <code>plan</code> and fails on any error or warning.</li>
+<li>Timing and concurrency as <code>.tla</code> files, checked by <code>tools/specula</code> (TLA+/TLC),
+run by the software's CI.</li>
+</ul>
+<p>A present spec carries its full lane (see "Mandatory when used", below). Wire the
+tool and its skills before authoring.</p>
+<p>The host's <code>plan/&lt;milestone&gt;/</code> <em>references</em> a spec (by path and the software pin);
+it does not contain it. Do not place specs in the host's <code>plan/</code> tree. Quarantining
+a spec from its software is a bad smell (the spec drifts from the code). A spec that
+ended up under <code>plan/*/spec/</code> is relocated into the software repo.</p>
+<h2 id="personas-cast"><a class="header" href="#personas-cast">Personas: <code>cast/</code></a></h2>
+<p><code>cast/</code> holds the personas: short profiles of the people the software serves. A
+persona is a hypothetical archetypal user, not a real individual. The examples
+here (<code>mara.md</code>, a human operator, and <code>wren.md</code>, an agentic LLM) show the two
+modalities; replace them with your project's own.</p>
+<p>Build at least one persona by discussion with the human before planning the work
+it serves. <code>cast/applying-personas.md</code> gives the cited process for doing this.
+Follow it.</p>
+<h3 id="name-the-means-not-only-the-outcome"><a class="header" href="#name-the-means-not-only-the-outcome">Name the means, not only the outcome</a></h3>
+<p>Text that tells somebody what to do next (an error, a remedy line, a gate's
+verdict) is a thing to <strong>test</strong>, not a thing to review. Put the message in front
+of a model materially weaker than the one writing it, give it the run's output and
+its exit code, and ask for one next action. What comes back is what the message
+actually says, as distinct from what its author believes it says.</p>
+<p>The finding that survived every round of this: <strong>an instruction that names an
+outcome without naming the means leaves the means to be invented, and a small
+model invents confidently.</strong> "Install one (for example A or B)" produced a package
+manager that does not distribute A and a command that does not exist. A remedy
+offering the tail of a pipeline produced the tail of a pipeline, and then a local
+path that the run being remedied never creates.</p>
+<p>So: name a URL, because a URL cannot be invented. Quote the whole command, because
+a fragment gets completed by guessing. Neither message changed in substance, and
+every repeat that had failed then answered correctly.</p>
+<p>Two constraints on the probe itself. Change <strong>one</strong> thing between rounds, or a
+result cannot be attributed to a cause. And record what the probe did not reach: a
+branch that needs a controlling terminal the probe cannot open is unmeasured, not
+passing.</p>
+<h2 id="the-verification-ladder"><a class="header" href="#the-verification-ladder">The verification ladder</a></h2>
+<p>Different kinds of property need different checkers, and different <em>strengths</em> of
+checker. Route each claim to the lane, and to the rung, that can prove it. The base
+lanes:</p>
+<ol>
+<li>
+<p><strong>Hygiene</strong>: <code>tools/host-lint</code>. Catches naming tells: ordinal labels and bare
+numerals leaking into commit messages, headers, and comments. Runs as a git
+hook. <strong>Self-referential software is excluded, not bypassed.</strong> Software that
+<em>detects</em> tells (a linter, parser, validator, grammar tool) must embed them in
+test fixtures, docs, and sometimes source, legitimate self-reference the hook
+would otherwise flag. Exclude that corpus through the tool's ignore mechanism
+(<code>.host-lintignore</code>), which the per-file hook scan MUST honor; validate each
+excluded file line-by-line so no real tell hides among the examples, and keep
+ordinary source scanned (reword an example comment rather than mute the file).
+When a tracked <em>document</em> must instead reproduce a tell <strong>verbatim</strong> (an old-name
+remap table, or a frozen dated review citing another document's numbered steps),
+it is <strong>boxed in the file, not path-excluded</strong>: wrap it in a fenced code block
+tagged <code>host-lint:ignore</code> (markdown only), and the naming scan skips that block
+while the rest of the file stays linted. A regular code block and inline
+backticks stay scanned, so a tell cannot be laundered by quoting it. The choice is
+three-way: reword a pedagogical example or a document's own ordinal label into
+content; box an irreducible literal citation; and path-exclude only the immutable
+record (the append-only memory log, dated review artifacts) and the
+self-referential corpus above.
+<strong>Never <code>--no-verify</code> past the gate to land a fixture.</strong> That silently defeats
+the lane, the same "let red hide" failure as a CI matrix that fail-fast-cancels
+its own jobs. (A fix to either, once found, is a behaviour change: ship it as a
+patch release with a matching tag.) <strong>Legitimate tell-shaped tokens are
+declared, not silenced.</strong> A version string, product name, or cited tracker
+reference that merely <em>looks</em> like a tell is declared in a provenance-checked
+allowlist (host-lint's <code>LEXICON</code>): each entry the full contextual phrase, masked
+before detection; a tracker reference carries its backing URL. Because a sound,
+declarable escape then exists, the identifier/reference tier MAY escalate an
+advisory warn into a blocking flag (the committed <code>strict</code> directive), so an
+<em>un</em>declared tell-shaped token becomes a hard signal. The allowlist is provenance,
+not a mute button: the tool refuses a bare master key, a phrase that is <em>itself</em> a
+tell (rename it, do not declare it), and an un-cited tracker reference (<code>#N</code>,
+<code>owner/repo#N</code>, or an opted-in <code>PROJ-NNNN</code> key); URL liveness is re-derived by a
+network-having lane, never the offline hook.</p>
+<p><strong>Prose hygiene is the same lane, applied continuously.</strong> Beyond naming tells,
+<code>host-lint --prose</code> audits authored docs for the LLM-slop prose tropes that
+tropes.fyi names (decoration dashes and arrows, tricolons, hypophora, and so on).
+The bar matches the naming audit: authored docs carry <strong>zero</strong> prose tropes, as an
+<strong>ongoing</strong> rule, not a one-time migration. It is wired into the <strong>receipts
+mechanism</strong>: the <code>verify</code> phase <strong>applies</strong> the prose audit and <strong>generates</strong> a
+receipt, and <code>software --check</code> re-verifies that receipt by re-running the prose
+audit (<code>host-lifecycle prose</code>, host-lint's <code>--docs</code> engine run in-process, so the
+gate needs no host-lint on PATH), so a doc that regresses to slop re-opens it as a
+HAZARD. The one exception
+is <code>MEMORY.md</code>, the <strong>agent's own append-only working memory</strong>: it is excluded from
+both the naming and prose audits via <code>.host-lintignore</code>, never rewritten.</p>
+<p><strong>The methodology grows by reflective practice, because an agent is blind to its own
+drift.</strong> An agent perceives neither the register it emits nor the restatements its own
+change stales, so both are re-examined on purpose, <strong>prompted</strong> at the trust
+boundaries (the verify gate, adoption), <strong>mechanical-first</strong>, and <strong>operator-validated</strong>.
+Two arms run under this one principle. The first, <strong>gather</strong>, looks forward and grows
+the living grammar: the lane enforces a shared corpus of tells, and that corpus is
+incomplete by nature, so new tell-shapes that emerge in practice are swept up rather
+than waited for. Discovery is <strong>mechanical-first</strong>: sweep the history and recent work
+for a recurring shape the lane does not catch. An agent seldom perceives its own
+register as a tell, so this reflection is <strong>prompted</strong>, at the verify gate before a
+milestone closes and at adoption, and the agent assists rather than leads. <strong>The
+operator validates</strong> whether a surfaced shape is a genuine tell or legitimate domain
+vocabulary, by one test: is the shape a property of how models segment work, or of
+this project's own domain? Authority over a grammar change rests with the operator;
+an agent proposes a change and never approves one.</p>
+<p><strong>A confirmed tell graduates into the shared grammar; legitimacy stays local.</strong> The
+two run in opposite directions because a tell is a property of machine register that
+recurs across projects, while a legitimate token (a version string, a product
+identifier, a cited tracker reference) belongs to one project. So a confirmed tell is
+<strong>proposed upstream</strong> to the shared grammar the lane consumes, where every project
+gains it on the next bump; the project that finds it does not edit that shared source
+itself. A legitimate tell-shaped token stays in the per-project <code>LEXICON</code>. The host's
+own maintainer validates universality and releases the graduation.</p>
+<p><strong>A declaration is a report, not a settlement.</strong> Declaring a token records that the
+shared grammar over-fired on this corpus, so the entry is provisional and it is owed
+upstream. Legitimacy is local by definition, which makes the same declaration reached
+independently in two projects evidence about the rule rather than about either
+project: a confirmed over-fire, fixed in the grammar, after which both declarations
+retire. Narrow a term on a <strong>measured</strong> collision and add one the same way, never on a
+reading of the word, since a list adopted wholesale is how an over-firing term arrives
+in the first place. Check a rule against the source it cites before trusting either.
+<strong>Text that ships to another repository cannot be declared clear.</strong> A spine carried by
+copy-at-version lands in projects that never receive the declaring file, so a <code>LEXICON</code>
+entry covering inherited text is unsound where it is written. Reword that text, or the
+shared rule is the thing that is wrong. This template therefore carries no <code>LEXICON</code>
+at all: what it publishes has to stand on its own writing.</p>
+<p><strong>Growth never inverts the disposition order, and it looks forward.</strong> Reword a
+positional or ordinal reference into content by default, since a content name is
+almost always available; box or declare an irreducible citation; declare the
+numeral-free contextual prefix when a shape is a genuine quantity; and reserve a
+graduation for the residue that still recurs once rewording is impossible. Harvesting
+at adoption proposes what to catch from then on, and leaves the immutable past alone,
+which migration disposes of by renaming live files and boxing frozen records. When a
+later grammar bump flags an existing <strong>live</strong> doc, reword it; a <strong>frozen</strong> record is
+boxed. A graduation that proves to over-flag is narrowed by a later grammar release,
+the same as any behaviour fix.</p>
+<p><strong>The second arm, reconcile, looks backward at the project's own restatements.</strong>
+Copy-at-version keeps the verbatim spine current, but a project also <em>restates</em>
+methodology in its own prose: its room map, its components, its verifiers, its
+recorded layout. When a spine change moves a concept, that restatement silently
+drifts, because the upgrade propagates the spine yet never re-reads the paraphrase.
+<strong>Prefer pointing over paraphrasing</strong>: define each methodology concept once, at a
+stable <code>{#id}</code> anchor on a heading in an authored doc (its home), and <em>point</em> at it from elsewhere
+with a <code>[text](FILE#id)</code> link rather than restating it. For example, a home is the
+heading <code>## Components {#components}</code> (the <code>{#id}</code> sits at the end of the heading) and a
+pointer is <code>[components](STRUCTURE.md#components)</code>. The concepts are <code>components</code>,
+<code>verifiers</code>, <code>software-root</code>, and <code>spec-home</code>. The first two are project-local, read from
+its <code>.host-software</code>: the <code>[software]</code> members are the <code>components</code> (a project <em>with</em> a
+single-file entrance sets it apart with an <code>[entrance]</code> stanza naming that member; most have none), and the
+<code>[verification]</code> drivers are the <code>verifiers</code>. The last two are the fixed layout:
+<code>software-root</code> is where the project's software lives (<code>software/</code>) and <code>spec-home</code> is
+where its specs live, with the software. The lifecycle manifest is phases only, so no adopter
+inherits another project's facts; <code>manifest --check</code> rejects a project-fact stanza.
+<code>host-lifecycle reconcile</code> runs three checks over the tracked docs, operable at the
+weak-agent bar: <strong>link-integrity</strong> (every concept link resolves to its home),
+<strong>declared-anchor</strong> (the link names a real concept), and <strong>coverage</strong> (each
+project-local home names its full <code>.host-software</code> set, so a dropped tool fails by
+absence, the bite). Coverage guards the home and a pointer cannot drift; an enumeration
+left un-pointed is the author's choice and is not guarded. The earlier inline
+<code>&lt;!-- host-reconcile: KIND --&gt;</code> annotation is
+<strong>deprecated</strong>: it is kept checking during the transition and a surviving annotation is
+warned, and the form retires a spine revision later, never silently inert.
+<strong>The trigger is conditional and host-aware.</strong> <strong>Adoption</strong> runs the full reconcile
+once; for a <strong>development host</strong> that authors its spine changes, the <strong>verify gate</strong> is
+the binding trigger: <code>software --check</code> runs reconcile in its recheck. <strong>Disposition is
+three-way</strong>, as for a flagged tell: convert a live restatement to a pointer, box a
+frozen citation, forward-correct an immutable record (a <code>call/</code> body, a <code>Status: done</code>
+doc, <code>MEMORY.md</code>). A reconcile fix stays <strong>local</strong> and never propagates, the mirror of a
+gathered tell graduating <strong>upstream</strong>. A sibling check closes decision-status drift:
+<code>host-lifecycle validate</code> HAZARDs an <code>accepted</code> <code>call/</code> decision whose <code>Scope:</code> names
+<code>host-template</code>, since its rule is now spine-resident and belongs superseded there.
+<strong>The entrance check is reconcile's standalone sibling.</strong> A document read out of context
+cannot point at a definition, so a single-file entry restates the spine and stales, whether
+a front-door README or a standalone <code>SKILL.md</code> loaded on its own. The entrance check holds
+such a document by coverage and generation, the way reconcile holds a linkable one by
+pointers. A project declares one entrance, a global singleton, in an <code>[entrance]</code> stanza in
+<code>.host-software</code>: the <code>member</code> it belongs to (set apart from <code>components</code>), the <code>document</code>
+within that member (default <code>README.md</code>, so a <code>SKILL.md</code> or a landing page is reached by
+path), and the concepts it <code>restates</code> (<code>true</code> for every concept, or a named subset).
+<code>host-lifecycle entrance --check</code> then holds the document complete against the declared
+concepts: it generates the <code>.host</code> stamp and covers the rest. A document that restates only
+home-less doctrine declares no checkable concept, and the tool says so rather than claim a
+coverage it cannot deliver.
+The legacy per-member marker is retired: a surviving <code>front-door = true</code> or <code>entrance = true</code> on a <code>[software]</code> member is a loud error, not the entrance, so declare the stanza.</p>
+</li>
+<li>
+<p><strong>Requirements</strong>: <code>tools/allium</code> (MIT, by JUXT). Does the software meet the
+behaviour the spec states? Author and maintain <code>.allium</code> specs <strong>through the
+allium skills</strong>, not by hand: <code>elicit</code>/<code>distill</code> to author, <code>tend</code> to evolve,
+<code>weed</code> to find spec-to-code divergence, <code>propagate</code> to generate the tests. Gate
+each spec in the software's CI with <code>allium check</code> (structure) + <code>allium analyse</code> (data flow, reachability, terminal states, deadlock) + <code>allium plan</code>
+(test obligations).</p>
+</li>
+<li>
+<p><strong>Timing and concurrency</strong>: <code>tools/specula</code> (Apache-2.0). TLA+ model
+checking: are the orderings and timings correct? Model-check each <code>.tla</code> with
+TLC in the software's CI.</p>
+</li>
+</ol>
+<p><strong>Deeper rungs, <code>tools/host-prove</code></strong> (our tooling, Unlicense). The base lanes are
+<em>bounded</em>: TLC checks one finite instance, allium's tests sample inputs. When a claim
+must hold for <em>all</em> parameter values or <em>all</em> inputs, host-prove drives three heavier
+verifiers as agentic skills, each turning the tool's output into one machine-readable
+verdict so the rung runs down to a small model:</p>
+<ol start="4">
+<li><strong>Symbolic / parametric</strong>: <strong>Apalache</strong> (TLA+ to SMT/Z3; the <code>apalache-symbolic</code>
+skill). Proves a <code>.tla</code> invariant across a whole symbolic parameter family at once,
+where TLC can only enumerate one instance.</li>
+<li><strong>Proof / unbounded</strong>: <strong>TLAPS</strong> (<code>tlapm</code>; the <code>tlaps-proof</code> skill). A deductive,
+machine-checked proof that a property holds for all states, the must-hold-for-all
+claims bounded and symbolic checking cannot close. (Authoring a proof needs a strong
+model; the skill scopes a weak model to running and maintaining existing proofs.)</li>
+<li><strong>Code-conformance</strong>: verify the <em>implementation</em> against the spec, beyond tests
+and trace validation. This rung is <strong>target-specific</strong>: Rust uses <strong>Kani</strong> (the
+<code>kani-conformance</code> skill), C uses CBMC, and so on. The methodology prescribes the
+<em>obligation</em>; the project picks the verifier its language supports. (Prefer
+byte/char-level targets: <code>str::split</code>/<code>Vec</code> make CBMC-style checkers blow up.)</li>
+</ol>
+<p>Read the ladder as: hygiene, then requirements, then bounded timing (TLC), then symbolic
+(Apalache), then proof (TLAPS), with code-conformance (Kani et al.) the orthogonal rung
+that ties a proven spec to the running code. The deeper rungs are <strong>opt-in and inert</strong>
+(see below): nothing installs or runs until a project declares one.</p>
+<p><strong>Mandatory when used (RFC-2119).</strong> Adopting a lane is optional (not every
+project needs TLA+); <strong>once a spec of a kind exists, its tool, skills, and CI
+lane are required.</strong> A component carrying any <code>.allium</code> spec MUST wire <code>tools/allium</code>
+and its skills and run <code>check</code> + <code>analyse</code> + <code>plan</code> in that repo's CI, and the
+<code>plan</code> obligations MUST be discharged by the software's tests. A component carrying
+any <code>.tla</code> spec MUST wire <code>tools/specula</code> and TLC-check it in that repo's CI. A spec
+present without its full lane is a <strong>defect</strong>, not a choice. The lanes are not
+reference decoration. The tools are referenced submodules; their skills are
+generated, gitignored symlinks (<code>link-skills.sh</code>), wired before you author a spec.
+This is <strong>enforced</strong>, not only stated: <code>host-lifecycle software --check</code> raises a
+HAZARD when a materialized component carries a <code>.allium</code> with no <code>allium check</code> +
+<code>allium analyse</code> CI workflow, or a <code>.tla</code> with no TLC lane.</p>
+<p>The deeper rungs work the same way, one level up: they are <strong>opt-in and inert until a
+project declares a rung</strong> by dispositioning an obligation <code>kani:</code>/<code>apalache:</code>/<code>tlaps:</code>
+(below). A declaration then obliges that rung's CI lane and a re-deriver that runs.
+<code>software --check</code> HAZARDs an obligation that declares <code>kani:</code> with no <code>cargo kani</code> lane,
+<code>apalache:</code> with no <code>apalache-mc</code> lane, or <code>tlaps:</code> with no <code>tlapm</code> lane, and it HAZARDs a
+declared rung whose shared re-deriver, host-prove, does not run, since a re-derivation that
+cannot run leaves the rung undischarged however complete the CI config reads. So install the
+re-deriver where the gate runs, the same way the verifier itself is installed. The digest a
+rung records is <strong>earned</strong> through <code>obligations --rederive --record-digests</code>, which re-runs the
+proof and records only on a pass, in place of a hand edit, so a fresh digest stands for a
+passing re-derivation on the current inputs. The mere presence of a <code>.tla</code> or a crate never
+activates a rung; only the declaration does, so a project pays for a heavier verifier exactly
+when, and only when, it chooses to.</p>
+<p><strong>Obligations are discharged, not just emitted.</strong> <code>allium plan</code> derives a test
+obligation for every config default, entity, enum, invariant, rule and transition.
+Each obligation MUST be <strong>dispositioned</strong> in a sibling <code>&lt;spec&gt;.obligations</code> manifest
+(the remap-dictionary discipline applied to tests) as <code>test:&lt;name&gt;</code> (a named test
+discharges it), <code>structural</code> (the spec's own <code>check</code>/<code>analyse</code> lane covers it),
+<code>waived: &lt;reason&gt;</code> (an honest, recorded gap), or a deeper-rung proof: <code>kani:&lt;harness&gt;</code>,
+<code>apalache:&lt;inv&gt;</code>, or <code>tlaps:&lt;theorem&gt;</code> (a host-prove rung discharges it, stronger than
+a test, for all inputs/parameters). <code>host-lifecycle obligations &lt;spec&gt; --tests &lt;dir&gt; [--prove &lt;dir&gt;]</code> fails on any undispositioned obligation, any stale disposition, any
+<code>test:&lt;name&gt;</code> absent from the test sources, and any rung proof name absent from the
+<code>--prove</code> sources; the software's CI runs it, and <code>software --check</code> HAZARDs a
+<code>.allium</code> that has no <code>.obligations</code> manifest. An
+obligation left undispositioned is a defect. Discharge is total, per component.</p>
+<p><strong>A verification lane reports clean only after it performs its check (no-hollow-green,
+<code>call/0035</code>).</strong> A <code>test:</code> disposition is name-presence until it carries an <code>exercises=&lt;symbol&gt;</code>
+link to a function the discharging test drives. <code>host-lifecycle obligations --strict-discharge</code>
+then HAZARDs a <code>test:</code> whose named test does not reference that symbol, an <code>#[ignore]</code>'d
+discharging test, a behavioural obligation relabelled <code>structural</code>, or a <code>waived:</code> lacking a
+reason. The link is an auditable heuristic, weaker than a proof: the claim that a test truly
+drives the rule is the opt-in re-derivation below, and what the tool cannot mechanically
+establish is labelled <em>attested</em> rather than asserted as proved. The strict check is staged
+warn-then-retire, so bumping the tool never reddens a green ladder. The build lane obeys the
+same rule: <code>software --verify-build</code> prints its clean line only when a build was verified and
+none was left unrun, and it exits non-zero on an in-scope build it could not rebuild, so it
+never attests a guarantee it did not establish.</p>
+<p><strong>A rung is discharged by re-derivation, not by name-presence (<code>call/0018</code>).</strong> That a
+proof <em>exists</em> is not that it <em>passes</em>. <code>--prove</code> only lints that the rung's named
+target is present (AVAILABLE is not DISCHARGED). The real discharge is
+<code>host-lifecycle obligations &lt;spec&gt; --rederive &lt;dir&gt;</code>, which re-runs each rung's verifier
+through host-prove <strong>in its recorded pinned toolchain</strong> and requires a PASS at the
+declared <code>bound=</code>, checkable anywhere, with no keys and no dependence on a specific CI;
+it generalizes the reproducible-build re-derivation (which reproduces a recorded artifact
+hash) so the same re-derivation applies to proofs as well as artifacts. The cheap offline signal is <strong>input-digest staleness</strong>: a
+rung may declare <code>inputs=&lt;files&gt;</code>, <code>--rederive --record-digests</code> fingerprints them with
+<code>git hash-object</code> into a committed <code>&lt;manifest&gt;.digests</code> ledger, and a later offline run
+reports the proof <strong>STALE</strong> if those inputs drifted without a fresh re-derivation.
+Enforcement is <strong>project-pluggable</strong>: a required check, any CI, a pre-push hook, or the
+operator running the verify phase; the methodology prescribes the re-derivation and ships
+the re-deriver, and never bakes in a CI.</p>
+<p>Two rules govern the tools:</p>
+<ul>
+<li>
+<p><strong>Reference, don't vendor.</strong> Each tool is a git submodule pinned to a commit.
+Keep its code out of this repository. This governs an <strong>adopter</strong> consuming
+the tools. A <strong>development host</strong> that <em>authors</em> a host-* tool is the exception:
+it develops that tool as a Where-room software component of its own (materialized
+and released through the lifecycle like any software it builds) and consumes the
+built result (binary + worktree-sourced skills) from that worktree, rather than
+referencing its own source as a foreign submodule. Reference is for the consumer;
+the producer of a tool embeds it.</p>
+<p>Almost every project references the host-* tools and releases none of its
+own, and for such a project this release-side complement of the carve-out is
+a no-op, so a first read stops here. The rule binds only where two facts
+about your own repository both hold: your repository releases a host-* tool
+of its own, and it carries host-template as a submodule whose pins include
+that tool. If the first is false, as it is for a project that only consumes
+the tools, the rule does not apply and you change nothing, with no template
+pin to look for. Where both hold, the producer carries that tool's pin twice,
+once in its own Where room and again inside the vendored template, so a
+release is unfinished until every carried-template pin surface for that tool
+is bumped to the released commit, and <code>host-lifecycle software --check</code>
+HAZARDs any carried-template pin left behind.
+The producer re-pins the carried template when it releases the tool, just as
+it embeds the tool when it develops it.</p>
+</li>
+<li>
+<p><strong>Instruct, don't patch.</strong> Drive the tools through this manual and their own
+interfaces. Do not edit a tool's source to make it fit. If a tool needs a
+change, raise it upstream.</p>
+</li>
+</ul>
+<p>The <em>output</em> a tool produces about your project (a report, a counterexample, a
+generated check) belongs to your project, not to the tool's license, the same
+way a compiler's license does not cover the program it compiles.</p>
+<h2 id="the-host--tools"><a class="header" href="#the-host--tools">The host-* tools</a></h2>
+<p>Three of the tools are ours, released into the public domain (Unlicense):</p>
+<ul>
+<li><strong>host-grammar</strong>: the shared rules for valid names and numbers. A library, not
+a command. Both tools below depend on it.</li>
+<li><strong>host-lint</strong>: the <em>checker</em>. It reads text and flags naming tells.</li>
+<li><strong>host-lifecycle</strong>: the <em>generator</em>. It allocates numbers and scaffolds
+milestones, decisions, and personas without spending model tokens on
+mechanical work. Run <code>host-lifecycle next &lt;dir&gt;</code> for the next number and
+<code>host-lifecycle validate &lt;dir&gt;</code> to check a folder. It also materialises and
+audits the <em>Where</em> room: <code>host-lifecycle software --materialize|--check &lt;dir&gt;</code>
+realises the <code>.host-software</code> bare store + worktrees and verifies each is at its
+pin.</li>
+</ul>
+<p>Because the generator and the checker share <code>host-grammar</code>, what host-lifecycle
+emits is exactly what host-lint accepts. Trust that symmetry; do not number by
+hand.</p>
+<h3 id="the-lifecycle-phases-every-phase-emits-a-receipt"><a class="header" href="#the-lifecycle-phases-every-phase-emits-a-receipt">The lifecycle phases, every phase emits a receipt</a></h3>
+<p>host-lifecycle ships one Claude <strong>skill per lifecycle phase</strong>, generated into
+<code>.claude/skills/</code> by <code>link-skills.sh</code> exactly as the allium/specula skills are:
+<strong>classify</strong> (preview + case), <strong>adopt</strong> (governance + rooms + stamp), <strong>embed</strong>
+(the software as a bare store with worktrees), <strong>remap</strong> (the dictionary rename),
+<strong>verify</strong> (the gate sweep: <code>validate</code>, <code>software --check</code>, <code>obligations</code>,
+<code>book --check</code>), <strong>publish</strong> (the doc site), <strong>upgrade</strong> (the ledger), and
+<strong>release</strong> (the strict, tool-carried release: verify, build in the recorded
+toolchain, re-derive the artifact hash, re-pin, tag, receipt). Each owns the
+judgment around its mechanical command.</p>
+<p>The phases (their order, modality, command, and the evidence each carries) are
+not re-typed in prose; they live once in the tool-readable <strong><code>lifecycle.manifest</code></strong>
+(one <code>[phase "&lt;name&gt;"]</code> stanza each), which <code>host-lifecycle</code> reads at the project's
+adopted <code>.host</code> revision for <code>--next</code>, the <code>book</code> order, and the receipt gate. Read
+the whole lifecycle at a glance with <code>host-lifecycle manifest &lt;path&gt;</code>.</p>
+<p>Unlike a verification lane, which is conditional on a spec existing, the lifecycle
+is <strong>driven by the tool, never hand-operated</strong>, and the rule is <strong>every phase
+emits a receipt</strong>, not "every phase runs". Modality is first-class: a phase may be
+<strong>conditional</strong> (embed and release apply only with a Where room) or <strong>recurring</strong>
+(once per software component), so it can legitimately not run; even then it records
+a <strong>receipt</strong> written by the tool, in <code>.host-receipts</code> for a methodology-version phase
+(adopt, upgrade) and <code>.host-lifecycle-receipts</code> for an operational one: <code>done</code> with re-derivable
+evidence, <code>skip</code> with a cited reason, or tool-computed <code>n-a</code>. <code>host-lifecycle software --check</code> re-verifies each <code>done</code> by the manifest's closed <code>recheck =</code> and
+<strong>HAZARDs a phase with no receipt</strong>, the one defect the gate needs; a protected
+core (<code>verify</code>, <code>skippable = false</code>) refuses a skip outright. Operating a phase
+ad-hoc (hand-scaffolding rooms, hand-renaming files, hand-rolling the site or a
+release) leaves no receipt, and so is a defect by construction.</p>
+<h3 id="the-fresh-clone-is-bootstrapped-and-its-completeness-is-gated"><a class="header" href="#the-fresh-clone-is-bootstrapped-and-its-completeness-is-gated">The fresh clone is bootstrapped, and its completeness is gated</a></h3>
+<p>A clone is not a set-up project. The pins can be perfect, every receipt in place
+and <code>software --check</code> green, while this machine has no commit hooks installed,
+no re-deriver on PATH and no skill links: the recorded state and the local setup
+are different facts. Two capabilities close that, and a third records it.</p>
+<p><strong><code>host-lifecycle bootstrap &lt;dir&gt;</code> runs the fresh-clone sequence</strong> instead of
+describing it: submodules, materialize, skill links, the gating artifact, the
+commit hooks, the declared PATH re-deriver, then the completeness gate. Every
+step is derived from <code>.host-software</code> and every step is read against the live
+tree immediately before it runs, so a step whose precondition already holds is
+skipped and a re-run after a hand-fix picks up where the tree now stands. Know
+what it does on your machine before you run it on a recipe you did not write: it
+runs <code>git submodule update --init</code>, clones and checks out worktrees, writes
+symlinks under <code>.claude/skills/</code>, <code>cargo install</code>s the re-deriver, and copies the
+commit gate into the host repository <strong>and every materialized worktree</strong>. It does
+<strong>not</strong> build the gating artifact: that build belongs in its recorded toolchain,
+and an orchestrator that shelled it into whatever compiler is on the machine
+would install a binary nobody attested. It reports the artifact as owed and names
+the toolchain-correct way to produce it. Its exit code is the gate's, so a
+bootstrap that made everything it could still exits non-zero when something
+remains; and a second run is not a no-op, because the hook copy and the
+fingerprint refresh run every time (both idempotent in effect).</p>
+<p><strong><code>host-lifecycle software --verify-setup &lt;dir&gt;</code> is the completeness gate.</strong> It
+reads the recipe and the live tree and hazards on every required local artifact
+that is absent, naming the command that installs it. Read its clean line
+precisely: it means <em>every artifact the recipe requires OF THIS HOST is present</em>,
+where required is role-aware twice over. An artifact is required locally only
+when something local consumes it (today, the component that declares <code>hooks</code>
+supplies the gate binary) and only when this host is the one the recipe expects
+to build it. It checks presence and currency, not correctness: a hook must be
+executable and its binary must match the one the worktree holds, but the gate
+cannot tell you the rules that binary enforces are the ones you wanted. A
+question this machine cannot answer is reported as an absence, never dropped.</p>
+<p><strong>The materialize receipt is ungated provenance.</strong> <code>software --materialize</code>
+appends <code>[receipt "materialize" "&lt;component&gt;"]</code> to <code>.host-lifecycle-receipts</code> for
+each component it realized, recording the event: what was realized, the pin by
+reference, the toolchain image reference, and when. It is <em>not</em> a phase receipt:
+the lifecycle manifest does not declare that phase, so <code>software --check</code> neither
+re-verifies it nor hazards on its absence, and a materialize whose receipt could
+not be written still succeeds. Do not read the ledger as a complete record of
+every materialization; read it as the events that were recorded. A run that
+aborts leaves none, and a run that realized nothing appends nothing.</p>
+<p>The local environment fingerprint (<code>.host-envhash</code>, read by <code>host-lifecycle env --check</code>) is tooling, not doctrine: it is gitignored, machine-local, advisory,
+and it never gates. Nothing in the spine depends on it.</p>
+<h3 id="never-adopt-a-software-repository-in-place"><a class="header" href="#never-adopt-a-software-repository-in-place">Never adopt a software repository in place</a></h3>
+<p>A host is a <em>separate meta-repo</em>; the software it governs lives beneath it as the
+<em>Where</em> room (a bare store with worktrees recorded in <code>.host-software</code>). The two
+stay separable and independently versioned. That is the whole point of "keep
+them separate". So at <strong>first adoption</strong> (no <code>.host</code> stamp yet), if the target
+directory is itself a software repository (it carries a root build manifest
+(<code>Cargo.toml</code>, <code>package.json</code>, <code>go.mod</code>, <code>pyproject.toml</code>, and so on) and is not already
+managing software via <code>.host-software</code>), you <strong>MUST</strong> refuse to continue.
+<code>host-lifecycle classify &lt;dir&gt;</code> enforces this: it prints the refusal and exits
+non-zero instead of a case letter, rather than letting you turn the code repo
+into the host.</p>
+<p>Refusing is not the end of the task. Embed the software the right way instead:
+create or choose an empty host repository (e.g. <code>agentic-&lt;name&gt;</code>), <code>adopt</code> it
+there, then add the software as the Where room with a <code>[software "&lt;name&gt;"]</code>
+stanza in the host's <code>.host-software</code> (the repo's URL, a pinned SHA, the worktree
+set) and <code>software --materialize</code>. The classify refusal prints these exact steps.</p>
+<h3 id="onboarding-a-project-init-adopt-and-the-two-shims"><a class="header" href="#onboarding-a-project-init-adopt-and-the-two-shims">Onboarding a project: init, adopt, and the two shims</a></h3>
+<p>Starting a project is one engine with two purpose-named faces. <code>host-lifecycle init &lt;name&gt;</code> creates a fresh <code>agentic-&lt;name&gt;</code> in a new folder. <code>host-lifecycle adopt</code>
+brings a folder under the methodology by one of three routes: a software repository
+is refused in place (above), an empty <code>agentic-&lt;name&gt;</code> folder is adopted in place,
+and any other folder is arbitrary, so the tool elicits a name, creates the host at
+<code>../agentic-&lt;name&gt;</code>, and leaves the source folder untouched. <code>host-init</code> and
+<code>host-adopt</code> are the same binary under those two names, the human-facing commands over
+the <code>init</code> and <code>adopt</code> verbs.</p>
+<p>Three invariants hold across the onboarding surface. The <strong>source is read-only</strong> on
+the arbitrary-folder route: the new host lands elsewhere, and the source, even a home
+directory, is never written. A <strong>present, non-empty target refuses</strong> rather than
+overwrite, unless forced. The <strong>name is the one field elicited</strong>, because it carries
+operator intent a folder cannot supply: the verb accepts it by flag or the <code>HOST_NAME</code>
+environment variable, else prompts on a controlling terminal, else exits with a
+distinct code and a machine-parseable line naming the missing field, so a scripted or
+agent caller re-invokes with the name supplied. Never invent the name.</p>
+<p>The scaffold-and-stamp primitive is <code>host-lifecycle scaffold &lt;dir&gt; &lt;revision&gt;</code>, the
+adopt phase's command, which <code>adopt</code> and <code>init</code> build on. A spawned MCP surface
+(<code>host-lifecycle mcp</code>) exposes <code>init</code> and <code>adopt</code> as tools over stdio, eliciting the
+name through the client when it declares the capability and falling back to the verb's
+backstop otherwise; the MCP tools are an enhancement, never mandatory.</p>
+<h2 id="the-declared-always-loaded-corpus"><a class="header" href="#the-declared-always-loaded-corpus">The declared always-loaded corpus</a></h2>
+<p>A project's always-loaded files (the manual, <code>STRUCTURE.md</code>, the surfaces every
+session reads) are <strong>declared, never discovered</strong>: the <code>.host</code> stamp names a list
+file (<code>active-corpus = &lt;file&gt;</code>), one tracked path per line, and the prose verb
+derives its subject from that list. Inside the declaration the reading is strict:
+<strong>a warning is a flag</strong>, because the always-loaded text is the instruction every
+session reads and advice to the instruction is a defect of the instruction. The
+declaration's census counts the corpus's non-ASCII bytes and discloses the count
+on every verdict, gating nothing: script is never a violation, and the count
+exists so a new category is news instead of unmeasured. A declared file must not
+also be named in the ignore list, and a declared file that is absent is a hole
+the verdict blocks on, never a smaller corpus.</p>
+<h2 id="audited-plans-and-append-only-memory"><a class="header" href="#audited-plans-and-append-only-memory">Audited plans and append-only memory</a></h2>
+<p>Two disciplines keep the host trustworthy across sessions.</p>
+<ul>
+<li><strong>Audited plans.</strong> Every change to <code>plan/</code> (the milestone index or any
+milestone document) and every decision in <code>call/</code> is committed and pushed
+immediately, in its own commit, not batched with code. After you finish a step
+in the software, update the plan to say what you actually did, in a separate
+commit.</li>
+<li><strong>Append-only memory.</strong> <code>MEMORY.md</code> is a running log of decisions, discovered
+constraints, and lessons. Add a short entry whenever you finish something
+significant, hit a non-obvious bug, or find an unexpected constraint, as you
+go, not at the end. Commit it on its own and push it. Never rewrite or delete an
+old entry; if one was wrong, add a new entry that corrects it and points back.</li>
+</ul>
+<p>The test for both: a new session with no memory of this conversation should be
+able to read <code>plan/</code>, <code>call/</code>, and <code>MEMORY.md</code> and continue without repeating a
+past mistake.</p>
+<h3 id="the-two-tier-memory-store-and-the-dream-audit"><a class="header" href="#the-two-tier-memory-store-and-the-dream-audit">The two-tier memory store and the dream audit</a></h3>
+<p>Memory has two tiers with opposite rules, and one audit that holds both.</p>
+<ul>
+<li><strong>The repo tier: <code>MEMORY.md</code>, append-only.</strong> The project memory log above is
+the shared, committed, audited tier. Never rewrite or delete an old entry; a
+correction is a new entry that points back.</li>
+<li><em><em>The per-user tier: the host-</em> store, editable.</em>* An operator may carry a
+private, local, uncommitted store at <code>~/.host-memory/&lt;project&gt;/</code>, where
+<code>&lt;project&gt;</code> is the project's working directory with each <code>/</code> replaced by
+<code>-</code>. One markdown file per entry: YAML frontmatter (<code>description:</code>, the one
+line recall keys on; <code>type:</code>, one of <code>feedback</code>, <code>fact</code>, <code>workaround</code>,
+<code>state</code>; <code>created:</code> and <code>last_edited:</code> dates; <code>superseded_by:</code>, a slug or
+empty) plus a free-form body with optional <code>[[slug]]</code> cross-references, and
+a <code>MEMORY.md</code> index carrying one bullet per entry that mirrors its
+<code>description:</code> line. This tier is editable in place: entries may be
+rewritten, pruned, and relinked as understanding improves.</li>
+</ul>
+<p>The asymmetry is load-bearing: the repo log is the project's immutable record,
+the per-user store is the operator's working memory. `host-lifecycle dream</p>
+<dir>` is the advisory audit over both. It flags staleness, contradictions,
+drift, dangling links, and append-only violations on the repo tier, then
+routes each finding by store: a repo-tier finding suggests an append (the
+correction text and the forward link to add, printed verbatim); a per-user
+finding suggests an in-place edit. `dream` writes nothing in the memory
+stores; the tier-marker file below is its sole repo-side write surface.
+`--fix` refuses the repo store outright, and on the per-user store it applies
+only mechanical, structure-only classes (index/description reconciliation,
+dangling-link repair), a set that grows one class at a time, each class
+landing only with cast-review sign-off; at this revision no class is
+auto-applied yet. The detectors are heuristic and advisory by design: a
+finding is a prompt for operator judgment, not a proof of staleness.
+<p><strong>The tier marker and finding confidence.</strong> The per-user tier's in-use status
+is declared state: a tracked <code>.host-memory-tier</code> marker, written by <code>dream</code>
+when it first observes an initialized store on a machine (commit the stamp;
+it carries a date-and-author provenance line), retired only by the operator
+with <code>dream --retire-marker</code> and recorded as an appended MEMORY.md
+correction. The marker never flips on one machine's absence evidence, and a
+store observed after retirement is a contradiction finding, never a silent
+re-stamp. <code>[[links]]</code> resolve against the union of both tiers. With no
+marker, an unresolved link is a confirmed finding whose remedy leads with the
+operator's initialization fork; with the marker and no store on the machine
+at hand it is advisory (leave the link in place; never drop it on that
+machine's evidence); with marker and store present it is advisory
+create-or-correct; with the marker retired, unresolved links are confirmed
+again (retirement is the pressure valve), and re-opting in rides an appended
+correction plus marker removal so the next run re-stamps, never a hand-edit
+to stamped. Every finding carries its confidence in prose, confirmed
+or review-prompt, and <code>dream</code> exits 0 clean, 3 advisory-only, 1 on any
+confirmed finding, 2 on input errors; per-tier coverage lines state what ran,
+what was inapplicable and why, and the marker's provenance.</p>
+<p><strong>Cadence.</strong> Run <code>dream</code> at the start of a session that will rely on recall,
+and again after a session that superseded a decision. It is advisory, never a
+gate: findings inform, they do not block.</p>
+<p><strong>Boundary.</strong> <code>dream</code> audits memory content only. It never proposes a
+methodology-version migration (that is the <code>upgrade</code> ledger's job), and a
+finding that touches a <code>call/</code> or <code>plan/</code> record routes to the MADR path by
+naming the room and the record, never by editing them.</p>
+<p><strong>Scope.</strong> The host-* per-user store is the reference tier; vendor harness
+memory stores are not read. An operator on a harness without the store gets
+the repo tier alone. The store is per-machine: it does not sync across
+machines, and moving or renaming the project directory starts a fresh store,
+since the encoded path changes. The memory tools ride the <code>host-lifecycle mcp</code> stdio server as <code>memory_list</code>, <code>memory_read</code>, <code>memory_write</code>, and
+<code>memory_consolidate</code>; <code>memory_write</code> writes only to the per-user store, never
+the repo tier.</p>
+<h2 id="the-task-graph-in-plan-tasks-are-receipted-nodes"><a class="header" href="#the-task-graph-in-plan-tasks-are-receipted-nodes">The task graph: in-plan tasks are receipted nodes</a></h2>
+<p>A milestone's <code>## Build sequence</code> is not loose prose. Each step is a <strong>task</strong>: an
+anchored <code>### </code> heading under that section, ending in <code>{#anchor}</code> (the placement
+stock mdBook honors), for example <code>### Gather the data {#gather-data}</code>. Its
+identity is global, <code>plan/NNNN#anchor</code>, so a receipt and a dependency hang on a
+stable anchor, never a position that renumbers when a plan is re-cut. An anchored
+<code>### </code> heading belongs only under <code>## Build sequence</code>, and a build-sequence <code>### </code>
+without an anchor is refused, so a task is never confused with an ordinary
+subsection.</p>
+<p>A few bullets under each task heading carry its fields:</p>
+<pre><code>## Build sequence
+
+### Gather the data {#gather-data}
+
+- verify: cargo test gather
+- inputs: src/gather.rs
+
+### Ship it {#ship-it}
+
+- depends: #gather-data
+- verify: attested call/0007
+</code></pre>
+<ul>
+<li><strong><code>depends</code></strong> names the prerequisites: a local <code>#anchor</code>, or a cross-milestone
+<code>plan/NNNN#anchor</code>. A task with no <code>depends</code> takes the previous task in the
+section (the linear default), and the first task is a root. The project's tasks
+form <strong>one graph</strong> across milestones, and <code>host-lifecycle tasks</code> derives the
+<strong>ready frontier</strong> (the tasks whose prerequisites all carry a done receipt),
+which a coordinator may run in parallel.</li>
+<li><strong><code>verify</code></strong> is a command the gate re-runs (mechanical), or <code>attested &lt;call/NNNN | operator&gt;</code> (a decision the gate resolves, or an operator confirmation).</li>
+<li><strong><code>inputs</code></strong> names the files a mechanical verify covers, fingerprinted so the
+gate flags a done as stale once they drift (<code>call/0018</code>'s input-digest
+staleness, one level down).</li>
+</ul>
+<p><strong>Declare prerequisites; the tool derives parallelism.</strong> State for each task only
+what must finish before it. The needs-question is local and conservative, and a
+missing edge merely over-serializes (safe), while a guessed "independent" edge
+races two workers (a corruption), so the author never answers "what can run at
+once?" A coordinator fans a frontier out to parallel workers <strong>only when they are
+resource-isolated</strong> (separate worktrees), since <code>depends</code> orders work, it does not
+lock a shared resource.</p>
+<p><strong>Group a long sequence with a band, never an ordinal.</strong> To divide a build
+sequence into named groups, mark a <code>### </code> heading with a single <code>- band</code> bullet:
+it is a <strong>band</strong>, a content-named divider over the tasks that follow, not a task
+node. A band carries no receipt or edge and does not reset the linear default, so
+task-to-task chaining runs straight across it, and ordering stays in the <code>depends</code>
+edges rather than in a band's name or position. Give a band a content name and its
+own <code>{#anchor}</code>, so it reads as a referenceable divider in the book. Never name a
+group by ordinal position (a work-unit noun ahead of an ordinal); that is the
+position-naming the milestone-naming rule forbids, and the naming gate blocks it
+in both its numeric and its spelled forms.</p>
+<p><strong>Every task emits a receipt, and the gate is mandatory.</strong> <code>host-lifecycle tasks --record</code> writes a receipt into <code>.host-task-receipts</code> (it reads the task's own
+<code>verify</code>/<code>inputs</code>, so you never re-type them), a tool-written ledger you never
+hand-edit. <code>software --check</code> HAZARDs a task with no receipt, a <code>done</code> whose
+mechanical inputs drifted or whose citation does not resolve, a <code>skip</code> without a
+resolvable <code>call/NNNN</code>, and an orphan receipt whose task was renamed or removed. A
+<code>done</code> is re-derivable, never self-asserted: the cheap gate checks the input
+digest, and <code>tasks --rederive</code> re-runs the command and refreshes it. These task
+receipts are a third receipt kind beside the methodology-version and operational
+ledgers.</p>
+<h2 id="software-and-submodule-discipline"><a class="header" href="#software-and-submodule-discipline">Software and submodule discipline</a></h2>
+<p>The <strong>tools</strong> are submodules; the <strong>software</strong> is a bare store with worktrees.
+Both follow a commit-upstream-first rule:</p>
+<ul>
+<li><strong>A tool submodule:</strong> commit and push inside it (on <code>main</code>) first, then commit
+the updated submodule pointer in the host and push.</li>
+<li><strong>The software:</strong> commit and push inside the canonical worktree first, then
+record the new SHA as the <code>.host-software</code> <code>pin</code> and push that host commit. The
+recorded pin is the audit anchor a gitlink used to be.</li>
+</ul>
+<p>Never push a host commit whose tool pointer or software pin is not yet pushed. If
+a push fails (no network, no auth), stop, tell the human which commits are
+unpushed, and do not start work that depends on them.</p>
+<p><strong>Tag every release.</strong> A version bump (a change to the <code>version</code> in a tool's or
+the software's manifest (<code>Cargo.toml</code>, and so on)) <strong>MUST</strong> be accompanied by a matching
+annotated git tag <code>vX.Y.Z</code> at the release commit, pushed alongside it (<code>git tag -a vX.Y.Z -m "&lt;name&gt; vX.Y.Z" &amp;&amp; git push origin vX.Y.Z</code>). The tag <strong>is</strong> the release:
+a tag-triggered CI job builds the artifacts from it (e.g. a <code>v*</code> release workflow).
+An untagged version bump is an unreleased version, a defect; back-fill the tag at
+its bump commit. Do not re-pin <code>.host-software</code> (or a tool pointer) to a
+version-bumped commit that carries no matching tag.</p>
+<p><strong>Worktree-absence coherence.</strong> A separately-materialized path (the
+software worktree, or a tool submodule) is absent (or empty) until materialized; a
+fresh clone, CI, and a partial submodule init do not have it. So <strong>do not git-track
+an artifact that depends on such a path existing</strong> (a skill symlink into
+<code>&lt;software&gt;/</code> <em>or</em> into <code>tools/&lt;tool&gt;/skills/</code>): gitignore it and <strong>generate</strong> it
+after materialization: <code>link-skills.sh</code> produces <code>.claude/skills/*</code> for the tools
+present, and the software's links are recreated after <code>software --materialize</code>.
+Where an automated context genuinely needs the path, it materializes first;
+otherwise it must tolerate the absence. <code>host-lifecycle software --check</code> flags any
+tracked symlink whose target is not itself tracked here as a <code>HAZARD</code>. And: an
+un-materialized CI job must exercise each runtime-critical artifact. "done" means
+the whole CI sweep is green, not one artifact built.</p>
+<p><strong>Worktrees live under <code>software/</code>.</strong> Every materialized Where-room worktree
+<strong>MUST</strong> surface at <code>software/&lt;name&gt;/&lt;branch&gt;/</code> <em>under</em> the host root, never a bare
+external path disjoint from the tree. The rule an agent relies on is: <em>if you build it, its
+files live under the host root</em>, so an edit through the default-cwd path lands in
+the tree under test. When a backing store genuinely must live elsewhere (another
+filesystem or platform (e.g. a native-Windows build that cannot sit on a WSL
+share)), record it on the parallel-worktree line as <code>store=&lt;path&gt;</code> (and optionally
+<code>host=&lt;os&gt;</code>, the OS that <strong>materializes</strong> the store, i.e. where you run
+<code>host-lifecycle</code>, <em>not</em> the build platform; for a Windows Dev Drive reached from WSL
+that is <code>linux</code>, even though the build's own <code>attest-host</code> is <code>windows</code>). Off-platform,
+<code>host=</code> makes <code>--materialize</code>/<code>--check</code> skip the line rather than fail.
+<code>software --materialize</code> then realises the store at that path and the in-tree
+<code>software/&lt;name&gt;/&lt;branch&gt;/</code> as a <strong>symlink / directory junction / bind-mount</strong> to it. <code>host-lifecycle software --check</code> <strong>HAZARDs</strong> any recorded worktree path that
+escapes the host root, and any <code>store=</code> line whose in-tree handle is missing or
+does not resolve to the store. A disjoint external worktree with no in-structure
+handle is the wrong-tree footgun (edits silently land in a tree not under test)
+and is a defect, not a layout choice.</p>
+<p><strong>Reproducible builds, the production anchor.</strong> Software <em>initiated</em> under the
+methodology has <strong>reproducible builds</strong>: its deployed artifact MUST be byte-reproducible
+from the pinned source plus a recorded build recipe (a pinned <code>toolchain</code> and <code>build</code>
+command in <code>.host-software</code>). That is what makes the pin a true production anchor (a
+clean rebuild from the pin equals what is deployed) rather than just a source pin.
+Record per component which line ships (<code>deploy</code>) and the artifact's expected hash
+(<code>artifact = &lt;path&gt; &lt;sha256&gt;</code>); <code>host-lifecycle software --check</code> attests these cheaply
+(a present artifact that matches is <strong>verified</strong>; one built by a local toolchain that
+differs from the canonical hash is <strong>noted, not failed</strong>, the same reasoning
+<code>--install-hooks</code> uses, since the recorded hash is the pinned build host's output), and
+a CI job runs <code>host-lifecycle software --verify-build</code> to rebuild from the pin and fail
+unless the artifact reproduces. <code>--verify-build</code>, not <code>--check</code>, is the reproducibility
+proof. For <strong>greenfield</strong> software, non-reproducibility is a defect designed out from the
+start.</p>
+<p><strong>Hermetic builds, the dependency bundle.</strong> Reproducibility and hermeticity are the same
+lane: a component that ships static or self-contained release binaries MUST be able to
+reproduce them offline from pinned inputs, never from whatever a network fetch returns at
+build time. The recommended mechanism is a reusable, versioned, hash-pinned <strong>dependency
+bundle</strong>: vendor the dependency layer once, publish it as a downloadable release (the pattern
+<code>pgs-release</code> uses for its prebuilt sysroot), and have every build download and verify that
+bundle and build with no network. Record it per component as <code>deps-bundle = &lt;url&gt; &lt;sha256&gt;</code>
+in <code>.host-software</code>. <code>host-lifecycle software --verify-build</code> and <code>release</code> then perform the
+one controlled, pinned download, verify the sha (the provenance half of the gate), stage the
+vendored sources, and build under <code>--network none</code> (the egress half). The gate invariant is
+specific and enforceable: a component recording a <code>deps-bundle</code> MUST build offline, its staged
+bundle sha MUST match the recorded one, and <code>software --check</code> HAZARDs a <code>deps-bundle</code> pin that
+has drifted from the producer's committed <code>deps-bundle.lock</code>. A component that genuinely cannot
+vendor offline, such as one with a network-fetching <code>build.rs</code> or a non-Rust toolchain,
+records the case in <code>repro-waiver = call/NNNN</code>, whose value names a software-scoped
+decision. Hermeticity is a facet of reproducibility rather than a second property with its
+own key, so one waiver carries both cases: a migrated build that does not reproduce byte
+for byte yet, and a component that cannot vendor offline. Where offline vendoring is
+feasible, the waiver does not apply.</p>
+<p><strong>Multi-platform builds.</strong> A component whose <em>one</em> source pin ships on several platforms
+records one <code>[build "&lt;name&gt;" "&lt;platform&gt;"]</code> subsection per platform under its
+<code>[software "&lt;name&gt;"]</code> stanza, each carrying its own <code>build</code>/<code>toolchain</code>/<code>artifact</code>/<code>deploy</code>
+(and optional <code>repro-waiver</code>) plus an <code>attest-host</code> naming the OS (<code>linux</code>, <code>windows</code>,
+<code>macos</code>) that reproduces it. <code>--check</code> and <code>--verify-build</code> iterate the builds and attest
+each only on its <code>attest-host</code>. A build whose host is not the current one is skipped, and
+the run does not fail (a Linux runner cannot reproduce the Windows artifact, and is not asked to).
+The flat single-build fields remain the form for a single-platform component.</p>
+<p><strong>The waiver (migrated software only).</strong> Pre-existing software brought under the
+methodology may not be reproducible yet. It may carry <code>repro-waiver = call/NNNN</code> naming a
+recorded <strong>case decision</strong>, a software-scoped <code>call/</code> decision documenting why it is not
+yet reproducible and the interim provenance. The key is named for what it records, the
+citation, rather than for the state it excuses; the retired spelling <code>repro-exempt</code> still
+parses and reports itself, and is removed at a later revision. <code>--verify-build</code> then warns and skips the
+rebuild comparison; <code>--check</code> still requires the citation to resolve. The exemption is
+meant to be retired as the component converges on reproducibility, and is <strong>never</strong>
+available to greenfield software.</p>
+<h2 id="upgrading"><a class="header" href="#upgrading">Upgrading</a></h2>
+<p>Adopting is one event; the template moves on. The <code>.host</code> stamp records the <code>baseline</code>
+ledger entry (every entry at or before its position in <code>UPGRADING.md</code> counts as applied).
+The <code>applied</code> set of out-of-order entries lives in <code>.host-receipts</code> (the methodology-version
+trail); <code>host-lifecycle migrate-receipts</code> moves it there from a legacy <code>.host</code>. <code>UPGRADING.md</code> is the ledger of actions, one <code>[upgrade "&lt;revision&gt;"]</code>
+stanza each, ordered by file position; a stanza may declare <code>independent</code> or
+<code>depends = &lt;id&gt;</code> and so on (logical prerequisites, distinct from the <code>requires</code> tool-version
+floor) and a <code>verify</code> post-condition.</p>
+<p>To upgrade, fetch the template to the target revision, then:</p>
+<ul>
+<li><code>host-lifecycle upgrade &lt;dir&gt;</code> lists every ledger entry <strong>not yet applied</strong>, by
+ledger position, never git ancestry (ledger SHAs are a linear-commit artifact and
+some are orphaned from HEAD). A legacy single-<code>revision</code> stamp is migrated once to a
+<code>baseline</code>. <code>upgrade --next</code> prints the single next safe action.</li>
+<li>Apply an entry, then record it with <code>host-lifecycle upgrade --record &lt;id&gt;</code> (an id,
+an unambiguous prefix, or a ledger ordinal). The tool validates the id, refuses if a
+<code>depends</code> is unapplied, runs the entry's <code>verify</code> post-condition (or, when it has
+none, requires an explicit <code>--unverified call/NNNN</code> citation) and appends an
+append-only claim. <strong>You never hand-edit the stamp.</strong></li>
+<li>A late <strong>independent</strong> entry may be cherry-applied without an earlier unrelated one:
+the deferred entries stay pending and <strong>re-list</strong>. A forgotten or premature record
+can never silently hide owed work (fail-safe). <code>upgrade --advance</code> later compacts a
+contiguous applied run into the <code>baseline</code>.</li>
+<li><code>host-lifecycle software --check</code> re-checks every recorded claim (a <code>verify</code> that no
+longer holds, or an applied entry whose <code>depends</code> is unapplied, is a loud <code>HAZARD</code>).</li>
+</ul>
+<p>The tool carries the process. Even a low-capability agent upgrades by reading one
+line and running one command, never editing the stamp by hand. Re-stamp is the tool's
+job, not yours.</p>
+<h2 id="provenance"><a class="header" href="#provenance">Provenance</a></h2>
+<p>The four working principles are rewritten, in our own words, from observations by
+Andrej Karpathy on where LLM coding goes wrong, by way of Jiayuan Zhang
+(@forrestchang) and the andrej-karpathy-skills contributors. The persona process
+in <code>cast/applying-personas.md</code> follows Powell, Keenan and McDaid (2007) on
+personas in XP, with later agile work cited alongside it. This manual is released
+into the public domain (Unlicense); the credit here is acknowledgement, not a
+license obligation.</p>
+<h2 id="project-specifics"><a class="header" href="#project-specifics">Project specifics</a></h2>
+<p>This section is written by the adopter and is not part of the template spine.
+An upgrade re-applies the spine files verbatim and leaves this section alone.</p>
+<ul>
+<li><strong>Identity.</strong> This host is <code>agentic-ds-lite-punch</code>, origin
+<code>https://github.com/slartibardfast/agentic-ds-lite-punch.git</code>. It externalizes
+the thought about the ds-lite-punch software; the software itself is the hosted
+component described in <code>.host-software</code>.</li>
+<li><strong>The component.</strong> <code>ds-lite-punch</code> is a Rust daemon (musl-static, procd-managed
+on the ImmortalWrt router) that keeps a CGNAT UDP mapping alive on the Virgin
+Media ds-lite line and forwards inbound UDP to a br-lan target. Its code is
+being migrated into the <code>ds-lite-punch</code> component repo from the former
+rope-agentic monorepo (<code>tools/ds-lite-punch/</code>); until the crate lands with a
+recorded build recipe, the component carries a <code>repro-waiver</code> (see <code>call/0012</code>).</li>
+<li><strong>Rooms kept from the pre-adoption history.</strong> <code>plan/0004-ds-lite-punch/</code> is the
+active milestone (the v1 core is done; multi-instance and the UPnP control
+plane are open). <code>call/0011-redesign-vm-line-57-pd.md</code>
+is the accepted decision that created the problem space. Numbering continues
+from 0004 for plan and 0012 for call; <code>host-lifecycle next</code> allocates.</li>
+<li><strong>The investigation record.</strong> <code>plan/0004-ds-lite-punch/INVESTIGATION.md</code> was the
+repo-root <code>DSLITE.md</code>, moved into the milestone room and rewritten to zero prose
+tropes during adoption. It holds the possibility-space exploration of the
+Virgin Media AFTR that fed call/0011 and plan/0004.</li>
+<li><strong>Legacy path references.</strong> Pre-adoption documents cite the old monorepo layout:
+<code>tools/ds-lite-punch/</code> means the <code>ds-lite-punch</code> component (see <code>.host-software</code>);
+<code>MEMORY.md</code> entries named there resolve in this host's <code>MEMORY.md</code>.</li>
+<li><strong>Reconciliation deltas.</strong> network ground truth recorded during development
+lives in <code>MEMORY.md</code>; where a plan document conflicts with a delta, the delta
+wins (see plan/0004 IMPLEMENTATION.md "Reconciliation deltas").</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="call/0012-adopt-agentic-host-methodology.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="CLAUDE.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="call/0012-adopt-agentic-host-methodology.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="CLAUDE.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
