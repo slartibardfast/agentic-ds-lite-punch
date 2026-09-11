@@ -1,0 +1,48 @@
+# Paths excluded from the reference sweep and the naming audit. The record layer is
+# excluded, never reworded.
+#
+# UPGRADING.md — the template's own record layer. It is the append-only ledger of
+# upgrade entries: an entry is written once, published, and thereafter read by adopters
+# at revisions we cannot see, so rewriting one changes what a mid-flight adopter is
+# checked against. That is the same reason `MEMORY.md` is excluded by construction.
+#
+# Its entries carry cross-project citations by nature ("Recorded as agentic-host
+# call/0046"), naming the register of the project that authored the change. Those
+# numbers belong to that project's rooms and resolve nowhere here, and there is
+# currently no form for a cross-project register reference that the sweep accepts:
+# bare, prefixed, and inside a markdown link all read as a reference into the local
+# room (connollydavid/host#19). Excluding the ledger is therefore the record-layer rule
+# applied, not a way around the finding; giving those citations an expressible form is
+# owed work, tracked in that issue.
+UPGRADING.md
+
+# The referenced methodology template: a gitlink at the repo root, audited
+# upstream at its own revision, not as this host's content.
+host-template/
+
+# The append-only working memory (the record layer; excluded by construction,
+# named here the way call/0009 does).
+MEMORY.md
+
+# Tool-written receipt records: append-only claims whose evidence quotes
+# genuine versions and measurements; the record layer is excluded, never
+# reworded.
+.host-receipts
+.host-lifecycle-receipts
+
+# Generated mdBook output (book.toml at the root; source and build under
+# mdBook/): produced by `host-lifecycle book`, never authored content.
+book.toml
+mdBook/
+
+# The spine copy at the repo root and the two pre-adoption milestone docs.
+# Each carries structural or engineering identifiers that are not this host's
+# newly authored content and are not renamed (call/0012):
+#
+# AGENTS.md is the template manual copied verbatim; its internal section
+# numbers are template-authored and re-applied unchanged by
+# `host-lifecycle upgrade`, so a local rename would fight the ledger.
+# (call/0012: the milestone docs' code identifiers were renamed to content
+# anchors, so plan/0004-ds-lite-punch/README.md and IMPLEMENTATION.md are
+# audited again.)
+AGENTS.md
