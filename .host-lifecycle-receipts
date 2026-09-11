@@ -1,0 +1,59 @@
+[receipt "classify"]
+    disposition = done
+    evidence = migration case a; classify . exit 0
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "embed" "ds-lite-punch"]
+    disposition = done
+    evidence = bare store + main worktree @ f7e11e934e99; .host-software recipe
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "remap"]
+    disposition = done
+    evidence = git mv DSLITE.md -> plan/0004/INVESTIGATION.md; remap --check clean (0 rules, exit 0); advisory code-tells acknowledged in call/0012
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "publish"]
+    disposition = done
+    evidence = host-lifecycle book . wrote book.toml + 17 pages + SUMMARY (gitignored); book --check: every room renders
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "release" "ds-lite-punch"]
+    disposition = skip
+    reason = call/0012
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "remap"]
+    disposition = done
+    evidence = git mv DSLITE.md -> plan/0004/INVESTIGATION.md; remap --check clean of flags (0 tells); 24 warn-tier items acknowledged (spine section numbers, milestone codes); LEXICON declares version string UPnP 1.0
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "remap"]
+    disposition = done
+    evidence = remap --check clean (0 tells, exit 0); naming carve-out per call/0012; LEXICON declares UPnP 1.0
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "verify"]
+    disposition = done
+    evidence = gate recheck green: validate plan/ call/ ok; prose clean (0 tropes); reconcile clean; refs --gate 15/15 resolve; remap --check 0 tells; book --check every room renders; software embed @ f7e11e9
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "remap"]
+    disposition = done
+    evidence = content rename of build-phase/measurement/invariant codes to anchors (v1 core, rescue-timing rig, one-holder rule); remap --check clean (0 tells) with milestone docs re-audited
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "verify"]
+    disposition = done
+    evidence = gate recheck green after rename: validate ok; prose clean; reconcile clean; refs 15/15; remap --check 0 tells; book --check ok; component @ pin
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11

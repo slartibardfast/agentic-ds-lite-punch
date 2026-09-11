@@ -1,0 +1,17 @@
+[receipt "adopt"]
+    disposition = done
+    evidence = .host stamp: template https://github.com/connollydavid/host-template revision 41ba4e108b43
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "upgrade"]
+    disposition = done
+    evidence = stamp revision 41ba4e1 is the adopted template HEAD; upgrade lists no newer ledger entries
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
+
+[receipt "upgrade"]
+    disposition = done
+    evidence = stamp revision 41ba4e1 is the template HEAD at adoption; upgrade . finds no later ledger baseline to apply (initial adoption)
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-11
