@@ -325,7 +325,7 @@ starting multi-instance.
   invalidate the forwarding model.
 - **Keepalive-pause soak.** Pause keepalives about 10 s, expect churn detected
   and re-publish on resume. Only the initial discovery churn has been observed
-  so far.
+  so far. The soak runs end to end from the test rig below.
 
 ### What is deliberately not covered
 
@@ -354,6 +354,38 @@ forwarding model that test could still falsify.
 | STUN fleet outage | blind state | keepalives continue (any outbound UDP refreshes the tuple); observation degrades, tuple stays live |
 | EIF switched off upstream | STUN stays healthy (responses are solicited) but unsolicited inbound stops | v1: invisible (noted); v2: external prober |
 | Router reboot | procd `respawn` | a fresh tuple + re-publish in one cycle |
+
+## Test rig: two dedicated experiment LXCs
+
+The acceptance paths that need a real second host (A1 reply-path validation,
+the A3 soak, the C6 echo half, the G8 forward leg) run from two experiment-only
+Arch LXCs on the router, rootfs on `/mnt/nvme` (ext4, label `nvme-container`).
+The production Arch LXC (192.168.21.10) stays untouched. No production service
+runs on either container.
+
+| Name | Side | Address | Role |
+|---|---|---|---|
+| `dslp-probe` | vdsl4 | an IPv4 off the Digiweb line | the external vantage: the AFTR sees a genuine off-subscriber source, the vdsl4 public IPv4, the same oracle that proved TCP EIF |
+| `dslp-sink` | VM | a br-lan IPv4 with default egress via eth1/AFTR | the relay's forward target; carries the A1 reply-path SNAT pin to `192.168.0.21:R`, the first permanent home of the console reply-path config |
+
+Why this removes the self-probe artifact: the relay's forward binds the peer
+source with `IP_TRANSPARENT`, and that bind collides (EADDRINUSE) only while
+the peer source is a socket in the router's own netns. The probe's sockets live
+in `dslp-probe`'s netns, so the bind is clean and the forward leg completes:
+arrival at the relay socket and delivery to the sink are asserted from
+router-hosted infra, with no phone hotspot.
+
+Setup notes: container rootfs under `/mnt/nvme`; the probe's addressing mode
+(a direct public IPv4 on its veth, or the line's NAT) is confirmed at setup;
+the sink takes the next free br-lan address and its SNAT pin lands in fw4.
+Hostnames are content roles: `dslp-probe`, `dslp-sink`.
+
+Closed by this rig: A3 in full (detect via tuple-file change, old tuple dead,
+new tuple delivered and forwarded), A1 reply-path validation, the C6 echo
+half, the G8 forward leg, and a standing probe path for the TCP idle-lifetime
+open item. It does not replace a foreign-network sender: the PSN console test
+keeps its internet probes (Globalping from several countries) and a physical
+console ([OPERATOR]).
 
 ## Testing
 
