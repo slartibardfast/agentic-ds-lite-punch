@@ -4,6 +4,32 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-12 — the fork incursion and its guardrails
+
+- A `gh repo fork <owner>/<repo> --clone` run with the host as cwd cloned the
+  wrong, pre-existing fork (`slartibardfast/andrej-karpathy-skills`) into the
+  host root, untracked. The scans walk untracked directories, so that clone
+  leaked three naming tells and re-opened the remap receipt. Cause chain:
+  cwd pollution (repo-creating command run inside the host), a destination-name
+  collision that made the follow-up commands operate on the submodule instead
+  of any fork clone, and no side-effect check until the audit complained hours
+  later. The fork detour was avoidable: pushing the branch to
+  `connollydavid/host-template` as the owner worked cleanly and merged.
+- Guardrails: repo-creating and cloning commands run with cwd in /tmp scratch,
+  never the host root; immediately after such a command, `git status` must show
+  no collateral; upstream changes to connollydavid/* go direct-push as the
+  owner, fork only when required; a command whose output contradicts its intent
+  is a stop-and-inspect signal, not a retry prompt.
+
+## 2026-09-12 — git auth over HTTPS: Basic, not Bearer
+
+- GitHub's API accepts `Authorization: Bearer`; the git endpoint does not. A
+  token that reads fine via the API is rejected by `git clone`. Use
+  `Authorization: Basic base64(x-access-token:<token>)`, the same scheme
+  actions/checkout uses. The reproducible-build lane reads the private
+  `ds-lite-punch` component this way, via the `DSLITE_READ_TOKEN` secret
+  (fine-grained PAT, Contents: read on `slartibardfast/ds-lite-punch`).
+
 ## 2026-09-11 — agentic-host adoption (host-template 41ba4e1)
 
 - The repo-root investigation `DSLITE.md` moved to
