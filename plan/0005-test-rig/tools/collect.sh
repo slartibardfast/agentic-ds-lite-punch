@@ -7,7 +7,7 @@
 set -e
 RUN=$1
 [ -n "$RUN" ] || { echo "usage: $0 <run-name>"; exit 2; }
-DEST="plan/0004-ds-lite-punch/testrig/results/$RUN"
+DEST="plan/0005-test-rig/tools/results/$RUN"
 mkdir -p "$DEST"
 scp -r -o BatchMode=yes "root@192.168.21.1:/mnt/nvme/runs/2026-09-12/$RUN/." "$DEST/"
 echo "collected to $DEST"

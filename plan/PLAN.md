@@ -5,5 +5,6 @@ their folders are named `NNNN-slug` (zero-padded, and the number is identity, no
 sort key; see `call/0000`). A milestone is a thin, persona-serving increment.
 
 - [0004 ds-lite-punch](0004-ds-lite-punch/README.md)
+- [0005 test rig](0005-test-rig/README.md)
 
 The next milestone number is allocated by `host-lifecycle next plan/`.
