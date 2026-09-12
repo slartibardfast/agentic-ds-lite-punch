@@ -625,7 +625,7 @@ has never been exercised. This is the one remaining item that could still
 invalidate the forwarding model.</li>
 <li><strong>Keepalive-pause soak.</strong> Pause keepalives about 10 s, expect churn detected
 and re-publish on resume. Only the initial discovery churn has been observed
-so far.</li>
+so far. The soak runs end to end from the test rig below.</li>
 </ul>
 <h3 id="what-is-deliberately-not-covered"><a class="header" href="#what-is-deliberately-not-covered">What is deliberately not covered</a></h3>
 <ul>
@@ -652,6 +652,33 @@ forwarding model that test could still falsify.</p>
 <tr><td>Router reboot</td><td>procd <code>respawn</code></td><td>a fresh tuple + re-publish in one cycle</td></tr>
 </tbody></table>
 </div>
+<h2 id="test-rig-two-dedicated-experiment-lxcs"><a class="header" href="#test-rig-two-dedicated-experiment-lxcs">Test rig: two dedicated experiment LXCs</a></h2>
+<p>The acceptance paths that need a real second host (A1 reply-path validation,
+the A3 soak, the C6 echo half, the G8 forward leg) run from two experiment-only
+Arch LXCs on the router, rootfs on <code>/mnt/nvme</code> (ext4, label <code>nvme-container</code>).
+The production Arch LXC (192.168.21.10) stays untouched. No production service
+runs on either container.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Side</th><th>Address</th><th>Role</th></tr></thead><tbody>
+<tr><td><code>dslp-probe</code></td><td>vdsl4</td><td>an IPv4 off the Digiweb line</td><td>the external vantage: the AFTR sees a genuine off-subscriber source, the vdsl4 public IPv4, the same oracle that proved TCP EIF</td></tr>
+<tr><td><code>dslp-sink</code></td><td>VM</td><td>a br-lan IPv4 with default egress via eth1/AFTR</td><td>the relay's forward target; carries the A1 reply-path SNAT pin to <code>192.168.0.21:R</code>, the first permanent home of the console reply-path config</td></tr>
+</tbody></table>
+</div>
+<p>Why this removes the self-probe artifact: the relay's forward binds the peer
+source with <code>IP_TRANSPARENT</code>, and that bind collides (EADDRINUSE) only while
+the peer source is a socket in the router's own netns. The probe's sockets live
+in <code>dslp-probe</code>'s netns, so the bind is clean and the forward leg completes:
+arrival at the relay socket and delivery to the sink are asserted from
+router-hosted infra, with no phone hotspot.</p>
+<p>Setup notes: container rootfs under <code>/mnt/nvme</code>; the probe's addressing mode
+(a direct public IPv4 on its veth, or the line's NAT) is confirmed at setup;
+the sink takes the next free br-lan address and its SNAT pin lands in fw4.
+Hostnames are content roles: <code>dslp-probe</code>, <code>dslp-sink</code>.</p>
+<p>Closed by this rig: A3 in full (detect via tuple-file change, old tuple dead,
+new tuple delivered and forwarded), A1 reply-path validation, the C6 echo
+half, the G8 forward leg, and a standing probe path for the TCP idle-lifetime
+open item. It does not replace a foreign-network sender: the PSN console test
+keeps its internet probes (Globalping from several countries) and a physical
+console ([OPERATOR]).</p>
 <h2 id="testing"><a class="header" href="#testing">Testing</a></h2>
 <ul>
 <li>Unit (example-based): STUN parser vectors; tuple-compare/churn state machine.</li>
