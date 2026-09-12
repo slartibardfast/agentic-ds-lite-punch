@@ -67,6 +67,14 @@ expected under 300 ms; a STUN server is declared dead after 3 silent cycles
 (about 6 s) and rotated. Mapping declared healthy if a response arrived within
 the last 3 cycles.
 
+The 2 s cadence is a deliberate divergence from RFC 6263's 15 s keepalive
+envelope, and the Request message type is deliberate too: the RFC's guidance
+assumes a minute-scale NAT binding lifetime, while the AFTR measures 5 to 10 s,
+so 15 s would lose the mapping outright; and the exchange must be a Binding
+Request rather than an Indication because tuple observation is a co-equal job.
+Both whys, and the full standards sweep, are asserted in the implementation
+brief §15.
+
 ## Forwarding model (endpoint consistency without TPROXY)
 
 The CGNAT mapping is keyed to (192.168.0.21, R). Peers must see that tuple in

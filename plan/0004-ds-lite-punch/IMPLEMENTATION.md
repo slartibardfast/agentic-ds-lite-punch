@@ -607,3 +607,36 @@ required). ICMP-on-unmapped conclusion (the probe). Console behavior on
 paired-Add TCP fault (E5 decision record). Per-slot IP divergence policy if
 the divergence test says divergent. Whether the Switch's grading probe shares a socket with game
 traffic (F residual).
+
+## §15 Standards sweep: NAT techniques and transition schemes
+
+Audited 2026-09-12. Coverage frame: the RFCs that define NAT behavior
+classes, the NAT-traversal and keepalive technique corpus, and the IPv6
+transition schemes that could replace the DS-Lite path. RFCs outside that
+frame (media/SIP ALGs, DNS, transport internals) do not touch the
+AFTR-facing design and are out of scope. Each row asserts the disposition
+and the why; dispositions cite measured facts where a measurement exists.
+In-text cites elsewhere in the brief name the versions current when they
+were written (RFC 5389, 5766, 5245); the current versions are noted here.
+
+| RFC | Governs | Disposition and why |
+|---|---|---|
+| 4787 | UDP NAT behavior: mapping and filtering classes, lifetimes | Adopted as the taxonomy: the measured EIM+EIF is its full-cone class. Its minute-scale mapping lifetime guidance is violated by the AFTR, which is the reason for the 2 s cadence. |
+| 7857 | Updates to 4787/5382/5508: EIF refresh, 5-tuple mapping, randomization | Considered: its refinements change nothing here. Its §7 position (inbound does not refresh an EIF mapping) matches how we refresh, which is outbound-only. |
+| 5382 | TCP NAT behavior | Adopted for the TCP EIF characterization (measured 2026-08-31). TCP idle lifetime is unmeasured and gates TCP grants only. |
+| 5508 | ICMP NAT behavior | Considered: unmapped UDP is a silent drop with no ICMP (measured, the unmapped-ICMP probe); the relay never uses ICMP as a dead-mapping signal. |
+| 6888 | Common CGNAT requirements | Adopted as the violated floor: its 120 s UDP timeout vs the measured 5 to 10 s AFTR timeout. Its randomization honor shows in external ports that are always AFTR-chosen random-high. |
+| 6269 | IP address sharing issues | Considered: the AFTR re-issued the same external port after restart (observed); no design dependency. |
+| 6056 | Transport port randomization | Considered: random-high external ports are AFTR-chosen; parity emulation is rejected (never synthesize). |
+| 3424 | UNSAF and ALG critique | Considered: underwrites the zero-cooperation premise; no ALG sits in the encapsulating path. |
+| 6333 | DS-Lite | Adopted: the B4 NAPT role is the legal basis for the nft SNAT and shadow-bind design. |
+| 6908 | DS-Lite deployment considerations | Considered: behavior was verified empirically on this line; no deployment variant applies. |
+| 7596 / 7597 / 7599 | MAP-E / MAP-T / LW4o6 | Closed: carrier provisioning is absent on this line (INVESTIGATION). |
+| 5389 (8489 current) | STUN | Adopted: a Binding Request rather than an Indication because tuple observation is a co-equal job; the mechanics are unchanged between versions. |
+| 5766 (8656 current) | TURN | Adopted as an analogue: the VPS relay is the TURN relay pattern; the control protocol itself does not apply, there is no control channel. |
+| 5245 (8445 current) | ICE | Considered: consoles negotiate via ICE; the relay supplies the mapping ICE relies on and performs no ICE itself. |
+| 5128 | P2P traversal survey | Adopted as taxonomy: UDP hole punching, TCP simultaneous open, and relaying; port prediction rejected as fragile. |
+| 6263 | RTP media keepalive | Diverges deliberately: 2 s vs its 15 s envelope (measured AFTR timeout), Binding Request vs its Indication (observation), its recommended RTCP-mux does not apply (no RTP), and its not-recommended 0-byte packet is the raw-injection last resort. |
+| 3489 | Classic STUN | Obsolete (replaced by 5389/8489); its 15 s keepalive guidance is the same assumption that does not hold here. |
+| 6887 | PCP | Adopted as the LAN facade (phase D). |
+| 6886 | NAT-PMP / IGD interworking | Adopted as the facade and the reconciliation authority (phase E). |
