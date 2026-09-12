@@ -6,6 +6,7 @@
 
 import json
 import os
+import subprocess
 import sys
 
 
@@ -41,18 +42,55 @@ def arrivals(path):
     return ev
 
 
-def cells_table(checkpoint):
+def pcap_arrivals(pcap, btime):
+    # Mapping-liveness markers: the eth1 capture's arrivals of the probe
+    # flow (src 84.203.115.61 to dst 192.168.0.21:40000). Death = last
+    # arrival before the pause; recovery = first arrival after republish.
+    # Convert capture (wall) time to the driver's monotonic clock via btime.
+    if not os.path.exists(pcap):
+        return []
+    try:
+        out = subprocess.run(
+            ["tcpdump", "-r", pcap, "-nn", "-tt",
+             "src host 84.203.115.61 and dst port 40000"],
+            capture_output=True, text=True, timeout=60).stdout
+    except OSError:
+        return []
+    base = int(btime) * 1000
+    hits = []
+    for ln in out.splitlines():
+        parts = ln.split()
+        if not parts:
+            continue
+        try:
+            wall = float(parts[0])
+        except ValueError:
+            continue
+        hits.append(int(wall * 1000) - base)
+    return hits
+
+
+def cells_table(run_dir, checkpoint):
     rows = []
+    btime = checkpoint.get("btime", "0")
     for c in checkpoint.get("cells", []):
-        dt = c.get("t_resume", 0) - c.get("t0", 0)
+        arr = pcap_arrivals(f"{run_dir}/cell-{c.get('cell', 0):02d}/eth1.pcap",
+                            btime)
+        t0 = c.get("t0") or 0
+        t_resume = c.get("t_resume") or 0
+        t_repub = c.get("t_repub") or 0
+        before = [a for a in arr if a <= t_resume]
+        after_pub = [a for a in arr if a > t_repub]
         rows.append({
             "cell": c.get("cell"),
-            "duration": c.get("duration_s"),
+            "duration_s": c.get("duration_s"),
+            "arrivals_pre": len(before),
+            "t_last_arrival": before[-1] if before else "",
+            "t_first_after_repub": after_pub[0] if after_pub else "",
             "pre_stable": c.get("pre_stable"),
             "tuple_old": c.get("tuple_old"),
             "tuple_new": c.get("tuple_new"),
-            "reuse": c.get("tuple_new") == c.get("tuple_old"),
-            "t_repub": c.get("t_repub"),
+            "port_reuse": "y" if c.get("tuple_new") == c.get("tuple_old") else "-",
             "state": c.get("state"),
         })
     return rows
@@ -61,19 +99,21 @@ def cells_table(checkpoint):
 def main():
     run_dir = sys.argv[1]
     ck = json.load(open(os.path.join(run_dir, "checkpoint.json")))
-    rows = cells_table(ck)
-    reuse = sum(1 for r in rows if r["reuse"])
+    rows = cells_table(run_dir, ck)
+    reuse = sum(1 for r in rows if r["port_reuse"] == "y")
     out = [
         "# Soak results: " + run_dir,
         "",
-        "| cell | dur s | pre-stable | old tuple | new tuple | reuse | t_repub | state |",
-        "|---|---|---|---|---|---|---|---|",
+        "| cell | dur s | pre | arrivals | last pre | first post-repub | old tuple | new tuple | reuse | state |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
-        out.append("| {cell} | {duration} | {pre_stable} | {tuple_old} | "
-                   "{tuple_new} | {reuse} | {t_repub} | {state} |".format(**r))
+        out.append("| {cell} | {duration_s} | {pre_stable} | {arrivals_pre} | "
+                   "{t_last_arrival} | {t_first_after_repub} | {tuple_old} | "
+                   "{tuple_new} | {port_reuse} | {state} |".format(**r))
     out.append("")
-    out.append(f"Port-reuse observed in {reuse} of {len(rows)} cells.")
+    out.append(f"Port reuse in {reuse} of {len(rows)} cells. All times are "
+               "monotonic milliseconds since boot (eth1 arrival markers).")
     with open(os.path.join(run_dir, "results.md"), "w") as f:
         f.write("\n".join(out) + "\n")
     print("\n".join(out))

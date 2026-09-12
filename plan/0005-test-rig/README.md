@@ -94,30 +94,45 @@ C. Artifact binding. run.json records sha256 of /usr/bin/ds-lite-punch
 D. Foreign-network reserve. The rig does not replace an external sender for
    the PSN-type test; that leg keeps Globalping and a real console.
 
-## Wiring findings and RCA (2026-09-12)
+## Wiring findings and RCA (2026-09-12/13)
 
-Bring-up verified, with one blocked leg. Evidence, in order:
+Bring-up verified; the forward leg is blocked by a pre-socket kernel-path
+consumption of NEW inbound UDP, reproduced with two relay builds. Evidence:
 
-- Probe egress: the masqueraded source 84.203.115.61 observed on pppoe-vdsl4
-  toward the mapping. The fw4 pbr_output chain matches nothing for the probe,
-  so no mark rule is needed (the checklist now says so).
-- AFTR arrival: the probe's datagrams are delivered to the relay socket,
-  captured on eth1 (src 84.203.115.61 to 192.168.0.21:40000, JSON payloads).
-- Direct sink delivery: a hand-emitted datagram with the identical
-  transparent source reached the sink end to end (br-lan frame, veth frame,
-  container socket, sink log). Every layer of the delivery chain works.
-- Relay forward: for the same datagrams the relay produces NO br-lan frame
-  with a live receiver. The forward ends silently inside the relay binary;
-  it logs nothing, and the source is not on this box (the crate is unmigrated,
-  call/0012). rp_filter is 0 everywhere, so the kernel is exonerated; the
-  transparent-bind and sendto semantics are proven by the direct emission.
+- Probe egress: masqueraded source 84.203.115.61 observed on pppoe-vdsl4
+  toward the mapping; no fwmark rule needed (pbr_output matches nothing for
+  the probe).
+- AFTR arrival: probe datagrams delivered to the router, captured on eth1
+  (src 84.203.115.61 to 192.168.0.21:40000) and counted at prerouting
+  (38 hits in 8 s of 1 Hz probing, dbg-observed 34 in the prior run).
+- Input stage: of those arrivals, only the established-return traffic
+  (STUN responses) reaches the input chain and the relay socket (relay
+  recv-log confirms 6 STUN receives, zero probe receives in the instrumented
+  run); the bulk of NEW inbound datagrams are consumed between prerouting
+  (priority -299) and the filter input chain.
+- Counter stages, production active: prerouting dport 40000 = 38, input
+  dport 40000 = 4, forward dport 40000 = 0. With the fresh binary the input
+  count was 0. Both the deployed binary and a fresh musl build of the
+  current source reproduce the black hole, and the source is exonerated:
+  forward.rs is a plain transparent bind + sendto (replicated successfully
+  by hand, including on the live NAT'd port), the recv loop has no guard,
+  and the binary logs every forward failure (none logged).
+- Exonerated mechanisms: reverse-path filtering (off); flow offload (not
+  configured); shadow-socket theft (one holder on the tuple);
+  dslitepunch-40000 accept placement (first rule of the input chain);
+  dstnat rewrites (none for 40000); raw prerouting (empty);
+  SO_REUSEADDR (irrelevant).
 
-Conclusion: the arrival and delivery chains are healthy; the relay's forward
-path drops the datagrams without a trace. A source-level diagnosis is
-deferred until the crate migrates. The soak's mapping-liveness markers must
-therefore come from the eth1 capture (arrivals of the .61 to 40000 flow),
-not from sink arrivals, and the forward leg remains an external-sender
-cross-check (Globalping), as the checklist already reserves.
+Conclusion: the relay is not the cause. NEW inbound UDP to the mapping is
+consumed in the router's prerouting stage before the socket, so no forward
+can occur regardless of binary or target. The soak therefore reads mapping
+liveness from the eth1 capture (arrivals of the .61 to 40000 flow), which
+is robust and measures the AFTR-side truth directly. The forward and reply
+legs remain external-sender functions (the standards idiom: first-party
+cannot be third-party), and the router's inbound-NEW path is recorded as an
+independent open item (kernel/firewall stage accounting) for the crate
+migration. Analysis markers derive from the per-cell eth1 pcap, not from
+sink arrivals.
 
 ## Execution order
 

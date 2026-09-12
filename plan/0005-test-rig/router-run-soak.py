@@ -165,10 +165,19 @@ def main():
                          capture_output=True, text=True).stdout.split()[0]
     init_sha = subprocess.run(["sha256sum", "/etc/init.d/ds-lite-punch"],
                               capture_output=True, text=True).stdout.split()[0]
+    btime = "0"
+    try:
+        for ln in open("/proc/stat"):
+            if ln.startswith("btime"):
+                btime = ln.split()[1]
+                break
+    except OSError:
+        pass
     plan = {
         "target": "the deployed relay at " + read_tuple(),
         "relay_sha256": sha,
         "init_sha256": init_sha,
+        "btime": btime,
         "durations": [int(x) for x in args.durations.split(",")],
         "reps": args.reps,
         "seed": args.seed,
