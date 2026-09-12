@@ -4,6 +4,16 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-12 — allocate register numbers at claim time, never from memory
+
+- A milestone folder was created as plan/0005 using a remembered allocation
+  from an earlier `host-lifecycle next plan/` run. The value was correct
+  (the tool now returns 0006), but the claim never went through the tool:
+  the spine's rule is that the generator allocates and the operator never
+  numbers by hand. The allocation is a claim-time act, not a remembered
+  fact. Every plan/ or call/ claim starts with `host-lifecycle next <dir>`;
+  keep the returned value in the room's README as the recorded claim.
+
 ## 2026-09-12 — the fork incursion and its guardrails
 
 - A `gh repo fork <owner>/<repo> --clone` run with the host as cwd cloned the
