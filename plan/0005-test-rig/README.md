@@ -1,8 +1,9 @@
 # Milestone: test rig (ds-lite-punch acceptance harness)
 
 **Status:** draft for operator review. The rig and the campaign tooling live
-in this room (`config/`, `router/`, `probe/`, `sink/`); the review checklist
-below gates every router-side change. Nothing has touched the router yet.
+flat in this room (lxc-*.conf, router-*.sh, router-run-*.py, probe-*.py,
+sink-*.py, analyze.py, collect.sh); the review checklist below gates every
+router-side change. Nothing has touched the router yet.
 The rig closes the A1,
 A3, C6, and G8 acceptance paths of plan/0004 that need a second host, and
 hosts the TCP idle-lifetime measurement. Tooling migrates into the
@@ -34,13 +35,13 @@ artifact is gone, and the forward and reply legs both complete.
 
 ## The campaign
 
-`router/run-soak.py` drives, on the router: a 10 min baseline, a
+`router-run-soak.py` drives, on the router: a 10 min baseline, a
 10 min control, then the pause grid `[5, 7, 10, 12, 20, 30]` seconds, three
 repetitions each, in seeded-random order, with 60 s settle between cells.
 Each cell kills the mapping with `kill -STOP`, observes its death from the
 probe's series on eth1, resumes with `-CONT`, and times detection,
 republish, and recovery, with a 60 s resurrection watch on the old tuple to
-count port reuse. `router/run-c3.py` measures the TCP idle-lifetime:
+count port reuse. `router-run-c3.py` measures the TCP idle-lifetime:
 the sink holds a TCP mapping discovered by STUN-over-TCP, and the probe
 connects at gaps 15 to 600 s, binary-searching the death point (the AFTR
 RST is the dead signal). The full data dictionary is in the scripts'
@@ -66,14 +67,14 @@ invocation headers.
 1. Create the containers with lxc-create (the archlinux download template).
 2. Configure static IPs and hostnames inside the containers; copy the tools
    into the rootfs at /opt/dslp-test/.
-3. Apply router/nft-bringup.sh; verify the probe egress reveals the
+3. Apply router-nft-bringup.sh; verify the probe egress reveals the
    public source 84.203.115.61 (STUN from dslp-probe).
-4. Retarget the relay with router/relay-retarget.sh to-sink.
+4. Retarget the relay with router-relay-retarget.sh to-sink.
 5. Run the campaign; pull the raw data; analyze; commit the dated results
    record and a MEMORY.md entry.
 
 ## Results home
 
-Raw captures stay local under `results/` (gitignored). The derived
-record commits as a dated annex in this room, the way plan/0004 embeds its
-measured records.
+Raw captures, logs, and the derived record land in `results/` and are
+committed with the record (size policy in `results/README.md`). `collect.sh`
+pulls a run from the router; `analyze.py` renders the per-cell table.

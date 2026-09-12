@@ -101,10 +101,10 @@ def cell(run_dir, i, duration, seed):
         meta["state"] = "aborted-pre"
         return meta
 
-    probe = lxc(PROBE, "probe.py", ["echo-on", tup, "1", f"cell-{i}"],
+    probe = lxc(PROBE, "probe-client.py", ["echo-on", tup, "1", f"cell-{i}"],
                 f"{cdir}/probe.log")
-    sink = lxc(SINK, "sink.py", [], f"{cdir}/sink.log")
-    snap = subprocess.Popen(["./snapshot.sh", cdir],
+    sink = lxc(SINK, "sink-server.py", [], f"{cdir}/sink.log")
+    snap = subprocess.Popen(["./router-snapshot.sh", cdir],
                             stdout=subprocess.DEVNULL)
     cap = subprocess.Popen(["tcpdump", "-i", "eth1", "-nn", "-U", "-w",
                             f"{cdir}/eth1.pcap"], stderr=subprocess.DEVNULL)
@@ -135,7 +135,7 @@ def cell(run_dir, i, duration, seed):
     time.sleep(60)  # resurrection watch on the old tuple
     probe.terminate()
     if new_tup != tup:
-        probe = lxc(PROBE, "probe.py", ["echo-on", new_tup, "1", f"cell-{i}-new"],
+        probe = lxc(PROBE, "probe-client.py", ["echo-on", new_tup, "1", f"cell-{i}-new"],
                     f"{cdir}/probe-new.log")
         time.sleep(15)
         probe.terminate()

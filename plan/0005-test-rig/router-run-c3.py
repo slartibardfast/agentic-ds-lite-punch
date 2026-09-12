@@ -33,7 +33,7 @@ def point(run_dir, gap):
         os.remove(hold_out)
     holder = subprocess.Popen(
         ["lxc-attach", "-n", "dslp-sink", "--", "/usr/bin/python3",
-         "/opt/dslp-test/hold.py", hold_out],
+         "/opt/dslp-test/sink-hold.py", hold_out],
         stdout=open(f"{run_dir}/hold.log", "w"))
     # Wait for the tuple discovery.
     tup = None
@@ -47,7 +47,7 @@ def point(run_dir, gap):
         holder.terminate()
         return {"gap": gap, "state": "no-tuple"}
     time.sleep(gap)
-    res = lxc("dslp-probe", "connect.py", [tup])
+    res = lxc("dslp-probe", "probe-connect.py", [tup])
     holder.terminate()
     return {"gap": gap, "tuple": tup, "result": res.stdout.strip(),
             "rc": res.returncode}

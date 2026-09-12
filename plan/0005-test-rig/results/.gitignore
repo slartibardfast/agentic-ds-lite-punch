@@ -1,5 +1,0 @@
-# Raw captures and logs stay local: the derived results.md commits as the
-# measurement record. Re-run collect.sh after a run; the dated results
-# record is committed by hand once reviewed.
-*
-!.gitignore
