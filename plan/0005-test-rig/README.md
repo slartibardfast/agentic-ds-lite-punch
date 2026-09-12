@@ -1,8 +1,9 @@
 # Milestone: test rig (ds-lite-punch acceptance harness)
 
 **Status:** draft for operator review. The rig and the campaign tooling live
-in this room (`config/`, `router/`, `probe/`, `sink/`); nothing is applied to
-the router until the review checklist below is signed. The rig closes the A1,
+in this room (`config/`, `router/`, `probe/`, `sink/`); the review checklist
+below gates every router-side change. Nothing has touched the router yet.
+The rig closes the A1,
 A3, C6, and G8 acceptance paths of plan/0004 that need a second host, and
 hosts the TCP idle-lifetime measurement. Tooling migrates into the
 ds-lite-punch component at crate migration (call/0012).
