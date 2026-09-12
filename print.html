@@ -2493,6 +2493,16 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-12--allocate-register-numbers-at-claim-time-never-from-memory"><a class="header" href="#2026-09-12--allocate-register-numbers-at-claim-time-never-from-memory">2026-09-12 — allocate register numbers at claim time, never from memory</a></h2>
+<ul>
+<li>A milestone folder was created as plan/0005 using a remembered allocation
+from an earlier <code>host-lifecycle next plan/</code> run. The value was correct
+(the tool now returns 0006), but the claim never went through the tool:
+the spine's rule is that the generator allocates and the operator never
+numbers by hand. The allocation is a claim-time act, not a remembered
+fact. Every plan/ or call/ claim starts with <code>host-lifecycle next &lt;dir&gt;</code>;
+keep the returned value in the room's README as the recorded claim.</li>
+</ul>
 <h2 id="2026-09-12--the-fork-incursion-and-its-guardrails"><a class="header" href="#2026-09-12--the-fork-incursion-and-its-guardrails">2026-09-12 — the fork incursion and its guardrails</a></h2>
 <ul>
 <li>A <code>gh repo fork &lt;owner&gt;/&lt;repo&gt; --clone</code> run with the host as cwd cloned the
