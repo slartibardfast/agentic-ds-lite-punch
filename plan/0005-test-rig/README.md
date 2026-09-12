@@ -127,7 +127,8 @@ Conclusion: the relay is not the cause. NEW inbound UDP to the mapping is
 consumed in the router's prerouting stage before the socket, so no forward
 can occur regardless of binary or target. The soak therefore reads mapping
 liveness from the eth1 capture (arrivals of the .61 to 40000 flow), which
-is robust and measures the AFTR-side truth directly. The forward and reply
+measures the AFTR-side truth directly and holds regardless of the relay.
+The forward and reply
 legs remain external-sender functions (the standards idiom: first-party
 cannot be third-party), and the router's inbound-NEW path is recorded as an
 independent open item (kernel/firewall stage accounting) for the crate
