@@ -44,7 +44,11 @@ jobs:
             echo "::error::ds-lite-punch is a private repo; set the DSLITE_READ_TOKEN secret (fine-grained PAT, Contents: read, on slartibardfast/ds-lite-punch) to materialize it."
             exit 1
           fi
-          git config --global http.https://github.com/.extraheader "Authorization: Bearer ${COMPONENT_READ_TOKEN}"
+          # Git over HTTPS speaks Basic, not Bearer (the API accepts Bearer;
+          # the git endpoint does not). This is the same scheme actions/checkout
+          # uses, and the same x-access-token username.
+          AUTH="$(printf 'x-access-token:%s' "$COMPONENT_READ_TOKEN" | base64 -w0)"
+          git config --global http.https://github.com/.extraheader "Authorization: Basic ${AUTH}"
           ./tools/host-lifecycle/target/release/host-lifecycle software --materialize .
       - name: Verify reproducibility (rebuild from the pin; compare the artifact)
         if: hashFiles('.host-software') != ''
