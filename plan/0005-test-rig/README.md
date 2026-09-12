@@ -49,18 +49,50 @@ invocation headers.
 
 ## Review checklist (operator sign-off)
 
-1. br-lan assignments 192.168.21.11 and .12 are free at apply time.
-2. Nothing contends for the fwmark nibble 0x10000/0xff0000 for the probe's
-   traffic.
-3. The masquerade scope (only the probe's UDP out pppoe-vdsl4) is the
-   agreed vdsl4 blast radius.
-4. The relay retarget window: one mapping reset at retarget, one at revert,
-   plus one per campaign cell; the target is the router sink only.
-5. /mnt/nvme has about 109 G free; each rootfs is about 1 G; raw runs go
-   under /mnt/nvme/runs/.
-6. hwaddrs 10:66:6a:00:00:11 and .12 are unique on br-lan.
-7. All runtime scripts are idempotent; the rules and the retarget carry
-   explicit revert instructions.
+1. br-lan assignments 192.168.21.11 and .12: VERIFIED free, and both sit
+   outside the DHCP pool (the range starts at .24), so no later lease
+   conflict can claim them.
+2. The probe's vdsl4 egress: NO MARK RULE NEEDED. The fw4 pbr_output chain
+   matches specific sources and destinations; the probe matches nothing and
+   already falls through to the main-table default via pppoe-vdsl4 (metric
+   16). The bring-up adds no mark; it adds only the masquerade.
+3. The masquerade: VERIFIED REQUIRED. The router has zero masquerade rules
+   and br-lan v4 has no egress today (`ip route get` from a br-lan source
+   is Network unreachable). The scoped rule (only the probe's UDP out
+   pppoe-vdsl4) is load-bearing, not belt-and-braces; the bring-up verifies
+   the probe's first probe on pppoe-vdsl4 with source 84.203.115.61.
+4. The relay retarget: `service ... reload` is a procd restart (no reload
+   service is defined); the mapping resets at retarget and revert by design
+   and is itself a port-reuse observation. The deployed build carries a live
+   observation engine (the ip dslp snat_map holds active pins at all times);
+   the rig's test-table NAT must be verified on-wire against fw4's fixed
+   eth1 snat and the live map, not assumed. The per-cell window is one
+   mapping kill per cell; the target is the router sink only.
+5. /mnt/nvme: VERIFIED, 109.1 G free; the production rootfs measures 1.7 G,
+   two more are trivial. Raw runs go under /mnt/nvme/runs/.
+6. hwaddrs 10:66:6a:00:00:11 and .12: VERIFIED unique on br-lan (no
+   neighbor, no lease).
+7. Idempotency and rollback: the scripts are add-or-ignore, and the revert
+   is table-scoped; accepted.
+
+Open amendments (new, from the 2026-09-12 review):
+
+A. Reply leg, honest scope. The probe's public source is the router's own
+   84.203.115.61, so a reply addressed to it terminates at the router: the
+   echo as drafted turns around through the vdsl4 masquerade conntrack and
+   never loops through the AFTR mapping. The rig proves the arrival and
+   forward legs and the local echo RTT; the reply-through-mapping leg is
+   cross-checked with an internet-side sender (Globalping), per plan/0004.
+B. Input accept for the relay port. No `dport 40000` rule matched in the
+   current ruleset text; inbound demonstrably works, so the accept exists in
+   some form or under zone policy. Preflight confirms the relay port stays
+   reachable before any cell runs.
+C. Artifact binding. run.json records sha256 of /usr/bin/ds-lite-punch
+   (currently 7127f4bf...), the init script, and the procd state, so results
+   bind to the exact deployed build, whose behaviors (slot range, observer)
+   supersede the v1-core milestone text.
+D. Foreign-network reserve. The rig does not replace an external sender for
+   the PSN-type test; that leg keeps Globalping and a real console.
 
 ## Execution order
 

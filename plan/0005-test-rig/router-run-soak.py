@@ -161,8 +161,14 @@ def main():
         sys.exit("no tuple, abort")
 
     os.makedirs(args.run_dir, exist_ok=True)
+    sha = subprocess.run(["sha256sum", "/usr/bin/ds-lite-punch"],
+                         capture_output=True, text=True).stdout.split()[0]
+    init_sha = subprocess.run(["sha256sum", "/etc/init.d/ds-lite-punch"],
+                              capture_output=True, text=True).stdout.split()[0]
     plan = {
         "target": "the deployed relay at " + read_tuple(),
+        "relay_sha256": sha,
+        "init_sha256": init_sha,
         "durations": [int(x) for x in args.durations.split(",")],
         "reps": args.reps,
         "seed": args.seed,
