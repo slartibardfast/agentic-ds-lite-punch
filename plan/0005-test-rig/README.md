@@ -68,8 +68,8 @@ invocation headers.
    the rig's test-table NAT must be verified on-wire against fw4's fixed
    eth1 snat and the live map, not assumed. The per-cell window is one
    mapping kill per cell; the target is the router sink only.
-5. /mnt/nvme: VERIFIED, 109.1 G free; the production rootfs measures 1.7 G,
-   two more are trivial. Raw runs go under /mnt/nvme/runs/.
+5. /mnt/nvme: VERIFIED, 109.1 G free; the production rootfs measures under
+   2 G, two more are trivial. Raw runs go under /mnt/nvme/runs/.
 6. hwaddrs 10:66:6a:00:00:11 and .12: VERIFIED unique on br-lan (no
    neighbor, no lease).
 7. Idempotency and rollback: the scripts are add-or-ignore, and the revert
