@@ -94,6 +94,31 @@ C. Artifact binding. run.json records sha256 of /usr/bin/ds-lite-punch
 D. Foreign-network reserve. The rig does not replace an external sender for
    the PSN-type test; that leg keeps Globalping and a real console.
 
+## Wiring findings and RCA (2026-09-12)
+
+Bring-up verified, with one blocked leg. Evidence, in order:
+
+- Probe egress: the masqueraded source 84.203.115.61 observed on pppoe-vdsl4
+  toward the mapping. The fw4 pbr_output chain matches nothing for the probe,
+  so no mark rule is needed (the checklist now says so).
+- AFTR arrival: the probe's datagrams are delivered to the relay socket,
+  captured on eth1 (src 84.203.115.61 to 192.168.0.21:40000, JSON payloads).
+- Direct sink delivery: a hand-emitted datagram with the identical
+  transparent source reached the sink end to end (br-lan frame, veth frame,
+  container socket, sink log). Every layer of the delivery chain works.
+- Relay forward: for the same datagrams the relay produces NO br-lan frame
+  with a live receiver. The forward ends silently inside the relay binary;
+  it logs nothing, and the source is not on this box (the crate is unmigrated,
+  call/0012). rp_filter is 0 everywhere, so the kernel is exonerated; the
+  transparent-bind and sendto semantics are proven by the direct emission.
+
+Conclusion: the arrival and delivery chains are healthy; the relay's forward
+path drops the datagrams without a trace. A source-level diagnosis is
+deferred until the crate migrates. The soak's mapping-liveness markers must
+therefore come from the eth1 capture (arrivals of the .61 to 40000 flow),
+not from sink arrivals, and the forward leg remains an external-sender
+cross-check (Globalping), as the checklist already reserves.
+
 ## Execution order
 
 1. Create the containers with lxc-create (the archlinux download template).
