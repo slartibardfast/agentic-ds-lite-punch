@@ -4,13 +4,18 @@
 # mapping via STUN Binding over the same socket, prints the tuple, then
 # holds the connection silent until the driver kills it. No keepalives:
 # the mapping idle timer is left to the AFTR.
+#
+# Server: the external STUN server OUTSIDE the relay's rotation whose
+# TCP/3478 was verified from the sink (stun.nextcloud.com). The rotation's
+# stun.l.google.com:3478 does not answer STUN over TCP (verified
+# 2026-09-13: TCP to it times out from the sink).
 
 import socket
 import struct
 import sys
 import time
 
-STUN_SERVER = ("stun.l.google.com", 3478)
+STUN_SERVER = ("46.225.95.169", 3478)
 COOKIE = 0x2112A442
 
 

@@ -11,6 +11,11 @@
 # Gaps: [15, 30, 60, 120, 300, 600] seconds; the death point is
 # binary-searched between the last ok and the first refused.
 #
+# The holder must present through the AFTR line: the run pins the sink's
+# egress to the eth1 table (rule 25002 -> table 1000, the console-path
+# mechanism) so the discovered tuple is an AFTR one. A discovered tuple
+# on the vdsl4 line (the sink's default route) is a wrong-line failure.
+#
 # Invocation: run-c3.py RUN_DIR [--gaps 15,30,60,120,300,600]
 
 import argparse
@@ -46,6 +51,10 @@ def point(run_dir, gap):
     if not tup:
         holder.terminate()
         return {"gap": gap, "state": "no-tuple"}
+    if tup.startswith("84.203.115.61"):
+        holder.terminate()
+        return {"gap": gap, "state": "wrong-line",
+                "tuple": tup}  # holder rode the vdsl4 route, not the AFTR
     time.sleep(gap)
     res = lxc("dslp-probe", "probe-connect.py", [tup])
     holder.terminate()
@@ -60,14 +69,20 @@ def main():
     args = ap.parse_args()
     os.makedirs(args.run_dir, exist_ok=True)
     gaps = [int(x) for x in args.gaps.split(",")]
-    points = []
-    for g in gaps:
-        p = point(args.run_dir, g)
-        points.append(p)
-        with open(f"{args.run_dir}/c3.json", "w") as f:
-            json.dump(points, f, indent=1)
-        print(f"gap {g}: {p}", flush=True)
-    print(json.dumps(points, indent=1))
+    subprocess.run(["ip", "rule", "add", "from", "192.168.21.12",
+                    "lookup", "1000", "prio", "25002"], capture_output=True)
+    try:
+        points = []
+        for g in gaps:
+            p = point(args.run_dir, g)
+            points.append(p)
+            with open(f"{args.run_dir}/c3.json", "w") as f:
+                json.dump(points, f, indent=1)
+            print(f"gap {g}: {p}", flush=True)
+        print(json.dumps(points, indent=1))
+    finally:
+        subprocess.run(["ip", "rule", "del", "prio", "25002"],
+                       capture_output=True)
 
 
 if __name__ == "__main__":
