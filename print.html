@@ -1121,6 +1121,18 @@ point (the AFTR RST is the dead signal)</li>
 </ul>
 <p>Run the queued C3 measurement. This is the exact unlock the
 UDP-only constraint names and sizes the TCP keepalive design.</p>
+<p>Measured 2026-09-13 (results/RESULTS-2026-09-13-c3.md): the AFTR expires
+an idle TCP mapping in (120, 300] s on this node and session (alive at
+120 s, dead at 300 s, double-confirmed by the eth1 arrival capture and
+the probe refused). The unlock is discharged; the datapath sizes its
+re-establish-on-demand model to time, not to a UDP-style keepalive.</p>
+<p>The C3 bring-up fixes (2026-09-13): the TCP-STUN holder server
+(stun.l.google.com:3478 does not serve STUN over TCP); the holder's
+egress pinned to the eth1 line with a wrong-line guard; the tuple read
+from the holder stdout (the container cannot see the host runs dir);
+the holder leak stopped in-container; and the alive signal scored from
+the eth1 SYN arrival capture because the fw4 input chain drops forwarded
+TCP NEW silently (the probe connect times out even while alive).</p>
 <h3 id="band-datapath"><a class="header" href="#band-datapath">The datapath</a></h3>
 <ul>
 <li>band</li>
@@ -3016,6 +3028,20 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--c3-measured-the-aftr-expires-idle-tcp-mappings-in-120-300-seconds"><a class="header" href="#2026-09-13--c3-measured-the-aftr-expires-idle-tcp-mappings-in-120-300-seconds">2026-09-13 — C3 measured: the AFTR expires idle TCP mappings in (120, 300] seconds</a></h2>
+<ul>
+<li>The C3 run (plan/0007 #c3-tcp; results/RESULTS-2026-09-13-c3.md)
+bounded the AFTR's TCP mapping idle lifetime at (120, 300] seconds on
+this node and session: alive at 120 s of silence, dead by 300 s,
+double-confirmed by the eth1 SYN-arrival capture and the probe's
+refused once the AFTR RSTs. The plan/0004 UDP-only constraint's
+unlock is discharged; TCP grants enter the datapath design.</li>
+<li>Contrast: UDP survived &gt;30 s silent and refreshes on inbound; TCP died
+within minutes of silence with no inbound refresh. The datapath sizes
+re-establish-on-demand to time, not a UDP-style keepalive.</li>
+<li>Scoping: one node, one session, one load; the number is a bound, not a
+lease guarantee.</li>
+</ul>
 <h2 id="2026-09-13--pgrep--f-self-match-trap-router-measurements"><a class="header" href="#2026-09-13--pgrep--f-self-match-trap-router-measurements">2026-09-13 — pgrep -f self-match trap (router measurements)</a></h2>
 <ul>
 <li>A command that contains the pattern text matches itself under pgrep

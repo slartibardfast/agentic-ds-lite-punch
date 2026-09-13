@@ -250,6 +250,18 @@ point (the AFTR RST is the dead signal)</li>
 </ul>
 <p>Run the queued C3 measurement. This is the exact unlock the
 UDP-only constraint names and sizes the TCP keepalive design.</p>
+<p>Measured 2026-09-13 (results/RESULTS-2026-09-13-c3.md): the AFTR expires
+an idle TCP mapping in (120, 300] s on this node and session (alive at
+120 s, dead at 300 s, double-confirmed by the eth1 arrival capture and
+the probe refused). The unlock is discharged; the datapath sizes its
+re-establish-on-demand model to time, not to a UDP-style keepalive.</p>
+<p>The C3 bring-up fixes (2026-09-13): the TCP-STUN holder server
+(stun.l.google.com:3478 does not serve STUN over TCP); the holder's
+egress pinned to the eth1 line with a wrong-line guard; the tuple read
+from the holder stdout (the container cannot see the host runs dir);
+the holder leak stopped in-container; and the alive signal scored from
+the eth1 SYN arrival capture because the fw4 input chain drops forwarded
+TCP NEW silently (the probe connect times out even while alive).</p>
 <h3 id="band-datapath"><a class="header" href="#band-datapath">The datapath</a></h3>
 <ul>
 <li>band</li>
