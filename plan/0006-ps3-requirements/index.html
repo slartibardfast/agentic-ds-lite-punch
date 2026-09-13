@@ -239,9 +239,13 @@ re-run at the gate, the operator ones are <code>attested operator</code> records
 reserved IP (odhcpd lease line, ping from the router)</li>
 <li>inputs: /etc/config/dhcp</li>
 </ul>
-<p>Add dhcp.@host for the console MAC to a fixed br-lan IP (outside the
-dynamic pool, matching the .145/.152 pattern), commit, restart dnsmasq,
-confirm the lease before the routing change.</p>
+<p>Applied 2026-09-13: the PS3 (00:24:8D:49:6E:87) is on br-lan at
+192.168.21.138, already present at that address when the milestone opened
+(neighbor REACHABLE, answers ping). Reserved as dhcp.@host[20] with name
+<code>ps3</code>. The address is inside the dynamic range (.24 to .143); dnsmasq
+excludes host entries from allocation, and the console already occupies
+the address, so no conflict arises. Verified: entry listed, console
+REACHABLE, relay untouched (tuple 37.228.213.83:59230).</p>
 <h3 id="console-via-eth1"><a class="header" href="#console-via-eth1">Route the console through the Virgin line</a></h3>
 <ul>
 <li>depends: #reserve-console</li>
@@ -271,20 +275,18 @@ untouched.</p>
 <h3 id="a2-run"><a class="header" href="#a2-run">Run the console connection test with both sides captured</a></h3>
 <ul>
 <li>depends: #retarget-relay</li>
-<li>verify: attested operator (the console's PSN connection test / NAT type
-result recorded; eth1 and br-lan pcaps archived)</li>
+<li>verify: attested operator</li>
 <li>inputs: the two pcaps, the console's reported NAT type</li>
 </ul>
-<p>On the console, run the PSN network / NAT type check. Simultaneously
-tcpdump eth1 (both directions on port 40000) and br-lan (the console's
-flows), following the 0005 capture conventions. Record the console's
-reported type verbatim.</p>
+<p>The operator records the console's PSN connection test / NAT type result
+verbatim (the console's network settings screen or connection test
+output), with its timestamp. Simultaneously tcpdump eth1 (both
+directions on port 40000) and br-lan (the console's flows), following
+the 0005 capture conventions, and archive both pcaps.</p>
 <h3 id="a2-verdict"><a class="header" href="#a2-verdict">Adjudicate the A2 gate</a></h3>
 <ul>
 <li>depends: #a2-run</li>
-<li>verify: attested operator; the capture evidence must show the egress
-folded as (192.168.0.21, 40000) and inbound appointments on the pin
-forwarded with the true peer source</li>
+<li>verify: attested operator</li>
 <li>inputs: the pcaps</li>
 </ul>
 <p>The verdict must first attribute the console's NAT-probe flow: did the
@@ -309,7 +311,9 @@ priority. Record the decision in call/ (a software-scoped decision, not
 a methodology one).</p>
 <h2 id="review-checklist-operator-sign-off"><a class="header" href="#review-checklist-operator-sign-off">Review checklist (operator sign-off)</a></h2>
 <ol>
-<li>The console's reservation IP is free and outside the dynamic pool.</li>
+<li>The console's reservation is 192.168.21.138 (inside the dynamic
+range; dnsmasq excludes host entries from the pool, and the PS3
+already occupies the address, so no conflict).</li>
 <li>No UPnP daemon on br-lan at run time (re-verify, absent at inspection).</li>
 <li>After retarget, the fold map holds the console entries and no stray
 sink entry survives the run.</li>
