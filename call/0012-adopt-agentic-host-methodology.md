@@ -1,6 +1,7 @@
 # Adopt the agentic-host methodology (host-template 41ba4e1)
 
-- Status: accepted
+- Status: superseded by call/0016 (the crate landed with the recipe;
+  the repro waiver retires)
 - Scope: adoption
 - Date: 2026-09-11
 
