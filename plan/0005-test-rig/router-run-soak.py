@@ -71,13 +71,16 @@ def stable_tuple(checkpoints=5, window=5):
     return len(set(seen)) == 1, seen[-1]
 
 
-def kill_container_probes():
+def kill_container_agents():
     # terminate() kills the lxc-attach wrapper only; the in-container
-    # python survives and leaks, roughly one stream per launched probe
-    # (about 18 across a full campaign). Kill it inside the container
-    # where pkill exists.
+    # python survives and leaks. Kill both agent kinds inside their
+    # containers where pkill exists: leaked probes flood the arrival
+    # stream, a leaked sink holds 40002 and EADDRINUSE-blocks the next
+    # cell's receiver.
     subprocess.run(["lxc-attach", "-n", PROBE, "--", "pkill", "-f",
                     "probe-client"], capture_output=True)
+    subprocess.run(["lxc-attach", "-n", SINK, "--", "pkill", "-f",
+                    "sink-server"], capture_output=True)
 
 
 def run_baseline(run_dir, minutes=10):
@@ -92,7 +95,7 @@ def run_baseline(run_dir, minutes=10):
                             f"{run_dir}/baseline.pcap"], stderr=subprocess.DEVNULL)
     time.sleep(minutes * 60)
     probe.terminate()
-    kill_container_probes()
+    kill_container_agents()
     snap.terminate()
     cap.terminate()
     return {"state": "done", "minutes": minutes, "tuple": tup}
@@ -144,16 +147,17 @@ def cell(run_dir, i, duration, seed):
         meta["tuple_new"] = new_tup
     time.sleep(60)  # resurrection watch on the old tuple
     probe.terminate()
-    kill_container_probes()
+    kill_container_agents()
     if new_tup != tup:
         probe = lxc(PROBE, "probe-client.py", ["series", new_tup, "1", f"cell-{i}-new"],
                     f"{cdir}/probe-new.log")
         time.sleep(15)
         probe.terminate()
-        kill_container_probes()
+        kill_container_agents()
     snap.terminate()
     cap.terminate()
     sink.terminate()
+    kill_container_agents()
     meta["state"] = "done"
     return meta
 
