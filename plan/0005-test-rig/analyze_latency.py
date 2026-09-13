@@ -21,10 +21,10 @@ def median(xs):
     s = sorted(xs)
     n = len(s)
     if n == 0:
-        return 0.0
+        return 0
     if n % 2 == 1:
         return s[n // 2]
-    return (s[n // 2 - 1] + s[n // 2]) / 2.0
+    return (s[n // 2 - 1] + s[n // 2]) / 2
 
 
 def mono(wall_ms, btime_ms):
