@@ -2577,6 +2577,29 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--a3-soak-run-3-a-silent-mapping-survives-30-seconds-probe-quiet"><a class="header" href="#2026-09-13--a3-soak-run-3-a-silent-mapping-survives-30-seconds-probe-quiet">2026-09-13 — A3 soak run 3: a silent mapping survives 30 seconds (probe-quiet)</a></h2>
+<ul>
+<li>Run 3 (seed 202609133, relay 26152) closed the runs 1/2 confound with
+the probe-quiet pause: at t0 both the relay (SIGSTOP) and the
+in-container probe are silenced. Packet-level audit: 0 packets touched
+port 40000 in any pause window (any source, any direction), all 18
+cells. The inbound-refresh route to the mapping was closed.</li>
+<li>Result: the mapping 37.228.213.83:59230 survived every silent window
+including 30 s, tuple unchanged, recovery flat 816 to 826 ms (no
+relay-tick wait, no re-creation delay), forward one-way 14 to 17 ms
+median and no buffered-flush echoes.</li>
+<li>This bounds today's node's AFTR UDP idle timeout below by 30 s, at odds
+with the recorded 5 to 10 s node-dependent figure the 2 s keepalive
+cadence was built around. Either node dependence across the AFTR farm
+or a methodology difference in the original measurement; the run 1/2
+inbound-refresh finding (RFC 7857 S7) stands alongside it. A
+longer-limit run (60 s, 120 s silent windows) locates the true timeout,
+with RFC 6888's 120 s floor as the outer bound.</li>
+<li>The relay's 2 s cadence is unchanged and correct under either reading;
+the margin is larger than believed on today's node. Details in
+plan/0005-test-rig/RESULTS-2026-09-13-run3.md; raw data on the router
+at /mnt/nvme/runs/2026-09-13-run3.</li>
+</ul>
 <h2 id="2026-09-13--aftr-refreshes-udp-mappings-on-inbound-rfc-7857-7-violation"><a class="header" href="#2026-09-13--aftr-refreshes-udp-mappings-on-inbound-rfc-7857-7-violation">2026-09-13 — AFTR refreshes UDP mappings on inbound (RFC 7857 §7 violation)</a></h2>
 <ul>
 <li>The soak timing analysis (plan/0005-test-rig/ANALYSIS-2026-09-13) shows
