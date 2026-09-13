@@ -40,14 +40,14 @@ allocations.
 
 Relay pin through the whole sequence: 59230 (tuple file unchanged; its
 mtime is held from 12:58, so no reported churn across the entire
-session, including every resume).
+session; every resume republished the same value).
 
 ## Conclusion
 
 1. The external IP is customer-session-pinned: identical <aftr-ip> for
-   all 8 console-class probes and the relay's pin, including probes
-   taken during 90 s of relay silence with the relay demonstrably
-   stopped.
+   all 8 console-class probes and the relay's pin; probes taken during
+   90 s of relay silence (the relay demonstrably stopped) returned the
+   same value.
 2. The 2 s keepalive pins the relay's own external port: 59230 held
    through every 45 to 90 s stop (survival or identical re-issue, the
    same reuse rule the soak campaigns measured at 18 of 18, now

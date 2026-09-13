@@ -113,8 +113,8 @@ script after a reboot; it is not UCI-persisted.
 - inputs: /etc/init.d/ds-lite-punch (the retarget script extends
   router-relay-retarget.sh)
 
-Re-point the deployed relay from the test sink to the console's PSN UDP
-ports. The v1 acceptance form is two instances (or two slots) for
+Point the deployed relay at the console's PSN UDP ports instead of the
+test sink. The v1 acceptance form is two instances (or two slots) for
 3478/3479. The mapping resets at retarget by design, which is itself a
 port-reuse observation; the pin accept rule and accept_local=1 must be
 untouched.
@@ -160,7 +160,7 @@ stability evidence. The dated record is results/RESULTS-2026-09-13-exam.md.
 ### Decide phase-E priority from the verdict {#igd-decision}
 
 - depends: #a2-verdict
-- verify: attested call/NNNN (this milestone's decision in call/)
+- verify: attested call/0015
 - inputs: the verdict record
 
 Type 2 through pure hole-punch with no IGD present means the UPnP IGDv1

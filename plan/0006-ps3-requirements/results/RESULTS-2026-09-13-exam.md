@@ -58,9 +58,9 @@ eth1, ~240 s window then continued):
   echoes (the pin cannot demux arbitrary console ports).
 
 Attribution verdict per #a2-verdict: this Type 2 is organic, not
-relay-fold-attributed. It validates that the line alone composes to
-Type 2 without IGD (phase-E relevance: IGD absence did not block a
-Type 2 reading), but it does not sign the relay's acceptance.
+relay-fold-attributed. The line alone composing to Type 2 without IGD
+is validated (phase-E relevance: IGD absence did not block a Type 2
+reading); the relay's acceptance remains unsigned by this reading.
 
 ## MW2 multiplayer session (2026-09-13)
 

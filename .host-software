@@ -2,12 +2,14 @@
 # component: source URL, the pinned canonical SHA, the canonical branch, any
 # parallel-line worktrees, and the reproducibility record.
 #
-# The ds-lite-punch crate has not yet been migrated into this component repo
-# (it lived at `tools/ds-lite-punch/` in the former rope-agentic monorepo);
-# until it lands with a build recipe and artifact hash, reproducibility is
-# waived by call/0012.
+# The crate migrated 2026-09-13 (component cb7bfb4) from the former
+# rope-agentic monorepo (tools/ds-lite-punch/), unmodified; the musl
+# release build reproduces the deployed artifact byte-identically, so the
+# waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = f7e11e934e990bcaf43b0ed38d56bc21a9f71e6d
+	pin   = cb7bfb4103737189d810accc7d902d04ad4878ab
 	branch = main
-	repro-waiver = call/0012
+	toolchain = x86_64-unknown-linux-musl
+	build = cargo build --release --target x86_64-unknown-linux-musl
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 7127f4bfd296e5241648b02c96e66180ab75789169140c061fd7976225ee811a

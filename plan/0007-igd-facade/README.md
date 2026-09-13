@@ -10,10 +10,11 @@ migration into the component repo.
 
 ## What this milestone is
 
-Plan/0004 phase E (IMPLEMENTATION section 8) is specified in detail and
-unbuilt. The operator's direction expands it: the paired-TCP-Add quirk
-(E4) resolves to a real TCP datapath rather than the fault or the
-silent no-op, and the facade answers fully for both protocols. The
+Plan/0004's phase E (IMPLEMENTATION.md, the UPnP facade entry) is
+specified in detail and unbuilt. The operator's direction expands it: the
+paired-TCP-Add quirk (the phase-E live decision point) resolves to a
+real TCP datapath rather than the fault or the silent no-op, and the
+facade answers fully for both protocols. The
 relay's 2 s keepalive pinning the customer external IP is the operator's
 hypothesis that the facade's GetExternalIPAddress honesty rests on, so
 it is measured, not assumed.
@@ -21,12 +22,12 @@ it is measured, not assumed.
 Scope: the crate migration, the two measurements, the TCP datapath, the
 facade (E1 to E8), and the closure. Out of scope: any PCP work beyond
 what the facade's lease model shares (phase D stays unbuilt), any change
-to the vdsl4 line, and any console-shaped code (the PS3 remains the
-acceptance client, per plan/0004 section 2).
+to the vdsl4 line, and any console-shaped code (the PS3 stays
+the acceptance client, per plan/0004's constraints).
 
-Grounding: the UDP-only constraint (plan/0004 section 2) names its own
-unlock: no TCP grants until the TCP idle-lifetime test is measured. The
-crate has not landed in the component repo (call/0012 waives
+Grounding: the UDP-only constraint (plan/0004's binding-constraints
+entry) names its own unlock: no TCP grants until the TCP idle-lifetime
+test is measured. The crate has not landed in the component repo (call/0012 waives
 reproducibility until it does); the source lives in the former
 rope-agentic monorepo at tools/ds-lite-punch/. The C3 rig script
 (plan/0005-test-rig/router-run-c3.py) exists unrun. Committed records
@@ -116,7 +117,7 @@ model comes from C3.
   via curl with the MAN header; TCP and UDP Adds deliver data from an
   external vantage; GENA SUBSCRIBE and NOTIFY on churn; the Kani suites
   pass
-- inputs: the relay source, plan/0004 section 8, the pinning result
+- inputs: the relay source, the phase E spec, the pinning result
 
 E1 SSDP: join 239.255.255.250:1900 on br-lan with REUSEPORT, M-SEARCH
 answers for the five v1 STs delayed randomly within MX, alive NOTIFY at
