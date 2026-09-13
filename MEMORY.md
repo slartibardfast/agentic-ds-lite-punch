@@ -4,6 +4,25 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-13 — plan/0006 complete; pbr 1.1.8 does not route secondary wans
+
+- The PS3 milestone is complete and signed: A2 acceptance under the
+  call/0014 reframe (organic capture-attributed Type 2 plus the A1 fold
+  proof plus tuple stability; a fold-attributed PSN type reading is
+  impossible by construction because the console's NAT probe uses
+  ephemeral source ports), phase-E priority settled by call/0015
+  (deprioritised; the console reached Type 2 and CoD Open with SSDP
+  unanswered). All six task receipts recorded; the tool reports the
+  graph fully discharged. Console state: PSN works after the OS update,
+  MW2 NAT Open, sessions captured and archived at
+  /mnt/nvme/runs/2026-09-13-ps3-exam/.
+- Routing lesson: pbr 1.1.8-r16 on ImmortalWrt monitors wireguard
+  interfaces and the primary pppoe gateway only; a DHCP secondary wan
+  (the eth1/vm4 side) cannot be a policy interface, even with a named
+  config interface entry. The console's eth1 routing stays on the direct
+  from-address rule (ip rule 25000 to table 1000); that is the correct
+  mechanism for interfaces pbr does not manage.
+
 ## 2026-09-13 — committed records redact addresses (standing policy)
 
 - Third-party public IPv4 addresses (game peers, service endpoints from
