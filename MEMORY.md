@@ -4,6 +4,26 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-13 — plan/0006: PS3 requirements milestone (A2 console acceptance)
+
+- New milestone plan/0006-ps3-requirements, number allocated by the
+  generator (host-lifecycle compiled at
+  tools/host-lifecycle/target/release; `next plan/` returns 0006).
+  Operationalizes the PS3 on the ds-lite line: router reconfig (DHCP
+  reservation, console policy-routed via eth1, relay retarget from the
+  test sink to the console's PSN UDP 3478/3479), the A2 connection-test
+  run with captures both sides, and the phase-E (UPnP IGDv1) priority
+  decision. The README's build sequence is the task-graph form (anchored
+  tasks with verify/inputs/depends).
+- Load-bearing facts from inspection: no UPnP daemon on the router, so
+  nothing needs pausing and the console's IGD probe finds nothing (the
+  correct interim); the default route egresses pppoe-vdsl4 (metric 16) so
+  the console MUST be policy-routed into eth1 or the relay line sees
+  nothing; br-lan to wan forwarding and the eth1 pin accept are already
+  open; the deployed relay (26152) still targets the test sink and its
+  fold map (table ip dslp) holds the sink entry. A2 pass = NAT Type 2
+  plus folded egress plus true-peer-source inbound; fail = STOP.
+
 ## 2026-09-13 — A3 soak run 3: a silent mapping survives 30 seconds (probe-quiet)
 
 - Run 3 (seed 202609133, relay 26152) closed the runs 1/2 confound with
