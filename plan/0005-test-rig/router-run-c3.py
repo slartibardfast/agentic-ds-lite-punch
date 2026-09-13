@@ -67,10 +67,24 @@ def point(run_dir, gap):
         return {"gap": gap, "state": "wrong-line",
                 "tuple": tup}  # holder rode the vdsl4 route, not the AFTR
     time.sleep(gap)
+    # Alive signal: the AFTR forwarding the probe's SYN to the inner
+    # tuple. The router's input chain (policy drop, UDP pin only) drops
+    # forwarded TCP NEW silently, so the probe's own connect cannot
+    # signal; the eth1 capture observes the forwarding directly, the
+    # same arrival methodology as the soak campaign. tcpdump -c 1 exits
+    # 0 the moment a SYN lands.
+    cap = subprocess.Popen(
+        ["tcpdump", "-i", "eth1", "-nn", "-c", "1", "-w", "/dev/null",
+         "tcp and dst host 192.168.0.21 and tcp[tcpflags] & tcp-syn != 0"],
+        stderr=subprocess.DEVNULL)
     res = lxc("dslp-probe", "probe-connect.py", [tup])
+    time.sleep(1.5)
+    alive = (cap.poll() == 0)
+    if cap.poll() is None:
+        cap.terminate()
     stop_holder(holder)
-    return {"gap": gap, "tuple": tup, "result": res.stdout.strip(),
-            "rc": res.returncode}
+    return {"gap": gap, "tuple": tup, "alive": alive,
+            "probe": res.stdout.strip(), "rc": res.returncode}
 
 
 def main():
@@ -82,16 +96,6 @@ def main():
     gaps = [int(x) for x in args.gaps.split(",")]
     subprocess.run(["ip", "rule", "add", "from", "192.168.21.12",
                     "lookup", "1000", "prio", "25002"], capture_output=True)
-    # Instrumentation: the fw4 input chain (policy drop, UDP pin only)
-    # silently eats AFTR-forwarded TCP SYNs, which a live mapping would
-    # otherwise answer with an inner RST. Reject eth1 TCP SYNs with RST
-    # so the probe sees `refused` while the mapping is alive; the death
-    # point is where refused flips to timeout. Cleaned up in finally.
-    subprocess.run(["nft", "insert", "rule", "inet", "fw4", "input",
-                    "iifname", "eth1",
-                    "tcp", "flags", "&", "(fin|syn|rst|ack)", "==", "syn",
-                    "reject", "with", "tcp", "reset", "comment", "c3-instr"],
-                   capture_output=True)
     try:
         points = []
         for g in gaps:
@@ -104,15 +108,6 @@ def main():
     finally:
         subprocess.run(["ip", "rule", "del", "prio", "25002"],
                        capture_output=True)
-        listed = subprocess.run(
-            ["nft", "-a", "list", "chain", "inet", "fw4", "input"],
-            capture_output=True, text=True).stdout
-        for ln in listed.splitlines():
-            if "c3-instr" in ln and "handle" in ln:
-                h = ln.rsplit("handle", 1)[-1].strip()
-                subprocess.run(["nft", "delete", "rule", "inet", "fw4",
-                                "input", "handle", h], capture_output=True)
-                break
 
 
 if __name__ == "__main__":
