@@ -7,5 +7,6 @@ sort key; see `call/0000`). A milestone is a thin, persona-serving increment.
 - [0004 ds-lite-punch](0004-ds-lite-punch/README.md)
 - [0005 test rig](0005-test-rig/README.md)
 - [0006 ps3 requirements](0006-ps3-requirements/README.md)
+- [0007 igd facade](0007-igd-facade/README.md)
 
 The next milestone number is allocated by `host-lifecycle next plan/`.
