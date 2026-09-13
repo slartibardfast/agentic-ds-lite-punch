@@ -71,13 +71,13 @@ def stable_tuple(checkpoints=5, window=5):
     return len(set(seen)) == 1, seen[-1]
 
 
-def run_baseline(run_dir, minutes=10, echo=True):
+def run_baseline(run_dir, minutes=10):
     os.makedirs(run_dir, exist_ok=True)
     tup = read_tuple()
-    probe = lxc(PROBE, "probe.py",
-                ["echo-on", SINK_TARGET if echo else tup, "1", "baseline"],
+    probe = lxc(PROBE, "probe-client.py",
+                ["series", tup, "1", "baseline"],
                 f"{run_dir}/probe.log")
-    snap = subprocess.Popen(["./snapshot.sh", run_dir],
+    snap = subprocess.Popen(["./router-snapshot.sh", run_dir],
                             stdout=subprocess.DEVNULL)
     cap = subprocess.Popen(["tcpdump", "-i", "eth1", "-nn", "-U", "-w",
                             f"{run_dir}/baseline.pcap"], stderr=subprocess.DEVNULL)
@@ -101,7 +101,7 @@ def cell(run_dir, i, duration, seed):
         meta["state"] = "aborted-pre"
         return meta
 
-    probe = lxc(PROBE, "probe-client.py", ["echo-on", tup, "1", f"cell-{i}"],
+    probe = lxc(PROBE, "probe-client.py", ["series", tup, "1", f"cell-{i}"],
                 f"{cdir}/probe.log")
     sink = lxc(SINK, "sink-server.py", [], f"{cdir}/sink.log")
     snap = subprocess.Popen(["./router-snapshot.sh", cdir],
@@ -135,7 +135,7 @@ def cell(run_dir, i, duration, seed):
     time.sleep(60)  # resurrection watch on the old tuple
     probe.terminate()
     if new_tup != tup:
-        probe = lxc(PROBE, "probe-client.py", ["echo-on", new_tup, "1", f"cell-{i}-new"],
+        probe = lxc(PROBE, "probe-client.py", ["series", new_tup, "1", f"cell-{i}-new"],
                     f"{cdir}/probe-new.log")
         time.sleep(15)
         probe.terminate()
