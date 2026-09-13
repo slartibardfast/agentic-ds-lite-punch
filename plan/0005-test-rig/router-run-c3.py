@@ -33,21 +33,24 @@ def lxc(container, script, args):
 
 
 def point(run_dir, gap):
-    hold_out = f"{run_dir}/hold-tuple.txt"
-    if os.path.exists(hold_out):
-        os.remove(hold_out)
     holder = subprocess.Popen(
         ["lxc-attach", "-n", "dslp-sink", "--", "/usr/bin/python3",
-         "/opt/dslp-test/sink-hold.py", hold_out],
-        stdout=open(f"{run_dir}/hold.log", "w"))
-    # Wait for the tuple discovery.
+         "/opt/dslp-test/sink-hold.py"],
+        stdout=open(f"{run_dir}/hold.log", "w"),
+        stderr=subprocess.STDOUT)
+    # The holder prints the discovered tuple as its first flushed line.
+    # (A cross-namespace tuple file is unavailable: the container does
+    # not see the /mnt/nvme runs dir.)
     tup = None
-    for _ in range(20):
-        if os.path.exists(hold_out):
-            tup = open(hold_out).read().strip()
-            if tup and tup != "nyi":
+    for _ in range(40):
+        try:
+            line = open(f"{run_dir}/hold.log").readline().strip()
+            if line and line != "nyi":
+                tup = line
                 break
-        time.sleep(0.5)
+        except OSError:
+            pass
+        time.sleep(0.25)
     if not tup:
         holder.terminate()
         return {"gap": gap, "state": "no-tuple"}
