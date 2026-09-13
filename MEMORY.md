@@ -4,6 +4,28 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-13 — forward-leg RCA resolved: accept_local, not the relay
+
+- The soak run 1 blocker (the relay never forwarding our probe datagrams,
+  the "pre-socket consumption") is fully root-caused: the kernel's
+  source-route validation drops inbound datagrams whose source equals a
+  router-local address when accept_local=0 (the default). No nft rule is
+  involved; accept placement, relay binary, and forward target were all
+  irrelevant. The September 2 "self-probe EADDRINUSE" record was this same
+  drop; P1's August forwards worked because Globalping's sources were
+  genuinely remote.
+- Fix: net.ipv4.conf.eth1.accept_local=1, persisted at
+  /etc/sysctl.d/99-ds-lite-punch.conf. Interface-scoped; all and
+  pppoe-vdsl4 stay 0 (the vdsl4 line is public, its own-address packets
+  are martians, and no mirror need exists; revisit only for an inter-line
+  test).
+- With the fix live, the relay forwards the probe stream to dslp-sink end
+  to end (JSON receipts with the masqueraded source preserved).
+- The soak's above-1 Hz arrival counts were roughly 18 leaked in-container
+  probe processes (the driver terminated lxc-attach wrappers without
+  killing the inner pythons); the driver now pkills inside the container
+  per phase.
+
 ## 2026-09-13 — A3 soak run 1: AFTR port reuse is the rule
 
 - Full keepalive-pause matrix (5/7/10/12/20/30 s x 3, seed 20260913) ran

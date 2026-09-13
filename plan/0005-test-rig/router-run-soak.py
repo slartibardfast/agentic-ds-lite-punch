@@ -71,6 +71,14 @@ def stable_tuple(checkpoints=5, window=5):
     return len(set(seen)) == 1, seen[-1]
 
 
+def kill_container_probes():
+    # terminate() kills the lxc-attach wrapper only; the in-container python
+    # survives and leaks (one per phase, ~18 during a campaign). Kill it
+    # inside the container where pkill exists.
+    subprocess.run(["lxc-attach", "-n", PROBE, "--", "pkill", "-f",
+                    "probe-client"], capture_output=True)
+
+
 def run_baseline(run_dir, minutes=10):
     os.makedirs(run_dir, exist_ok=True)
     tup = read_tuple()
@@ -83,6 +91,7 @@ def run_baseline(run_dir, minutes=10):
                             f"{run_dir}/baseline.pcap"], stderr=subprocess.DEVNULL)
     time.sleep(minutes * 60)
     probe.terminate()
+    kill_container_probes()
     snap.terminate()
     cap.terminate()
     return {"state": "done", "minutes": minutes, "tuple": tup}
@@ -134,11 +143,13 @@ def cell(run_dir, i, duration, seed):
         meta["tuple_new"] = new_tup
     time.sleep(60)  # resurrection watch on the old tuple
     probe.terminate()
+    kill_container_probes()
     if new_tup != tup:
         probe = lxc(PROBE, "probe-client.py", ["series", new_tup, "1", f"cell-{i}-new"],
                     f"{cdir}/probe-new.log")
         time.sleep(15)
         probe.terminate()
+        kill_container_probes()
     snap.terminate()
     cap.terminate()
     sink.terminate()

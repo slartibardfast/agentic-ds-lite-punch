@@ -123,17 +123,33 @@ consumption of NEW inbound UDP, reproduced with two relay builds. Evidence:
   dstnat rewrites (none for 40000); raw prerouting (empty);
   SO_REUSEADDR (irrelevant).
 
-Conclusion: the relay is not the cause. NEW inbound UDP to the mapping is
-consumed in the router's prerouting stage before the socket, so no forward
-can occur regardless of binary or target. The soak therefore reads mapping
-liveness from the eth1 capture (arrivals of the .61 to 40000 flow), which
-measures the AFTR-side truth directly and holds regardless of the relay.
-The forward and reply
-legs remain external-sender functions (the standards idiom: first-party
-cannot be third-party), and the router's inbound-NEW path is recorded as an
-independent open item (kernel/firewall stage accounting) for the crate
-migration. Analysis markers derive from the per-cell eth1 pcap, not from
-sink arrivals.
+Conclusion, resolved 2026-09-13: the relay is not the cause. The drop is
+the kernel's source-route validation at the routing decision, between the
+prerouting hooks and the input hook: inbound datagrams whose source equals
+a router-local address are discarded because `accept_local` defaults to 0.
+No nft rule is involved, which explains every observed stage (prerouting
+counts, input does not, accept placement irrelevant, both binaries and
+every target identical). The September 2 "self-probe EADDRINUSE" record
+was this same drop; the P1-era forwards worked because Globalping's
+sources were genuinely remote.
+
+Fix, applied and persisted at `/etc/sysctl.d/99-ds-lite-punch.conf`:
+`net.ipv4.conf.eth1.accept_local = 1`, interface-scoped (all and
+pppoe-vdsl4 stay 0). With it active, the probe-side datagrams reach the
+relay socket and the relay forwards them to the sink; verified end to
+end by sink receipts (JSON payloads at dslp-sink with the masqueraded
+source preserved).
+
+The vdsl4 decision: keep 0. The eth1 need is legitimate multi-homing
+overlap on a NAT'd segment; on the public vdsl4 line, packets claiming
+the router's own addresses are martians and the default stance is
+correct. Revisit only if an inter-line test requires it.
+
+The soak's above-1 Hz arrival counts are also explained: the campaign
+driver terminated its lxc-attach wrappers while the in-container probes
+leaked and kept sending, roughly 18 concurrent streams. That is a
+driver process-lifecycle bug, fixed by adding the container-side pkill
+to the per-phase teardown.
 
 ## Execution order
 
