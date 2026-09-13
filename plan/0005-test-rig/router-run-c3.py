@@ -32,6 +32,14 @@ def lxc(container, script, args):
     return subprocess.run(cmd, capture_output=True, text=True, timeout=30)
 
 
+def stop_holder(holder):
+    holder.terminate()
+    # terminate() kills the lxc-attach wrapper only; the in-container
+    # python survives and leaks a held AFTR TCP mapping per point.
+    subprocess.run(["lxc-attach", "-n", "dslp-sink", "--", "pkill", "-f",
+                    "sink-hold"], capture_output=True)
+
+
 def point(run_dir, gap):
     holder = subprocess.Popen(
         ["lxc-attach", "-n", "dslp-sink", "--", "/usr/bin/python3",
@@ -52,15 +60,15 @@ def point(run_dir, gap):
             pass
         time.sleep(0.25)
     if not tup:
-        holder.terminate()
+        stop_holder(holder)
         return {"gap": gap, "state": "no-tuple"}
     if tup.startswith("84.203.115.61"):
-        holder.terminate()
+        stop_holder(holder)
         return {"gap": gap, "state": "wrong-line",
                 "tuple": tup}  # holder rode the vdsl4 route, not the AFTR
     time.sleep(gap)
     res = lxc("dslp-probe", "probe-connect.py", [tup])
-    holder.terminate()
+    stop_holder(holder)
     return {"gap": gap, "tuple": tup, "result": res.stdout.strip(),
             "rc": res.returncode}
 
