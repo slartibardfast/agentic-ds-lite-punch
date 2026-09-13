@@ -72,7 +72,12 @@ def pcap_arrivals(pcap, btime):
 
 def cells_table(run_dir, checkpoint):
     rows = []
-    btime = checkpoint.get("btime", "0")
+    btime = "0"
+    try:
+        run = json.load(open(os.path.join(run_dir, "run.json")))
+        btime = run.get("btime", "0")
+    except OSError:
+        pass
     for c in checkpoint.get("cells", []):
         arr = pcap_arrivals(f"{run_dir}/cell-{c.get('cell', 0):02d}/eth1.pcap",
                             btime)
