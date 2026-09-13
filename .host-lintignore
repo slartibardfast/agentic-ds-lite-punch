@@ -35,6 +35,12 @@ MEMORY.md
 book.toml
 mdBook/
 
+# Raw measurement data under the test-rig results store: machine-written
+# JSON and log files (checkpoint timestamps, run-tag identifiers) that are
+# data, not authored text. The prose gate does not scan them; the naming
+# audit excludes them the way tool-written records are excluded.
+plan/0005-test-rig/results/
+
 # The spine copy at the repo root and the two pre-adoption milestone docs.
 # Each carries structural or engineering identifiers that are not this host's
 # newly authored content and are not renamed (call/0012):
