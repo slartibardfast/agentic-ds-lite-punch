@@ -177,6 +177,27 @@
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--a3-soak-run-1-aftr-port-reuse-is-the-rule"><a class="header" href="#2026-09-13--a3-soak-run-1-aftr-port-reuse-is-the-rule">2026-09-13 — A3 soak run 1: AFTR port reuse is the rule</a></h2>
+<ul>
+<li>Full keepalive-pause matrix (5/7/10/12/20/30 s x 3, seed 20260913) ran
+via the test rig: 18/18 cells done with stable preconditions, and the
+AFTR re-issued the identical external tuple 37.228.213.83:59230 in all
+eighteen deliberate mapping kills. Port reuse on this line is the rule,
+not the exception (also observed across restarts and retargets).</li>
+<li>The rig's arrival-based liveness sensing is validated: eth1 captures of
+the probe flow (src 84.203.115.61 to dst 192.168.0.21:40000) measured the
+delivery gap through every pause and the resume on the re-created mapping.</li>
+<li>Standing limitations: the relay forward leg is still unassertable
+(inbound-NEW UDP consumed pre-socket, see plan/0005 RCA); the reply
+through-mapping leg stays an external-sender function. Raw data (396 MB)
+lives on the router at /mnt/nvme/runs/2026-09-13; the derived record is
+plan/0005-test-rig/RESULTS-2026-09-13.md.</li>
+<li>Operator notes for the router: busybox ash has no stat, nohup, or pkill
+(kill by PID; use the [p]attern bracket trick to avoid self-kill);
+pattern-kills of "tcpdump" or "probe-client" WILL hit the rig's own
+instruments. The deployment env still targets the test sink
+(TARGET=192.168.21.12:40002) until reverted.</li>
+</ul>
 <h2 id="2026-09-12--allocate-register-numbers-at-claim-time-never-from-memory"><a class="header" href="#2026-09-12--allocate-register-numbers-at-claim-time-never-from-memory">2026-09-12 — allocate register numbers at claim time, never from memory</a></h2>
 <ul>
 <li>A milestone folder was created as plan/0005 using a remembered allocation
