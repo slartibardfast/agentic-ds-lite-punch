@@ -2577,6 +2577,21 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--a3-soak-run-2-forward-leg-end-to-end-port-reuse-again-1818"><a class="header" href="#2026-09-13--a3-soak-run-2-forward-leg-end-to-end-port-reuse-again-1818">2026-09-13 — A3 soak run 2: forward leg end to end, port reuse again 18/18</a></h2>
+<ul>
+<li>Run 2 (seed 202609132) repeated the matrix with accept_local=1 live on
+eth1: 18/18 cells done, port reuse 18/18 (37.228.213.83:59230), and the
+relay forwarded every probe stream to dslp-sink with source preserved
+(79 to 108 receipts per cell). The forward leg is now proven through a
+full campaign, not just a point test.</li>
+<li>The driver leak fix is validated: arrival counts match the 1 Hz probe
+exactly and every cell's sink bound cleanly.</li>
+<li>Summary-column caveat persists under port reuse: the driver sees no
+tuple change, so death-to-recovery latency needs the per-cell arrival
+series (raw pcaps on the router at /mnt/nvme/runs/2026-09-13-run2).</li>
+<li>Next measurable: the A1 reply-path leg (sink echo through the AFTR
+tuple), then C3 TCP idle-lifetime.</li>
+</ul>
 <h2 id="2026-09-13--forward-leg-rca-resolved-accept_local-not-the-relay"><a class="header" href="#2026-09-13--forward-leg-rca-resolved-accept_local-not-the-relay">2026-09-13 — forward-leg RCA resolved: accept_local, not the relay</a></h2>
 <ul>
 <li>The soak run 1 blocker (the relay never forwarding our probe datagrams,
