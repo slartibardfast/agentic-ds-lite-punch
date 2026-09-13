@@ -4,6 +4,20 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-13 — C3 measured: the AFTR expires idle TCP mappings in (120, 300] seconds
+
+- The C3 run (plan/0007 #c3-tcp; results/RESULTS-2026-09-13-c3.md)
+  bounded the AFTR's TCP mapping idle lifetime at (120, 300] seconds on
+  this node and session: alive at 120 s of silence, dead by 300 s,
+  double-confirmed by the eth1 SYN-arrival capture and the probe's
+  refused once the AFTR RSTs. The plan/0004 UDP-only constraint's
+  unlock is discharged; TCP grants enter the datapath design.
+- Contrast: UDP survived >30 s silent and refreshes on inbound; TCP died
+  within minutes of silence with no inbound refresh. The datapath sizes
+  re-establish-on-demand to time, not a UDP-style keepalive.
+- Scoping: one node, one session, one load; the number is a bound, not a
+  lease guarantee.
+
 ## 2026-09-13 — pgrep -f self-match trap (router measurements)
 
 - A command that contains the pattern text matches itself under pgrep
