@@ -190,3 +190,10 @@ Raw captures and the dated record land in this room under `results/` and
 are committed with the record (size policy as in plan/0005). collect via
 the 0005 collect.sh pattern; commit the plan change and a MEMORY entry
 immediately, per the audited-plans and append-only-memory rules.
+
+The 2026-09-13 examination record (
+`results/RESULTS-2026-09-13-exam.md`) holds the organic PSN failure
+diagnosis (stale firmware against the decommissioned legacy DNS zone), the
+OS-update resolution, and an organic NAT Type 2 measurement that is
+capture-attributed as NOT relay-fold-attributed. It does not sign
+#a2-verdict; the relay-attributed run remains.
