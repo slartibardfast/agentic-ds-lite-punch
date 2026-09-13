@@ -5,3 +5,11 @@
     evidence = dhcp.@host[20] name=ps3 mac=00:24:8D:49:6E:87 ip=192.168.21.138; console answers ping; dnsmasq running; relay untouched
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-13
+
+[receipt "plan/0006#console-via-eth1"]
+    disposition = done
+    verify = the pbr rule for the console saddr is in nft list ruleset;
+    inputs = /etc/config/network, the nft pbr chains and the ip rule tables
+    evidence = ip rule 25000 from 192.168.21.138 lookup 1000 (default via 192.168.0.1 dev eth1); route get console src via eth1, untagged lan src unchanged via vdsl4
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13

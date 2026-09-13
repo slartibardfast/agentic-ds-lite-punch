@@ -94,6 +94,14 @@ table) with a small table whose default is via 192.168.0.1 dev eth1. This
 is the load-bearing change: without it the console rides the vdsl4
 default and the relay line sees nothing.
 
+Applied 2026-09-13: policy rule 25000 sends the console's source
+(192.168.21.138) to table 1000, whose default is via 192.168.0.1 dev
+eth1 (`router-console-bringup.sh`, add-or-ignore, `down` for the
+teardown). Verified: before the rule the console's route resolved via
+pppoe-vdsl4; after, via eth1 table 1000; an untagged LAN source still
+resolves via vdsl4. The rule is applied live and re-applied by the
+script after a reboot; it is not UCI-persisted.
+
 ### Retarget the relay to the console {#retarget-relay}
 
 - depends: #console-via-eth1
