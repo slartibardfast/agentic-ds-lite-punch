@@ -177,6 +177,17 @@
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--committed-records-redact-addresses-standing-policy"><a class="header" href="#2026-09-13--committed-records-redact-addresses-standing-policy">2026-09-13 — committed records redact addresses (standing policy)</a></h2>
+<ul>
+<li>Third-party public IPv4 addresses (game peers, service endpoints from
+the PS3 sessions) and this line's own addresses (the AFTR tuple, LAN
+hosts, the vdsl4 address, the console MAC) are replaced with labelled
+placeholders in committed records. The raw captures on the router
+retain the real values; results stay out of the repo per the size
+policy. The rig scripts keep their operational values because they
+must run. A record that needs a real tuple re-derives it from the
+running system, never from the repo.</li>
+</ul>
 <h2 id="2026-09-13--ps3-mw2-session-stats-rdap-country-is-not-the-hosting-location"><a class="header" href="#2026-09-13--ps3-mw2-session-stats-rdap-country-is-not-the-hosting-location">2026-09-13 — PS3 MW2 session stats; RDAP country is not the hosting location</a></h2>
 <ul>
 <li>Full session captured (brlan/eth1, ~330 MB each; backend at
@@ -187,13 +198,14 @@ console's 3074 with no drops. Path proof: 15 s live windows show the
 game on eth1 and ZERO matching packets on pppoe-vdsl4 (vdsl4 had ~93
 KB/s down of router-side traffic, not the PS3). Source-port
 preservation kept the console's 3074 visible on eth1 egress
-(192.168.0.21:3074).</li>
+(<router-eth1-ip>:3074). Addresses redacted from records 2026-09-13;
+raw captures on the router retain them.</li>
 <li>Peer distances: measured RTT (median) to the match peers 11 to 18 ms
 = European PoPs, ~1,200 to 2,600 km. RDAP registrations are not the
-route: 51.36.255.29 (the main host, 90% of game traffic) registers to
-Zain Saudi Arabia yet answers at 18 ms from the UK; 72.84.102.221
-registers to Verizon US yet answers at 17 ms. Use measured RTT, never
-the registry country, for distance claims.</li>
+route: the main host (90% of game traffic) registers to Zain Saudi
+Arabia yet answers at 18 ms from the UK; a second peer registers to
+Verizon US yet answers at 17 ms. Use measured RTT, never the registry
+country, for distance claims.</li>
 </ul>
 <h2 id="2026-09-13--ps3-examination-organic-psn-failure-was-stale-firmware-not-the-network"><a class="header" href="#2026-09-13--ps3-examination-organic-psn-failure-was-stale-firmware-not-the-network">2026-09-13 — PS3 examination: organic PSN failure was stale firmware, not the network</a></h2>
 <ul>
@@ -210,13 +222,13 @@ live namespace (nsx.np.dl.playstation.net, *.np.community.
 playstation.net, auth.np.ac.playstation.net, *.sonyentertainment-
 network.com); none of the legacy names appear in the capture.</li>
 <li>Organic NAT Type 2 measured under capture: PSN NAT servers
-52.40.62.54/55 on UDP 3478/3479 echo the console's ephemeral source
-ports 53004/53010; the console SSDP M-SEARCHed 239.255.255.250:1900
-with no IGD answering, so Type 2 came from hole punching alone
-(phase-E relevant). NOT relay-attributed: the relay still targets the
-test sink, no 192.168.21.138 fold entries, and ephemeral probe ports
-cannot ride a single-target 3478 pin. The organic Type 2 does not sign
-plan/0006's #a2-verdict.</li>
+<psn-nat-a>/<psn-nat-b> on UDP 3478/3479 echo the console's ephemeral
+source ports 53004/53010; the console SSDP M-SEARCHed
+239.255.255.250:1900 with no IGD answering, so Type 2 came from hole
+punching alone (phase-E relevant). NOT relay-attributed: the relay
+still targets the test sink, no <console-ip> fold entries, and
+ephemeral probe ports cannot ride a single-target 3478 pin. The
+organic Type 2 does not sign plan/0006's #a2-verdict.</li>
 <li>Record: plan/0006-ps3-requirements/results/RESULTS-2026-09-13-exam.md.
 Pending: the relay-attributed A2 run (retarget + re-run under capture),
 then the pbr-idiom swap (replace policy rule 25000/table 1000 with a

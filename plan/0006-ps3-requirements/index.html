@@ -205,28 +205,28 @@ Nothing on br-lan answers SSDP 239.255.255.250:1900. The console's IGD
 probe finds no device, which is the correct interim: a present-but-
 impotent IGD can force a strict/Type-3 reading in some consoles;
 absence forces the hole-punch path, exactly what A2 measures.</li>
-<li>The VM hub's own IGD (if any) lives on eth1/192.168.0.0/24. SSDP
+<li>The VM hub's own IGD (if any) lives on eth1's hub segment. SSDP
 multicast stays inside br-lan's L2 domain and is never routed, so it is
 invisible to the console. Nothing to pause there either.</li>
-<li>Default route: <code>default via 83.147.162.174 dev pppoe-vdsl4</code> (metric 16)
-wins; <code>default via 192.168.0.1 dev eth1</code> (metric 128) is the fallback.
-Console traffic to PSN would egress vdsl4 as 84.203.115.61 and never
+<li>Default route: <code>default via &lt;vdsl4-gw&gt; dev pppoe-vdsl4</code> (metric 16)
+wins; <code>default via &lt;hub-gw&gt; dev eth1</code> (metric 128) is the fallback.
+Console traffic to PSN would egress vdsl4 as <vdsl4-ip> and never
 see the AFTR or the pin. The console must be steered to eth1 by its own
 rule. The relay's two STUN host routes (74.125.250.129, 162.159.207.0)
 show the eth1-pinning idiom but cover fixed IPs only, not a service.</li>
 <li>Forwarding: <code>forward_lan</code> accepts br-lan to wan; the eth1 input chain
 accepts udp dport 40000 (the pin). No firewall change is needed.</li>
 <li>Reflection DNATs (yarn 443/80, surface-rdp 63389/63390) and the pbr
-vbings (us saddr 192.168.21.73 and .152/29; uk daddr ranges) match
+vbings (the us-tag saddr records; uk daddr ranges) match
 neither an untagged console nor PSN ports. No interference.</li>
-<li>DHCP pool: 192.168.21.24 to .142; existing reservations at .145 and
-.152 follow the dhcp.@host pattern with a tag. A console reservation
+<li>DHCP pool: the br-lan dynamic range; existing reservations outside it
+follow the dhcp.@host pattern with a tag. A console reservation
 slots into the same pattern.</li>
 <li>The relay (pid at inspection: 26152, artifact sha
 7127f4bfd296e5241648b02c96e66180ab75789169140c061fd7976225ee811a)
-still targets the test sink, <code>--target 192.168.21.12:40002</code>. Its live
+still targets the test sink, <code>--target &lt;sink-endpoint&gt;</code>. Its live
 fold map (table ip dslp) holds the sink entry
-<code>192.168.21.12 . 40002 : 192.168.0.21 . 40000</code> plus a router-self
+<code>&lt;sink-ip&gt; . 40002 : &lt;pin-endpoint&gt;</code> plus a router-self
 entry. <code>--max-maps-per-client 16</code> and the slot range already cover the
 console's needs.</li>
 </ul>
@@ -239,28 +239,28 @@ re-run at the gate, the operator ones are <code>attested operator</code> records
 reserved IP (odhcpd lease line, ping from the router)</li>
 <li>inputs: /etc/config/dhcp</li>
 </ul>
-<p>Applied 2026-09-13: the PS3 (00:24:8D:49:6E:87) is on br-lan at
-192.168.21.138, already present at that address when the milestone opened
+<p>Applied 2026-09-13: the PS3 (<console-mac>) is on br-lan at
+<console-ip>, already present at that address when the milestone opened
 (neighbor REACHABLE, answers ping). Reserved as dhcp.@host[20] with name
-<code>ps3</code>. The address is inside the dynamic range (.24 to .143); dnsmasq
+<code>ps3</code>. The address is inside the dynamic range; dnsmasq
 excludes host entries from allocation, and the console already occupies
 the address, so no conflict arises. Verified: entry listed, console
-REACHABLE, relay untouched (tuple 37.228.213.83:59230).</p>
+REACHABLE, relay untouched (tuple <aftr-tuple>).</p>
 <h3 id="console-via-eth1"><a class="header" href="#console-via-eth1">Route the console through the Virgin line</a></h3>
 <ul>
 <li>depends: #reserve-console</li>
 <li>verify: the pbr rule for the console saddr is in nft list ruleset;
-from the router, <code>ip route get &lt;console-ip&gt;</code> resolves out eth1/192.168.0.1;
+from the router, <code>ip route get &lt;console-ip&gt;</code> resolves out eth1/<hub-gw>;
 an eth1 capture shows console egress within a minute</li>
 <li>inputs: /etc/config/network, the nft pbr chains and the ip rule tables,
 the bring-up script (extends router-nft-bringup.sh)</li>
 </ul>
 <p>Follow the existing fwmark idiom (saddr goto a mark chain, marked lookup
-table) with a small table whose default is via 192.168.0.1 dev eth1. This
+table) with a small table whose default is via <hub-gw> dev eth1. This
 is the load-bearing change: without it the console rides the vdsl4
 default and the relay line sees nothing.</p>
 <p>Applied 2026-09-13: policy rule 25000 sends the console's source
-(192.168.21.138) to table 1000, whose default is via 192.168.0.1 dev
+(<console-ip>) to table 1000, whose default is via <hub-gw> dev
 eth1 (<code>router-console-bringup.sh</code>, add-or-ignore, <code>down</code> for the
 teardown). Verified: before the rule the console's route resolved via
 pppoe-vdsl4; after, via eth1 table 1000; an untagged LAN source still
@@ -270,7 +270,7 @@ script after a reboot; it is not UCI-persisted.</p>
 <ul>
 <li>depends: #console-via-eth1</li>
 <li>verify: relay cmdline shows the console target; nft list table ip dslp
-gains <code>console . 3478 : 192.168.0.21 . 40000</code> and the 3479 twin</li>
+gains <code>console . 3478 : &lt;pin-endpoint&gt;</code> and the 3479 twin</li>
 <li>inputs: /etc/init.d/ds-lite-punch (the retarget script extends
 router-relay-retarget.sh)</li>
 </ul>
@@ -318,7 +318,7 @@ priority. Record the decision in call/ (a software-scoped decision, not
 a methodology one).</p>
 <h2 id="review-checklist-operator-sign-off"><a class="header" href="#review-checklist-operator-sign-off">Review checklist (operator sign-off)</a></h2>
 <ol>
-<li>The console's reservation is 192.168.21.138 (inside the dynamic
+<li>The console's reservation is <console-ip> (inside the dynamic
 range; dnsmasq excludes host entries from the pool, and the PS3
 already occupies the address, so no conflict).</li>
 <li>No UPnP daemon on br-lan at run time (re-verify, absent at inspection).</li>
