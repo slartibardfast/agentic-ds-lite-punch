@@ -8,8 +8,8 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = 80905006d34f508407be975f3408122157729df6
+	pin   = 6c3d15a34730e65f5af69a33c700010d72d6ef20
 	branch = main
 	toolchain = x86_64-unknown-linux-musl
 	build = cargo build --release --target x86_64-unknown-linux-musl
-	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch e1a79dafa7a42274f8cfd68d9a1cbd64525cd60de44386e428841141c6d834c3
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 134404d764efb4d1b9bf10265491a46f1c35fab63361bd5514bbab6873dd45a7

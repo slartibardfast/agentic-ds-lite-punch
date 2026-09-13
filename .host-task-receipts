@@ -75,3 +75,11 @@
     evidence = RESULTS-2026-09-13-c3.md: AFTR TCP idle lifetime in (120,300] s, unlock discharged
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-13
+
+[receipt "plan/0007#tcp-datapath"]
+    disposition = done
+    verify = a granted TCP slot forwards an external TCP connection to the
+    inputs = the relay source, the C3 result
+    evidence = RESULTS-2026-09-13-tcp-datapath.md: external end-to-end TCP session through the mapping proven (us-wireguard peer), egress fix 6c3d15a, 54 tests, 32/32 Kani
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
