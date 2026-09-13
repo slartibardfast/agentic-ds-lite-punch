@@ -1,6 +1,11 @@
 # RESULTS-2026-09-13-run3: the probe-quiet pause (mapping survival under silence)
 
-Status: run complete. 18/18 cells done, preconditions stable, and the
+Status: run complete.
+
+Redaction note: concrete addresses in this record are replaced with
+placeholders; the raw captures on the router retain them.
+
+18/18 cells done, preconditions stable, and the
 probe-quiet pause is validated at the packet level: zero packets touched
 the relay port in any pause window, from any source, in any direction.
 The AFTR mapping survived every silent window including 30 seconds with
@@ -40,24 +45,24 @@ the inbound-refresh confound of runs 1 and 2 is closed.
 
 | cell | dur s | pause-arr | pre-tail ms | recov ms | fwd oneway med/max ms | tuple | state |
 |---|---|---|---|---|---|---|---|
-| 0 | 10 | 0 | 179 | 817 | 17/21 | 37.228.213.83:59230 | done |
-| 1 | 12 | 0 | 170 | 822 | 16/21 | 37.228.213.83:59230 | done |
-| 2 | 10 | 0 | 175 | 822 | 14/20 | 37.228.213.83:59230 | done |
-| 3 | 20 | 0 | 179 | 822 | 17/21 | 37.228.213.83:59230 | done |
-| 4 | 12 | 0 | 180 | 817 | 17/20 | 37.228.213.83:59230 | done |
-| 5 | 30 | 0 | 179 | 825 | 17/21 | 37.228.213.83:59230 | done |
-| 6 | 5 | 0 | 180 | 826 | 16/21 | 37.228.213.83:59230 | done |
-| 7 | 30 | 0 | 176 | 816 | 14/19 | 37.228.213.83:59230 | done |
-| 8 | 12 | 0 | 179 | 816 | 14/20 | 37.228.213.83:59230 | done |
-| 9 | 7 | 0 | 180 | 819 | 17/20 | 37.228.213.83:59230 | done |
-| 10 | 20 | 0 | 165 | 820 | 14/19 | 37.228.213.83:59230 | done |
-| 11 | 30 | 0 | 173 | 826 | 16/21 | 37.228.213.83:59230 | done |
-| 12 | 7 | 0 | 182 | 817 | 14/19 | 37.228.213.83:59230 | done |
-| 13 | 5 | 0 | 181 | 821 | 14/23 | 37.228.213.83:59230 | done |
-| 14 | 5 | 0 | 175 | 820 | 17/21 | 37.228.213.83:59230 | done |
-| 15 | 10 | 0 | 177 | 823 | 14/19 | 37.228.213.83:59230 | done |
-| 16 | 7 | 0 | 182 | 820 | 14/18 | 37.228.213.83:59230 | done |
-| 17 | 20 | 0 | 177 | 823 | 14/19 | 37.228.213.83:59230 | done |
+| 0 | 10 | 0 | 179 | 817 | 17/21 | <aftr-tuple> | done |
+| 1 | 12 | 0 | 170 | 822 | 16/21 | <aftr-tuple> | done |
+| 2 | 10 | 0 | 175 | 822 | 14/20 | <aftr-tuple> | done |
+| 3 | 20 | 0 | 179 | 822 | 17/21 | <aftr-tuple> | done |
+| 4 | 12 | 0 | 180 | 817 | 17/20 | <aftr-tuple> | done |
+| 5 | 30 | 0 | 179 | 825 | 17/21 | <aftr-tuple> | done |
+| 6 | 5 | 0 | 180 | 826 | 16/21 | <aftr-tuple> | done |
+| 7 | 30 | 0 | 176 | 816 | 14/19 | <aftr-tuple> | done |
+| 8 | 12 | 0 | 179 | 816 | 14/20 | <aftr-tuple> | done |
+| 9 | 7 | 0 | 180 | 819 | 17/20 | <aftr-tuple> | done |
+| 10 | 20 | 0 | 165 | 820 | 14/19 | <aftr-tuple> | done |
+| 11 | 30 | 0 | 173 | 826 | 16/21 | <aftr-tuple> | done |
+| 12 | 7 | 0 | 182 | 817 | 14/19 | <aftr-tuple> | done |
+| 13 | 5 | 0 | 181 | 821 | 14/23 | <aftr-tuple> | done |
+| 14 | 5 | 0 | 175 | 820 | 17/21 | <aftr-tuple> | done |
+| 15 | 10 | 0 | 177 | 823 | 14/19 | <aftr-tuple> | done |
+| 16 | 7 | 0 | 182 | 820 | 14/18 | <aftr-tuple> | done |
+| 17 | 20 | 0 | 177 | 823 | 14/19 | <aftr-tuple> | done |
 
 Recovery summary: n=18, min 816 ms, median 820 ms, max 826 ms. Forward
 one-way transit: 14 to 17 ms median, 18 to 23 ms max in every cell (the
