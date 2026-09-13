@@ -3072,6 +3072,35 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--pgrep--f-self-match-trap-router-measurements"><a class="header" href="#2026-09-13--pgrep--f-self-match-trap-router-measurements">2026-09-13 — pgrep -f self-match trap (router measurements)</a></h2>
+<ul>
+<li>A command that contains the pattern text matches itself under pgrep
+-f: three attempts at the keepalive-stop gradient froze the script's
+own shell (a SIGSTOP against the wrapper's own pid) and orphaned
+stopped shells on the router. The fix: a bracketed pattern class
+([d]s-lite-punch) and never quoting the plain pattern anywhere else
+in the same command; and for the relay specifically, derive the pid by
+comparing /proc/PID/comm against an assembled literal (a split string
+so the wrapper cmdline never contains the plain name). pgrep -x proved
+unreliable on the router's busybox for this; the comm check is the
+ground truth.</li>
+</ul>
+<h2 id="2026-09-13--pinning-hunch-measured-the-ip-is-session-pinned-the-keepalive-pins-the-port"><a class="header" href="#2026-09-13--pinning-hunch-measured-the-ip-is-session-pinned-the-keepalive-pins-the-port">2026-09-13 — pinning hunch measured: the IP is session-pinned, the keepalive pins the port</a></h2>
+<ul>
+<li>plan/0007 enabler measured (results/RESULTS-2026-09-13-pinning.md):
+eight console-class XOR-MAPPED probes and the relay's pin all share
+the session public IP (<aftr-ip>), across 45/60/90 s relay stops with
+the relay State=T verified and a keepalive-quiet window (one in-flight
+packet then silence). The external IP is customer-session-pinned, not
+keepalive-pinned; the 2 s keepalive pins the relay's own port (59230),
+held or identically re-issued, extending the 18/18 reuse rule to these
+windows. Console flows allocate sibling ports in the session space
+(59201 to 59391), independent of the relay's keepalives.</li>
+<li>Scoping: one node, one session, one load; the AFTR's state is node and
+load dependent (the old 5-10 s TTL versus today's &gt;30 s survival).
+The facade's GetExternalIPAddress honesty assumes the session-pinned
+IP; re-check if node churn is suspected.</li>
+</ul>
 <h2 id="2026-09-13--plan0006-complete-pbr-118-does-not-route-secondary-wans"><a class="header" href="#2026-09-13--plan0006-complete-pbr-118-does-not-route-secondary-wans">2026-09-13 — plan/0006 complete; pbr 1.1.8 does not route secondary wans</a></h2>
 <ul>
 <li>The PS3 milestone is complete and signed: A2 acceptance under the
