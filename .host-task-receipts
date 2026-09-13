@@ -1,0 +1,7 @@
+[receipt "plan/0006#reserve-console"]
+    disposition = done
+    verify = uci show dhcp lists the host entry and the console holds the
+    inputs = /etc/config/dhcp
+    evidence = dhcp.@host[20] name=ps3 mac=00:24:8D:49:6E:87 ip=192.168.21.138; console answers ping; dnsmasq running; relay untouched
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
