@@ -57,6 +57,19 @@ relay-fold-attributed. It validates that the line alone composes to
 Type 2 without IGD (phase-E relevance: IGD absence did not block a
 Type 2 reading), but it does not sign the relay's acceptance.
 
+## MW2 multiplayer session (2026-09-13)
+
+The operator ran a Modern Warfare 2 session while the capture continued.
+The in-game NAT indicator reported Open. The capture shows the organic
+path carrying actual gameplay: UDP game data on 3074 both directions with
+the CoD server ranges (209.170.122.250:3074, 185.34.107.69:3074,
+185.34.107.128:3074), the console's own game socket bound on 3074,
+inbound datagrams from a remote reaching the console's 3074
+(51.36.255.29 to 192.168.21.138:3074), TCP 3074 to a CoD backend, and
+service traffic (52.39.99.233:5223). Combined with the PSN Type 2, this
+is a second, gameplay-level NAT classification (Open) on the organic
+path, with no relay and no IGD in the path.
+
 ## Carried items
 
 - The relay-attributed A2 run: retarget the relay to the console and
