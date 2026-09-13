@@ -74,6 +74,16 @@ def main():
     gaps = [int(x) for x in args.gaps.split(",")]
     subprocess.run(["ip", "rule", "add", "from", "192.168.21.12",
                     "lookup", "1000", "prio", "25002"], capture_output=True)
+    # Instrumentation: the fw4 input chain (policy drop, UDP pin only)
+    # silently eats AFTR-forwarded TCP SYNs, which a live mapping would
+    # otherwise answer with an inner RST. Reject eth1 TCP SYNs with RST
+    # so the probe sees `refused` while the mapping is alive; the death
+    # point is where refused flips to timeout. Cleaned up in finally.
+    subprocess.run(["nft", "insert", "rule", "inet", "fw4", "input",
+                    "iifname", "eth1",
+                    "tcp", "flags", "&", "(fin|syn|rst|ack)", "==", "syn",
+                    "reject", "with", "tcp", "reset", "comment", "c3-instr"],
+                   capture_output=True)
     try:
         points = []
         for g in gaps:
@@ -86,6 +96,15 @@ def main():
     finally:
         subprocess.run(["ip", "rule", "del", "prio", "25002"],
                        capture_output=True)
+        listed = subprocess.run(
+            ["nft", "-a", "list", "chain", "inet", "fw4", "input"],
+            capture_output=True, text=True).stdout
+        for ln in listed.splitlines():
+            if "c3-instr" in ln and "handle" in ln:
+                h = ln.rsplit("handle", 1)[-1].strip()
+                subprocess.run(["nft", "delete", "rule", "inet", "fw4",
+                                "input", "handle", h], capture_output=True)
+                break
 
 
 if __name__ == "__main__":
