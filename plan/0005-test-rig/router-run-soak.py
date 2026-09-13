@@ -4,18 +4,20 @@
 # Baseline 10 min, control 10 min, then the matrix of pause durations
 # [5,7,10,12,20,30] seconds x 3 in a seeded random order. Each cell:
 #
-#   t0        pause starts (kill -STOP)
-#   t_death   last sink arrival from the old tuple (mapping death, ~1s)
-#   t_resume  kill -CONT at t0 + duration
-#   t_resp    first STUN response on eth1 after resume (capture)
+#   t0        pause starts (kill -STOP; probe is silenced too)
+#   t_resume  kill -CONT at t0 + duration; probe relaunched on the old tuple
 #   t_repub   tuple file change (snapshot)
-#   t_recov   first sink arrival through the NEW tuple
+#   t_recov   first sink arrival after t_resume (recovery, analysis annex)
 #   reuse     old external tuple re-issued by the AFTR? (resurrection watch)
 #
-# Old-tuple probes continue through the pause and for 60 s after republish
-# (ports the AFTR may resurrect). The payload sequence numbers correlate
-# probe, capture, and sink logs. Every line timestamp is monotonic ms from
-# /proc/uptime on the router.
+# Run 3 uses a probe-quiet pause: at t0 the driver kills the in-container
+# probe as well as stopping the relay, so nothing inbound sustains the
+# AFTR mapping through the window (the AFTR refreshes mappings on inbound
+# datagrams, RFC 7857 S7 violation; see ANALYSIS-2026-09-13). With both
+# silent, the mapping expires at the AFTR's true idle timeout, and the
+# arrival stream resumes only after the relay's first post-resume keepalive
+# re-creates it. The payload sequence numbers correlate probe, capture,
+# and sink logs. Every line timestamp is monotonic ms from /proc/uptime.
 #
 # Invocation: run-soak.py RUN_DIR [--cells 5,7,10,12,20,30 --reps 3 --seed N]
 # State: RUN_DIR/run.json, checkpoint.json (abort-safe resume).
@@ -125,11 +127,22 @@ def cell(run_dir, i, duration, seed):
 
     t0 = monoms()
     os.kill(pid0, signal.SIGSTOP)
+    # Probe-quiet pause: silence the probe inside its container too, so no
+    # inbound datagram sustains the AFTR mapping while the relay is stopped.
+    subprocess.run(["lxc-attach", "-n", PROBE, "--", "pkill", "-f",
+                    "probe-client"], capture_output=True)
     meta["t0"] = t0
+    meta["quiet"] = True
     time.sleep(duration)
     t_resume = monoms()
     os.kill(pid0, signal.SIGCONT)
     meta["t_resume"] = t_resume
+    # Relaunch the probe on the old tuple: if the mapping died in the pause,
+    # datagrams vanish until the relay's post-resume keepalive re-creates
+    # it; the arrival resume is the true recovery mark.
+    probe = lxc(PROBE, "probe-client.py", ["series", tup, "1",
+                f"cell-{i}-res"], f"{cdir}/probe-res.log")
+    time.sleep(2)
 
     # Watch for republish (tuple change) up to 12 s, then keep probing the
     # OLD tuple for the resurrection watch, then switch to the new tuple.

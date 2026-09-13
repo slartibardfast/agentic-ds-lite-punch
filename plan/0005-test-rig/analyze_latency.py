@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 # analyze_latency.py — per-cell timing analysis from the raw pcaps and
-# sink receipts. Router-side (needs tcpdump). For each cell:
-#   death_delay   last delivered arrival after the pause start, minus t0
-#                 (the AFTR's effective UDP idle timeout, bounded by the
-#                 probe cadence)
-#   first_after   first arrival after resume (recovery, boundary t_resume)
-#   gap           first_after minus last delivered arrival (delivery gap)
-#   survived      arrival stream never stopped (pause shorter than death)
-#   oneway        sink receipt recv minus the probe's payload ts (median,
-#                 from the cell sink.log forward receipts)
+# sink receipts. Router-side (needs tcpdump). For each cell (run 3+,
+# probe-quiet pause):
+#   pause_arr   arrivals inside [t0, t_resume] (the quiet check: 0 means
+#               the pause was silence, nothing inbound sustained the AFTR
+#               mapping)
+#   death       last delivered arrival before t0, minus t0 (the pre-pause
+#               cadence tail, <= 1 probe period)
+#   recov       first arrival after t_resume, minus t_resume (the true
+#               death-to-recovery gap: mapping expiry plus the relay's
+#               post-resume keepalive re-creating it)
+#   oneway      sink receipt recv minus the probe's payload ts (median,
+#               from the cell sink.log forward receipts)
 # Usage: analyze_latency.py RUN_DIR
 
 import json
@@ -75,36 +78,35 @@ def main():
     run = json.load(open(os.path.join(run_dir, "run.json")))
     btime_ms = int(run.get("btime", "0")) * 1000
     print("# latency analysis: " + run_dir)
-    print("| cell | dur | last-pre | first-after | gap ms | death+ | survived | fwd oneway med/max ms |")
+    print("| cell | dur | last-pre | first-after | pause-arr | pre-tail ms | recov ms | fwd oneway med/max ms |")
     print("|---|---|---|---|---|---|---|---|")
-    gaps = []
-    deaths = []
+    recovs = []
+    faults = []
     for c in ck.get("cells", []):
         ci = c.get("cell", 0)
         t0 = c.get("t0") or 0
         tres = c.get("t_resume") or 0
         arr = arrivals(f"{run_dir}/cell-{ci:02d}/eth1.pcap", btime_ms)
-        pre = [a for a in arr if a <= tres]
+        pre = [a for a in arr if a <= t0]
+        pause = [a for a in arr if t0 < a <= tres]
         post = [a for a in arr if a > tres]
         last_pre = pre[-1] if pre else ""
         first_after = post[0] if post else ""
-        gap = first_after - last_pre if (post and pre) else ""
-        death = last_pre - t0 if pre else ""
-        survived = "y" if (pre and pre[-1] > tres - 1500) else "n"
-        if gap != "":
-            gaps.append(gap)
-        if death != "":
-            deaths.append(death)
+        pre_tail = t0 - last_pre if pre else ""
+        recov = first_after - tres if post else ""
+        if recov != "":
+            recovs.append(recov)
+        if pause:
+            faults.append(ci)
         ow = oneway(f"{run_dir}/cell-{ci:02d}/sink.log")
         ow_s = f"{median(ow):.0f}/{max(ow):.0f}" if ow else "-"
         print(f"| {ci} | {c.get('duration_s')} | {last_pre} | {first_after} "
-              f"| {gap} | {death} | {survived} | {ow_s} |")
-    if gaps:
-        print(f"gaps: n={len(gaps)} min={min(gaps)} med={median(gaps):.0f} "
-              f"max={max(gaps)}")
-    if deaths:
-        print(f"death-delay: n={len(deaths)} min={min(deaths)} "
-              f"med={median(deaths):.0f} max={max(deaths)}")
+              f"| {len(pause)} | {pre_tail} | {recov} | {ow_s} |")
+    if recovs:
+        print(f"recov: n={len(recovs)} min={min(recovs)} "
+              f"med={median(recovs):.0f} max={max(recovs)}")
+    if faults:
+        print(f"quiet faults (pause arrivals > 0): cells {faults}")
 
 
 if __name__ == "__main__":
