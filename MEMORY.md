@@ -4,6 +4,28 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-13 — TCP datapath closed: return-path RCA, egress fix, external proof
+
+- The datapath's open frontier is closed. The RCA (results/
+  RESULTS-2026-09-13-tcp-datapath.md): rp_filter off (refuted);
+  source validation open; the listener healthy (a local loop and the lo
+  capture proved the SYN-ACK is generated). Root cause: the accepted
+  connection's reply routes per the kernel's output lookup, so a
+  self-sourced peer's reply loops locally (the local table outranks
+  everything) and a remote peer's reply egresses the vdsl4 default,
+  never the eth1 line the AFTR mapping lives on.
+- The fix (component 6c3d15a): add_egress_rule installs a policy rule
+  from the bind address into a dedicated table (prio 25100, table
+  1001) whose default is the hub; the init script removes it on stop.
+  Proven end to end: a peer behind the us wireguard (a genuinely
+  external source) completed a mapped TCP session with data both ways
+  through the fold-holder, wildcard listener, splice, and sink echo.
+- The #tcp-datapath receipt is recorded; the milestone frontier is
+  #facade. Self-sourced handshakes through the relay are impossible by
+  construction (the reply's destination is the router itself), so the
+  external vantage (the us tunnel) is the verification gate, not the
+  rig's own vdsl4 masquerade.
+
 ## 2026-09-13 — TCP datapath staged verification: layers proven, one frontier
 
 - The tcp-datapath implementation (plan/0007 #tcp-datapath) is in the
