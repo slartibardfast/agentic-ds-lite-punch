@@ -45,7 +45,7 @@ binds cleanly.
 | 17 | 20 | True | 23 | 98 | 37.228.213.83:59230 | same | y | done |
 
 Arrival counts now match the 1 Hz probe exactly (10 s cells: 13, 30 s: 33,
-5 s: 8, 20 s: 23), confirming the leak fix. Sink receipts are the
+5 s: 8, 20 s: 23), which confirms the leak fix. Sink receipts are the
 forwarded datagrams as logged by dslp-sink per cell. All times monotonic
 milliseconds since boot.
 
