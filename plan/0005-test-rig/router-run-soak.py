@@ -72,9 +72,10 @@ def stable_tuple(checkpoints=5, window=5):
 
 
 def kill_container_probes():
-    # terminate() kills the lxc-attach wrapper only; the in-container python
-    # survives and leaks (one per phase, ~18 during a campaign). Kill it
-    # inside the container where pkill exists.
+    # terminate() kills the lxc-attach wrapper only; the in-container
+    # python survives and leaks, roughly one stream per launched probe
+    # (about 18 across a full campaign). Kill it inside the container
+    # where pkill exists.
     subprocess.run(["lxc-attach", "-n", PROBE, "--", "pkill", "-f",
                     "probe-client"], capture_output=True)
 
