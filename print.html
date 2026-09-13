@@ -2804,6 +2804,24 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--ps3-mw2-session-stats-rdap-country-is-not-the-hosting-location"><a class="header" href="#2026-09-13--ps3-mw2-session-stats-rdap-country-is-not-the-hosting-location">2026-09-13 — PS3 MW2 session stats; RDAP country is not the hosting location</a></h2>
+<ul>
+<li>Full session captured (brlan/eth1, ~330 MB each; backend at
+/mnt/nvme/runs/2026-09-13-ps3-exam/). Game data UDP 3074 only: 22k
+packets, 2.3 MB, ~3.3 KB/s; outbound 2:1 over inbound; zero TCP RST;
+the organic path delivered 7.3k inbound game datagrams to the
+console's 3074 with no drops. Path proof: 15 s live windows show the
+game on eth1 and ZERO matching packets on pppoe-vdsl4 (vdsl4 had ~93
+KB/s down of router-side traffic, not the PS3). Source-port
+preservation kept the console's 3074 visible on eth1 egress
+(192.168.0.21:3074).</li>
+<li>Peer distances: measured RTT (median) to the match peers 11 to 18 ms
+= European PoPs, ~1,200 to 2,600 km. RDAP registrations are not the
+route: 51.36.255.29 (the main host, 90% of game traffic) registers to
+Zain Saudi Arabia yet answers at 18 ms from the UK; 72.84.102.221
+registers to Verizon US yet answers at 17 ms. Use measured RTT, never
+the registry country, for distance claims.</li>
+</ul>
 <h2 id="2026-09-13--ps3-examination-organic-psn-failure-was-stale-firmware-not-the-network"><a class="header" href="#2026-09-13--ps3-examination-organic-psn-failure-was-stale-firmware-not-the-network">2026-09-13 — PS3 examination: organic PSN failure was stale firmware, not the network</a></h2>
 <ul>
 <li>The PS3 failed PSN organically before any of our reconfiguration.
