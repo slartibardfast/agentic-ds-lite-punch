@@ -1018,6 +1018,12 @@ from the A2 verdict; this milestone does not reopen it.</li>
 are committed with the record (size policy as in plan/0005). collect via
 the 0005 collect.sh pattern; commit the plan change and a MEMORY entry
 immediately, per the audited-plans and append-only-memory rules.</p>
+<p>The 2026-09-13 examination record (
+<code>results/RESULTS-2026-09-13-exam.md</code>) holds the organic PSN failure
+diagnosis (stale firmware against the decommissioned legacy DNS zone), the
+OS-update resolution, and an organic NAT Type 2 measurement that is
+capture-attributed as NOT relay-fold-attributed. It does not sign
+#a2-verdict; the relay-attributed run remains.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="software-where"><a class="header" href="#software-where">Software: where</a></h1>
 <p>The action this project produces. Each component is a bare object store with worktrees, not committed into this repo; the recipe below is the reproducibility anchor. Materialize the worktrees locally with:</p>
 <pre><code>host-lifecycle software --materialize .
@@ -2798,6 +2804,33 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--ps3-examination-organic-psn-failure-was-stale-firmware-not-the-network"><a class="header" href="#2026-09-13--ps3-examination-organic-psn-failure-was-stale-firmware-not-the-network">2026-09-13 — PS3 examination: organic PSN failure was stale firmware, not the network</a></h2>
+<ul>
+<li>The PS3 failed PSN organically before any of our reconfiguration.
+Root cause: the legacy console-facing zone is gone from the public DNS
+(api.playstation.net, us.playstation.net, epps.dl.playstation.net,
+nss.cr.us.playstation.net: no A/AAAA from 8.8.8.8 directly;
+www.playstation.com and ps3.update.playstation.net alive; xboxlive
+control resolved). Both lines healthy: vdsl4 returned 403 from
+auth.api.sonyentertainmentnetwork.com (TLS fine), and the eth1 path
+carried a real TCP connect to it from a br-lan source.</li>
+<li>The console OS update resolved it: the current firmware queries the
+live namespace (nsx.np.dl.playstation.net, *.np.community.
+playstation.net, auth.np.ac.playstation.net, *.sonyentertainment-
+network.com); none of the legacy names appear in the capture.</li>
+<li>Organic NAT Type 2 measured under capture: PSN NAT servers
+52.40.62.54/55 on UDP 3478/3479 echo the console's ephemeral source
+ports 53004/53010; the console SSDP M-SEARCHed 239.255.255.250:1900
+with no IGD answering, so Type 2 came from hole punching alone
+(phase-E relevant). NOT relay-attributed: the relay still targets the
+test sink, no 192.168.21.138 fold entries, and ephemeral probe ports
+cannot ride a single-target 3478 pin. The organic Type 2 does not sign
+plan/0006's #a2-verdict.</li>
+<li>Record: plan/0006-ps3-requirements/results/RESULTS-2026-09-13-exam.md.
+Pending: the relay-attributed A2 run (retarget + re-run under capture),
+then the pbr-idiom swap (replace policy rule 25000/table 1000 with a
+pbr-package policy).</li>
+</ul>
 <h2 id="2026-09-13--plan0006-ps3-requirements-milestone-a2-console-acceptance"><a class="header" href="#2026-09-13--plan0006-ps3-requirements-milestone-a2-console-acceptance">2026-09-13 — plan/0006: PS3 requirements milestone (A2 console acceptance)</a></h2>
 <ul>
 <li>New milestone plan/0006-ps3-requirements, number allocated by the
