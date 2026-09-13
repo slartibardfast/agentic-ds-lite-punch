@@ -13,3 +13,33 @@
     evidence = ip rule 25000 from 192.168.21.138 lookup 1000 (default via 192.168.0.1 dev eth1); route get console src via eth1, untagged lan src unchanged via vdsl4
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-13
+
+[receipt "plan/0006#retarget-relay"]
+    disposition = skip
+    reason = call/0014
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
+
+[receipt "plan/0006#a2-run"]
+    disposition = done
+    verify = attested operator
+    inputs = the two pcaps, the console's reported NAT type
+    evidence = organic PSN Type 2 and CoD Open, capture-attributed; exam record
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
+
+[receipt "plan/0006#a2-verdict"]
+    disposition = done
+    verify = attested operator
+    inputs = the pcaps
+    evidence = call/0014 acceptance reframe
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
+
+[receipt "plan/0006#igd-decision"]
+    disposition = done
+    verify = attested call/NNNN (this milestone's decision in call/)
+    inputs = the verdict record
+    evidence = call/0015 phase-E priority
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13

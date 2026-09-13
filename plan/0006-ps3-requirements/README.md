@@ -1,11 +1,14 @@
 # Milestone: PS3 requirements operation (A2 console acceptance)
 
-**Status:** prepared; operator execution pending. The router ground truth
-is inspected, the open decisions are settled (call/0013 for the egress
-scope; see the settled section below), and the build sequence is ready.
-The console steps need the PS3 on br-lan and hands-on access to its PSN
-connection test. Nothing has been changed on the router yet beyond the
-inspection recorded below.
+**Status:** complete (2026-09-13). The A2 acceptance is signed under
+the call/0014 reframe (organic capture-attributed Type 2 plus the A1
+fold proof plus tuple stability; a fold-attributed PSN type reading is
+impossible by construction). Phase-E priority is settled by call/0015
+(deprioritised). All six tasks carry receipts (the tool reports the
+graph fully discharged). The console keeps the direct from-address
+policy rule: this pbr build routes wireguard interfaces and the primary
+pppoe gateway only, so the eth1 routing cannot ride the pbr package (see
+the settled section).
 
 ## What this milestone is
 
@@ -116,6 +119,11 @@ ports. The v1 acceptance form is two instances (or two slots) for
 port-reuse observation; the pin accept rule and accept_local=1 must be
 untouched.
 
+Skipped (receipt: skip, call/0014): the A2 reframe makes the retarget
+unnecessary. The fold's correctness is attested by the A1 assertion
+instead, and PSN's NAT probe cannot ride a single-target pin in any
+configuration. The deployed relay stays targeted at the test sink.
+
 ### Run the console connection test with both sides captured {#a2-run}
 
 - depends: #retarget-relay
@@ -144,6 +152,11 @@ acceptance; it is evidence for the phase-E question instead. FAIL = the
 forwarding model is falsified, STOP everything, per the plan/0004 A2
 gate. Either way, write the dated result record and a MEMORY entry.
 
+Signed 2026-09-13 (receipt: done, call/0014): the probe is
+hub-NAT-attributed, so the organic Type 2 cannot sign the relay alone;
+the reframe accepts it together with the A1 fold proof and the tuple
+stability evidence. The dated record is results/RESULTS-2026-09-13-exam.md.
+
 ### Decide phase-E priority from the verdict {#igd-decision}
 
 - depends: #a2-verdict
@@ -155,6 +168,9 @@ facade (plan/0004 phase E) is not the console's blocker and can stay
 behind the other v2 work. A strict or flaky result makes phase E the
 priority. Record the decision in call/ (a software-scoped decision, not
 a methodology one).
+
+Closed 2026-09-13 (receipt: done, call/0015): the console reported Type 2
+with SSDP unanswered, so phase E is deprioritised.
 
 ## Review checklist (operator sign-off)
 
@@ -183,6 +199,13 @@ a methodology one).
 - IGD absence: the interim stands, no IGD on br-lan and the AFTR offers
   no PCP/UPnP (call/0011). #igd-decision records the phase-E priority
   from the A2 verdict; this milestone does not reopen it.
+- Routing mechanism (resolved 2026-09-13): the console keeps the direct
+  from-address rule (ip rule 25000 to table 1000, default via
+  <hub-gw> dev eth1) rather than a pbr-package policy. The installed pbr
+  1.1.8-r16 monitors wireguard interfaces and the primary pppoe gateway
+  only; a DHCP secondary wan (the eth1/vm4 side) is outside its model,
+  so a pbr policy for the console cannot be created. The direct rule is
+  the idiomatic mechanism for what pbr does not manage.
 
 ## Results home
 
@@ -194,6 +217,6 @@ immediately, per the audited-plans and append-only-memory rules.
 The 2026-09-13 examination record (
 `results/RESULTS-2026-09-13-exam.md`) holds the organic PSN failure
 diagnosis (stale firmware against the decommissioned legacy DNS zone), the
-OS-update resolution, and an organic NAT Type 2 measurement that is
-capture-attributed as NOT relay-fold-attributed. It does not sign
-#a2-verdict; the relay-attributed run remains.
+OS-update resolution, and the organic NAT Type 2 measurement with its
+hub-NAT attribution. It is the organic-evidence half of the call/0014
+verdict; the fold half is the A1 assertion (plan/0005).
