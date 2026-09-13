@@ -177,6 +177,23 @@
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--aftr-refreshes-udp-mappings-on-inbound-rfc-7857-7-violation"><a class="header" href="#2026-09-13--aftr-refreshes-udp-mappings-on-inbound-rfc-7857-7-violation">2026-09-13 — AFTR refreshes UDP mappings on inbound (RFC 7857 §7 violation)</a></h2>
+<ul>
+<li>The soak timing analysis (plan/0005-test-rig/ANALYSIS-2026-09-13) shows
+the VM AFTR's UDP mapping lifetime is maintained by inbound datagrams:
+all 36 cells across two runs survived 5 to 30 s keepalive silences while
+a probe stream was inbound (survived=y, death delay equals the pause
+duration). RFC 7857 §7 says inbound should not refresh; this
+implementation does.</li>
+<li>Consequence: the A3 pause methodology was confounded (no cell exercised
+real death). Mapping-death measurement needs a probe-quiet pause
+(silence the probe inside the pause window). The genuine death plus
+immediate reuse evidence is the relay restart events, not the soak.</li>
+<li>Solid measurements from the data: forward one-way transit 14 to 19 ms
+median (probe to sink through vdsl4, the internet, the AFTR, the
+relay); the buffer-flush deltas equal the pause durations; arrival 1 Hz
+integrity in every run-2 cell.</li>
+</ul>
 <h2 id="2026-09-13--a3-soak-run-2-forward-leg-end-to-end-port-reuse-again-1818"><a class="header" href="#2026-09-13--a3-soak-run-2-forward-leg-end-to-end-port-reuse-again-1818">2026-09-13 — A3 soak run 2: forward leg end to end, port reuse again 18/18</a></h2>
 <ul>
 <li>Run 2 (seed 202609132) repeated the matrix with accept_local=1 live on
