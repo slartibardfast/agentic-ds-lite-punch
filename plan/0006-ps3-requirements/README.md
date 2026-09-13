@@ -1,14 +1,19 @@
 # Milestone: PS3 requirements operation (A2 console acceptance)
 
-**Status:** draft for operator review. This milestone operationalizes the
-PS3's requirements on the ds-lite line: a real console on br-lan, the
-router reconfigured to serve it through the relay pin, the PSN connection
-test run with captures both sides, and the A2 acceptance of plan/0004
-signed or failed. The verdict also decides whether the phase E UPnP IGD
-facade is priority. Nothing has been changed on the router yet beyond the
-inspection that is recorded below.
+**Status:** prepared; operator execution pending. The router ground truth
+is inspected, the open decisions are settled (call/0013 for the egress
+scope; see the settled section below), and the build sequence is ready.
+The console steps need the PS3 on br-lan and hands-on access to its PSN
+connection test. Nothing has been changed on the router yet beyond the
+inspection recorded below.
 
 ## What this milestone is
+
+This milestone operationalizes the PS3's requirements on the ds-lite
+line: a real console on br-lan, the router reconfigured to serve it
+through the relay pin, the PSN connection test run with captures both
+sides, and the A2 acceptance of plan/0004 signed or failed. The verdict
+also decides whether the phase E UPnP IGD facade is priority.
 
 Plan/0004's A2 item ("PSN NAT test, OPERATOR") is the last unsigned v1
 acceptance. The test rig's amendment D (plan/0005 README) states it
@@ -119,9 +124,15 @@ reported type verbatim.
   forwarded with the true peer source
 - inputs: the pcaps
 
-PASS = NAT Type 2 AND the two capture conditions. FAIL = the forwarding
-model is falsified, STOP everything, per the plan/0004 A2 gate. Either
-way, write the dated result record and a MEMORY entry.
+The verdict must first attribute the console's NAT-probe flow: did the
+probe ride the fold (alone, one source port on the pin) or the hub's
+separate NAT (any other egress)? PSN's reported type reflects whichever
+path the probe took, so the verdict names it explicitly. PASS = NAT
+Type 2 on a fold-attributed probe AND the two capture conditions. A type
+reading that came from hub-NAT egress does not sign the relay's
+acceptance; it is evidence for the phase-E question instead. FAIL = the
+forwarding model is falsified, STOP everything, per the plan/0004 A2
+gate. Either way, write the dated result record and a MEMORY entry.
 
 ### Decide phase-E priority from the verdict {#igd-decision}
 
@@ -147,15 +158,19 @@ a methodology one).
 6. The deploy environment reverts to the test sink when the milestone
    closes, unless the console ownership is handed to the operator.
 
-## Open decisions to settle
+## Settled decisions
 
-- Egress scope: route the console's whole traffic via eth1 (recommended;
-  the hub line is the console's natural WAN) or only the PSN address
-  ranges.
-- The exact relay target port pairing: plan/0004 says PSN UDP 3478/3479;
-  confirm live from the console's established sockets via the fold map
-  before signing.
-- The IGD-absence interim stands until #igd-decision records otherwise.
+- Egress scope: the console's whole traffic routes via eth1, one pbr
+  rule keyed on the reserved address (call/0013). The vdsl4 line stays
+  probe/oracle only.
+- Relay target pairing: PSN UDP 3478/3479 is the initial target. The
+  pairing is confirmed live during #a2-run by observing the fold map
+  (nft list table ip dslp) for the console's actually-folding source
+  ports, and the observed pairing lands in the run record. Nothing past
+  the run is hardcoded on it.
+- IGD absence: the interim stands, no IGD on br-lan and the AFTR offers
+  no PCP/UPnP (call/0011). #igd-decision records the phase-E priority
+  from the A2 verdict; this milestone does not reopen it.
 
 ## Results home
 
