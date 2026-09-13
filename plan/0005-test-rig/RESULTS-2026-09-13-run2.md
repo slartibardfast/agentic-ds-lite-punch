@@ -64,12 +64,16 @@ milliseconds since boot.
 
 ## Carried items
 
-- The summary columns remain limited by port reuse (the driver detects
-  republish by a tuple change, which never occurs; the post-republish
-  fallback column is the cell's first arrival). Death-to-recovery latency
-  derives from the per-cell arrival series in the raw pcaps.
+- The death-and-recovery reading of these runs is superseded by the
+  analysis annex (ANALYSIS-2026-09-13.md): the AFTR refreshes its mappings
+  on inbound datagrams, so the pause premise was confounded and no cell
+  exercised a genuine mapping death. The forward one-way transit
+  (14 to 19 ms median) and the buffered-flush behavior are the solid
+  measurements from this campaign.
 - The reply-through-mapping leg (the sink echo returning through the AFTR
   tuple) is the next measurable item now that the forward leg is open;
   it needs the A1 reply-path test (echo-on mode and the eth1 reply-tuple
   capture).
 - TCP idle-lifetime (C3) remains queued behind this campaign.
+- A mapping-death campaign requires the probe-quiet pause design (silence
+  the probe inside the pause); see the analysis annex.
