@@ -51,3 +51,27 @@
     evidence = call/0015 phase-E priority
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-13
+
+[receipt "plan/0007#migrate-crate"]
+    disposition = done
+    verify = the worktree software/ds-lite-punch/main holds src/, deploy/
+    inputs = the rope-agentic monorepo sources (tools/ds-lite-punch/)
+    evidence = crate landed cb7bfb4, recipe live, artifact verified 7127f4bf, software check clean
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
+
+[receipt "plan/0007#pin-hunch"]
+    disposition = done
+    verify = the results record (results/<date>-pinning.md) carries the
+    inputs = the router line, the STUN echo mechanics of the A1 assertion
+    evidence = RESULTS-2026-09-13-pinning.md: IP session-pinned, keepalive pins the relay port
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
+
+[receipt "plan/0007#c3-tcp"]
+    disposition = done
+    verify = the C3 run record with the binary-searched TCP mapping death
+    inputs = plan/0005-test-rig/router-run-c3.py, the rig containers
+    evidence = RESULTS-2026-09-13-c3.md: AFTR TCP idle lifetime in (120,300] s, unlock discharged
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-13
