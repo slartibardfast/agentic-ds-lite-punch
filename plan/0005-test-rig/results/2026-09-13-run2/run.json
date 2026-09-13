@@ -1,0 +1,17 @@
+{
+ "target": "the deployed relay at 37.228.213.83:59230",
+ "relay_sha256": "7127f4bfd296e5241648b02c96e66180ab75789169140c061fd7976225ee811a",
+ "init_sha256": "f22d762bcaef61601a55fa3d5e9fe5200893519d2f369ae788d93ce772fbd835",
+ "btime": "1787828987",
+ "durations": [
+  5,
+  7,
+  10,
+  12,
+  20,
+  30
+ ],
+ "reps": 3,
+ "seed": 202609132,
+ "pid": 24825
+}

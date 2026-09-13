@@ -1,0 +1,230 @@
+{
+ "baseline": {
+  "state": "done",
+  "minutes": 10,
+  "tuple": "37.228.213.83:59230"
+ },
+ "control": {
+  "state": "done",
+  "minutes": 10,
+  "tuple": "37.228.213.83:59230"
+ },
+ "cells": [
+  {
+   "cell": 0,
+   "duration_s": 10,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1471192080,
+   "t_resume": 1471202080,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 1,
+   "duration_s": 10,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1471345140,
+   "t_resume": 1471355140,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 2,
+   "duration_s": 12,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1471498200,
+   "t_resume": 1471510200,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 3,
+   "duration_s": 7,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1471653260,
+   "t_resume": 1471660260,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 4,
+   "duration_s": 30,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1471803330,
+   "t_resume": 1471833330,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 5,
+   "duration_s": 5,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1471976390,
+   "t_resume": 1471981390,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 6,
+   "duration_s": 30,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1472124440,
+   "t_resume": 1472154440,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 7,
+   "duration_s": 5,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1472297510,
+   "t_resume": 1472302510,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 8,
+   "duration_s": 10,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1472445570,
+   "t_resume": 1472455570,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 9,
+   "duration_s": 20,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1472598630,
+   "t_resume": 1472618630,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 10,
+   "duration_s": 12,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1472761690,
+   "t_resume": 1472773690,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 11,
+   "duration_s": 7,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1472916750,
+   "t_resume": 1472923750,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 12,
+   "duration_s": 7,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1473066810,
+   "t_resume": 1473073810,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 13,
+   "duration_s": 30,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1473216870,
+   "t_resume": 1473246870,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 14,
+   "duration_s": 12,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1473389930,
+   "t_resume": 1473401930,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 15,
+   "duration_s": 5,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1473544990,
+   "t_resume": 1473549990,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 16,
+   "duration_s": 20,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1473693050,
+   "t_resume": 1473713050,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  },
+  {
+   "cell": 17,
+   "duration_s": 20,
+   "seed": 202609132,
+   "pre_stable": true,
+   "tuple_old": "37.228.213.83:59230",
+   "pid0": 24825,
+   "t0": 1473856110,
+   "t_resume": 1473876110,
+   "tuple_new": "37.228.213.83:59230",
+   "state": "done"
+  }
+ ]
+}
