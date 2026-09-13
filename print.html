@@ -1225,7 +1225,7 @@ redacted per the standing policy. Raw data stays on the router.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>80905006d34f508407be975f3408122157729df6</code></li>
+<li>pin: <code>6c3d15a34730e65f5af69a33c700010d72d6ef20</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -3075,6 +3075,28 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-13--tcp-datapath-closed-return-path-rca-egress-fix-external-proof"><a class="header" href="#2026-09-13--tcp-datapath-closed-return-path-rca-egress-fix-external-proof">2026-09-13 — TCP datapath closed: return-path RCA, egress fix, external proof</a></h2>
+<ul>
+<li>The datapath's open frontier is closed. The RCA (results/
+RESULTS-2026-09-13-tcp-datapath.md): rp_filter off (refuted);
+source validation open; the listener healthy (a local loop and the lo
+capture proved the SYN-ACK is generated). Root cause: the accepted
+connection's reply routes per the kernel's output lookup, so a
+self-sourced peer's reply loops locally (the local table outranks
+everything) and a remote peer's reply egresses the vdsl4 default,
+never the eth1 line the AFTR mapping lives on.</li>
+<li>The fix (component 6c3d15a): add_egress_rule installs a policy rule
+from the bind address into a dedicated table (prio 25100, table
+1001) whose default is the hub; the init script removes it on stop.
+Proven end to end: a peer behind the us wireguard (a genuinely
+external source) completed a mapped TCP session with data both ways
+through the fold-holder, wildcard listener, splice, and sink echo.</li>
+<li>The #tcp-datapath receipt is recorded; the milestone frontier is
+#facade. Self-sourced handshakes through the relay are impossible by
+construction (the reply's destination is the router itself), so the
+external vantage (the us tunnel) is the verification gate, not the
+rig's own vdsl4 masquerade.</li>
+</ul>
 <h2 id="2026-09-13--tcp-datapath-staged-verification-layers-proven-one-frontier"><a class="header" href="#2026-09-13--tcp-datapath-staged-verification-layers-proven-one-frontier">2026-09-13 — TCP datapath staged verification: layers proven, one frontier</a></h2>
 <ul>
 <li>The tcp-datapath implementation (plan/0007 #tcp-datapath) is in the
