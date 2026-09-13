@@ -4,6 +4,33 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-13 — TCP datapath staged verification: layers proven, one frontier
+
+- The tcp-datapath implementation (plan/0007 #tcp-datapath) is in the
+  component (pin 8090500): the protocol threading, the nft TCP arms,
+  and the tcpslot module (wildcard listener, splice, fold-based
+  holder). Code-level verification: 54 unit tests, 32 of 32 Kani
+  harnesses.
+- Line-level (results/RESULTS-2026-09-13-tcp-datapath.md): a listener
+  and an outbound connector cannot share one tuple on this kernel under
+  any plain-socket SO_REUSE combination (all verified); the holder uses
+  an ephemeral local port folded to the slot tuple by the relay's own
+  snat_map, and the mapping's external tuple publishes. SYN forwarding
+  from the rig's own and genuinely external (us-wireguard) sources
+  proven; the accept-splice-target path proven by the local loopback
+  round-trip.
+- The frontier: AFTR-forwarded SYNs arriving on eth1 are not answered
+  even with the accept rule first and the wildcard listener bound
+  (local SYNs are answered). The candidate is the eth1 rp_filter or the
+  route for the translated source. The #tcp-datapath receipt stays
+  pending until this closes.
+- Vantage limitation: self-sourced probes masquerade to the router's own
+  address, so the listener's reply routes locally and never egresses
+  the AFTR; Globalping's current schema allows no port targeting (http
+  is port 80 only, no options). The us-wireguard vantage reaches the
+  mapping but its own return path broke in the test. The deployed relay
+  was restored to the recorded artifact (7127f4bf) after the test.
+
 ## 2026-09-13 — C3 measured: the AFTR expires idle TCP mappings in (120, 300] seconds
 
 - The C3 run (plan/0007 #c3-tcp; results/RESULTS-2026-09-13-c3.md)
