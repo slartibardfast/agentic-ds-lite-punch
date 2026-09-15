@@ -1212,6 +1212,30 @@ games with the console's 3074/3658 grants honoured exactly as
 requested and the mapping held unrotated through the session, peers
 verified inbound on the packet trace
 (results/RESULTS-2026-09-15-ps3-facade.md).</p>
+<h2 id="keepalive-floor-design-cost-measured"><a class="header" href="#keepalive-floor-design-cost-measured">Keepalive floor (design cost, measured)</a></h2>
+<p>The STUN keepalive that holds AFTR mappings is a bare 20-byte binding
+request (stun.rs, zero attributes) plus the server's response (~55 B
+nominal). At the 2 s deploy interval per slot, three armed slots carry
+~8-12 MB per 24 h on the line, independent of user traffic (roughly
+1 kbit/s; a rounding error against the line rate, and linearly smaller
+at a longer --interval). The 2026-09-15 hold census (one day of daemon
+log) showed zero tuple rotations across ~60 slot-hours while armed; the
+single rotation observed corresponded to the one unarmed window (a slot
+left without keepalive for about 9 minutes), which bounds the AFTR's
+idle reaping on this session to under that.</p>
+<h2 id="teardown-behaviour-observed-no-release-on-client-disappearance"><a class="header" href="#teardown-behaviour-observed-no-release-on-client-disappearance">Teardown behaviour (observed: no release on client disappearance)</a></h2>
+<p>A client that disappears without deleting does not release its grants:
+the PS3 powers off without a DeletePortMapping, the grants carry
+infinite leases, and the facade has no liveness detection, so the slot
+stays bound with the keepalive and the AFTR mapping held until an
+explicit Delete, a re-Add from the same client with a changed internal
+tuple (the replace path), or the operator deletes it. A daemon restart
+restores the grants (leases.tsv persistence). Observed 2026-09-15: the
+console's 3074/3658 grants remained armed with no delete lines for the
+full post-session window. Follow-up: clamp granted leases to a device
+policy max (the session re-Adds on boot, so the console pattern
+survives a bounded lease) so vanished clients are reclaimed by the GC
+instead of persisting forever.</p>
 <h2 id="verification"><a class="header" href="#verification">Verification</a></h2>
 <ul>
 <li>cargo build (musl) and the cargo kani suites (STUN codec, slot and
@@ -3185,6 +3209,25 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-15--keepalive-floor-and-teardown-no-release-on-client-disappearance"><a class="header" href="#2026-09-15--keepalive-floor-and-teardown-no-release-on-client-disappearance">2026-09-15 — Keepalive floor and teardown: no release on client disappearance</a></h2>
+<ul>
+<li>The keepalive floor measured: a bare 20-byte STUN binding request
+plus a ~55 B response, every 2 s, per slot. Three armed slots carry
+~8-12 MB/24 h on the line (a rounding error). Zero tuple rotations
+in ~60 slot-hours while armed (census of one day of daemon log); the
+one rotation seen matched the single unarmed window (~9 min),
+bounding the AFTR idle reap on this session. Recorded in
+plan/0007-igd-facade README.</li>
+<li>Teardown: a client that disappears without deleting does NOT release
+its grants. The PS3 powers off without DeletePortMapping; the
+granted leases are infinite (U32_MAX); the facade has no liveness
+detection; even a daemon restart restores the grants (leases.tsv).
+Release happens only on an explicit Delete, a same-client re-Add
+with a changed internal tuple (the replace path), or the operator.
+Recorded follow-up: clamp granted leases to a device policy max so
+the GC reclaims vanished clients; the console pattern survives a
+bounded lease because the games re-Add on boot.</li>
+</ul>
 <h2 id="2026-09-15--kani-relocation-37-of-40-verdicts-on-the-192-gib-host-remediation-in-flight-session-handoff"><a class="header" href="#2026-09-15--kani-relocation-37-of-40-verdicts-on-the-192-gib-host-remediation-in-flight-session-handoff">2026-09-15 — Kani relocation: 37 of 40 verdicts on the 192 GiB host; remediation in flight (session handoff)</a></h2>
 <ul>
 <li>The call/0019 re-derivation ran on the andromeda workstation (Windows 11
