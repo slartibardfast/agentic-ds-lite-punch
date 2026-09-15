@@ -99,3 +99,11 @@
     evidence = RESULTS-2026-09-15-facade-review.md: every task discharged (validate plan/ call/ ok, verify recheck green, book renders); E6 PS3-with-facade run deferred by operator decision (recorded, not attested); kani deferral call/0019
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-15
+
+[receipt "plan/0007#closure"]
+    disposition = done
+    verify = host-lifecycle tasks reports every task discharged; validate
+    inputs = the milestone records, the decisions
+    evidence = RESULTS-2026-09-15-facade-review.md + RESULTS-2026-09-15-ps3-facade.md: every task discharged (validate plan/ call/ ok, verify recheck green, book renders); E6 completed 2026-09-15 against deployed 34d48c1 (operator attestation, three-plus games, zero log anomalies in the game window); kani deferral call/0019
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-15

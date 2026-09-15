@@ -1,12 +1,14 @@
 # Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)
 
-**Status:** prepared; execution begins 2026-09-13. This milestone
-implements plan/0004 phase E as full answering and honouring for both
-protocols: SSDP and SOAP and GENA answered on br-lan, AddPortMapping
-granted for UDP and TCP with real datapaths (the UDP-only constraint is
-lifted by its own gate), plus the two prerequisite measurements (the
-external-IP pinning hunch; the C3 TCP idle-lifetime) and the crate
-migration into the component repo.
+**Status:** closed 2026-09-15. This milestone implemented plan/0004
+phase E as full answering and honouring for both protocols: SSDP and
+SOAP and GENA answered on br-lan, AddPortMapping granted for UDP and
+TCP with real datapaths (the UDP-only constraint lifted by its own
+gate), the two prerequisite measurements (the external-IP pinning
+hunch; the C3 TCP idle-lifetime), and the crate migration into the
+component repo. Every task is receipted done; the E6 console sign-off
+completed the same day against the deployed 34d48c1 build
+(results/RESULTS-2026-09-15-ps3-facade.md).
 
 ## What this milestone is
 
@@ -152,7 +154,9 @@ IP_Routed. E4's paired-Add quirk resolves to the real TCP path. E5 GENA:
 SUBSCRIBE/UNSUBSCRIBE, SID, initial NOTIFY, renewal, expiry at 2x
 timeout, ExternalIPAddress events on churn, callback URLs on br-lan
 only. E6 conformance and the operator PS3 test reusing the A2 chain
-(Type 2 and Open must hold with the facade live). E7 Kani: SSDP header
+(Type 2 and Open must hold with the facade live): completed
+2026-09-15 against the deployed 34d48c1 build
+(results/RESULTS-2026-09-15-ps3-facade.md). E7 Kani: SSDP header
 grammar, SOAP dispatch and fault paths, enumeration index math, SID/SEQ.
 E8 hardening (size caps, LAN-only binds, no panics, capped logs) and the
 documented-not-built paragraph (miniupnpd-WAN-deaf and lease file tail
@@ -171,7 +175,12 @@ escape).
 
 Record the dated results (redacted), the decisions (the repro waiver
 retirement, the TCP-grants relaxation), the MEMORY entries, and the
-pushtail. The PS3 sign-off reuses the A2 chain with the facade live.
+pushtail. The PS3 sign-off reuses the A2 chain with the facade live:
+completed 2026-09-15 against the deployed 34d48c1 build, three-plus
+games with the console's 3074/3658 grants honoured exactly as
+requested and the mapping held unrotated through the session, peers
+verified inbound on the packet trace
+(results/RESULTS-2026-09-15-ps3-facade.md).
 
 ## Verification
 
@@ -181,8 +190,9 @@ pushtail. The PS3 sign-off reuses the A2 chain with the facade live.
 - The rig measurements recorded (pinning, C3); external-vantage
   datapath tests for UDP and TCP Adds (vdsl4-oracle self-sourced plus
   captures; the console session as operator acceptance).
-- upnpc full verb set, M-POST parity, the PS3 re-test remaining Type 2
-  and Open with the facade live.
+- upnpc full verb set, M-POST parity; the PS3 re-test held Type 2 and
+  Open with the facade live (completed 2026-09-15,
+  results/RESULTS-2026-09-15-ps3-facade.md).
 - host-lifecycle tasks fully discharged; validate plan/ and validate
   call/ ok; software --check ok at the new pin.
 
