@@ -182,6 +182,34 @@ requested and the mapping held unrotated through the session, peers
 verified inbound on the packet trace
 (results/RESULTS-2026-09-15-ps3-facade.md).
 
+## Keepalive floor (design cost, measured)
+
+The STUN keepalive that holds AFTR mappings is a bare 20-byte binding
+request (stun.rs, zero attributes) plus the server's response (~55 B
+nominal). At the 2 s deploy interval per slot, three armed slots carry
+~8-12 MB per 24 h on the line, independent of user traffic (roughly
+1 kbit/s; a rounding error against the line rate, and linearly smaller
+at a longer --interval). The 2026-09-15 hold census (one day of daemon
+log) showed zero tuple rotations across ~60 slot-hours while armed; the
+single rotation observed corresponded to the one unarmed window (a slot
+left without keepalive for about 9 minutes), which bounds the AFTR's
+idle reaping on this session to under that.
+
+## Teardown behaviour (observed: no release on client disappearance)
+
+A client that disappears without deleting does not release its grants:
+the PS3 powers off without a DeletePortMapping, the grants carry
+infinite leases, and the facade has no liveness detection, so the slot
+stays bound with the keepalive and the AFTR mapping held until an
+explicit Delete, a re-Add from the same client with a changed internal
+tuple (the replace path), or the operator deletes it. A daemon restart
+restores the grants (leases.tsv persistence). Observed 2026-09-15: the
+console's 3074/3658 grants remained armed with no delete lines for the
+full post-session window. Follow-up: clamp granted leases to a device
+policy max (the session re-Adds on boot, so the console pattern
+survives a bounded lease) so vanished clients are reclaimed by the GC
+instead of persisting forever.
+
 ## Verification
 
 - cargo build (musl) and the cargo kani suites (STUN codec, slot and
