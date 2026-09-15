@@ -4,6 +4,25 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-15 — Keepalive floor and teardown: no release on client disappearance
+
+- The keepalive floor measured: a bare 20-byte STUN binding request
+  plus a ~55 B response, every 2 s, per slot. Three armed slots carry
+  ~8-12 MB/24 h on the line (a rounding error). Zero tuple rotations
+  in ~60 slot-hours while armed (census of one day of daemon log); the
+  one rotation seen matched the single unarmed window (~9 min),
+  bounding the AFTR idle reap on this session. Recorded in
+  plan/0007-igd-facade README.
+- Teardown: a client that disappears without deleting does NOT release
+  its grants. The PS3 powers off without DeletePortMapping; the
+  granted leases are infinite (U32_MAX); the facade has no liveness
+  detection; even a daemon restart restores the grants (leases.tsv).
+  Release happens only on an explicit Delete, a same-client re-Add
+  with a changed internal tuple (the replace path), or the operator.
+  Recorded follow-up: clamp granted leases to a device policy max so
+  the GC reclaims vanished clients; the console pattern survives a
+  bounded lease because the games re-Add on boot.
+
 ## 2026-09-15 — Kani relocation: 37 of 40 verdicts on the 192 GiB host; remediation in flight (session handoff)
 
 - The call/0019 re-derivation ran on the andromeda workstation (Windows 11
