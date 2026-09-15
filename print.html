@@ -1223,16 +1223,17 @@ log) showed zero tuple rotations across ~60 slot-hours while armed; the
 single rotation observed corresponded to the one unarmed window (a slot
 left without keepalive for about 9 minutes), which bounds the AFTR's
 idle reaping on this session to under that.</p>
-<h2 id="teardown-behaviour-observed-no-release-on-client-disappearance"><a class="header" href="#teardown-behaviour-observed-no-release-on-client-disappearance">Teardown behaviour (observed: no release on client disappearance)</a></h2>
-<p>A client that disappears without deleting does not release its grants:
-the PS3 powers off without a DeletePortMapping, the grants carry
-infinite leases, and the facade has no liveness detection, so the slot
-stays bound with the keepalive and the AFTR mapping held until an
-explicit Delete, a re-Add from the same client with a changed internal
-tuple (the replace path), or the operator deletes it. A daemon restart
-restores the grants (leases.tsv persistence). Observed 2026-09-15: the
-console's 3074/3658 grants remained armed with no delete lines for the
-full post-session window. Follow-up: clamp granted leases to a device
+<h2 id="teardown-behaviour-observed-partial-release-on-power-off"><a class="header" href="#teardown-behaviour-observed-partial-release-on-power-off">Teardown behaviour (observed: partial release on power-off)</a></h2>
+<p>The PS3 DOES send a DeletePortMapping at power-off: observed 2026-09-15
+20:22:44, the facade honoured it and released the 3658 grant cleanly
+(entry removed, slot socket released, keepalive stopped; the live
+teardown path worked end to end). The cleanup is partial: the same
+shutdown left the console's other grant (3074) armed, and a client
+that vanishes without deleting (unplug, network loss) leaves its
+grants entirely: infinite leases, no liveness detection, leases.tsv
+restore. A grant is otherwise released by an explicit Delete, a
+re-Add from the same client with a changed internal tuple (the replace
+path), or the operator. Follow-up: clamp granted leases to a device
 policy max (the session re-Adds on boot, so the console pattern
 survives a bounded lease) so vanished clients are reclaimed by the GC
 instead of persisting forever.</p>
@@ -3209,6 +3210,20 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-15--teardown-correction-the-ps3-does-delete-at-power-off-partial"><a class="header" href="#2026-09-15--teardown-correction-the-ps3-does-delete-at-power-off-partial">2026-09-15 — Teardown correction: the PS3 DOES delete at power-off (partial)</a></h2>
+<ul>
+<li>The 2026-09-15 keepalive/teardown entry below is corrected in part:
+the PS3 sent a DeletePortMapping at power-off (20:22:44, observed
+live) and the facade released the 3658 grant cleanly (entry removed,
+slot socket released, keepalive count dropped 4 to 3) — the C1/C2
+teardown path verified on a real console grant outside the harness.
+The shutdown cleanup is partial: the console's other grant (3074)
+remained armed. The unsupported claim "the PS3 powers off without a
+DeletePortMapping" is superseded.</li>
+<li>What stands: a client that vanishes without deleting (unplug, lost
+network) leaves its grants (infinite leases, no liveness, leases.tsv
+restore); the lease-clamping follow-up covers those residues.</li>
+</ul>
 <h2 id="2026-09-15--keepalive-floor-and-teardown-no-release-on-client-disappearance"><a class="header" href="#2026-09-15--keepalive-floor-and-teardown-no-release-on-client-disappearance">2026-09-15 — Keepalive floor and teardown: no release on client disappearance</a></h2>
 <ul>
 <li>The keepalive floor measured: a bare 20-byte STUN binding request
