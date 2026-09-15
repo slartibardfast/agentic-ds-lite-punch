@@ -22,7 +22,15 @@ def handle(conn, addr):
         lines = head.decode("latin-1").split("\r\n")
         seq = next((l.split(":", 1)[1].strip() for l in lines if l.lower().startswith("seq:")), "?")
         sid = next((l.split(":", 1)[1].strip() for l in lines if l.lower().startswith("sid:")), "?")
-        ext = next((l.split(">", 1)[1].split("<", 1)[0] for l in body.split(b"\n") if b"ExternalIPAddress" in l), "?")
+        ext = "?"
+        for l in body.split(b"\n"):
+            if b"ExternalIPAddress" in l:
+                # the payload's property tag carries an xmlns envelope; the
+                # open tag is exactly <ExternalIPAddress> (no attributes)
+                parts = l.split(b"<ExternalIPAddress>", 1)
+                if len(parts) == 2:
+                    ext = parts[1].split(b"<", 1)[0].decode("utf-8", "replace")
+                break
         print(f"NOTIFY from {addr[0]}:{addr[1]} SEQ={seq} SID={sid} ExternalIPAddress={ext}", flush=True)
         sys.stdout.flush()
     except Exception as e:

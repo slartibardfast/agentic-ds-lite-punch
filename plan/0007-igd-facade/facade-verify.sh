@@ -27,7 +27,7 @@ svc_name() { [ "$1" = IPConn ] && echo WANIPConnection || echo WANPPPConnection;
 
 echo "== capture on br-lan (ssdp 1900 + upnp 49152) =="
 tcpdump -i br-lan -n -s 0 -w "$OUT/facade-battery.pcap" \
-  'udp port 1900 or tcp port 49152 or (udp and port 14500-15000)' >/dev/null 2>&1 &
+  'udp port 1900 or tcp port 49152 or udp portrange 14500-15000' >/dev/null 2>&1 &
 CAP_PID=$!
 sleep 1
 
@@ -78,9 +78,9 @@ curl -s -D - -o /dev/null -X SUBSCRIBE "http://'"$P"'/ctl/IPConn" -H "SID: $SID"
 curl -s -o /dev/null -X UNSUBSCRIBE "http://'"$P"'/ctl/IPConn" -H "SID: $SID"
 '
 echo "-- subscribe response --"
-cat /tmp/gena-sid.txt 2>/dev/null | tee "$OUT/gena-sid.txt"
+lxc-attach -n dslp-probe -- cat /tmp/gena-sid.txt 2>/dev/null | tee "$OUT/gena-sid.txt"
 echo "-- renewal response --"
-cat /tmp/gena-renew.txt 2>/dev/null | tee "$OUT/gena-renew.txt"
+lxc-attach -n dslp-probe -- cat /tmp/gena-renew.txt 2>/dev/null | tee "$OUT/gena-renew.txt"
 echo "-- catcher log (initial NOTIFY with SEQ 0) --"
 sleep 2
 lxc-attach -n dslp-probe -- cat /tmp/gena-catcher.log 2>/dev/null | tee "$OUT/gena-catcher.log"
