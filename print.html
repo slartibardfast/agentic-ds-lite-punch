@@ -2221,6 +2221,113 @@ explicit v2 discovery
 <p><strong>Implement the complete DeviceProtection:1 standardized service and integrate it as the authorization boundary for the complete IGD:2 service set. Do not implement DeviceProtection as a stub, advertisement-only service, or optional compatibility feature.</strong></p>
 </blockquote>
 <p>The fact that the base IGD2 document phrases DeviceProtection as <strong>SHOULD</strong> is therefore intentional at the specification level; this project chooses the stronger implementation target so that "IGD2" means a genuinely security-complete implementation rather than merely the <code>WANIPConnection:2</code> API surface.</p>
+<hr />
+<h1 id="27-research-annex-deviceprotection1-in-the-field-2026-09-16"><a class="header" href="#27-research-annex-deviceprotection1-in-the-field-2026-09-16">27. Research annex: DeviceProtection:1 in the field (2026-09-16)</a></h1>
+<p>Research findings from primary and secondary sources on what "a real
+DeviceProtection:1 implementation" means in deployed practice. The
+conclusion up front:</p>
+<blockquote>
+<p><strong>The only widely-deployed open implementation is miniupnpd, and it
+implements a three-action subset of the specification. "Complete" per
+this milestone is therefore a deliberate superset of the reference,
+not a parity target. Every action the specification defines is
+implemented and enforced; nothing is scaffolded by name only.</strong></p>
+</blockquote>
+<h2 id="271-the-reference-implementation-miniupnpd"><a class="header" href="#271-the-reference-implementation-miniupnpd">27.1 The reference implementation: miniupnpd</a></h2>
+<p>Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
+widespread open implementation. Its own description generator
+(<code>miniupnpd/upnpdescgen.c</code>) ships a DeviceProtection:1 SCPD whose
+action surface is exactly:</p>
+<pre><code class="language-text">SendSetupMessage
+GetSupportedProtocols
+GetAssignedRoles
+</code></pre>
+<p>with state variables:</p>
+<pre><code class="language-text">SetupReady            (boolean, evented; the generated value is always 1)
+SupportedProtocols    (string)
+A_ARG_TYPE_ACL        (string)
+A_ARG_TYPE_IdentityList
+A_ARG_TYPE_Identity
+A_ARG_TYPE_Base64     (bin.base64)
+A_ARG_TYPE_String
+</code></pre>
+<p>The service is gated by the compile flag <code>ENABLE_DP_SERVICE</code>, and in
+<code>IGD_V2</code> builds the <code>force_igd1</code> path (the <code>force_igd_desc_v1</code> option
+from section 6) strips DeviceProtection and WANIPv6FirewallControl
+from the emitted root description. The version-specific URLs from
+section 21 map onto its <code>DP_PATH</code> / <code>DP_CONTROLURL</code> / <code>DP_EVENTURL</code>
+macros.</p>
+<p>Miniupnpd's own project notes state that IGD v2 support was added in
+2011 and that IGD2 is still not enabled by default because of
+interoperability issues.</p>
+<p>Consequences for this milestone:</p>
+<ol>
+<li>A comparator that "matches miniupnpd" would deliver only
+<code>SendSetupMessage</code> + <code>GetSupportedProtocols</code> + <code>GetAssignedRoles</code>
+and could still claim DeviceProtection presence. That is exactly
+the stub-class anti-pattern this milestone rejects.</li>
+<li>The specification's full surface is the completion target, not the
+reference implementation's subset.</li>
+<li>The reference's own gating and force-igd1 behaviour corroborate the
+facade thesis: the description presented to legacy discovery is an
+explicit, toggleable policy, separate from implementation
+capability.</li>
+</ol>
+<h2 id="272-the-specifications-full-surface"><a class="header" href="#272-the-specifications-full-surface">27.2 The specification's full surface</a></h2>
+<p>The DeviceProtection:1 service specification (UPnP Forum, February
+2011) defines the actions this milestone implements in full:</p>
+<pre><code class="language-text">GetSupportedProtocols
+GetAssignedRoles
+RequestUserLogin
+ValidateIdentity
+SendSetupMessage
+GetACLData
+AddACLEntry
+RemoveACLEntry
+GetListOfRoles
+RevokeRole
+GetRolesForAction
+GetUserLoginChallenge
+LoginWithPIN
+LoginWithThirdParty
+</code></pre>
+<p>The authentication-protocol model carries at least the protocol
+families X.509, RSA, Kerberos, username/password, and third-party
+identity; <code>GetSupportedProtocols</code> reports the implemented set, and the
+login flow comprises a challenge (<code>GetUserLoginChallenge</code>), a PIN
+login (<code>LoginWithPIN</code>, administrator PUK versus user PIN), and a
+certificate login (<code>LoginWithThirdParty</code> + <code>ValidateIdentity</code>), with
+the setup ceremony running through <code>SendSetupMessage</code>. The ACL and
+role surface (<code>GetACLData</code>, <code>AddACLEntry</code>, <code>RemoveACLEntry</code>,
+<code>GetListOfRoles</code>, <code>RevokeRole</code>, <code>GetRolesForAction</code>) is persisted and
+enforced, not reported.</p>
+<p>At kickoff the normative PDF
+(<code>UPnP-gw-DeviceProtection-v1-Service.pdf</code>) is obtained and the exact
+argument tables, protocol strings, state-variable semantics and event
+definitions are transcribed into the behaviour spec that lives with
+the component. This annex records the shape; the PDF is the
+authority.</p>
+<h2 id="273-what-complete-and-enforced-means-here"><a class="header" href="#273-what-complete-and-enforced-means-here">27.3 What "complete and enforced" means here</a></h2>
+<pre><code class="language-text">complete:
+    14 actions implemented
+    7 state variables declared as specified
+    SetupReady event semantics as specified
+    ACL and role state persisted per section 26.15
+    the setup and login ceremonies implemented, not simulated
+
+enforced:
+    every protected WIP2 action passes the authorization boundary
+    (section 26.7) with a real, session-derived principal
+    an unauthenticated or unauthorized invocation receives the
+    DeviceProtection-defined SOAP fault, not a stub approval
+    the v1 facade exposes none of it (section 26.12)
+</code></pre>
+<p>The test obligations of section 26.19 (unauthorized action, expired
+session, invalid credentials, ACL change, role change, restart,
+reboot, multiple control points, source-IP independence) are the
+verification that the implementation is not a scaffold. A stub that
+answers names but never enforces fails every one of them by
+construction; the conformance suite is the anti-stub gate.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="software-where"><a class="header" href="#software-where">Software: where</a></h1>
 <p>The action this project produces. Each component is a bare object store with worktrees, not committed into this repo; the recipe below is the reproducibility anchor. Materialize the worktrees locally with:</p>
 <pre><code>host-lifecycle software --materialize .
