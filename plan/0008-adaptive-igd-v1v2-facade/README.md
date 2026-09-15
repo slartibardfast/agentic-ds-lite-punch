@@ -1283,7 +1283,13 @@ v2 facade:
     ...
 ```
 
-This keeps Xbox/legacy clients from encountering the IGD:2 security-control surface that has been implicated in real Xbox interoperability failures. The Xbox/MiniUPnP capture specifically showed the legacy client fetching `DP.xml` when exposed to the IGD2 description.
+This keeps Xbox/legacy clients from encountering the IGD:2
+security-control surface. The association is correlational, not
+causal: the Xbox/MiniUPnP capture showed the legacy client fetching
+`DP.xml` in IGD2 mode before abandoning the sequence, but no evidence
+shows the DP service itself caused the abandonment (see 27.5). The v1
+facade policy rests on the direct trace evidence that Xbox consumes
+IGD1 + WIP1 successfully, not on the DeviceProtection hypothesis.
 
 ## 26.13 Error handling
 
@@ -1656,3 +1662,40 @@ therefore a superset of every reference found; there is no reference
 that can be matched while remaining non-stub, which is precisely the
 reason the specification text, not any implementation, is the
 completion authority.
+
+## 27.5 The DeviceProtection-causation re-read (2026-09-16)
+
+The milestone's earlier framing carried an implied causal claim: that
+exposing DeviceProtection to legacy clients was a driver of the
+observed Xbox One IGD2-mode failure. That claim is weakened by the
+field research and is no longer load-bearing:
+
+1. Orange ships a production IGD2 presentation with no DeviceProtection
+   surface at all (27.4.3), so DP cannot be a universal IGD2 interop
+   breaker.
+2. miniupnpd's own DeviceProtection is a three-action scaffold
+   (27.1); the IGD2 presentation the Xbox actually encountered was not
+   a rich, functional security surface.
+3. The Xbox trace establishes correlation only: in IGD2 mode the
+   client fetched `DP.xml` and then abandoned. The IGD2-versus-IGD1
+   delta is a bundle of differences (device hierarchy, WIP2 SCPD
+   action set, additional services, missing services such as
+   Layer3Forwarding and WANIPv6FirewallControl differences, UDA
+   version). The step captured before the failure is not thereby its
+   cause.
+
+The defensible causal statement is therefore the one in section 4:
+Xbox is a demonstrably sensitive IGD1 control point whose
+interoperability differs materially with the IGD2 description
+presented. The driver of the IGD2-mode failure is unproven.
+
+Plan consequences:
+
+- DeviceProtection remains in the v2 facade because R5 requires a
+  complete IGD2, not because it protects the Xbox path.
+- The v1-for-ssdp:all policy rests on the direct trace evidence
+  (Xbox consumes IGD1 + WIP1 successfully), not on the DP hypothesis.
+- The test phase gains an empirical obligation: bench legacy clients
+  (the Xbox chain) against the v2 facade and capture where the
+  sequence abandons, to isolate the actual IGD2-mode failure driver
+  instead of assuming it.
