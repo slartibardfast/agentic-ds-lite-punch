@@ -45,6 +45,26 @@ newer one, not edited.
 - Not done yet (milestone closure, gated): plan/0007 results record,
   receipts, .host-software pin move (requires pushing 24f4e4d first).
 
+## 2026-09-15 — plan/0007 facade milestone closed; two deferrals recorded
+
+- The E1-E8 facade milestone is receipted and closed: every plan/0007
+  task discharged (migrate-crate through closure), the verify recheck
+  green (validate ok, prose clean, reconcile ok, refs gate ok, book
+  renders), the software pinned at 34d48c1 (review fixes + kani scoping,
+  pushed upstream).
+- Two items are recorded as deferred, not attested, in
+  RESULTS-2026-09-15-facade-review.md:
+  1. Kani structural proofs on the facade tree (call/0019): CBMC 0.67.0
+     does not converge on this host (three timed-out runs, 17/10/5 min).
+     `mpost_post_parity` now proofs clean action text; the multi-line
+     corners are unit-pinned. Full-suite re-derivation runs on a larger
+     host before any deploy relying on the Kani receipt.
+  2. The E6 PS3 sign-off with the facade live: not run at closure
+     (operator decision); the plan/0006 A2 sign-off stands for the
+     organic datapath.
+- The 2026-09-14 OOM-era entry below stays authoritative for the
+  random_sid fix and the deployed build (92ac62cc).
+
 ## 2026-09-14 — Facade OOM root-caused and fixed: unbounded /dev/urandom read in random_sid
 
 - The router daemon OOM-killed itself three times (27426/2030/2202, all
