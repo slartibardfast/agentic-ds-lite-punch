@@ -1334,6 +1334,77 @@ complete IGD2, not because it protects the Xbox path.</li>
 sequence abandons, to isolate the actual IGD2-mode failure driver
 instead of assuming it.</li>
 </ul>
+<hr />
+<h1 id="28-research-annex-the-livebox-play-igd-reverse-engineered-2026-09-16"><a class="header" href="#28-research-annex-the-livebox-play-igd-reverse-engineered-2026-09-16">28. Research annex: the Livebox Play IGD reverse-engineered (2026-09-16)</a></h1>
+<p>Reverse-engineering of the UPnP/IGD implementation in the Livebox Play
+Sagemcom firmware source archive
+(<code>lb_play_sagemcom-sg30_sip-fr-5.7.16-all-packages.tar.bz2</code>,
+61,016 files, all under <code>opensrc/sah/</code>). The durable full report is
+kept outside the repo; this annex records the plan-relevant facts.</p>
+<h2 id="281-provenance-from-source"><a class="header" href="#281-provenance-from-source">28.1 Provenance, from source</a></h2>
+<p>The IGD daemon is
+<code>opensrc/sah/services/linux-igd/REL/2014-06-19_V3.9.1/linuxigd2</code> and
+its own headers carry:</p>
+<pre><code class="language-c">/* This file is part of Nokia InternetGatewayDevice v2 reference
+   implementation */
+</code></pre>
+<p>That is the lineage both narratives trace to: the Nokia/linux-igd v2
+code that Orange's <code>igd2-for-linux</code> also derived from, packaged here
+by SoftAtHome as service <code>linux-igd V3.9.1</code> inside their SOP
+component framework with SoftAtHome glue (<code>fw_wrapper.c</code>,
+<code>nemo_wrapper.c</code>, <code>ipc_wrapper.c</code>, <code>pcb_eventloop.c</code>). The
+SSDP/HTTP/SOAP engine is libupnp 1.6.18, visibly forked: a six-argument
+<code>UpnpRegisterRootDevice4(..., LowerDescUrl)</code> (<code>upnp.h:1353</code>,
+<code>upnpapi.c:1139</code>), version-aware M-SEARCH routing in <code>ssdp_server.c</code>,
+and <code>#define X_USER_AGENT "redsonic"</code> (<code>ssdplib.h:93</code>, "needed for
+the DSM-320"). Miniupnpd appears only as the test client
+(<code>test/miniupnpc-1.5.20110618/</code>), never as the IGD.</p>
+<h2 id="282-the-two-description-mechanism"><a class="header" href="#282-the-two-description-mechanism">28.2 The two-description mechanism</a></h2>
+<p><code>gatedesc.xml</code> / <code>gatedesc1.xml</code> are build-time-processed templates
+(<code>m4 -D__PRESENTATION_URL__</code>, <code>sed __ICON_LIST__</code>; Makefile) named by
+the config pair <code>description_document_name</code> / <code>lower_description_document</code>
+(<code>upnpd.conf</code>, default defines in <code>globals.h</code>). The daemon registers
+one root device with both URLs (<code>main.c:92-113</code> wrapper,
+<code>UpnpRegisterRootDevice4(desc, ..., LowerDescUrl)</code>), and the forked
+libupnp selects at M-SEARCH time:</p>
+<pre><code class="language-text">requested &lt; registered   -&gt; ST=requested(lower) + LOCATION=LowerDescURL
+                           (gatedesc1.xml, the v1 presentation)
+requested == registered  -&gt; ST=:2 + LOCATION=DescURL (gatedesc.xml)
+</code></pre>
+<p>The product's own config states the intent: the lower document
+"advertise[s] an UPnP IGD v1 device embedding all the UPnP IGD v2
+functions for legacy Control Points which are not able to interact
+with UPnP IGD v2 device (those legacy CPs are not compliant with the
+UDA)". The two descriptions differ in device versions only
+(InternetGatewayDevice/WANDevice/WANConnectionDevice :1 vs :2); the
+connection service is a single shared superset SCPD
+(<code>GetNATRSIPStatus</code> plus <code>AddAnyPortMapping</code>), with an IP/PPP build
+split (<code>__SERVICE_TYPE__</code> substitution).</p>
+<h2 id="283-finding-a-plan-section-93-the-livebox-serves-ssdpall-from-the-v2-description"><a class="header" href="#283-finding-a-plan-section-93-the-livebox-serves-ssdpall-from-the-v2-description">28.3 Finding A (plan section 9.3): the Livebox serves ssdp:all from the v2 description</a></h2>
+<p>In the forked libupnp the ssdp:all branch replies with the PRIMARY
+(DescURL) description (<code>ssdp_server.c</code>, SSDP_ALL case); the lower
+document is served only on explicit lower-version STs. The Livebox
+therefore resolves generic discovery to the v2 facade, not the v1
+compatibility facade.</p>
+<p>Decision recorded for this milestone: section 9.3's
+ssdp:all-to-v1 policy stands (it is the deliberate compatibility
+profile protecting Xbox-class clients, per sections 15 and 25), while
+the Livebox divergence is logged as a real-world counter-example to
+evaluate at bench time. The test matrix gains no rule change: explicit
+versioned searches keep R3/R4 behavior (identical to the Livebox), and
+ssdp:all keeps the profile's conservative v1 answer. The bench phase
+records how Xbox-family and modern clients behave against BOTH
+policies.</p>
+<h2 id="284-finding-b-sections-26-and-27-production-dp-absence-confirmed-from-source"><a class="header" href="#284-finding-b-sections-26-and-27-production-dp-absence-confirmed-from-source">28.4 Finding B (sections 26 and 27): production DP absence confirmed from source</a></h2>
+<p>The Livebox config set carries no DeviceProtection SCPD, and the
+daemon's authorization is an internal access-level ACL
+(<code>accessLevelXml</code>, <code>ACL_XML /etc/upnpd_ACL.xml</code>) with the literal
+source comment <code>//TODO: must be replaced by DeviceProtection</code>
+(<code>globals.h:113</code>). A second production IGD2 implementation therefore
+ships without DP and with its own placeholder for it, reinforcing
+section 27's field picture and the completion bar: no deployed
+reference implements the full DP surface, and this milestone remains a
+superset of every one.</p>
 
                     </main>
 
