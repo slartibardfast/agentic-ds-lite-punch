@@ -129,8 +129,9 @@ model comes from C3.
 - depends: #tcp-datapath, #pin-hunch
 - verify: upnpc -l / -a / -d full verb set with captures; M-POST parity
   via curl with the MAN header; TCP and UDP Adds deliver data from an
-  external vantage; GENA SUBSCRIBE and NOTIFY on churn; the Kani suites
-  pass
+  external vantage; GENA SUBSCRIBE and NOTIFY on churn; the unit suite
+  passes (86); the facade Kani structural proofs deferred to a larger
+  host (attested call/0019)
 - inputs: the relay source, the phase E spec, the pinning result
 
 E1 SSDP: join 239.255.255.250:1900 on br-lan with REUSEPORT, M-SEARCH

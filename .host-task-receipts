@@ -83,3 +83,11 @@
     evidence = RESULTS-2026-09-13-tcp-datapath.md: external end-to-end TCP session through the mapping proven (us-wireguard peer), egress fix 6c3d15a, 54 tests, 32/32 Kani
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-13
+
+[receipt "plan/0007#facade"]
+    disposition = done
+    verify = upnpc -l / -a / -d full verb set with captures; M-POST parity
+    inputs = the relay source, the phase E spec, the pinning result
+    evidence = RESULTS-2026-09-15-facade-review.md: 5 criticals + approved suggestions fixed (24f4e4d, 34d48c1), 86 tests green; live-rig walk build 92ac62cc; kani deferral call/0019
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-15
