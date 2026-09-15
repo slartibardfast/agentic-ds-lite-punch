@@ -1452,3 +1452,131 @@ The implementation agent should interpret this document as:
 > **Implement the complete DeviceProtection:1 standardized service and integrate it as the authorization boundary for the complete IGD:2 service set. Do not implement DeviceProtection as a stub, advertisement-only service, or optional compatibility feature.**
 
 The fact that the base IGD2 document phrases DeviceProtection as **SHOULD** is therefore intentional at the specification level; this project chooses the stronger implementation target so that "IGD2" means a genuinely security-complete implementation rather than merely the `WANIPConnection:2` API surface.
+
+---
+
+# 27. Research annex: DeviceProtection:1 in the field (2026-09-16)
+
+Research findings from primary and secondary sources on what "a real
+DeviceProtection:1 implementation" means in deployed practice. The
+conclusion up front:
+
+> **The only widely-deployed open implementation is miniupnpd, and it
+> implements a three-action subset of the specification. "Complete" per
+> this milestone is therefore a deliberate superset of the reference,
+> not a parity target. Every action the specification defines is
+> implemented and enforced; nothing is scaffolded by name only.**
+
+## 27.1 The reference implementation: miniupnpd
+
+Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
+widespread open implementation. Its own description generator
+(`miniupnpd/upnpdescgen.c`) ships a DeviceProtection:1 SCPD whose
+action surface is exactly:
+
+```text
+SendSetupMessage
+GetSupportedProtocols
+GetAssignedRoles
+```
+
+with state variables:
+
+```text
+SetupReady            (boolean, evented; the generated value is always 1)
+SupportedProtocols    (string)
+A_ARG_TYPE_ACL        (string)
+A_ARG_TYPE_IdentityList
+A_ARG_TYPE_Identity
+A_ARG_TYPE_Base64     (bin.base64)
+A_ARG_TYPE_String
+```
+
+The service is gated by the compile flag `ENABLE_DP_SERVICE`, and in
+`IGD_V2` builds the `force_igd1` path (the `force_igd_desc_v1` option
+from section 6) strips DeviceProtection and WANIPv6FirewallControl
+from the emitted root description. The version-specific URLs from
+section 21 map onto its `DP_PATH` / `DP_CONTROLURL` / `DP_EVENTURL`
+macros.
+
+Miniupnpd's own project notes state that IGD v2 support was added in
+2011 and that IGD2 is still not enabled by default because of
+interoperability issues.
+
+Consequences for this milestone:
+
+1. A comparator that "matches miniupnpd" would deliver only
+   `SendSetupMessage` + `GetSupportedProtocols` + `GetAssignedRoles`
+   and could still claim DeviceProtection presence. That is exactly
+   the stub-class anti-pattern this milestone rejects.
+2. The specification's full surface is the completion target, not the
+   reference implementation's subset.
+3. The reference's own gating and force-igd1 behaviour corroborate the
+   facade thesis: the description presented to legacy discovery is an
+   explicit, toggleable policy, separate from implementation
+   capability.
+
+## 27.2 The specification's full surface
+
+The DeviceProtection:1 service specification (UPnP Forum, February
+2011) defines the actions this milestone implements in full:
+
+```text
+GetSupportedProtocols
+GetAssignedRoles
+RequestUserLogin
+ValidateIdentity
+SendSetupMessage
+GetACLData
+AddACLEntry
+RemoveACLEntry
+GetListOfRoles
+RevokeRole
+GetRolesForAction
+GetUserLoginChallenge
+LoginWithPIN
+LoginWithThirdParty
+```
+
+The authentication-protocol model carries at least the protocol
+families X.509, RSA, Kerberos, username/password, and third-party
+identity; `GetSupportedProtocols` reports the implemented set, and the
+login flow comprises a challenge (`GetUserLoginChallenge`), a PIN
+login (`LoginWithPIN`, administrator PUK versus user PIN), and a
+certificate login (`LoginWithThirdParty` + `ValidateIdentity`), with
+the setup ceremony running through `SendSetupMessage`. The ACL and
+role surface (`GetACLData`, `AddACLEntry`, `RemoveACLEntry`,
+`GetListOfRoles`, `RevokeRole`, `GetRolesForAction`) is persisted and
+enforced, not reported.
+
+At kickoff the normative PDF
+(`UPnP-gw-DeviceProtection-v1-Service.pdf`) is obtained and the exact
+argument tables, protocol strings, state-variable semantics and event
+definitions are transcribed into the behaviour spec that lives with
+the component. This annex records the shape; the PDF is the
+authority.
+
+## 27.3 What "complete and enforced" means here
+
+```text
+complete:
+    14 actions implemented
+    7 state variables declared as specified
+    SetupReady event semantics as specified
+    ACL and role state persisted per section 26.15
+    the setup and login ceremonies implemented, not simulated
+
+enforced:
+    every protected WIP2 action passes the authorization boundary
+    (section 26.7) with a real, session-derived principal
+    an unauthenticated or unauthorized invocation receives the
+    DeviceProtection-defined SOAP fault, not a stub approval
+    the v1 facade exposes none of it (section 26.12)
+```
+
+The test obligations of section 26.19 (unauthorized action, expired
+session, invalid credentials, ACL change, role change, restart,
+reboot, multiple control points, source-IP independence) are the
+verification that the implementation is not a scaffold. A stub that
+answers names but never enforces fails every one of them by
+construction; the conformance suite is the anti-stub gate.
