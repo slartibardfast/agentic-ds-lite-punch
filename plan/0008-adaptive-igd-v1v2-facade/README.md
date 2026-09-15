@@ -1699,3 +1699,92 @@ Plan consequences:
   (the Xbox chain) against the v2 facade and capture where the
   sequence abandons, to isolate the actual IGD2-mode failure driver
   instead of assuming it.
+
+---
+
+# 28. Research annex: the Livebox Play IGD reverse-engineered (2026-09-16)
+
+Reverse-engineering of the UPnP/IGD implementation in the Livebox Play
+Sagemcom firmware source archive
+(`lb_play_sagemcom-sg30_sip-fr-5.7.16-all-packages.tar.bz2`,
+61,016 files, all under `opensrc/sah/`). The durable full report is
+kept outside the repo; this annex records the plan-relevant facts.
+
+## 28.1 Provenance, from source
+
+The IGD daemon is
+`opensrc/sah/services/linux-igd/REL/2014-06-19_V3.9.1/linuxigd2` and
+its own headers carry:
+
+```c
+/* This file is part of Nokia InternetGatewayDevice v2 reference
+   implementation */
+```
+
+That is the lineage both narratives trace to: the Nokia/linux-igd v2
+code that Orange's `igd2-for-linux` also derived from, packaged here
+by SoftAtHome as service `linux-igd V3.9.1` inside their SOP
+component framework with SoftAtHome glue (`fw_wrapper.c`,
+`nemo_wrapper.c`, `ipc_wrapper.c`, `pcb_eventloop.c`). The
+SSDP/HTTP/SOAP engine is libupnp 1.6.18, visibly forked: a six-argument
+`UpnpRegisterRootDevice4(..., LowerDescUrl)` (`upnp.h:1353`,
+`upnpapi.c:1139`), version-aware M-SEARCH routing in `ssdp_server.c`,
+and `#define X_USER_AGENT "redsonic"` (`ssdplib.h:93`, "needed for
+the DSM-320"). Miniupnpd appears only as the test client
+(`test/miniupnpc-1.5.20110618/`), never as the IGD.
+
+## 28.2 The two-description mechanism
+
+`gatedesc.xml` / `gatedesc1.xml` are build-time-processed templates
+(`m4 -D__PRESENTATION_URL__`, `sed __ICON_LIST__`; Makefile) named by
+the config pair `description_document_name` / `lower_description_document`
+(`upnpd.conf`, default defines in `globals.h`). The daemon registers
+one root device with both URLs (`main.c:92-113` wrapper,
+`UpnpRegisterRootDevice4(desc, ..., LowerDescUrl)`), and the forked
+libupnp selects at M-SEARCH time:
+
+```text
+requested < registered   -> ST=requested(lower) + LOCATION=LowerDescURL
+                           (gatedesc1.xml, the v1 presentation)
+requested == registered  -> ST=:2 + LOCATION=DescURL (gatedesc.xml)
+```
+
+The product's own config states the intent: the lower document
+"advertise[s] an UPnP IGD v1 device embedding all the UPnP IGD v2
+functions for legacy Control Points which are not able to interact
+with UPnP IGD v2 device (those legacy CPs are not compliant with the
+UDA)". The two descriptions differ in device versions only
+(InternetGatewayDevice/WANDevice/WANConnectionDevice :1 vs :2); the
+connection service is a single shared superset SCPD
+(`GetNATRSIPStatus` plus `AddAnyPortMapping`), with an IP/PPP build
+split (`__SERVICE_TYPE__` substitution).
+
+## 28.3 Finding A (plan section 9.3): the Livebox serves ssdp:all from the v2 description
+
+In the forked libupnp the ssdp:all branch replies with the PRIMARY
+(DescURL) description (`ssdp_server.c`, SSDP_ALL case); the lower
+document is served only on explicit lower-version STs. The Livebox
+therefore resolves generic discovery to the v2 facade, not the v1
+compatibility facade.
+
+Decision recorded for this milestone: section 9.3's
+ssdp:all-to-v1 policy stands (it is the deliberate compatibility
+profile protecting Xbox-class clients, per sections 15 and 25), while
+the Livebox divergence is logged as a real-world counter-example to
+evaluate at bench time. The test matrix gains no rule change: explicit
+versioned searches keep R3/R4 behavior (identical to the Livebox), and
+ssdp:all keeps the profile's conservative v1 answer. The bench phase
+records how Xbox-family and modern clients behave against BOTH
+policies.
+
+## 28.4 Finding B (sections 26 and 27): production DP absence confirmed from source
+
+The Livebox config set carries no DeviceProtection SCPD, and the
+daemon's authorization is an internal access-level ACL
+(`accessLevelXml`, `ACL_XML /etc/upnpd_ACL.xml`) with the literal
+source comment `//TODO: must be replaced by DeviceProtection`
+(`globals.h:113`). A second production IGD2 implementation therefore
+ships without DP and with its own placeholder for it, reinforcing
+section 27's field picture and the completion bar: no deployed
+reference implements the full DP surface, and this milestone remains a
+superset of every one.
