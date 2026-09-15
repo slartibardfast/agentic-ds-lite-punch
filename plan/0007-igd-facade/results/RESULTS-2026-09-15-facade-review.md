@@ -63,6 +63,13 @@ runs, 17 min, 10 min, 5 min. `mpost_post_parity` now proofs clean action
 text; the multi-line corners are unit-pinned. A full-suite re-derivation
 runs on a larger host before any deploy that relies on the Kani receipt.
 
+## Deferred by operator decision (2026-09-15)
+
+- The E6 PS3 sign-off with the facade live: the A2-chain console check
+  (NAT Type 2 / MW2 Open) against the facade was not run before this
+  closure. It is a recorded follow-up, not an attestation; the plan/0006
+  A2 sign-off stands for the organic datapath.
+
 ## Verification
 
 - cargo test: 86 passed, 0 failed, 1 ignored (`miniupnpc_interop`, an
