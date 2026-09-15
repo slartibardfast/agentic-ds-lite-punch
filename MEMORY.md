@@ -33,9 +33,13 @@ newer one, not edited.
   detection; even a daemon restart restores the grants (leases.tsv).
   Release happens only on an explicit Delete, a same-client re-Add
   with a changed internal tuple (the replace path), or the operator.
-  Recorded follow-up: clamp granted leases to a device policy max so
-  the GC reclaims vanished clients; the console pattern survives a
-  bounded lease because the games re-Add on boot.
+- Policy (2026-09-15, supersedes the lease-clamping follow-up): grants
+  stay infinite on purpose. Expiry-driven cleanup churns AFTR tuples
+  (a released mapping is not preservable on this line; re-arm gets a
+  new port, observed), while these mappings are actively held (2 s
+  keepalive, tuple watch, churn lines) and bounded by the slot caps
+  (32/16) plus replace-on-re-Add. The IGD:2 604800 guidance addresses
+  passive mappings; the relay's active hold supersedes it.
 
 ## 2026-09-15 — Kani relocation: 37 of 40 verdicts on the 192 GiB host; remediation in flight (session handoff)
 
