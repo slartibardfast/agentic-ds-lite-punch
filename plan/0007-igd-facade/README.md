@@ -217,7 +217,13 @@ AFTR port, observed on the one unarmed slot). The appearing-infinite
 value is not a permanence promise; the conservation levers remain
 behind it. The IGD:2 lease guidance (max 604800 s, static via UPnP
 discouraged) addresses passive mappings; this relay's active hold
-supersedes it.
+supersedes it. Implemented 2026-09-15 in the component (95 tests): a
+per-grant last-seen clock stamped by inbound peer data (rate-limited)
+and by any SOAP action from the client; a UDP grant becomes reapeable
+when its client goes silent past 24 h (pressure eviction of the
+longest-idle other-client grant at TableFull) or 7 days (backstop
+sweep). TCP grants stay outside the policy. Restore seeds the clock at
+now so a respawn never insta-reaps.
 
 ## Verification
 
