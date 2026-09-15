@@ -57,3 +57,9 @@
     evidence = gate recheck green after rename: validate ok; prose clean; reconcile clean; refs 15/15; remap --check 0 tells; book --check ok; component @ pin
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-11
+
+[receipt "materialize" "ds-lite-punch"]
+    disposition = done
+    evidence = 2 item(s) realized for ds-lite-punch at pin 34d48c127ac6 (reference); toolchain x86_64-unknown-linux-musl
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-15
