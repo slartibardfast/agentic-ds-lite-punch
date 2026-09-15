@@ -1233,14 +1233,16 @@ that vanishes without deleting (unplug, network loss) leaves its
 grants entirely: infinite leases, no liveness detection, leases.tsv
 restore. A grant is otherwise released by an explicit Delete, a
 re-Add from the same client with a changed internal tuple (the replace
-path), or the operator. Decision (2026-09-15): grants stay infinite by
-policy. Expiry-driven cleanup is wrong for this line: a released
-mapping is not preservable (re-arm gets a new AFTR port, observed on
-the one unarmed slot), so lease expiry would churn stable tuples on
-re-Add; and these mappings are never passive (2 s keepalive, tuple
-watch, per-rotation churn lines) and their residue is bounded by the
-slot-pool caps (32 slots, 16 per client) and the replace-on-re-Add
-path. The UPNP lease guidance (IGD:2 max 604800 s, static via UPnP
+path), or the operator. Decision (2026-09-15): the granted lease
+appears infinite (U32_MAX on the wire and in the index) while the
+effective lifetime is managed underneath by the slot machinery: the
+active hold (2 s keepalive, tuple watch, churn lines), the replace
+path, the Delete path, the operator, and the slot-pool caps (32 slots,
+16 per client). No expiry countdown churns a live tuple, and a
+released mapping is not preservable on this line (re-arm gets a new
+AFTR port, observed on the one unarmed slot). The appearing-infinite
+value is not a permanence promise; the conservation levers remain
+behind it. The IGD:2 lease guidance (max 604800 s, static via UPnP
 discouraged) addresses passive mappings; this relay's active hold
 supersedes it.</p>
 <h2 id="verification"><a class="header" href="#verification">Verification</a></h2>
@@ -3245,13 +3247,15 @@ granted leases are infinite (U32_MAX); the facade has no liveness
 detection; even a daemon restart restores the grants (leases.tsv).
 Release happens only on an explicit Delete, a same-client re-Add
 with a changed internal tuple (the replace path), or the operator.</li>
-<li>Policy (2026-09-15, supersedes the lease-clamping follow-up): grants
-stay infinite on purpose. Expiry-driven cleanup churns AFTR tuples
-(a released mapping is not preservable on this line; re-arm gets a
-new port, observed), while these mappings are actively held (2 s
-keepalive, tuple watch, churn lines) and bounded by the slot caps
-(32/16) plus replace-on-re-Add. The IGD:2 604800 guidance addresses
-passive mappings; the relay's active hold supersedes it.</li>
+<li>Policy (2026-09-15, supersedes the lease-clamping follow-up): the
+granted lease APPEARS infinite (U32_MAX on the wire and in the
+index); the effective lifetime is managed underneath by the slot
+machinery (active hold, replace, Delete, operator, pool caps 32/16).
+No expiry countdown churns a live tuple (a released mapping is not
+preservable on this line; re-arm gets a new port, observed). The
+appearing-infinite value is not a permanence promise; conservation
+levers stay behind it. The IGD:2 604800 guidance addresses passive
+mappings; the relay's active hold supersedes it.</li>
 </ul>
 <h2 id="2026-09-15--kani-relocation-37-of-40-verdicts-on-the-192-gib-host-remediation-in-flight-session-handoff"><a class="header" href="#2026-09-15--kani-relocation-37-of-40-verdicts-on-the-192-gib-host-remediation-in-flight-session-handoff">2026-09-15 — Kani relocation: 37 of 40 verdicts on the 192 GiB host; remediation in flight (session handoff)</a></h2>
 <ul>
