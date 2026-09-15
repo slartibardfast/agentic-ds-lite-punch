@@ -4,6 +4,52 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-15 — Kani relocation: 37 of 40 verdicts on the 192 GiB host; remediation in flight (session handoff)
+
+- The call/0019 re-derivation ran on the andromeda workstation (Windows 11
+  Pro for Workstations, 192 GiB physical, WSL2 soft-limited to 96 GiB,
+  Xeon X5650 at 2.67 GHz, 12 threads; kani-verifier 0.67.0 with the
+  bundle provisioned that day, CBMC 6.8.0, cadical) against a fresh
+  clone of ds-lite-punch at 34d48c1. Operator note: the old non-convergence
+  was memory plus slow-core solver time, not symbolic hardness.
+- `cargo kani --jobs=4 --output-format=terse` (operator-directed; the tool
+  requires terse with --jobs) produced 37 of 40 verdicts: 35 SUCCESSFUL,
+  including the entire pre-facade 32 and sid_set_invariants — the facade
+  review's chunk-7 prediction did not materialize (the full+absent state
+  is unreachable in that harness as written). 2 FAILED; 3 harnesses were
+  still solving at 4 h+ when this entry landed.
+- FAILED, classified SPURIOUS — entry_at_bounds_proof (upnp.rs:1557,
+  `e == arr[idx as usize]`): the captured counterexample (idx = 3,
+  maximal field values) replays green in plain Rust
+  (`entry_at_cex_replay_idx3`). It is a Kani/CBMC artifact; the harness
+  should be reshaped to concrete-index enumeration and the finding
+  raised upstream.
+- FAILED, arithmetic not hardness — mpost_post_parity (unwinding
+  assertion in `put`, upnp.rs:1397): the M-POST prefix constant is ~101
+  bytes against `unwind(96)`, and classify's full-head marker scans need
+  ~120 on the ~132-byte M-POST head. mpost_post_parity_real_actions is
+  predicted to fail the same way when its verdict lands.
+- The favourable-shape attempt is pushed as branch `kani-favourable`
+  (22b9677) on the component remote: `put` rewritten to
+  `copy_from_slice` (memcpy is a CBMC builtin; no loop to unroll), both
+  parity harnesses at `unwind(200)`, clean-action-text scoping
+  untouched. Fold-test timings pending; the escalation if the symbolic
+  variant stays slow is a verified `find_header` contract applied via
+  `stub_verified` (`-Z function-contracts`).
+- Everything from the runs lives only on this host under
+  `~/kani-relocation/`: `kani-run-2026-09-15.log` (interrupted serial
+  attempt), `kani-run-2026-09-15-j4.log` (the complete suite),
+  `favourable-real-actions.txt` and `favourable-mpost.txt` (the
+  attempt), `entry-at-cex.txt` (the artifact evidence),
+  `parse_kani.py` (thread-aware verdict extractor; volatile /tmp copy
+  was replaced). Raw logs stay on the host per the results-redaction
+  policy.
+- Still owed after the stragglers and fold tests resolve: the RESULTS
+  record in plan/0007-igd-facade/results/, the call/0020 supersession
+  of call/0019, the crate remediation commit with the pin move, and the
+  upstream artifact report. PS3 work (plan/0006) is unaffected: the
+  host repo and the component pin are pushed.
+
 ## 2026-09-15 — Facade review verdict: 5 criticals fixed, committed 24f4e4d
 
 - The 17-agent review of the E1-E8 facade increment (79 tests green) found
