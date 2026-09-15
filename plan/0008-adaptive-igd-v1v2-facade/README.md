@@ -1580,3 +1580,79 @@ reboot, multiple control points, source-IP independence) are the
 verification that the implementation is not a scaffold. A stub that
 answers names but never enforces fails every one of them by
 construction; the conformance suite is the anti-stub gate.
+
+## 27.4 The second reference: Orange igd2-for-linux
+
+Orange-OpenSource's `igd2-for-linux` (imported from the retired
+gitorious of the same name) is the Linux UPnP IGD updated to the
+InternetGatewayDevice:2 specifications, with an OpenWrt custom feed
+under `openwrt/`. Its source tree is a second primary reference for
+this milestone, and it makes two points directly.
+
+### 27.4.1 The dual-presentation switch exists in production
+
+The tree ships TWO root device descriptions:
+
+```text
+gatedesc.xml     InternetGatewayDevice:2, WANDevice:2,
+                 WANConnectionDevice:2, WANIPConnection:2,
+                 WANIPv6FirewallControl:1, ... (no Layer3Forwarding,
+                 no DeviceProtection)
+
+gatedesc1.xml    InternetGatewayDevice:1, WANDevice:1,
+                 WANConnectionDevice:1, WANIPConnection:1, ...
+```
+
+This is section 11's model operating as a shipped configuration:
+the capability is v2, and the presentation to a given control point is
+a policy choice between two deterministic descriptions. It corroborates
+the facade thesis from a production codebase, not just from the
+miniupnpd changelog.
+
+One divergence from this milestone's requirement: both root descs
+point at the SAME service SCPD URLs (`/gateconnSCPD.xml` et al.).
+Section 21's "the v1 and v2 descriptions MUST have distinct service
+URLs" is therefore deliberately stricter than the Orange precedent;
+the strictness exists for determinism and cache clarity and is
+retained.
+
+### 27.4.2 The shared connection SCPD is a vendor-extended superset
+
+The one shared `gateconnSCPD.xml` contains WIP1 actions (including
+`GetNATRSIPStatus`, which is a WIP1-only action) together with the
+v2-era extensions `AddAnyPortMapping`, `DeletePortMappingRange` and
+`GetListOfPortMappings`. The SCPD itself does not declare a
+serviceType; version attribution lives in the root description that
+references it. The single-superset-SCPD pattern is a real-world third
+shape beside miniupnpd's strict versioning and this milestone's
+distinct-service-URLs model.
+
+### 27.4.3 DeviceProtection is absent there too
+
+No file in the tree carries DeviceProtection; neither root description
+exposes the service. A major carrier's production IGD2 therefore ships
+without any DeviceProtection surface (and without Layer3Forwarding),
+confirming how little of the IGD2 hierarchy the deployed ecosystem
+actually implements.
+
+### 27.4.4 The field picture, updated
+
+```text
+miniupnpd   IGD2 optional, off by default; DP = 3 actions
+            (SendSetupMessage, GetSupportedProtocols,
+            GetAssignedRoles), no working login/ACL ceremonies
+
+Orange igd2 IGD2 with WIP2 + WANIPv6FirewallControl; dual root descs;
+            shared superset SCPD; DP absent entirely
+
+this milestone
+            complete DP:1 (14 actions, enforced), dual facades with
+            distinct per-version service URLs
+```
+
+No deployed open implementation provides even a working subset of the
+DP login, setup and ACL ceremonies. "Complete" per this milestone is
+therefore a superset of every reference found; there is no reference
+that can be matched while remaining non-stub, which is precisely the
+reason the specification text, not any implementation, is the
+completion authority.
