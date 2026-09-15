@@ -267,6 +267,38 @@ corners; receiver must re-verify the proof and the "32 of 32" receipt.</li>
 <li>Not done yet (milestone closure, gated): plan/0007 results record,
 receipts, .host-software pin move (requires pushing 24f4e4d first).</li>
 </ul>
+<h2 id="2026-09-15--e6-signed-consoleupnp-observed-live-on-the-deployed-34d48c1-deploy-footguns"><a class="header" href="#2026-09-15--e6-signed-consoleupnp-observed-live-on-the-deployed-34d48c1-deploy-footguns">2026-09-15 — E6 signed: console/UPnP observed live on the deployed 34d48c1; deploy footguns</a></h2>
+<ul>
+<li>E6 (the deferred PS3-with-facade item, see 2026-09-15 closure entry and
+call/0019's sibling) is now attested: three consecutive MW2 games ran
+perfectly with the facade live on the router. The console's games DO
+use UPnP IGD AddPortMapping (the "PS3 has no UPnP" notion is wrong):
+MW2 requested 3074/UDP exactly, the facade granted it (entry 3074 -&gt;
+slot 40002, infinite lease), plus 3658 -&gt; 40001; a packet trace showed
+the 3074 mapping held unrotated through three games and three external
+peers contacting the console inbound (one sustained peer, two probes,
+inbound payloads to 488 bytes). Raw evidence stays on the router at
+/mnt/nvme/runs/2026-09-15-ps3-facade/ per the results size policy;
+the record is RESULTS-2026-09-15-ps3-facade.md.</li>
+<li>The deployed build is now 34d48c1 (sha 3a030fd0, pid 20468), deployed
+this evening. The old "deployed 92ac62cc" note is superseded. RSS
+flat, zero log errors through the whole session.</li>
+<li>Deploy footguns, both hit this evening:
+<ol>
+<li>deploy/install.sh expects the binary ALREADY at /usr/bin (its
+first check); staging it in /tmp and running install.sh restarts
+the OLD binary silently. scp to /usr/bin FIRST, then install.sh.</li>
+<li>scp onto /usr/bin/ds-lite-punch fails with "dest open ... Failure"
+(ETXTBSY) while the old process runs: stop the service first
+(/etc/init.d/ds-lite-punch stop), scp, then install.sh.</li>
+</ol>
+</li>
+<li>The facade battery (facade-verify.sh) had three script bugs fixed this
+session: the pcap filter used invalid <code>port N-M</code> (now <code>portrange</code>), so
+the capture leg died silently; the catcher's ExternalIPAddress parse
+split bytes with str separators; gena-sid.txt/renew.txt were written
+inside the probe but read on the router host. Re-runnable cleanly now.</li>
+</ul>
 <h2 id="2026-09-15--plan0007-facade-milestone-closed-two-deferrals-recorded"><a class="header" href="#2026-09-15--plan0007-facade-milestone-closed-two-deferrals-recorded">2026-09-15 — plan/0007 facade milestone closed; two deferrals recorded</a></h2>
 <ul>
 <li>The E1-E8 facade milestone is receipted and closed: every plan/0007
