@@ -45,8 +45,8 @@ router.
 
 ## The RCA (rp_filter to root cause)
 
-- rp_filter: off (eth1 and all = 0) — refuted as the cause.
-- Source validation: open (accept_local = 1) — not the cause.
+- rp_filter: off (eth1 and all = 0); refuted as the cause.
+- Source validation: open (accept_local = 1); not the cause.
 - The listener and the accept rule: healthy (a local SYN completes; the
   lo capture shows the SYN-ACK generated).
 - Root cause: the accepted connection's reply routes per the kernel's

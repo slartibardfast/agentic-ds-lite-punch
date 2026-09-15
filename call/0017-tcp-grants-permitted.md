@@ -39,8 +39,8 @@ discharged by this decision.
   TCP-and-UDP Adds resolve to a real path; the RST dead-signal gives TCP
   prompt death detection that the UDP path lacks.
 - Negative: the TCP mapping is expected to expire within minutes of
-  silence. Idle spliced connections need the under-120 s liveness the
-  design sizes, and a dead mapping re-establishes on demand, publishing
+  silence. The design sizes an under-120 s liveness for idle spliced
+  connections; a dead mapping re-establishes on demand and publishes the
   likely-changed external tuple as a churn event.
 - Publication becomes per protocol: the UDP tuple record is unchanged,
   and the TCP tuple gets its own record keyed by the slot.

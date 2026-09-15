@@ -9,8 +9,8 @@
 The facade (E3 AddPortMapping/GetExternalIPAddress and E5 GENA) runs
 against an AFTR-operated CGNAT that dictates the external tuple: the
 relay's measured ground truth (EIM+EIF, no source-port preservation,
-per-protocol mapping keys) means a conventional IGD's contract —
-"the requested external port is the one the world dials" — cannot be
+per-protocol mapping keys) means a conventional IGD's contract ("the
+requested external port is the one the world dials") cannot be
 honoured. The control point's `NewExternalPort` is a request, not a
 grant. Three divergences follow and must be decided once, not invented
 per request:
@@ -50,7 +50,7 @@ per request:
   the PS3-era stacks (POST and M-POST) and modern ones (upnpc) get a
   consistent, honest surface; no address is ever fabricated.
 - Negative: a client that insists its requested external port be
-  reachable on the public side will not find it there — that is the
+  reachable on the public side will not find it there. That is the
   CGNAT's nature, documented in the E8 paragraph of the component
   README, and the reason the facade reports tuples rather than
   promising ports.
