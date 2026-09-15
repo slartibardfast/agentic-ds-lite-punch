@@ -4,6 +4,69 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-15 — Facade review verdict: 5 criticals fixed, committed 24f4e4d
+
+- The 17-agent review of the E1-E8 facade increment (79 tests green) found
+  five criticals; all were re-verified against the tree and fixed with
+  regression tests. 86 tests now green. The fixes that future sessions
+  must not re-break (all landed in component commit 24f4e4d):
+  1. Respawn-restored grants: main's slot loop skips granted leases in
+     facade mode; `UpnpFacade::start` re-spawns them and registers the
+     JoinHandles (`spawn_restored_grants`), so delete_mapping/GC abort
+     them — the 2026-09-14 socket-leak class was reachable through the
+     documented respawn path (tasks map starts empty; main's discarded
+     handles were the only owner).
+  2. The control-plane entry now rides the internal (proto, client,
+     int_port) key via the pure `apply_entry` decision; a re-Add that
+     moves a mapping to a new slot tears down the old occupant (replace
+     semantics, one entry per external port) instead of leaving a stale
+     bind_port that deleted the wrong datapath.
+  3. SIGTERM handler: sleep+exit now sit INSIDE the `if let Ok(...)`
+     guard — a registration failure no longer self-terminates the daemon
+     150 ms after boot.
+  4. `UpnpFacade::start` returns io::Result; an SSDP bind failure (UDP
+     1900 taken, or lan-ip not owned) degrades the facade instead of
+     panicking the whole daemon; deploy env gained `UPNP=0` to disable.
+  5. `classify` GENA markers (NT/CALLBACK, SID) now run on M-POST too —
+     the `mpost_post_parity` Kani counterexample (action bytes with `\n`
+     fabricating a `SID:` line) is closed; pinned by
+     `mpost_post_parity_multiline_corners`.
+- Suggestions fixed: GENA initial NOTIFY advances the eventKey (first
+  change carries 1, not a repeat of 0); bind_ssdp checks both setsockopt
+  results (fail-closed on a failed group join); parse_callback rejects a
+  residual `<`/`>` (multi-URL CALLBACK) instead of mangling the path;
+  xml_tag/find_close skip comment+CDATA spans (boundary strip, never a
+  partial accept); http_serve continues on accept errors; persist:
+  `snapshot` is the one projection (main's inline copy deleted) with
+  tests, plus `seed_external_ip` pinned.
+- Kani: `mpost_post_parity` harness re-run was started post-fix but had
+  not converged when this entry was written — the unit test pins the
+  corners; receiver must re-verify the proof and the "32 of 32" receipt.
+- Not done yet (milestone closure, gated): plan/0007 results record,
+  receipts, .host-software pin move (requires pushing 24f4e4d first).
+
+## 2026-09-14 — Facade OOM root-caused and fixed: unbounded /dev/urandom read in random_sid
+
+- The router daemon OOM-killed itself three times (27426/2030/2202, all
+  anon-rss ≈15.4 GB, total-vm ≈2^34): a GENA SUBSCRIBE calls
+  `random_sid()`, which used `std::fs::read("/dev/urandom")` — a
+  read_to_end that never sees EOF on a device, so the Vec doubles without
+  bound until the host exhausts (66-71 s per death, matching the doubling
+  cadence from a 2 s tick). SUBSCRIBE leaves no SOAP log line, so the
+  deaths looked triggerless. Reproduced locally: single SUBSCRIBE with
+  one GENA subscribe produced a 2^29-byte transient; fixed with
+  `File::open` + `read_exact(&mut [u8; 16])`, verified live: 8× SUBSCRIBE
+  all 200, VmData flat at ~10 MB.
+- Earlier "wedge" and SSDP blocking-socket issues (fd 11 flags `02`) were
+  also fixed this session (SOCK_NONBLOCK|SOCK_CLOEXEC at bind_ssdp); the
+  slot-socket teardown leak (spawn_udp_slot returning empty handle vector)
+  was fixed and covered by `udp_slot_revoke_releases_socket`. 2385 (the
+  OOM-survivor) was the same teardown build, stable for hours — the death
+  required a SUBSCRIBE, which is why long-idle instances stayed green.
+- Deployed builds this session: b9804ac9 (CIF service), 6ba11644 (SSDP
+  nonblocking), 5550db21 (slot teardown), 92ac62cc (urandom read fix —
+  the currently deployed, sha 92ac62cc, pid 10769 as of 00:14).
+
 ## 2026-09-13 — TCP datapath closed: return-path RCA, egress fix, external proof
 
 - The datapath's open frontier is closed. The RCA (results/
