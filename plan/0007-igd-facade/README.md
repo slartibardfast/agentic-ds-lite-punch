@@ -195,17 +195,18 @@ single rotation observed corresponded to the one unarmed window (a slot
 left without keepalive for about 9 minutes), which bounds the AFTR's
 idle reaping on this session to under that.
 
-## Teardown behaviour (observed: no release on client disappearance)
+## Teardown behaviour (observed: partial release on power-off)
 
-A client that disappears without deleting does not release its grants:
-the PS3 powers off without a DeletePortMapping, the grants carry
-infinite leases, and the facade has no liveness detection, so the slot
-stays bound with the keepalive and the AFTR mapping held until an
-explicit Delete, a re-Add from the same client with a changed internal
-tuple (the replace path), or the operator deletes it. A daemon restart
-restores the grants (leases.tsv persistence). Observed 2026-09-15: the
-console's 3074/3658 grants remained armed with no delete lines for the
-full post-session window. Follow-up: clamp granted leases to a device
+The PS3 DOES send a DeletePortMapping at power-off: observed 2026-09-15
+20:22:44, the facade honoured it and released the 3658 grant cleanly
+(entry removed, slot socket released, keepalive stopped; the live
+teardown path worked end to end). The cleanup is partial: the same
+shutdown left the console's other grant (3074) armed, and a client
+that vanishes without deleting (unplug, network loss) leaves its
+grants entirely: infinite leases, no liveness detection, leases.tsv
+restore. A grant is otherwise released by an explicit Delete, a
+re-Add from the same client with a changed internal tuple (the replace
+path), or the operator. Follow-up: clamp granted leases to a device
 policy max (the session re-Adds on boot, so the console pattern
 survives a bounded lease) so vanished clients are reclaimed by the GC
 instead of persisting forever.

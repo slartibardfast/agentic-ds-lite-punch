@@ -4,6 +4,20 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-15 — Teardown correction: the PS3 DOES delete at power-off (partial)
+
+- The 2026-09-15 keepalive/teardown entry below is corrected in part:
+  the PS3 sent a DeletePortMapping at power-off (20:22:44, observed
+  live) and the facade released the 3658 grant cleanly (entry removed,
+  slot socket released, keepalive count dropped 4 to 3) — the C1/C2
+  teardown path verified on a real console grant outside the harness.
+  The shutdown cleanup is partial: the console's other grant (3074)
+  remained armed. The unsupported claim "the PS3 powers off without a
+  DeletePortMapping" is superseded.
+- What stands: a client that vanishes without deleting (unplug, lost
+  network) leaves its grants (infinite leases, no liveness, leases.tsv
+  restore); the lease-clamping follow-up covers those residues.
+
 ## 2026-09-15 — Keepalive floor and teardown: no release on client disappearance
 
 - The keepalive floor measured: a bare 20-byte STUN binding request
