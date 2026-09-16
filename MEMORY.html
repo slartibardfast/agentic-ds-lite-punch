@@ -852,6 +852,19 @@ to the control point's own entries and to ports at or above 1024.</p>
 27.3c as the reading not taken, deliberately. Tightening it would change
 the section 24 matrix and the boundary design, so it is a plan change to
 be taken with the operator, never a quiet transcription detail.</p>
+<h2 id="the-ocr-conversions-carry-expiring-figure-urls-so-re-host-them-at-receipt"><a class="header" href="#the-ocr-conversions-carry-expiring-figure-urls-so-re-host-them-at-receipt">The OCR conversions carry expiring figure URLs, so re-host them at receipt</a></h2>
+<p>The GLM-OCR markdown exports reference their diagrams as signed crop URLs at
+the converter's object store (<code>maas-watermark-prod-new.cn-wlcb.ufileos.com</code>,
+with <code>Signature=</code> and <code>Expires=</code> in the query). The signature is time-limited;
+the DeviceProtection:1 figures were lost that way and had to be re-hosted from
+memory of the source.</p>
+<p>The rule that follows: when a conversion lands, fetch every <code>img src</code> it
+carries in the same session, commit the crops under the component's
+<code>docs/&lt;service&gt;/images/</code>, and rewrite the reference to a relative path. Then
+the markdown and its figures are durable together. A conversion can also
+render a figure as a table instead of a crop (WANIPConnection:2's Figures 2-3
+and 2-4 are exactly that), so the image count need not match the List of
+Figures.</p>
 
                     </main>
 
