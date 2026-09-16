@@ -579,17 +579,24 @@ LOCATION: http://gateway/.../igd/v2/rootDesc.xml
 <p>UPnP explicitly defines LOCATION as the URL for the root-device description, and requires it to be reachable by the control point receiving the response.</p>
 <hr />
 <h1 id="12-bounded-burst-debounce-the-deliberate-exception"><a class="header" href="#12-bounded-burst-debounce-the-deliberate-exception">12. Bounded burst debounce: the deliberate exception</a></h1>
-<p>This section supersedes an earlier absolute in this document: "a
-server MUST NOT make the semantic result of an already received
-M-SEARCH dependent on a future M-SEARCH that has not yet arrived",
-and its consequence "classification MUST be based on the ST of the
-individual search, not on a future-search debounce heuristic". The
-reversal is recorded in <a href="https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0020-deferred-ssdpall-classification.md">call/0020</a>.
+<p>This section supersedes an earlier absolute in this document, which
+required classification to rest on the ST of the individual search and
+forbade any dependence on a search still to come. The superseded text, kept
+verbatim because it is the thing being departed from:</p>
+<pre><code class="language-host-lint:ignore">a server MUST NOT make the semantic result of an already received M-SEARCH
+dependent on a future M-SEARCH that has not yet arrived. Classification
+MUST be based on the ST of the individual search, not on a future-search
+debounce heuristic.
+``` The
+reversal is recorded in [call/0020](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0020-deferred-ssdpall-classification.md).
 The rejection that stands is of
 UNBOUNDED debounce; the mechanism adopted is a BOUNDED, deterministic
-one.</p>
-<p>The adopted state machine is per discovery burst, per control point:</p>
-<pre><code class="language-text">BURST {
+one.
+
+The adopted state machine is per discovery burst, per control point:
+
+```text
+BURST {
     start = receive(:all)
     deadline = start + MX(:all)
     seen_v2 = false
@@ -914,8 +921,8 @@ legacy-client compatibility facade
 </tbody></table>
 </div>
 <p>Every burst case MUST also assert the deadline property: the <code>:all</code>
-response arrives no later than <code>receive + DISCOVERY_DEBOUNCE</code>, and a
-<code>:2</code> response no later than its own MX.</p>
+response arrives within <code>receive + DISCOVERY_DEBOUNCE</code>, and a <code>:2</code>
+response within its own MX.</p>
 <p>Then:</p>
 <h3 id="xbox-class-test"><a class="header" href="#xbox-class-test">Xbox-class test</a></h3>
 <pre><code class="language-text">M-SEARCH IGD1
@@ -1444,7 +1451,7 @@ authority.</p>
 <h2 id="273-what-complete-and-enforced-means-here"><a class="header" href="#273-what-complete-and-enforced-means-here">27.3 What "complete and enforced" means here</a></h2>
 <pre><code class="language-text">complete:
     13 actions implemented (the authoritative surface; an earlier
-        miniupnpd-derived count of 14 carried wrong names —
+        miniupnpd-derived count of 14 carried wrong names:
         RequestUserLogin, ValidateIdentity, AddACLEntry, LoginWithPIN
         and friends are not actions of this service; superseded)
     7 state variables declared as specified
@@ -1494,8 +1501,8 @@ boundary (section 26.7); the :1 face stays legacy-unauthenticated.</p>
 tables transcription, the AddAnyPortMapping wildcard request, the range
 refusals and the version 2 lease reading landed at components aaca491
 and a339747 (sections 27.3b and 27.3c); the WPS registrar transport is
-still absent (SendSetupMessage answers 600/704 — this wired IGD runs no
-WPS registrar). Body of the conformances: dp.rs
+still absent (SendSetupMessage answers 600/704, and this wired IGD runs
+no WPS registrar). Body of the conformances: dp.rs
 26.19 suite + a wire-level suite driving the HTTP/SOAP path through
 login to the opened boundary and the logout re-close.</p>
 <h3 id="273b-the-wip2-transcription-component-aaca491"><a class="header" href="#273b-the-wip2-transcription-component-aaca491">27.3b The WIP2 transcription (component aaca491)</a></h3>
@@ -1666,8 +1673,8 @@ client fetched <code>DP.xml</code> and then abandoned. The IGD2-versus-IGD1
 delta is a bundle of differences (device hierarchy, WIP2 SCPD
 action set, additional services, missing services such as
 Layer3Forwarding and WANIPv6FirewallControl differences, UDA
-version). The step captured before the failure is not thereby its
-cause.</li>
+version). Capture order establishes no causation: the step recorded
+last before a failure may be a bystander.</li>
 </ol>
 <p>The defensible causal statement is therefore the one in section 4:
 Xbox is a demonstrably sensitive IGD1 control point whose
