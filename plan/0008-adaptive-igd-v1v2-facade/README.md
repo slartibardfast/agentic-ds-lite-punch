@@ -24,7 +24,9 @@
 - verify: the section 24 v2 rows; the section 26.19 conformance suite;
   the DP SCPD transcribed from the normative PDF (the authority) and
   every one of its 13 actions enforced; the WIP2 SCPD transcribed from
-  the WANIPConnection:2 PDF and every one of its 21 actions dispatched
+  the WANIPConnection:2 PDF and every one of its fourteen REQUIRED
+  actions dispatched (table 2-10's device column; the seven OPTIONAL
+  ones are neither advertised nor dispatched)
 - inputs: the DeviceProtection:1 service specification PDF, internalized
   at component docs/upnp-dp1/ (commit c5609cd: the full OCR
   transcription with the seven List-of-Figures diagrams and the ACL
@@ -1709,9 +1711,12 @@ complete:
     SetupReady event semantics as specified
     ACL and role state persisted per section 26.15 (dp.tsv)
     the setup and login ceremonies implemented, not simulated
-    21 WIP2 actions carrying their own argument tables in the published
-        SCPD (the WANIPConnection:2 surface; the placeholder named the
-        v2 actions without describing them and declared a bogus 22nd)
+    the fourteen REQUIRED WIP2 actions (table 2-10's device column)
+        carrying their own argument tables in the published SCPD, and
+        the seven OPTIONAL ones neither advertised nor dispatched (the
+        placeholder named the v2 actions without describing them and
+        declared a bogus 22nd; the second transcription took all
+        twenty-one as required)
     23 WIP2 state variables with the specified eventing (five evented:
         PossibleConnectionTypes, ConnectionStatus, ExternalIPAddress,
         PortMappingNumberOfEntries, SystemUpdateID)
@@ -1767,8 +1772,9 @@ figure crops re-hosted locally (component 93138a2: the conversion carried
 its diagrams as signed object-store URLs, and the signatures expire, so a
 clone made later would have had a document whose figures resolve to
 nothing). The published
-`SCPD_WIP2` is that document: the 21 actions of the spec's table 2-10,
-each with the argument table of its own section; the 23 state variables
+`SCPD_WIP2` is that document projected onto what a device must provide:
+the fourteen REQUIRED actions of the spec's table 2-10, each with the
+argument table of its own section; the 23 state variables
 of table 2-2 plus the two argument types, with the allowed values and
 ranges of tables 2-3 to 2-8; and the five evented variables of table 2-9,
 the mapping pair evented together per 2.4.4 and 2.4.5. The
@@ -1809,6 +1815,30 @@ fails:
 The wire suite drives all four through HTTP/SOAP under an open session;
 two unit tests pin the port choice, the lease reading, the Listing
 fragment's shape and its remaining-lease value.
+
+### 27.3d The required surface, and the four actions it was missing
+
+A third reading of table 2-10, this time of its device column: the service
+defines twenty-one actions, fourteen REQUIRED of a device and seven
+OPTIONAL. The transcription had taken all twenty-one as required, and the
+facade then dispatched eleven of them, so the published SCPD promised ten
+actions the dispatcher would answer with 401 (component 4d0160f).
+
+Now: the four required actions that had no arm are implemented with the
+section that decides each (SetConnectionType 731 ReadOnly per 2.5.1's
+read-only note; RequestConnection success with a tuple and 704
+ConnectionSetupFailed without it, per 2.5.3.4 through 2.5.3.6;
+GetNATRSIPStatus per 2.3.11 and 2.3.12; ForceTermination refused, below),
+and the seven OPTIONAL actions are neither advertised nor dispatched, so
+the SCPD describes exactly what the device implements. New faults 731
+ReadOnly and 704 ConnectionSetupFailed join the table.
+
+ForceTermination is the one deliberate refusal in the required set, and
+the reason is a security one: the facade does not own the WAN lifetime
+(netifd and the ISP do), and the action is public on the v1 face, so
+honouring it would give every device on the LAN a lever that drops the
+household line for every client. Its own error table (2.5.5.6) has no code
+for a device that may not terminate, so the answer is the UDA generic 501.
 
 Two items remain open on the v2 path. The WPS registrar transport is
 still absent (SendSetupMessage answers 600/704; this wired IGD runs no
