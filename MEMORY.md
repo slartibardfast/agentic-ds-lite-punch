@@ -4,6 +4,32 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-16 — DP:1 service dispatched; the PKCS5 ceremony parameters are pinned by the spec
+
+- plan/0008 #v2-service-set progress: the DeviceProtection:1 service is
+  implemented end to end (component eb79263, 112 tests green): the
+  authoritative 13 actions behind /ctl/DP, admin-gated ACL/role surface,
+  the WIP2 section 26.7 boundary (v2 mapping mutators need a session;
+  :1 face stays unauthenticated), dp.tsv persistence (users+ACL; sessions
+  transient), and the wire-level boundary suite.
+- Spec pins that corrected earlier assumptions: the action surface is 13
+  (the miniupnpd-derived 14 names were wrong); the standard roles are
+  Public/Basic/Admin (NOT "Administrator"); STORED = first 128 bits of
+  PBKDF2-HMAC-SHA-256 with salt = Name || Salt and c = 5000 (not 4096);
+  the authenticator is the first 128 bits of HMAC-SHA-256(STORED,
+  Challenge || DeviceID || ControlPointID); the login CP identity MUST be
+  in the ACL (2.6.6.5).
+- Sessions are keyed by the control point's source address (the plain-HTTP
+  analogue of the spec's TLS session); the decision stays a pure function
+  of the principal's roles. GetAssignedRoles returns "Public" for
+  unauthenticated sessions per 2.6.3.2.
+- Recorded deferrals (IGD_V2_ENABLED still off): WIP2:2 argument-table
+  transcription, AddAnyPortMapping any-port (0), the WPS registrar
+  transport (SendSetupMessage answers 600/704 on this wired IGD).
+- Operator provisioning of a fresh deployment: dp.tsv (users + ACL) is
+  out-of-band config; with the default empty ACL every protected action
+  denies.
+
 ## 2026-09-15 — Teardown correction: the PS3 DOES delete at power-off (partial)
 
 - The 2026-09-15 keepalive/teardown entry below is corrected in part:
