@@ -4863,6 +4863,28 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-16--wsl-guest-crash-loop-halts-the-verification-campaign-on-andromeda"><a class="header" href="#2026-09-16--wsl-guest-crash-loop-halts-the-verification-campaign-on-andromeda">2026-09-16 — WSL guest crash-loop halts the verification campaign on andromeda</a></h2>
+<ul>
+<li>The 6.18.33.1-1 guest (WSL 2.7.8.0) began restart-looping at ~14:35
+(ten-plus boots in twenty minutes, one wtmp CRASH marker, guest
+journals corrupted each cycle, healthy host: 178 GB free, clean
+System event log). It crashes at idle on a 60-90 s cadence. It killed
+the suite stragglers mid-solve (~24 h each), the favourable fold
+test, and two relaunches.</li>
+<li>Mitigation attempted and in place: <code>.wslconfig</code> gained
+<code>memory=48GB</code>, <code>processors=8</code>, and <code>autoMemoryReclaim=disabled</code> (was
+the experimental Gradual) — the loop continued at idle, so the
+reclaim setting was not the whole cause. Revert those lines at will
+once WSL is stable again.</li>
+<li>Blocked on operator-grade intervention: <code>wsl --update</code> (or rollback
+off the 6.18 preview kernel), a Windows reboot, or distro repair.
+Until then no long verification run can live on this host.</li>
+<li>All evidence salvaged to the Windows side at
+<code>C:\Users\dconnolly\Development\kani-evidence-2026-09-16\</code> (the j4
+suite log with the 37 verdicts, the serial log, the favourable-run
+logs, the entry_at counterexample capture, the verdict parser). The
+37-verdict as-run record stands; the repo remains fully pushed.</li>
+</ul>
 <h2 id="2026-09-16--dp1-service-dispatched-the-pkcs5-ceremony-parameters-are-pinned-by-the-spec"><a class="header" href="#2026-09-16--dp1-service-dispatched-the-pkcs5-ceremony-parameters-are-pinned-by-the-spec">2026-09-16 — DP:1 service dispatched; the PKCS5 ceremony parameters are pinned by the spec</a></h2>
 <ul>
 <li>plan/0008 #v2-service-set progress: the DeviceProtection:1 service is
