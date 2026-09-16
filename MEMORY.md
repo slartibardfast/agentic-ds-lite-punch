@@ -4,6 +4,28 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — a rename's references must use the heading's own words
+
+David asked whether the rename degraded the document, and the honest answer
+was yes in one mechanical way: six of the thirty renamed references did not
+find their target. "the conformance suite" pointed at a heading called
+"Testing"; "the ssdp:all rule", "the persistence rules", "the burst-window
+coalescing", "the miniupnpd reference" and "the Xbox One legacy facts" had
+the same near-miss shape. A number is a lookup key and a near-miss phrase
+is a guess, so the rename traded one navigation cost for another.
+
+The lesson for anyone supplying a rename map: `.host-remap` never coins a
+name, so every miss is the supplier's. Before writing a rule's `new` value,
+read the heading it will point at and reuse its words. Five headings now
+carry the phrase the prose reaches them by, and the sixth moved the
+reference to the heading's more precise words.
+
+The check that catches this class is cheap and worth repeating after any
+rename: for each rule's `new`, test whether its key noun phrase appears in a
+heading. Two apparent failures there are usually formatting rather than
+wording (a code span around a token, or a phrase split by a line wrap), so
+confirm before editing.
+
 ## 2026-09-16 — the naming audit is clean: the milestone's sections read by content
 
 David: "alright let's fix up prose" — the prose lane was five tropes (done,
