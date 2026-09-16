@@ -675,3 +675,19 @@ This is recorded in the component transcription and in plan/0008 section
 27.3c as the reading not taken, deliberately. Tightening it would change
 the section 24 matrix and the boundary design, so it is a plan change to
 be taken with the operator, never a quiet transcription detail.
+
+## The OCR conversions carry expiring figure URLs, so re-host them at receipt
+
+The GLM-OCR markdown exports reference their diagrams as signed crop URLs at
+the converter's object store (`maas-watermark-prod-new.cn-wlcb.ufileos.com`,
+with `Signature=` and `Expires=` in the query). The signature is time-limited;
+the DeviceProtection:1 figures were lost that way and had to be re-hosted from
+memory of the source.
+
+The rule that follows: when a conversion lands, fetch every `img src` it
+carries in the same session, commit the crops under the component's
+`docs/<service>/images/`, and rewrite the reference to a relative path. Then
+the markdown and its figures are durable together. A conversion can also
+render a figure as a table instead of a crop (WANIPConnection:2's Figures 2-3
+and 2-4 are exactly that), so the image count need not match the List of
+Figures.
