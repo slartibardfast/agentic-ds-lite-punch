@@ -1,6 +1,9 @@
 # Milestone: adaptive UPnP IGD v1/v2 compatibility facade
 
-- Status: specified 2026-09-16; build in progress (tasks T1-T4 below).
+- Status: specified 2026-09-16; T1 (#disc-presentation) and T2
+  (#v2-service-set) receipted, T3 (#canonical-api) and T4 (#bench-matrix)
+  open. The IGD_V2 gate is on: the device now presents the v1 and the v2
+  facade together (component 4d0160f).
 - Scope: the ds-lite-punch UPnP facade (plan/0007 phase E successor);
   builds on the deployed 34d48c1-era facade and the lease policy.
 - This document is the milestone specification. The build-sequence
