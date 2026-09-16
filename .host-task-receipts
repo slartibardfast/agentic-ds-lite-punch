@@ -131,3 +131,11 @@
     evidence = component b22a96d (host pin 266a6d6): the engine is reached through allocate_exact (WIP1/WIP2 AddPortMapping) and allocate_preferred (WIP2 AddAnyPortMapping) over the one mapping table; preferred_port is the pure resolution and allocate_exact_and_preferred_differ asserts the contrast on one shared table state (a port another client holds moves the request to a free port and the occupant survives, while exact surrenders the occupant to the caller for teardown); cargo test = 117 passed, 0 failed, 1 ignored.
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-16
+
+[receipt "plan/0008#v2-service-set"]
+    disposition = done
+    verify = the section 24 v2 rows; the section 26.19 conformance suite;
+    inputs = the DeviceProtection:1 service specification PDF, internalized
+    evidence = component 4d0160f (pin updated to 979aafd for the transcription citation; host pin 266a6d6..979aafd): IGD_V2_ENABLED on; section 24 discovery rows asserted by ssdp_loop_answers_the_mounted_surface and the document rows by versioned_doc_routing (v2 root desc carries DeviceProtection:1 beside WANIPConnection:2; /igd/v2/WANIPCn.xml publishes the 14 required actions; /igd/v2/DP.xml the 13); dp19_conformance_suite, dp_boundary_wire and wip2_connection_actions_wire green; cargo test = 117 passed, 0 failed, 1 ignored. The SendSetupMessage WPS limb is no longer an open question: it is decided in call/0021 (advertise WPS as 2.4.3.1 mandates, answer a setup attempt 704 Processing Error with an empty OutMessage, 600 rejected), recorded at plan/0008 section 27.3e and in the component transcription docs/upnp-dp1/TRANSCRIPTION.md.
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-16

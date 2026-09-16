@@ -756,3 +756,35 @@ otherwise any free port of the protocol). preferred_port is the pure
 resolution, so the contrast is asserted directly rather than through a
 granted mapping; the wire and facade tests could not have caught it
 because nft is absent in tests.
+
+## The WPS limb is a decision, not an open question (call/0021)
+
+David: "WPS spec will not be available internally." The DeviceProtection
+setup ceremony's WPS limb therefore cannot be transcribed, and it is now
+recorded rather than carried as a question: call/0021
+
+  - advertise WPS, because 2.4.3.1 mandates the entry in
+    SupportedProtocols and the protocol must be in the list a
+    SendSetupMessage ProtocolType may name;
+  - answer a WPS setup attempt with 704 Processing Error and an empty
+    OutMessage, the action's own code for a failure to process InMessage;
+  - reject 600, whose meaning ("the ProtocolType value is not supported by
+    the Device") would contradict the list the device just published.
+
+The two reasons are worth keeping: the message encoding lives in the Wi-Fi
+Alliance WPS specification (not available, will not be internalized), and
+Appendix A requires the exchange inside a certificate-authenticated TLS
+channel, which this plain-HTTP facade does not carry. Reversing it needs
+both: the WPS specification internalized as a component source, and a TLS
+posture decision for the exchange.
+
+Recorded at plan/0008 section 27.3e, in the component transcription
+docs/upnp-dp1/TRANSCRIPTION.md, and in a fresh T2 receipt that replaces the
+one which called it open.
+
+Also repaired: plan/0008 section 12 cited call/0021 for the discovery
+reversal, and no such record existed (the refs sweep called it a dead
+pointer). The reversal it describes is call/0020, which supersedes the same
+absolute in that section, so the pointer now names it. A register citation
+written for a decision that has not been allocated yet is a trap: allocate
+first, cite second.
