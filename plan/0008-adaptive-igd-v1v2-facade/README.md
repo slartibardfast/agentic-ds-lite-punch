@@ -594,11 +594,17 @@ UPnP explicitly defines LOCATION as the URL for the root-device description, and
 
 # 12. Bounded burst debounce: the deliberate exception
 
-This section supersedes an earlier absolute in this document: "a
-server MUST NOT make the semantic result of an already received
-M-SEARCH dependent on a future M-SEARCH that has not yet arrived",
-and its consequence "classification MUST be based on the ST of the
-individual search, not on a future-search debounce heuristic". The
+This section supersedes an earlier absolute in this document, which
+required classification to rest on the ST of the individual search and
+forbade any dependence on a search still to come. The superseded text, kept
+verbatim because it is the thing being departed from:
+
+```host-lint:ignore
+a server MUST NOT make the semantic result of an already received M-SEARCH
+dependent on a future M-SEARCH that has not yet arrived. Classification
+MUST be based on the ST of the individual search, not on a future-search
+debounce heuristic.
+``` The
 reversal is recorded in [call/0020](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0020-deferred-ssdpall-classification.md).
 The rejection that stands is of
 UNBOUNDED debounce; the mechanism adopted is a BOUNDED, deterministic
@@ -1058,8 +1064,8 @@ The implementation agent MUST construct at least these packet-level regression t
 | `WIP:2`    | v2 description         | `WIP:2`                                 | WIP2                 |
 
 Every burst case MUST also assert the deadline property: the `:all`
-response arrives no later than `receive + DISCOVERY_DEBOUNCE`, and a
-`:2` response no later than its own MX.
+response arrives within `receive + DISCOVERY_DEBOUNCE`, and a `:2`
+response within its own MX.
 
 Then:
 
@@ -1797,7 +1803,7 @@ authority.
 ```text
 complete:
     13 actions implemented (the authoritative surface; an earlier
-        miniupnpd-derived count of 14 carried wrong names —
+        miniupnpd-derived count of 14 carried wrong names:
         RequestUserLogin, ValidateIdentity, AddACLEntry, LoginWithPIN
         and friends are not actions of this service; superseded)
     7 state variables declared as specified
@@ -1851,8 +1857,8 @@ Deferrals at the time of the dispatch, all closed but one: the argument
 tables transcription, the AddAnyPortMapping wildcard request, the range
 refusals and the version 2 lease reading landed at components aaca491
 and a339747 (sections 27.3b and 27.3c); the WPS registrar transport is
-still absent (SendSetupMessage answers 600/704 — this wired IGD runs no
-WPS registrar). Body of the conformances: dp.rs
+still absent (SendSetupMessage answers 600/704, and this wired IGD runs
+no WPS registrar). Body of the conformances: dp.rs
 26.19 suite + a wire-level suite driving the HTTP/SOAP path through
 login to the opened boundary and the logout re-close.
 
@@ -2054,8 +2060,8 @@ field research and is no longer load-bearing:
    delta is a bundle of differences (device hierarchy, WIP2 SCPD
    action set, additional services, missing services such as
    Layer3Forwarding and WANIPv6FirewallControl differences, UDA
-   version). The step captured before the failure is not thereby its
-   cause.
+   version). Capture order establishes no causation: the step recorded
+   last before a failure may be a bystander.
 
 The defensible causal statement is therefore the one in section 4:
 Xbox is a demonstrably sensitive IGD1 control point whose
