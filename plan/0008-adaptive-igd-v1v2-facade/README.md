@@ -479,7 +479,7 @@ This is the path that protects Xbox-class clients.
 
 ---
 
-## `ssdp:all`
+## The `ssdp:all` rule
 
 A device does not advertise additional lower versions of a type; UDA describes `ssdp:all` as discovering the device's advertised capabilities.
 
@@ -662,7 +662,7 @@ v1 compatibility presentation as the drop-dead default.
 
 ---
 
-# 13. Response coalescing within the burst window
+# 13. Burst-window coalescing
 
 Duplicate or near-duplicate searches from the same control point are
 collapsed onto the burst's single response schedule:
@@ -1464,7 +1464,7 @@ The implementation MUST maintain event subscriptions independently of ordinary S
 
 An authorization change that affects evented security state SHALL generate the corresponding standardized event notification.
 
-## Persistence
+## Persistence rules
 
 Persistent security configuration SHOULD survive ordinary service restart/reboot according to the DeviceProtection specification and the gateway's security model.
 
@@ -1547,7 +1547,7 @@ for v2 services.
 
 This ensures that a later addition of another control path cannot accidentally bypass DeviceProtection.
 
-## Testing
+## The conformance suite
 
 The implementation agent SHALL construct conformance tests for at least:
 
@@ -1710,7 +1710,7 @@ selection still 730.
 
 Component 58fed63, host pin recorded with it.
 
-## The reference implementation: miniupnpd
+## The miniupnpd reference
 
 Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
 widespread open implementation. Its own description generator
@@ -2064,9 +2064,9 @@ field research and is no longer load-bearing:
    version). Capture order establishes no causation: the step recorded
    last before a failure may be a bystander.
 
-The defensible causal statement is therefore the one in the Xbox One legacy facts:
-Xbox is a demonstrably sensitive IGD1 control point whose
-interoperability differs materially with the IGD2 description
+The defensible causal statement is therefore the one in the Xbox One
+legacy-client facts: Xbox is a demonstrably sensitive IGD1 control point
+whose interoperability differs materially with the IGD2 description
 presented. The driver of the IGD2-mode failure is unproven.
 
 Plan consequences:
