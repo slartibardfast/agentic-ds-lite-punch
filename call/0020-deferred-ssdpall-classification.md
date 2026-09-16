@@ -58,5 +58,5 @@ to capable clients that happen to begin with a generic search.
   ssdp:all-then-IGD:2, ssdp:all-then-IGD:1) and a deadline assertion
   on every response.
 - The bench phase records how Xbox-family and modern clients behave
-  against the concrete one-second policy, including the Livebox-style
-  v2-on-generic-discovery outcome for v2-capable bursts.
+  against the concrete one-second policy, and it records the
+  Livebox-style v2-on-generic-discovery outcome for v2-capable bursts.
