@@ -16,3 +16,12 @@
 
 # The local environment fingerprint: this machine's state, never shared.
 /.claude/skills/*
+
+# Python bytecode caches written by the test-rig drivers. The two .pyc files
+# already tracked under plan/0005-test-rig/__pycache__/ stay tracked; this
+# stops new ones joining them.
+__pycache__/
+
+# The agent harness's own working directory (session state, not project
+# content).
+.qwen/
