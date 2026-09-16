@@ -599,7 +599,8 @@ server MUST NOT make the semantic result of an already received
 M-SEARCH dependent on a future M-SEARCH that has not yet arrived",
 and its consequence "classification MUST be based on the ST of the
 individual search, not on a future-search debounce heuristic". The
-reversal is recorded in call/0021. The rejection that stands is of
+reversal is recorded in [call/0020](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0020-deferred-ssdpall-classification.md).
+The rejection that stands is of
 UNBOUNDED debounce; the mechanism adopted is a BOUNDED, deterministic
 one.
 
@@ -1844,15 +1845,31 @@ honouring it would give every device on the LAN a lever that drops the
 household line for every client. Its own error table (2.5.5.6) has no code
 for a device that may not terminate, so the answer is the UDA generic 501.
 
-Two items remain open on the v2 path. The WPS registrar transport is
-still absent (SendSetupMessage answers 600/704; this wired IGD runs no
-WPS registrar). And the access control policy the device applies is now
-stated in the transcription rather than inferred: the mapping mutators
-require an authenticated `Basic` session, while the reads, an
-unauthenticated `GetListOfPortMappings` among them, are public. Section
+### 27.3e The WPS introduction protocol is not implemented
+
+DeviceProtection's setup ceremony has one limb that cannot be built from
+what this project can transcribe. Section 2.4.3.1 mandates the WPS entry in
+the advertised protocol list, and Appendix A defines the message exchange
+behind it by deferring to the Wi-Fi Alliance WPS specification, which is not
+available here and will not be internalized, while also requiring the
+exchange to run inside a certificate-authenticated TLS channel this
+plain-HTTP facade does not carry.
+
+The behaviour is decided rather than left open: WPS is advertised as
+mandated, and `SendSetupMessage` with `ProtocolType` WPS answers 704
+Processing Error with an empty `OutMessage`, which is the action's own code
+for a failure to process `InMessage` (2.6.1.9). The full reasoning, the
+rejected alternative (600, which would contradict the published list), and
+the two things a reversal needs are recorded in
+[call/0021](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0021-wps-introduction-not-implemented.md).
+
+One item remains open on the v2 path: the access control policy the device
+applies is stated in the transcription rather than inferred, with the
+mapping mutators requiring an authenticated `Basic` session while the reads,
+an unauthenticated `GetListOfPortMappings` among them, are public. Section
 2.5.21.3 recommends restricting that listing to the control point's own
-entries and to ports at or above 1024, so this is a deliberate policy
-choice with a named consequence, to be settled here rather than in the
+entries and to ports at or above 1024, so this is a deliberate policy choice
+with a named consequence, to be settled here rather than in the
 transcription.
 
 ## 27.4 The second reference: Orange igd2-for-linux
