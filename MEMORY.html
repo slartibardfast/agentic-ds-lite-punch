@@ -780,6 +780,43 @@ source IP the AFTR forwarded, matching the twin's accept log 1:1.</li>
 TCP mapping is reachable by any external address. The relay stays UDP-only
 by product decision, not CGNAT limitation.</li>
 </ul>
+<h2 id="the-wip2-surface-is-transcribed-from-its-own-spec"><a class="header" href="#the-wip2-surface-is-transcribed-from-its-own-spec">The WIP2 surface is transcribed from its own spec</a></h2>
+<p>The WANIPConnection:2 service (the v2 face of the plan/0008 facade) is now
+transcribed from the normative document rather than assumed, the way the
+DeviceProtection:1 service was (the entry above on the DP:1 SCPD). Component
+docs/upnp-wip2/ holds the source PDF, the conversion and TRANSCRIPTION.md.</p>
+<p>The facts that replaced assumption, each worth not re-deriving:</p>
+<ul>
+<li>The service carries 21 actions, not the 22 the placeholder declared. The
+extra one, GetLinkLayerMaxBitRates, belongs to WANCommonInterfaceConfig.</li>
+<li>Every action relates its arguments to the state variable it names, except
+NewManage and NewPortListing, which relate to A_ARG_TYPE_Manage and
+A_ARG_TYPE_PortListing. The placeholder's A_ARG_TYPE_ExternalPort,
+A_ARG_TYPE_InternalClient, A_ARG_TYPE_InternalPort, A_ARG_TYPE_Protocol
+and A_ARG_TYPE_LeaseTime do not exist in this service.</li>
+<li>The state variable is NATEEnabled. The placeholder spelled it NATEnabled.</li>
+<li>Exactly five variables are evented (table 2-9): PossibleConnectionTypes,
+ConnectionStatus, ExternalIPAddress, PortMappingNumberOfEntries and
+SystemUpdateID. PortMappingNumberOfEntries and SystemUpdateID are evented
+together whenever a mapping is added or removed (2.4.4, 2.4.5).</li>
+<li>A lease of 0 is not a static mapping in version 2: it MUST be read as
+604800 seconds. Static mappings are made out of band only.</li>
+<li>The PortListing fragment is a PortMappingList of PortMappingEntry elements
+in the urn:schemas-upnp-org:gw:WANIPConnection namespace, with the entry
+fields as child elements named NewRemoteHost, NewExternalPort,
+NewProtocol, NewInternalPort, NewInternalClient, NewEnabled,
+NewDescription and NewLeaseTime. The schema URL the spec names
+(http://www.upnp.org/schemas/gw/WANIPConnection-v2.xsd) answers with an
+HTML placeholder now, so the sample document of 2.3.25.2 is the shape
+authority. A query returns the remaining lease, not the granted one.</li>
+<li>Error codes 724 to 727 are accepted on input and MUST NOT be emitted by a
+version 2 device; 730 PortMappingNotFound is required on an empty range
+and 733 InconsistentParameters on a crossed one.</li>
+</ul>
+<p>Still open on the v2 path (the IGD_V2 gate stays off): the AddAnyPortMapping
+wildcard (0) request is refused, the 730 and 733 refusals are not returned,
+the lease 0 rule is not implemented, and the description string a control
+point sends is not persisted (the listing reports it empty).</p>
 
                     </main>
 
