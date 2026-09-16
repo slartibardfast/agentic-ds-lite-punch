@@ -691,3 +691,48 @@ the markdown and its figures are durable together. A conversion can also
 render a figure as a table instead of a crop (WANIPConnection:2's Figures 2-3
 and 2-4 are exactly that), so the image count need not match the List of
 Figures.
+
+## T2 is closed: the v2 facade is mounted, and three readings of table 2-10
+
+plan/0008 #v2-service-set is receipted done; the IGD_V2 gate is on in the
+source (component 4d0160f). Three readings of the WANIPConnection:2 action
+table, each correcting the one before, are worth not repeating:
+
+- The placeholder took miniupnpd's action list (with a bogus 22nd).
+- The first transcription took the spec's whole 21-action list as required
+  of a device, which table 2-10's device column does not say. It splits
+  them: fourteen REQUIRED, seven OPTIONAL.
+- The dispatch had eleven arms, so ten actions the published SCPD
+  advertised would have answered 401. An SCPD must describe what the
+  device implements: the fourteen required are dispatched and the seven
+  optional are neither advertised nor dispatched.
+
+The four added required actions and their answers: SetConnectionType 731
+ReadOnly (2.5.1's read-only note for an auto-configured connection),
+RequestConnection success while the tuple is present and 704
+ConnectionSetupFailed without it, GetNATRSIPStatus RSIP 0 / NAT 1,
+ForceTermination 501.
+
+ForceTermination's refusal is a security decision, not a gap: the facade
+does not own the WAN lifetime (netifd and the ISP do) and the action is
+public on the v1 face, so honouring it would give every LAN device a lever
+that drops the household line for every client. The action's own error
+table has no code for a device that may not, so 501 is the answer, and
+that is recorded in the plan (27.3d) and the transcription.
+
+Also landed with T2: the control point's NewPortMappingDescription is now
+stored and returned rather than replaced by a device string (the label is
+control-point text, so the parse drops control characters that could forge
+a persisted row and the writers escape XML metacharacters), and the packet
+tests now assert section 24's discovery and document rows, including the
+deferred ssdp:all answer landing at the debounce deadline and an in-window
+:2 flipping both answers to v2.
+
+Still open on the v2 path, and named in the T2 receipt: SendSetupMessage
+answers 600 for an unknown ProtocolType and 704 for WPS. The WPS
+Registration Protocol (DP spec Appendix A) needs the Wi-Fi Alliance
+specification, which is not internalized, and Appendix A requires the
+exchange to run inside a certificate-authenticated TLS channel that this
+plain-HTTP facade does not carry. That is a decision for the operator:
+supply [WPS] and a TLS posture, or record the 704 as a device-capability
+deviation.
