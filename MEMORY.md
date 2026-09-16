@@ -736,3 +736,23 @@ exchange to run inside a certificate-authenticated TLS channel that this
 plain-HTTP facade does not carry. That is a decision for the operator:
 supply [WPS] and a TLS posture, or record the 704 as a device-capability
 deviation.
+
+## T3 closed: AddAnyPortMapping must not evict, and the engine now says so
+
+plan/0008 #canonical-api is receipted (component b22a96d). The defect it
+found: AddAnyPortMapping was routed through the same engine call as
+AddPortMapping, so a request for a port another client held took that port
+over. Section 2.5.17 says the gateway reserves any free port instead and
+returns it as NewReservedPort — that reserved port is the whole reason a
+control point calls the action. A client silently losing its mapping to
+another client's preference is the kind of thing that never shows up in a
+unit test that mocks the engine.
+
+The engine is now reached through two entry points, which is what plan
+section 17 asked for: allocate_exact (the requested port is
+authoritative; a different requester takes a held port over) and
+allocate_preferred (the requested port when free or the requester's own,
+otherwise any free port of the protocol). preferred_port is the pure
+resolution, so the contrast is asserted directly rather than through a
+granted mapping; the wire and facade tests could not have caught it
+because nft is absent in tests.
