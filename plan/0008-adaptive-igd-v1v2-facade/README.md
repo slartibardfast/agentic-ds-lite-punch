@@ -1647,22 +1647,32 @@ the ceremony-free half of protecting it, and it is now enforced.
   break rather than a policy.
 - **The reads.** A contained caller's Listing and enumeration hold only its
   own entries at or above the floor, and a specific read of another
-  client's entry is 606 rather than "not found". This binds **the v2
-  face** for the same reason, and the v1 reads stay whole so that anonymous
-  LAN diagnostics still see the table. The v1 read surface is therefore a
-  known information leak, accepted deliberately: closing it would remove
-  the operator's own view of the table for clients that cannot
-  authenticate.
+  client's entry is 606 rather than "not found". This binds **both faces**
+  as well, and for the same reason the address clause does: a read confers
+  no capability, but the table is the ingress map (which internal host is
+  reachable from outside, on which port, over which protocol, with how much
+  lease left), and on this box that map is the artefact the punch work
+  creates. One view therefore serves reads and writes on either face.
 
-### The lift
+### The lift, and what it does not cost the operator
 
-A live DeviceProtection session whose roles satisfy Basic lifts all three
-clauses; Admin satisfies Basic, so it lifts them too. The lift is decided
-by the same policy function the boundary gate uses (`dp::authorize` against
+A live DeviceProtection session whose roles satisfy Basic lifts every
+clause; Admin satisfies Basic, so it lifts them too. The lift is decided by
+the same policy function the boundary gate uses (`dp::authorize` against
 `DpAuthz::Roles(["Basic"])`), so the two cannot drift apart. On the v2 face
 an unauthenticated mutator is refused by the gate before the containment is
 consulted, and the containment is the reason a *public* v2 read is still
 confined.
+
+A lift belongs to the principal rather than to a face, so a control point
+that authenticates over DeviceProtection reaches the whole table on either
+face: the v1 read containment has a remedy, and it is the remedy the v2
+face provides. Nothing privileged depends on the anonymous read in the
+meantime, because the daemon already writes the whole index to its state
+file (`/tmp/dslp/upnp.tsv` while it runs), which is a local read rather than
+a network one. An earlier draft of this section kept the v1 reads whole to
+preserve anonymous diagnostics; that was overstated, since the local index
+already serves them.
 
 ### Mechanics
 
@@ -1683,9 +1693,13 @@ selection still 730.
   the enumeration (the index space is what the caller may see, so a walk
   past the end still terminates on 714), the single delete, and the range
   delete with the skip rule.
-- The `dp_boundary_wire` wire test asserts that the v1 face refuses a
-  request naming another host with 606 while admitting the caller's own
-  request past the containment to the engine.
+- The `dp_boundary_wire` wire test asserts, against a seeded table holding
+  another host's entry: the v1 face refuses a request naming another host
+  with 606 while admitting the caller's own request past the containment to
+  the engine; a read of the other host's entry is 606 on either face and
+  the contained enumeration ends at index 0 with 714; and, once a
+  DeviceProtection session is established, the same read answers on either
+  face, which is the lift riding the principal rather than the face.
 
 Component 58fed63, host pin recorded with it.
 
