@@ -2447,10 +2447,13 @@ the component. This annex records the shape; the PDF is the
 authority.</p>
 <h2 id="273-what-complete-and-enforced-means-here"><a class="header" href="#273-what-complete-and-enforced-means-here">27.3 What "complete and enforced" means here</a></h2>
 <pre><code class="language-text">complete:
-    14 actions implemented
+    13 actions implemented (the authoritative surface; an earlier
+        miniupnpd-derived count of 14 carried wrong names —
+        RequestUserLogin, ValidateIdentity, AddACLEntry, LoginWithPIN
+        and friends are not actions of this service; superseded)
     7 state variables declared as specified
     SetupReady event semantics as specified
-    ACL and role state persisted per section 26.15
+    ACL and role state persisted per section 26.15 (dp.tsv)
     the setup and login ceremonies implemented, not simulated
 
 enforced:
@@ -2466,6 +2469,29 @@ reboot, multiple control points, source-IP independence) are the
 verification that the implementation is not a scaffold. A stub that
 answers names but never enforces fails every one of them by
 construction; the conformance suite is the anti-stub gate.</p>
+<h2 id="273a-implementation-record-the-v2-service-set-dispatch"><a class="header" href="#273a-implementation-record-the-v2-service-set-dispatch">27.3a Implementation record (the #v2-service-set dispatch)</a></h2>
+<p>The normative contract is transcribed (component docs/upnp-dp1/
+TRANSCRIPTION.md) and the surface is wired: the thirteen actions behind
+<code>/ctl/DP</code>, the PKCS5 ceremony with the spec's exact parameters (STORED =
+PBKDF2-HMAC-SHA-256, salt = Name || Salt, c = 5000; authenticator =
+first 128 bits of HMAC-SHA-256(STORED, Challenge || DeviceID ||
+ControlPointID)), the identity-must-be-in-ACL login rule (2.6.6.5),
+the five-failure backstop (2.6.6.8), live ACL/role evaluation so grants
+and revocations take effect on existing sessions, and the DeviceProtection
+-defined faults (600/606/701/704). Sessions are keyed by the control
+point's address, the plain-HTTP analogue of the spec's authenticated TLS
+session (section 26.8: the address keys the store; the decision is a pure
+function of the principal's roles). The role vocabulary is the spec's own
+Public/Basic/Admin (section 0) with the recommended Admin-over-Basic
+hierarchy (2.6.3.2, 2.6.4.5). The v2 WIP2 mapping mutators pass the
+boundary (section 26.7); the :1 face stays legacy-unauthenticated.</p>
+<p>Recorded deferrals (the gate stays off until they land): the WIP2:2
+argument tables transcription (GetListOfPortMappings' PortListing is
+entry-derived for now), AddAnyPortMapping any-port (0) allocation, and
+the WPS registrar transport (SendSetupMessage answers 600/704 — this
+wired IGD runs no WPS registrar). Body of the conformances: dp.rs
+26.19 suite + a wire-level suite driving the HTTP/SOAP path through
+login to the opened boundary and the logout re-close.</p>
 <h2 id="274-the-second-reference-orange-igd2-for-linux"><a class="header" href="#274-the-second-reference-orange-igd2-for-linux">27.4 The second reference: Orange igd2-for-linux</a></h2>
 <p>Orange-OpenSource's <code>igd2-for-linux</code> (imported from the retired
 gitorious of the same name) is the Linux UPnP IGD updated to the
@@ -2638,7 +2664,7 @@ superset of every one.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>42af612e81919914a33369ff1fbef269fa9aee2c</code></li>
+<li>pin: <code>eb79263eaacab9907198a7c61ddc636282efe7a9</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -4647,6 +4673,32 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-16--dp1-service-dispatched-the-pkcs5-ceremony-parameters-are-pinned-by-the-spec"><a class="header" href="#2026-09-16--dp1-service-dispatched-the-pkcs5-ceremony-parameters-are-pinned-by-the-spec">2026-09-16 — DP:1 service dispatched; the PKCS5 ceremony parameters are pinned by the spec</a></h2>
+<ul>
+<li>plan/0008 #v2-service-set progress: the DeviceProtection:1 service is
+implemented end to end (component eb79263, 112 tests green): the
+authoritative 13 actions behind /ctl/DP, admin-gated ACL/role surface,
+the WIP2 section 26.7 boundary (v2 mapping mutators need a session;
+:1 face stays unauthenticated), dp.tsv persistence (users+ACL; sessions
+transient), and the wire-level boundary suite.</li>
+<li>Spec pins that corrected earlier assumptions: the action surface is 13
+(the miniupnpd-derived 14 names were wrong); the standard roles are
+Public/Basic/Admin (NOT "Administrator"); STORED = first 128 bits of
+PBKDF2-HMAC-SHA-256 with salt = Name || Salt and c = 5000 (not 4096);
+the authenticator is the first 128 bits of HMAC-SHA-256(STORED,
+Challenge || DeviceID || ControlPointID); the login CP identity MUST be
+in the ACL (2.6.6.5).</li>
+<li>Sessions are keyed by the control point's source address (the plain-HTTP
+analogue of the spec's TLS session); the decision stays a pure function
+of the principal's roles. GetAssignedRoles returns "Public" for
+unauthenticated sessions per 2.6.3.2.</li>
+<li>Recorded deferrals (IGD_V2_ENABLED still off): WIP2:2 argument-table
+transcription, AddAnyPortMapping any-port (0), the WPS registrar
+transport (SendSetupMessage answers 600/704 on this wired IGD).</li>
+<li>Operator provisioning of a fresh deployment: dp.tsv (users + ACL) is
+out-of-band config; with the default empty ACL every protected action
+denies.</li>
+</ul>
 <h2 id="2026-09-15--teardown-correction-the-ps3-does-delete-at-power-off-partial"><a class="header" href="#2026-09-15--teardown-correction-the-ps3-does-delete-at-power-off-partial">2026-09-15 — Teardown correction: the PS3 DOES delete at power-off (partial)</a></h2>
 <ul>
 <li>The 2026-09-15 keepalive/teardown entry below is corrected in part:
