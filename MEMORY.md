@@ -4,6 +4,40 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-16 — the containment for callers without the lift
+
+- plan/0008 #v2-service-set now enforces the policy the spec recommends for
+  unauthenticated and unauthorized control points (2.5.16.2, 2.5.18.2,
+  2.5.14.2, 2.5.21.3), recorded at plan section 26.22. Before it, the engine
+  checked only that the named client lay in the LAN /24, so any LAN device
+  could open a door to any LAN host; on this box a mapping is an ingress path
+  punched through CGNAT that lands on a named host, so that mattered.
+- Three clauses, each bound where the caller has a remedy. The caller's own
+  host binds both faces, and it is the clause that matters on the v1 face,
+  where no authentication exists. The port floor and the read containment bind
+  the v2 face, where a live Basic session lifts them: low-port self-mapping is
+  common enough that a remedy-free refusal on the legacy face would be a
+  compatibility break rather than a policy.
+- The lift is `dp::authorize(session_roles, Roles(["Basic"]))`, the same
+  function the boundary gate uses, so the gate and the lift cannot drift.
+- Mechanics worth keeping: `Contain { caller, high_port }` is computed once in
+  the dispatcher and passed to the engine as a view, so the containment sits
+  under the boundary gate; `MappingReq` keeps allocate_exact and
+  allocate_preferred differing in port resolution alone; a range delete skips
+  what the caller may not touch (2.5.19.2) and answers 730 when nothing in the
+  range was its own; a contained enumeration's index space is what the caller
+  may see, so 714 still terminates a walk.
+- Left open deliberately, and recorded as an accepted leak rather than an
+  oversight: an unauthenticated v1 caller can still enumerate the table,
+  because no authentication exists on that face and the operator's own
+  diagnostics read it.
+- Note on this file: the four entries this session added before this one (the
+  WIP2 transcription, table 2-10's required surface, the allocate split, and
+  call/0021's WPS decision) were appended at the bottom, against the
+  newest-on-top rule stated above. They are left in place rather than moved,
+  because this file is append-only; a reader should look at the tail as well
+  as the top.
+
 ## 2026-09-16 — WSL guest crash-loop halts the verification campaign on andromeda
 
 - The 6.18.33.1-1 guest (WSL 2.7.8.0) began restart-looping at ~14:35
