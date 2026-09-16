@@ -500,7 +500,7 @@ ST: urn:schemas-upnp-org:device:InternetGatewayDevice:1
 <p>For the <strong>compatibility facade</strong>, the LOCATION SHOULD point to the IGD1-compatible root description.</p>
 <p>This is the path that protects Xbox-class clients.</p>
 <hr />
-<h2 id="ssdpall"><a class="header" href="#ssdpall"><code>ssdp:all</code></a></h2>
+<h2 id="the-ssdpall-rule"><a class="header" href="#the-ssdpall-rule">The <code>ssdp:all</code> rule</a></h2>
 <p>A device does not advertise additional lower versions of a type; UDA describes <code>ssdp:all</code> as discovering the device's advertised capabilities.</p>
 <p>The v1/v2 decision for a pending <code>ssdp:all</code> search is:</p>
 <pre><code class="language-text">:all received
@@ -639,7 +639,7 @@ reverse-engineering (the research annex) showed production serves <code>ssdp:all
 from v2; the burst rule decides <em>when</em> v2 is safe to present, with the
 v1 compatibility presentation as the drop-dead default.</p>
 <hr />
-<h1 id="13-response-coalescing-within-the-burst-window"><a class="header" href="#13-response-coalescing-within-the-burst-window">13. Response coalescing within the burst window</a></h1>
+<h1 id="13-burst-window-coalescing"><a class="header" href="#13-burst-window-coalescing">13. Burst-window coalescing</a></h1>
 <p>Duplicate or near-duplicate searches from the same control point are
 collapsed onto the burst's single response schedule:</p>
 <pre><code class="language-text">t=0.000 :all
@@ -1185,7 +1185,7 @@ HTTP 403
 <p>Implement DeviceProtection eventing exactly as required by its service specification.</p>
 <p>The implementation MUST maintain event subscriptions independently of ordinary SSDP discovery state.</p>
 <p>An authorization change that affects evented security state SHALL generate the corresponding standardized event notification.</p>
-<h2 id="persistence"><a class="header" href="#persistence">Persistence</a></h2>
+<h2 id="persistence-rules"><a class="header" href="#persistence-rules">Persistence rules</a></h2>
 <p>Persistent security configuration SHOULD survive ordinary service restart/reboot according to the DeviceProtection specification and the gateway's security model.</p>
 <p>Transient authentication/session state SHOULD NOT be persisted unless explicitly required by the specification.</p>
 <p>At minimum distinguish:</p>
@@ -1239,7 +1239,7 @@ mapping engine
 </code></pre>
 <p>for v2 services.</p>
 <p>This ensures that a later addition of another control path cannot accidentally bypass DeviceProtection.</p>
-<h2 id="testing"><a class="header" href="#testing">Testing</a></h2>
+<h2 id="the-conformance-suite"><a class="header" href="#the-conformance-suite">The conformance suite</a></h2>
 <p>The implementation agent SHALL construct conformance tests for at least:</p>
 <pre><code class="language-text">unauthenticated public action
 unauthenticated protected action
@@ -1375,7 +1375,7 @@ DeviceProtection session is established, the same read answers on either
 face, which is the lift riding the principal rather than the face.</li>
 </ul>
 <p>Component 58fed63, host pin recorded with it.</p>
-<h2 id="the-reference-implementation-miniupnpd"><a class="header" href="#the-reference-implementation-miniupnpd">The reference implementation: miniupnpd</a></h2>
+<h2 id="the-miniupnpd-reference"><a class="header" href="#the-miniupnpd-reference">The miniupnpd reference</a></h2>
 <p>Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
 widespread open implementation. Its own description generator
 (<code>miniupnpd/upnpdescgen.c</code>) ships a DeviceProtection:1 SCPD whose
@@ -1677,9 +1677,9 @@ Layer3Forwarding and WANIPv6FirewallControl differences, UDA
 version). Capture order establishes no causation: the step recorded
 last before a failure may be a bystander.</li>
 </ol>
-<p>The defensible causal statement is therefore the one in the Xbox One legacy facts:
-Xbox is a demonstrably sensitive IGD1 control point whose
-interoperability differs materially with the IGD2 description
+<p>The defensible causal statement is therefore the one in the Xbox One
+legacy-client facts: Xbox is a demonstrably sensitive IGD1 control point
+whose interoperability differs materially with the IGD2 description
 presented. The driver of the IGD2-mode failure is unproven.</p>
 <p>Plan consequences:</p>
 <ul>
