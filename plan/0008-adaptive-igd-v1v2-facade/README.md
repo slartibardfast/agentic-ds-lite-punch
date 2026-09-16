@@ -1615,6 +1615,80 @@ conclusion up front:
 > not a parity target. Every action the specification defines is
 > implemented and enforced; nothing is scaffolded by name only.**
 
+## 26.22 The containment for callers without the lift
+
+Section 26.18 places the DeviceProtection boundary in front of the mapping
+engine, and 26.12 keeps the v1 face unauthenticated for the console-class
+control points that cannot speak DeviceProtection. Between them sat a gap
+that the specification closes for us: 2.5.16.2, 2.5.18.2, 2.5.14.2 and
+2.5.21.3 RECOMMEND a policy for unauthenticated and unauthorized control
+points, and the engine enforced none of it. It checked only that the named
+`InternalClient` lay somewhere in the LAN /24, so any device on the LAN
+could open a door for another host, on any port, including the router
+itself.
+
+That is not bookkeeping on this box. A mapping is an ingress path punched
+through CGNAT that terminates on a host the caller names, and the mapping
+table is therefore the set of doors into the LAN. The recommended policy is
+the ceremony-free half of protecting it, and it is now enforced.
+
+### The clauses and where each binds
+
+- **The caller's own host.** A request that names another host is 606, and
+  an entry that is not the caller's own is not listed, not enumerable and
+  not deletable. This clause needs no remedy, so it binds **both faces**,
+  and it is the one that matters on the v1 face, where no authentication
+  exists.
+- **The port floor.** Internal and external ports at or above 1024, with
+  the wildcard external port admitted because it resolves above the floor
+  by construction. This clause binds **the v2 face**, where a control point
+  can lift it by authenticating; low-port self-mapping is common enough
+  that a remedy-free refusal on the legacy face would be a compatibility
+  break rather than a policy.
+- **The reads.** A contained caller's Listing and enumeration hold only its
+  own entries at or above the floor, and a specific read of another
+  client's entry is 606 rather than "not found". This binds **the v2
+  face** for the same reason, and the v1 reads stay whole so that anonymous
+  LAN diagnostics still see the table. The v1 read surface is therefore a
+  known information leak, accepted deliberately: closing it would remove
+  the operator's own view of the table for clients that cannot
+  authenticate.
+
+### The lift
+
+A live DeviceProtection session whose roles satisfy Basic lifts all three
+clauses; Admin satisfies Basic, so it lifts them too. The lift is decided
+by the same policy function the boundary gate uses (`dp::authorize` against
+`DpAuthz::Roles(["Basic"])`), so the two cannot drift apart. On the v2 face
+an unauthenticated mutator is refused by the gate before the containment is
+consulted, and the containment is the reason a *public* v2 read is still
+confined.
+
+### Mechanics
+
+A `Contain { caller, high_port }` value is computed once in the dispatcher
+and passed into the engine as a view, so the containment sits under the
+boundary gate rather than beside it. The two allocation entry points take a
+`MappingReq`, which is also what makes the exact and preferred pair differ
+in port resolution alone. A range delete skips what the caller may not
+touch and continues, which is the rule 2.5.19.2 gives, with an empty
+selection still 730.
+
+### Evidence
+
+- `containment_predicates` pins both clauses, the wildcard, and the "the
+  floor never licenses another host" case.
+- `containment_view_over_the_table` drives a contained caller over seeded
+  entries: the listing, the specific read (606 for another client's entry),
+  the enumeration (the index space is what the caller may see, so a walk
+  past the end still terminates on 714), the single delete, and the range
+  delete with the skip rule.
+- The `dp_boundary_wire` wire test asserts that the v1 face refuses a
+  request naming another host with 606 while admitting the caller's own
+  request past the containment to the engine.
+
+Component 58fed63, host pin recorded with it.
+
 ## 27.1 The reference implementation: miniupnpd
 
 Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
