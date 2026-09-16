@@ -1696,10 +1696,13 @@ authority.
 
 ```text
 complete:
-    14 actions implemented
+    13 actions implemented (the authoritative surface; an earlier
+        miniupnpd-derived count of 14 carried wrong names —
+        RequestUserLogin, ValidateIdentity, AddACLEntry, LoginWithPIN
+        and friends are not actions of this service; superseded)
     7 state variables declared as specified
     SetupReady event semantics as specified
-    ACL and role state persisted per section 26.15
+    ACL and role state persisted per section 26.15 (dp.tsv)
     the setup and login ceremonies implemented, not simulated
 
 enforced:
@@ -1716,6 +1719,32 @@ reboot, multiple control points, source-IP independence) are the
 verification that the implementation is not a scaffold. A stub that
 answers names but never enforces fails every one of them by
 construction; the conformance suite is the anti-stub gate.
+
+## 27.3a Implementation record (the #v2-service-set dispatch)
+
+The normative contract is transcribed (component docs/upnp-dp1/
+TRANSCRIPTION.md) and the surface is wired: the thirteen actions behind
+`/ctl/DP`, the PKCS5 ceremony with the spec's exact parameters (STORED =
+PBKDF2-HMAC-SHA-256, salt = Name || Salt, c = 5000; authenticator =
+first 128 bits of HMAC-SHA-256(STORED, Challenge || DeviceID ||
+ControlPointID)), the identity-must-be-in-ACL login rule (2.6.6.5),
+the five-failure backstop (2.6.6.8), live ACL/role evaluation so grants
+and revocations take effect on existing sessions, and the DeviceProtection
+-defined faults (600/606/701/704). Sessions are keyed by the control
+point's address, the plain-HTTP analogue of the spec's authenticated TLS
+session (section 26.8: the address keys the store; the decision is a pure
+function of the principal's roles). The role vocabulary is the spec's own
+Public/Basic/Admin (section 0) with the recommended Admin-over-Basic
+hierarchy (2.6.3.2, 2.6.4.5). The v2 WIP2 mapping mutators pass the
+boundary (section 26.7); the :1 face stays legacy-unauthenticated.
+
+Recorded deferrals (the gate stays off until they land): the WIP2:2
+argument tables transcription (GetListOfPortMappings' PortListing is
+entry-derived for now), AddAnyPortMapping any-port (0) allocation, and
+the WPS registrar transport (SendSetupMessage answers 600/704 — this
+wired IGD runs no WPS registrar). Body of the conformances: dp.rs
+26.19 suite + a wire-level suite driving the HTTP/SOAP path through
+login to the opened boundary and the logout re-close.
 
 ## 27.4 The second reference: Orange igd2-for-linux
 
