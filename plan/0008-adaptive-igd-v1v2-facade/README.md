@@ -15,7 +15,7 @@
 
 ### Define the discovery and presentation layer {#disc-presentation}
 
-- verify: cargo test (the section 24 matrix, burst rows included);
+- verify: cargo test (the test matrix, burst rows included);
   cargo clippy clean of new warnings
 - inputs: mdbook plan text, the deployed facade code
 - delivers the per-control-point burst state machine
@@ -25,7 +25,7 @@
 
 ### Mount the v2 service set (WIP2 + DeviceProtection:1) {#v2-service-set}
 
-- verify: the section 24 v2 rows; the section 26.19 conformance suite;
+- verify: the test matrix's v2 rows; the conformance suite;
   the DP SCPD transcribed from the normative PDF (the authority) and
   every one of its 13 actions enforced; the WIP2 SCPD transcribed from
   the WANIPConnection:2 PDF and every one of its fourteen REQUIRED
@@ -42,7 +42,7 @@
   signed URLs expired, and the contract transcribed in TRANSCRIPTION.md),
   the canonical mapping engine
 - delivers WIP2 (AddAnyPortMapping, the superset SCPD set) behind the
-  DeviceProtection authorization boundary (sections 26.7 and 26.18),
+  DeviceProtection authorization boundary,
   the complete DP:1 service, ACL and role persistence, the login and
   setup ceremonies, and the event surface. The IGD_V2 gate flips on
   here and stays on.
@@ -52,17 +52,17 @@
 - verify: unit tests for allocate_exact versus allocate_preferred
   semantics over the one engine
 - inputs: the current upsert/add_mapping paths
-- delivers the allocate_exact / allocate_preferred split (section 17)
+- delivers the allocate_exact / allocate_preferred split (the version-specific SOAP semantics)
   so WIP1 and WIP2 resolve to the same mapping objects unchanged.
 
 ### Bench the client matrix {#bench-matrix}
 
 - verified by: the Xbox-class, Syncthing-class, Tailscale-class and
-  legacy-only sequences of section 24 and the discovery-deadline
+  legacy-only sequences of the test matrix and the discovery deadline
   assertions, against the deployed box
 - inputs: the deployed facade, the console chain, a v2-capable client
-- delivers the empirical record of the section 12/22 policy and of the
-  actual IGD2-mode failure driver (section 27.5).
+- delivers the empirical record of the burst policy and of the
+  actual IGD2-mode failure driver (the DeviceProtection-causation re-read).
 
 This document specifies an implementation architecture for a new IPv4
 UPnP Internet Gateway Device (IGD) server whose principal requirement
@@ -117,7 +117,7 @@ WIP2#AddAnyPortMapping
 
 # 2. Normative background
 
-## 2.1 `ssdp:all` is part of UDA 1.0
+## `ssdp:all` is part of UDA 1.0
 
 UPnP Device Architecture 1.0 defines `ssdp:all` as an M-SEARCH target meaning search for all devices and services. It is therefore not a v2 feature.
 
@@ -141,7 +141,7 @@ This specification nevertheless deliberately assigns the server's **IPv4 compati
 
 ---
 
-## 2.2 Explicit version searches
+## Explicit version searches
 
 UDA requires a versioned device/service search to receive a response whose `ST` contains the same version that was searched for.
 
@@ -175,7 +175,7 @@ because the search response's `ST` is required to match the searched version.
 
 ---
 
-## 2.3 A v2 device advertises its highest supported version
+## A v2 device advertises its highest supported version
 
 UDA 1.1/2.0 also specifies that devices advertise the **highest supported version** of each supported device/service type; they do not advertise multiple versions merely because the implementation remains backward compatible. A control point supporting v1 is expected to be able to interact with the advertised v2 type using the functionality defined by v1.
 
@@ -197,7 +197,7 @@ IGD2 is the advertised version; v1 interoperability is provided through versione
 
 # 3. M-SEARCH timing
 
-## 3.1 Response delay
+## Response delay
 
 For multicast M-SEARCH, UDA specifies a randomized response delay in the interval:
 
@@ -213,7 +213,7 @@ Therefore an implementation MAY deliberately defer its response to any individua
 
 ---
 
-## 3.2 The timing allowance is not a negotiation mechanism
+## The timing allowance is not a negotiation mechanism
 
 Nothing in UDA defines:
 
@@ -433,7 +433,7 @@ The mapping database MUST NOT have independent "v1 mappings" and "v2 mappings". 
 
 For the purpose of this compatibility profile, classification is intentionally trivial.
 
-## 9.1 Explicit IGD2 search
+## Explicit IGD2 search
 
 If a control point sends:
 
@@ -458,7 +458,7 @@ This is the positive v2 capability signal.
 
 ---
 
-## 9.2 Explicit IGD1 search
+## Explicit IGD1 search
 
 If the control point sends:
 
@@ -479,7 +479,7 @@ This is the path that protects Xbox-class clients.
 
 ---
 
-## 9.3 `ssdp:all`
+## `ssdp:all`
 
 A device does not advertise additional lower versions of a type; UDA describes `ssdp:all` as discovering the device's advertised capabilities.
 
@@ -514,8 +514,9 @@ learning beyond identifying the control point for the window's
 duration, and no state is kept once the window closes.
 
 This replaces the earlier fixed rule "ssdp:all is always answered from
-the v1 facade" (see 12 for the reversal rationale and 28.3 for the
-superseded decision).
+the v1 facade": the bounded burst debounce gives the reversal rationale,
+and the Livebox finding records the production behaviour that
+superseded it.
 
 ---
 
@@ -630,7 +631,7 @@ it is an independent request answered from the v1 facade immediately.
 The constraints that keep this bounded and deterministic:
 
 1. The window is the implementation parameter `DISCOVERY_DEBOUNCE
-   = 1 s` (section 9.3). One second is the UDA default for a missing
+   = 1 s` (the ssdp:all rule). One second is the UDA default for a missing
    MX, so the server may assume it as the MX floor, and the window
    never exceeds any valid MX of the pending `:all`.
 2. The window state is per control point, keyed only for the window's
@@ -641,7 +642,7 @@ The constraints that keep this bounded and deterministic:
    starved while another is awaited beyond the allowed response
    window.
 4. Duplicate `:all` retransmissions inside the window coalesce onto
-   the single pending response schedule (section 13).
+   the single pending response schedule (the burst-window coalescing).
 5. `:1` never triggers or suppresses the v2 classification.
 
 The implementation holds the `:all` response for up to
@@ -655,7 +656,7 @@ Why this is adopted despite being a deviation: it makes `ssdp:all` a
 capability-probing request with the explicit `:2` search as the
 disambiguator, which solves the practical Xbox-versus-modern split without
 permanently fixing generic discovery to v1. The Livebox
-reverse-engineering (section 28) showed production serves `ssdp:all`
+reverse-engineering (the research annex) showed production serves `ssdp:all`
 from v2; the burst rule decides *when* v2 is safe to present, with the
 v1 compatibility presentation as the drop-dead default.
 
@@ -673,7 +674,7 @@ t=0.008 :all
 ```
 
 All three retransmissions are answered by the burst's one response
-(deferred per section 12, then resolved from `seen_v2 ? v2 : v1`),
+(deferred per the bounded burst debounce, then resolved from `seen_v2 ? v2 : v1`),
 provided every required response is emitted before its own MX. The
 coalescing window IS the capability window: it exists only while a
 response is deferred and doubles as the span in which an `:2` flips
@@ -688,7 +689,7 @@ response_delay = random(0, MX)
 or any deterministic delay no greater than the applicable MX that
 satisfies the specification. The response to a search is never delayed
 beyond that search's own window, and no search is held open waiting
-for a hypothetical future `:2` past the deadline of section 12's
+for a hypothetical future `:2` past the deadline of the bounded burst debounce's
 burst window.
 
 ---
@@ -710,7 +711,7 @@ Under the burst rule the behavior is:
 
 ```text
 M-SEARCH :all
-    -> burst window opens; response deferred (section 12)
+    -> burst window opens; response deferred (the bounded burst debounce)
 
 M-SEARCH :2   (same control point, inside the window)
     -> pending :all resolves to v2
@@ -894,7 +895,7 @@ validate:
 switch ST:
 
     ssdp:all:
-        open a burst window and defer (see 9.3)
+        open a burst window and defer (see the ssdp:all rule)
         resolve at the window deadline from seen_v2 ? v2 : v1
 
     IGD:1:
@@ -949,7 +950,7 @@ The server MAY use a smaller effective maximum than the client
 supplied, as permitted by the architecture. For a pending `ssdp:all`
 search the effective deadline is `receive_time + DISCOVERY_DEBOUNCE`
 (1 s), the assumed-MX floor that also bounds the burst window
-(sections 9.3 and 12); the deferred response is released at or before
+(the ssdp:all rule and the bounded burst debounce); the deferred response is released at or before
 that deadline, early if a `:2` flips the classification.
 
 For a burst of duplicate requests, the server may coalesce internal
@@ -1000,7 +1001,7 @@ M-SEARCH ST=:2
 # 22. Interaction with `ssdp:all`
 
 The policy exception is now conditional via the burst rule (sections
-9.3 and 12):
+the ssdp:all rule and the bounded burst debounce):
 
 ```text
 ssdp:all (no :2 in the window) -> v1 compatibility facade
@@ -1133,7 +1134,7 @@ R6  Deferred `ssdp:all` classification with
     second (the assumed-MX floor) and answered from the v2 facade only
     if an `IGD:2` search from the same control point is observed in
     the window; otherwise from the v1 facade. An `IGD:1` search never
-    influences the classification (sections 9.3, 12, 14, call/0020).
+    influences the classification (the ssdp:all rule, the bounded burst debounce, the same-client rule, call/0020).
 ```
 
 ---
@@ -1145,7 +1146,7 @@ correctly and completely. No carve-outs. DeviceProtection in
 particular is implemented as a genuine authorization subsystem, not as
 an advertised endpoint over an always-authorized service.
 
-## 26.1 Requirement
+## Requirement
 
 An IGD:2 presentation SHALL expose a fully functional:
 
@@ -1159,7 +1160,7 @@ The v1 compatibility facade MUST NOT expose DeviceProtection.
 
 This implements the IGD:2 security model rather than merely placing the service in `rootDesc.xml`. The IGD:2 device specification identifies DeviceProtection as a recommended component of the IGD:2 hierarchy, while IGD-specific security requirements remain mandatory.
 
-## 26.2 Purpose
+## Purpose
 
 DeviceProtection is an authorization layer for UPnP services.
 
@@ -1187,7 +1188,7 @@ DeviceProtection authorization context
 
 DeviceProtection is explicitly intended to provide secure communication and access control to UPnP services.
 
-## 26.3 Security model
+## Security model
 
 Implement DeviceProtection as a genuine authorization subsystem:
 
@@ -1215,7 +1216,7 @@ as that would provide the appearance of IGD:2 security while leaving the protect
 
 RFC 6970's IGD/PCP interoperability guidance reinforces this interpretation: when IGD:2 is used, IGD:2 access-control requirements and authorization levels SHOULD be applied by default, and operations on behalf of another device should require authentication and authorization.
 
-## 26.4 Root-device placement
+## Root-device placement
 
 The IGD:2 device description SHALL place:
 
@@ -1233,7 +1234,7 @@ unless the implementation is following another hierarchy explicitly permitted by
 
 The IGD:2 device specification specifically recommends connecting DeviceProtection to the InternetGatewayDevice in the device/service hierarchy.
 
-## 26.5 Service implementation
+## Service implementation
 
 Implement the complete standardized DeviceProtection:1 SCPD and its complete action/event surface.
 
@@ -1255,7 +1256,7 @@ defined there.
 
 The service specification is the authoritative source for the exact action names, arguments, XML namespaces, data types and error codes. DeviceProtection:1 is the standardized UPnP Forum service dated February 24, 2011.
 
-## 26.6 Public versus protected operations
+## Public versus protected operations
 
 The implementation SHALL distinguish:
 
@@ -1275,7 +1276,7 @@ The implementation MUST NOT make all operations public merely to maximize compat
 
 For an IGD server, operations that alter security-sensitive gateway state, particularly port mappings, firewall state, or security configuration, must flow through the authorization layer.
 
-## 26.7 WANIPConnection integration
+## WANIPConnection integration
 
 The authorization check occurs before the canonical mapping engine:
 
@@ -1305,7 +1306,7 @@ and to all other security-sensitive WANIPConnection operations.
 
 The v1 facade remains a legacy unauthenticated compatibility surface and is therefore kept separate from this IGD:2 authorization path.
 
-## 26.8 Security context
+## Security context
 
 The implementation SHALL maintain an authenticated security context associated with the control point's DeviceProtection session.
 
@@ -1331,7 +1332,7 @@ alone.
 
 Those may be useful for diagnostics but MUST NOT constitute authentication.
 
-## 26.9 ACL model
+## ACL model
 
 Implement the DeviceProtection ACL model as specified by the DeviceProtection service.
 
@@ -1366,7 +1367,7 @@ LAN client == administrator
 
 because that bypasses the security model.
 
-## 26.10 Default security posture
+## Default security posture
 
 Default installation SHALL use the restrictive interpretation of the IGD:2 security model:
 
@@ -1385,7 +1386,7 @@ no matching authorization
 
 This is consistent with the IGD2 security direction and with RFC 6970's recommendation that IGD:2 authorization controls be applied by default.
 
-## 26.11 DeviceProtection absence is not an acceptable IGD:2 shortcut
+## DeviceProtection absence is not an acceptable IGD:2 shortcut
 
 Do not implement:
 
@@ -1405,7 +1406,7 @@ For this project the implementation target is deliberately stronger:
 
 > If the server exposes the IGD:2 facade, it also exposes and actually enforces DeviceProtection:1.
 
-## 26.12 v1 facade isolation
+## v1 facade isolation
 
 The v1 description SHALL contain none of:
 
@@ -1439,7 +1440,7 @@ shows the DP service itself caused the abandonment (see 27.5). The v1
 facade policy rests on the direct trace evidence that Xbox consumes
 IGD1 + WIP1 successfully, not on the DeviceProtection hypothesis.
 
-## 26.13 Error handling
+## Error handling
 
 Authorization failure MUST be a proper UPnP SOAP fault using the DeviceProtection-defined mechanism where one exists.
 
@@ -1455,7 +1456,7 @@ as a substitute for the standardized UPnP application-level error unless the Dev
 
 Likewise, do not convert authorization failures into generic WANIPConnection errors.
 
-## 26.14 Eventing
+## Eventing
 
 Implement DeviceProtection eventing exactly as required by its service specification.
 
@@ -1463,7 +1464,7 @@ The implementation MUST maintain event subscriptions independently of ordinary S
 
 An authorization change that affects evented security state SHALL generate the corresponding standardized event notification.
 
-## 26.15 Persistence
+## Persistence
 
 Persistent security configuration SHOULD survive ordinary service restart/reboot according to the DeviceProtection specification and the gateway's security model.
 
@@ -1483,7 +1484,7 @@ transient:
     nonces / tokens
 ```
 
-## 26.16 Credentials
+## Credentials
 
 Credentials SHALL never appear in:
 
@@ -1499,7 +1500,7 @@ Passwords or equivalent authenticators MUST be stored using the secure represent
 
 Do not invent a weaker password scheme for implementation convenience.
 
-## 26.17 Cryptographic ceremonies
+## Cryptographic ceremonies
 
 Where DeviceProtection specifies a cryptographic exchange, challenge, certificate, or security-token ceremony, implement the complete ceremony.
 
@@ -1516,7 +1517,7 @@ unless the DeviceProtection specification explicitly permits that mechanism as t
 
 The DeviceProtection specification exists specifically to provide secure communication and access control for UPnP services.
 
-## 26.18 Authorization boundary for the canonical mapping engine
+## Authorization boundary for the canonical mapping engine
 
 The canonical mapping engine MUST have no direct UPnP-facing bypass.
 
@@ -1546,7 +1547,7 @@ for v2 services.
 
 This ensures that a later addition of another control path cannot accidentally bypass DeviceProtection.
 
-## 26.19 Testing
+## Testing
 
 The implementation agent SHALL construct conformance tests for at least:
 
@@ -1580,7 +1581,7 @@ v2 facade:
     authorization affects WIP2 operations
 ```
 
-## 26.20 Interoperability policy
+## Interoperability policy
 
 DeviceProtection is part of the **v2 facade only**.
 
@@ -1599,7 +1600,7 @@ explicit v2 discovery
 
 This preserves the empirically demonstrated Xbox compatibility path while allowing modern v2 control points to receive a genuinely security-aware IGD2 device.
 
-## 26.21 Implementation target
+## Implementation target
 
 The implementation agent should interpret this document as:
 
@@ -1621,10 +1622,10 @@ conclusion up front:
 > not a parity target. Every action the specification defines is
 > implemented and enforced; nothing is scaffolded by name only.**
 
-## 26.22 The containment for callers without the lift
+## The containment for callers without the lift
 
-Section 26.18 places the DeviceProtection boundary in front of the mapping
-engine, and 26.12 keeps the v1 face unauthenticated for the console-class
+The authorization boundary sits in front of the mapping
+engine, and the v1 facade isolation keeps the v1 face unauthenticated for the console-class
 control points that cannot speak DeviceProtection. Between them sat a gap
 that the specification closes for us: 2.5.16.2, 2.5.18.2, 2.5.14.2 and
 2.5.21.3 RECOMMEND a policy for unauthenticated and unauthorized control
@@ -1709,7 +1710,7 @@ selection still 730.
 
 Component 58fed63, host pin recorded with it.
 
-## 27.1 The reference implementation: miniupnpd
+## The reference implementation: miniupnpd
 
 Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
 widespread open implementation. Its own description generator
@@ -1736,9 +1737,9 @@ A_ARG_TYPE_String
 
 The service is gated by the compile flag `ENABLE_DP_SERVICE`, and in
 `IGD_V2` builds the `force_igd1` path (the `force_igd_desc_v1` option
-from section 6) strips DeviceProtection and WANIPv6FirewallControl
+from the precedent implementation) strips DeviceProtection and WANIPv6FirewallControl
 from the emitted root description. The version-specific URLs from
-section 21 map onto its `DP_PATH` / `DP_CONTROLURL` / `DP_EVENTURL`
+the LOCATION design map onto its `DP_PATH` / `DP_CONTROLURL` / `DP_EVENTURL`
 macros.
 
 Miniupnpd's own project notes state that IGD v2 support was added in
@@ -1758,7 +1759,7 @@ Consequences for this milestone:
    explicit, toggleable policy, separate from implementation
    capability.
 
-## 27.2 The specification's full surface
+## The specification's full surface
 
 The DeviceProtection:1 service specification (UPnP Forum, February
 2011) defines the actions this milestone implements in full:
@@ -1798,7 +1799,7 @@ definitions are transcribed into the behaviour spec that lives with
 the component. This annex records the shape; the PDF is the
 authority.
 
-## 27.3 What "complete and enforced" means here
+## What "complete and enforced" means here
 
 ```text
 complete:
@@ -1808,7 +1809,7 @@ complete:
         and friends are not actions of this service; superseded)
     7 state variables declared as specified
     SetupReady event semantics as specified
-    ACL and role state persisted per section 26.15 (dp.tsv)
+    ACL and role state persisted per the persistence rules (dp.tsv)
     the setup and login ceremonies implemented, not simulated
     the fourteen REQUIRED WIP2 actions (table 2-10's device column)
         carrying their own argument tables in the published SCPD, and
@@ -1822,20 +1823,20 @@ complete:
 
 enforced:
     every protected WIP2 action passes the authorization boundary
-    (section 26.7) with a real, session-derived principal
+    (the WANIPConnection integration) with a real, session-derived principal
     an unauthenticated or unauthorized invocation receives the
     DeviceProtection-defined SOAP fault, not a stub approval
-    the v1 facade exposes none of it (section 26.12)
+    the v1 facade exposes none of it (the v1 facade isolation)
 ```
 
-The test obligations of section 26.19 (unauthorized action, expired
+The test obligations of the conformance suite (unauthorized action, expired
 session, invalid credentials, ACL change, role change, restart,
 reboot, multiple control points, source-IP independence) are the
 verification that the implementation is not a scaffold. A stub that
 answers names but never enforces fails every one of them by
 construction; the conformance suite is the anti-stub gate.
 
-## 27.3a Implementation record (the #v2-service-set dispatch)
+## Implementation record (the #v2-service-set dispatch)
 
 The normative contract is transcribed (component docs/upnp-dp1/
 TRANSCRIPTION.md) and the surface is wired: the thirteen actions behind
@@ -1847,11 +1848,11 @@ the five-failure backstop (2.6.6.8), live ACL/role evaluation so grants
 and revocations take effect on existing sessions, and the DeviceProtection
 -defined faults (600/606/701/704). Sessions are keyed by the control
 point's address, the plain-HTTP analogue of the spec's authenticated TLS
-session (section 26.8: the address keys the store; the decision is a pure
+session (the security context: the address keys the store; the decision is a pure
 function of the principal's roles). The role vocabulary is the spec's own
-Public/Basic/Admin (section 0) with the recommended Admin-over-Basic
+Public/Basic/Admin (the DeviceProtection role definitions) with the recommended Admin-over-Basic
 hierarchy (2.6.3.2, 2.6.4.5). The v2 WIP2 mapping mutators pass the
-boundary (section 26.7); the :1 face stays legacy-unauthenticated.
+boundary (the WANIPConnection integration); the :1 face stays legacy-unauthenticated.
 
 Deferrals at the time of the dispatch, all closed but one: the argument
 tables transcription, the AddAnyPortMapping wildcard request, the range
@@ -1859,10 +1860,10 @@ refusals and the version 2 lease reading landed at components aaca491
 and a339747 (sections 27.3b and 27.3c); the WPS registrar transport is
 still absent (SendSetupMessage answers 600/704, and this wired IGD runs
 no WPS registrar). Body of the conformances: dp.rs
-26.19 suite + a wire-level suite driving the HTTP/SOAP path through
+the conformance suite + a wire-level suite driving the HTTP/SOAP path through
 login to the opened boundary and the logout re-close.
 
-### 27.3b The WIP2 transcription (component aaca491)
+### The WIP2 transcription (component aaca491)
 
 The WANIPConnection:2 service is now transcribed from its own normative
 document (component docs/upnp-wip2/TRANSCRIPTION.md), the source PDF and
@@ -1892,7 +1893,7 @@ empty because the device does not persist the control point's
 description string; storing it is a recorded fidelity gap, not a claim
 that the control point sent nothing.
 
-### 27.3c The v2 readings the transcription required (component a339747)
+### The v2 readings the transcription required (component a339747)
 
 The behaviours 27.3b named as still open are implemented, each with the
 section that requires it and a test that a name-only implementation
@@ -1915,7 +1916,7 @@ The wire suite drives all four through HTTP/SOAP under an open session;
 two unit tests pin the port choice, the lease reading, the Listing
 fragment's shape and its remaining-lease value.
 
-### 27.3d The required surface, and the four actions it was missing
+### The required surface, and the four actions it was missing
 
 A third reading of table 2-10, this time of its device column: the service
 defines twenty-one actions, fourteen REQUIRED of a device and seven
@@ -1939,7 +1940,7 @@ honouring it would give every device on the LAN a lever that drops the
 household line for every client. Its own error table (2.5.5.6) has no code
 for a device that may not terminate, so the answer is the UDA generic 501.
 
-### 27.3e The WPS introduction protocol is not implemented
+### The WPS introduction protocol is not implemented
 
 DeviceProtection's setup ceremony has one limb that cannot be built from
 what this project can transcribe. Section 2.4.3.1 mandates the WPS entry in
@@ -1966,7 +1967,7 @@ entries and to ports at or above 1024, so this is a deliberate policy choice
 with a named consequence, to be settled here rather than in the
 transcription.
 
-## 27.4 The second reference: Orange igd2-for-linux
+## The second reference: Orange igd2-for-linux
 
 Orange-OpenSource's `igd2-for-linux` (imported from the retired
 gitorious of the same name) is the Linux UPnP IGD updated to the
@@ -1996,7 +1997,7 @@ miniupnpd changelog.
 
 One divergence from this milestone's requirement: both root descs
 point at the SAME service SCPD URLs (`/gateconnSCPD.xml` et al.).
-Section 21's "the v1 and v2 descriptions MUST have distinct service
+the LOCATION design's "the v1 and v2 descriptions MUST have distinct service
 URLs" is therefore deliberately stricter than the Orange precedent;
 the strictness exists for determinism and cache clarity and is
 retained.
@@ -2042,7 +2043,7 @@ that can be matched while remaining non-stub, which is precisely the
 reason the specification text, not any implementation, is the
 completion authority.
 
-## 27.5 The DeviceProtection-causation re-read (2026-09-16)
+## The DeviceProtection-causation re-read (2026-09-16)
 
 The milestone's earlier framing carried an implied causal claim: that
 exposing DeviceProtection to legacy clients was a driver of the
@@ -2053,7 +2054,7 @@ field research and is no longer load-bearing:
    surface at all (27.4.3), so DP cannot be a universal IGD2 interop
    breaker.
 2. miniupnpd's own DeviceProtection is a three-action scaffold
-   (27.1); the IGD2 presentation the Xbox actually encountered was not
+   (the miniupnpd reference); the IGD2 presentation the Xbox actually encountered was not
    a rich, functional security surface.
 3. The Xbox trace establishes correlation only: in IGD2 mode the
    client fetched `DP.xml` and then abandoned. The IGD2-versus-IGD1
@@ -2063,7 +2064,7 @@ field research and is no longer load-bearing:
    version). Capture order establishes no causation: the step recorded
    last before a failure may be a bystander.
 
-The defensible causal statement is therefore the one in section 4:
+The defensible causal statement is therefore the one in the Xbox One legacy facts:
 Xbox is a demonstrably sensitive IGD1 control point whose
 interoperability differs materially with the IGD2 description
 presented. The driver of the IGD2-mode failure is unproven.
@@ -2089,7 +2090,7 @@ Sagemcom firmware source archive
 61,016 files, all under `opensrc/sah/`). The durable full report is
 kept outside the repo; this annex records the plan-relevant facts.
 
-## 28.1 Provenance, from source
+## Provenance, from source
 
 The IGD daemon is
 `opensrc/sah/services/linux-igd/REL/2014-06-19_V3.9.1/linuxigd2` and
@@ -2112,7 +2113,7 @@ and `#define X_USER_AGENT "redsonic"` (`ssdplib.h:93`, "needed for
 the DSM-320"). Miniupnpd appears only as the test client
 (`test/miniupnpc-1.5.20110618/`), never as the IGD.
 
-## 28.2 The two-description mechanism
+## The two-description mechanism
 
 `gatedesc.xml` / `gatedesc1.xml` are build-time-processed templates
 (`m4 -D__PRESENTATION_URL__`, `sed __ICON_LIST__`; Makefile) named by
@@ -2138,7 +2139,7 @@ connection service is a single shared superset SCPD
 (`GetNATRSIPStatus` plus `AddAnyPortMapping`), with an IP/PPP build
 split (`__SERVICE_TYPE__` substitution).
 
-## 28.3 Finding A (plan section 9.3): the Livebox serves ssdp:all from the v2 description
+## The Livebox finding: production serves ssdp:all from the v2 description
 
 In the forked libupnp the ssdp:all branch replies with the PRIMARY
 (DescURL) description (`ssdp_server.c`, SSDP_ALL case); the lower
@@ -2155,7 +2156,7 @@ IGD:2 search inside the window, and v1 remains the drop-dead default
 otherwise. The bench phase records how Xbox-family and modern clients
 behave against the concrete DISCOVERY_DEBOUNCE = 1 s policy.
 
-## 28.4 Finding B (sections 26 and 27): production DP absence confirmed from source
+## The production-absence finding: no DeviceProtection in the carrier image
 
 The Livebox config set carries no DeviceProtection SCPD, and the
 daemon's authorization is an internal access-level ACL
