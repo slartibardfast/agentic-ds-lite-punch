@@ -139,3 +139,19 @@
     evidence = component 4d0160f (pin updated to 979aafd for the transcription citation; host pin 266a6d6..979aafd): IGD_V2_ENABLED on; section 24 discovery rows asserted by ssdp_loop_answers_the_mounted_surface and the document rows by versioned_doc_routing (v2 root desc carries DeviceProtection:1 beside WANIPConnection:2; /igd/v2/WANIPCn.xml publishes the 14 required actions; /igd/v2/DP.xml the 13); dp19_conformance_suite, dp_boundary_wire and wip2_connection_actions_wire green; cargo test = 117 passed, 0 failed, 1 ignored. The SendSetupMessage WPS limb is no longer an open question: it is decided in call/0021 (advertise WPS as 2.4.3.1 mandates, answer a setup attempt 704 Processing Error with an empty OutMessage, 600 rejected), recorded at plan/0008 section 27.3e and in the component transcription docs/upnp-dp1/TRANSCRIPTION.md.
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-16
+
+[receipt "plan/0008#disc-presentation"]
+    disposition = done
+    verify = cargo test (the test matrix, burst rows included);
+    inputs = mdbook plan text, the deployed facade code
+    evidence = component d5bf749, 101 tests green, clippy clean: version-aware SearchTarget, the discovery burst (DISCOVERY_DEBOUNCE=1s, ssdp:all deferred, the :2 flip, :1 inert), the versioned /igd URLs, the IGD_V2 gate off at the time, the classify whitelist extended; the test matrix and the deadline assertions covered. Re-recorded after the naming-audit rename renamed this task's verify text; the claim itself is unchanged.
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-16
+
+[receipt "plan/0008#v2-service-set"]
+    disposition = done
+    verify = the test matrix's v2 rows; the conformance suite;
+    inputs = the DeviceProtection:1 service specification PDF, internalized
+    evidence = component 4d0160f (host pin 979aafd): the IGD_V2 gate on; the test matrix' discovery rows asserted by ssdp_loop_answers_the_mounted_surface and the document rows by versioned_doc_routing; dp19_conformance_suite, dp_boundary_wire and wip2_connection_actions_wire green; cargo test = 119 passed, 0 failed, 1 ignored. The WPS limb is decided in call/0021. Re-recorded after the naming-audit rename renamed this task's verify text; the claim itself is unchanged.
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-16
