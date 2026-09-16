@@ -242,7 +242,7 @@ actual IGD2-mode failure driver (section 27.5).</li>
 UPnP Internet Gateway Device (IGD) server whose principal requirement
 is simultaneous interoperability with:</p>
 <ul>
-<li>legacy IGD:1 control points, including observed Xbox One behavior;</li>
+<li>legacy IGD:1 control points, among them observed Xbox One behavior;</li>
 <li>modern IGD:2 control points;</li>
 <li>clients that perform discovery using <code>ssdp:all</code>;</li>
 <li>clients that explicitly search for <code>InternetGatewayDevice:2</code>;</li>
@@ -618,14 +618,14 @@ the single pending response schedule (section 13).</li>
 <li><code>:1</code> never triggers or suppresses the v2 classification.</li>
 </ol>
 <p>The implementation holds the <code>:all</code> response for up to
-<code>DISCOVERY_DEBOUNCE = 1 s</code>, releasing early only when an observed
+<code>DISCOVERY_DEBOUNCE = 1 s</code>. It releases early only when an observed
 <code>:2</code> permits an earlier v2 answer. The <code>:2</code> response itself obeys its
 own MX deadline independently. This is deliberate product behavior,
 not an accidental compatibility heuristic (call/0020 records the
 decision).</p>
 <p>Why this is adopted despite being a deviation: it makes <code>ssdp:all</code> a
 capability-probing request with the explicit <code>:2</code> search as the
-disambiguator, solving the practical Xbox-versus-modern split without
+disambiguator, which solves the practical Xbox-versus-modern split without
 permanently fixing generic discovery to v1. The Livebox
 reverse-engineering (section 28) showed production serves <code>ssdp:all</code>
 from v2; the burst rule decides <em>when</em> v2 is safe to present, with the
@@ -884,7 +884,7 @@ are empirical:</p>
 </ul>
 <p>The burst rule adds the flip side: a control point that demonstrably
 searches for IGD2 inside the window gets the v2 presentation for its
-generic discovery too, matching the Livebox production behavior of
+generic discovery too, which matches the Livebox production behavior of
 serving v2 to generic discovery for capable clients.</p>
 <hr />
 <h1 id="23-the-unresolved-standards-boundary-is-now-explicit"><a class="header" href="#23-the-unresolved-standards-boundary-is-now-explicit">23. The unresolved standards boundary is now explicit</a></h1>
@@ -1295,9 +1295,9 @@ control points that cannot speak DeviceProtection. Between them sat a gap
 that the specification closes for us: 2.5.16.2, 2.5.18.2, 2.5.14.2 and
 2.5.21.3 RECOMMEND a policy for unauthenticated and unauthorized control
 points, and the engine enforced none of it. It checked only that the named
-<code>InternalClient</code> lay somewhere in the LAN /24, so any device on the LAN
-could open a door for another host, on any port, including the router
-itself.</p>
+<code>InternalClient</code> lay somewhere in the LAN /24. Any device on the LAN could
+therefore open a door for another host, on any port, and the router itself
+was within its reach.</p>
 <p>That is not bookkeeping on this box. A mapping is an ingress path punched
 through CGNAT that terminates on a host the caller names, and the mapping
 table is therefore the set of doors into the LAN. The recommended policy is
@@ -1615,8 +1615,8 @@ distinct-service-URLs model.</p>
 <h3 id="2743-deviceprotection-is-absent-there-too"><a class="header" href="#2743-deviceprotection-is-absent-there-too">27.4.3 DeviceProtection is absent there too</a></h3>
 <p>No file in the tree carries DeviceProtection; neither root description
 exposes the service. A major carrier's production IGD2 therefore ships
-without any DeviceProtection surface (and without Layer3Forwarding),
-confirming how little of the IGD2 hierarchy the deployed ecosystem
+without any DeviceProtection surface (and without Layer3Forwarding). That
+confirms how little of the IGD2 hierarchy the deployed ecosystem
 actually implements.</p>
 <h3 id="2744-the-field-picture-updated"><a class="header" href="#2744-the-field-picture-updated">27.4.4 The field picture, updated</a></h3>
 <pre><code class="language-text">miniupnpd   IGD2 optional, off by default; DP = 3 actions
