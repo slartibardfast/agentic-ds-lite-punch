@@ -26,9 +26,13 @@ MEMORY.md
 
 # Tool-written receipt records: append-only claims whose evidence quotes
 # genuine versions and measurements; the record layer is excluded, never
-# reworded.
+# reworded. `.host-task-receipts` is the third of these ledgers (the task
+# graph's receipts, written by `host-lifecycle tasks --record` from the
+# task's own verify line and evidence), and it quotes the milestone text it
+# was recorded from, so rewording it would change what a past claim said.
 .host-receipts
 .host-lifecycle-receipts
+.host-task-receipts
 
 # Generated mdBook output (book.toml at the root; source and build under
 # mdBook/): produced by `host-lifecycle book`, never authored content.
