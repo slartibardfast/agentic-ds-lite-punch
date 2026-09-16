@@ -177,6 +177,31 @@
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-16--the-reads-are-contained-too-one-view-for-both-faces"><a class="header" href="#2026-09-16--the-reads-are-contained-too-one-view-for-both-faces">2026-09-16 — the reads are contained too; one view for both faces</a></h2>
+<ul>
+<li>David's question ("they can only affect self, so is a read of others even
+privileged?") cut the last asymmetry out of the containment: writes were
+contained on both faces and reads on the v2 face alone. A read confers no
+capability, but the table is the ingress map (which host is reachable from
+outside, on which port, over which protocol, and how much lease is left),
+and on this box that map is the artefact the punch work creates. So one
+view now serves reads and writes on either face; the port floor is the only
+clause bound to the v2 face, since a legacy client may legitimately exceed
+it.</li>
+<li>The cost I had claimed for containing the v1 reads was overstated, and the
+check that settled it is worth remembering: the daemon already writes the
+whole entry index to its state file (<code>/tmp/dslp/upnp.tsv</code>, tmpfs, live
+while it runs), so the operator's privileged view is a local read and never
+depended on the anonymous UPnP read. Before arguing that a containment
+costs the operator sight, look for the state file first.</li>
+<li>A lift belongs to the principal, not the face: a control point that
+authenticates over DeviceProtection reads the whole table on either face.
+That is the v1 read containment's remedy, and it means "the v1 face has no
+authentication" was never the same claim as "the v1 caller has no remedy".</li>
+<li>Assertion lesson: GetSpecificPortMappingEntry's response carries its OUT
+arguments only, so the NewExternalPort it was asked for is not echoed; a
+wire assertion must look for the internal side or the label.</li>
+</ul>
 <h2 id="2026-09-16--the-containment-for-callers-without-the-lift"><a class="header" href="#2026-09-16--the-containment-for-callers-without-the-lift">2026-09-16 — the containment for callers without the lift</a></h2>
 <ul>
 <li>plan/0008 #v2-service-set now enforces the policy the spec recommends for

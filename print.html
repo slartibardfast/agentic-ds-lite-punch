@@ -2412,21 +2412,30 @@ that a remedy-free refusal on the legacy face would be a compatibility
 break rather than a policy.</li>
 <li><strong>The reads.</strong> A contained caller's Listing and enumeration hold only its
 own entries at or above the floor, and a specific read of another
-client's entry is 606 rather than "not found". This binds <strong>the v2
-face</strong> for the same reason, and the v1 reads stay whole so that anonymous
-LAN diagnostics still see the table. The v1 read surface is therefore a
-known information leak, accepted deliberately: closing it would remove
-the operator's own view of the table for clients that cannot
-authenticate.</li>
+client's entry is 606 rather than "not found". This binds <strong>both faces</strong>
+as well, and for the same reason the address clause does: a read confers
+no capability, but the table is the ingress map (which internal host is
+reachable from outside, on which port, over which protocol, with how much
+lease left), and on this box that map is the artefact the punch work
+creates. One view therefore serves reads and writes on either face.</li>
 </ul>
-<h3 id="the-lift"><a class="header" href="#the-lift">The lift</a></h3>
-<p>A live DeviceProtection session whose roles satisfy Basic lifts all three
-clauses; Admin satisfies Basic, so it lifts them too. The lift is decided
-by the same policy function the boundary gate uses (<code>dp::authorize</code> against
+<h3 id="the-lift-and-what-it-does-not-cost-the-operator"><a class="header" href="#the-lift-and-what-it-does-not-cost-the-operator">The lift, and what it does not cost the operator</a></h3>
+<p>A live DeviceProtection session whose roles satisfy Basic lifts every
+clause; Admin satisfies Basic, so it lifts them too. The lift is decided by
+the same policy function the boundary gate uses (<code>dp::authorize</code> against
 <code>DpAuthz::Roles(["Basic"])</code>), so the two cannot drift apart. On the v2 face
 an unauthenticated mutator is refused by the gate before the containment is
 consulted, and the containment is the reason a <em>public</em> v2 read is still
 confined.</p>
+<p>A lift belongs to the principal rather than to a face, so a control point
+that authenticates over DeviceProtection reaches the whole table on either
+face: the v1 read containment has a remedy, and it is the remedy the v2
+face provides. Nothing privileged depends on the anonymous read in the
+meantime, because the daemon already writes the whole index to its state
+file (<code>/tmp/dslp/upnp.tsv</code> while it runs), which is a local read rather than
+a network one. An earlier draft of this section kept the v1 reads whole to
+preserve anonymous diagnostics; that was overstated, since the local index
+already serves them.</p>
 <h3 id="mechanics"><a class="header" href="#mechanics">Mechanics</a></h3>
 <p>A <code>Contain { caller, high_port }</code> value is computed once in the dispatcher
 and passed into the engine as a view, so the containment sits under the
@@ -2444,9 +2453,13 @@ entries: the listing, the specific read (606 for another client's entry),
 the enumeration (the index space is what the caller may see, so a walk
 past the end still terminates on 714), the single delete, and the range
 delete with the skip rule.</li>
-<li>The <code>dp_boundary_wire</code> wire test asserts that the v1 face refuses a
-request naming another host with 606 while admitting the caller's own
-request past the containment to the engine.</li>
+<li>The <code>dp_boundary_wire</code> wire test asserts, against a seeded table holding
+another host's entry: the v1 face refuses a request naming another host
+with 606 while admitting the caller's own request past the containment to
+the engine; a read of the other host's entry is 606 on either face and
+the contained enumeration ends at index 0 with 714; and, once a
+DeviceProtection session is established, the same read answers on either
+face, which is the lift riding the principal rather than the face.</li>
 </ul>
 <p>Component 58fed63, host pin recorded with it.</p>
 <h2 id="271-the-reference-implementation-miniupnpd"><a class="header" href="#271-the-reference-implementation-miniupnpd">27.1 The reference implementation: miniupnpd</a></h2>
@@ -2843,7 +2856,7 @@ superset of every one.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>d44c622b2c7d2f6f5f23b0284630c8ab7a6c0526</code></li>
+<li>pin: <code>25552f183db8ad17942a611b60799ae3385d4b74</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -4929,6 +4942,31 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-16--the-reads-are-contained-too-one-view-for-both-faces"><a class="header" href="#2026-09-16--the-reads-are-contained-too-one-view-for-both-faces">2026-09-16 — the reads are contained too; one view for both faces</a></h2>
+<ul>
+<li>David's question ("they can only affect self, so is a read of others even
+privileged?") cut the last asymmetry out of the containment: writes were
+contained on both faces and reads on the v2 face alone. A read confers no
+capability, but the table is the ingress map (which host is reachable from
+outside, on which port, over which protocol, and how much lease is left),
+and on this box that map is the artefact the punch work creates. So one
+view now serves reads and writes on either face; the port floor is the only
+clause bound to the v2 face, since a legacy client may legitimately exceed
+it.</li>
+<li>The cost I had claimed for containing the v1 reads was overstated, and the
+check that settled it is worth remembering: the daemon already writes the
+whole entry index to its state file (<code>/tmp/dslp/upnp.tsv</code>, tmpfs, live
+while it runs), so the operator's privileged view is a local read and never
+depended on the anonymous UPnP read. Before arguing that a containment
+costs the operator sight, look for the state file first.</li>
+<li>A lift belongs to the principal, not the face: a control point that
+authenticates over DeviceProtection reads the whole table on either face.
+That is the v1 read containment's remedy, and it means "the v1 face has no
+authentication" was never the same claim as "the v1 caller has no remedy".</li>
+<li>Assertion lesson: GetSpecificPortMappingEntry's response carries its OUT
+arguments only, so the NewExternalPort it was asked for is not echoed; a
+wire assertion must look for the internal side or the label.</li>
+</ul>
 <h2 id="2026-09-16--the-containment-for-callers-without-the-lift"><a class="header" href="#2026-09-16--the-containment-for-callers-without-the-lift">2026-09-16 — the containment for callers without the lift</a></h2>
 <ul>
 <li>plan/0008 #v2-service-set now enforces the policy the spec recommends for
