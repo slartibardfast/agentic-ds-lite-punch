@@ -21,7 +21,7 @@ The design deliberately separates the **canonical NAT/mapping implementation** f
 
 The central conclusion is:
 
-> **Do not use cross-request debounce to decide whether `ssdp:all` is "really" a v2 client. Treat `ssdp:all` as the legacy/v1 facade, and treat an explicit IGD:2 search as positive evidence for the v2 facade. Use the UPnP `MX` timing allowance only for ordinary response jitter/coalescing, not as a version-negotiation protocol.**
+> **`ssdp:all` response selection is deferred for a bounded, per-control-point discovery-coalescing window (no longer than the `:all` request's MX). If an explicit IGD:2 search from the same control point is observed inside the window, the pending `ssdp:all` search and the `IGD:2` search are both answered from the IGD:2 facade. Otherwise the pending `ssdp:all` search is answered from the IGD:1 compatibility facade. An `IGD:1` search never affects the classification and is answered from the v1 facade independently. This is a deliberate, bounded deviation from a strict no-cross-request-negotiation reading of UDA; it is deterministic over a window, not a heuristic over long-lived state.**
 
 This produces deterministic behavior without relying upon client identity, HTTP source-IP heuristics, or a mutable `rootDesc.xml`.
 
@@ -424,15 +424,41 @@ This is the path that protects Xbox-class clients.
 
 ## 9.3 `ssdp:all`
 
-A device does not advertise additional lower versions of a type; UDA describes `ssdp:all` as discovering the device's advertised capabilities. Therefore a gateway which supports IGD2 and advertises IGD2, but makes every `ssdp:all` response look exclusively IGD1, cannot claim that its discovery facade is a literal, complete implementation of the UDA advertisement model.
+A device does not advertise additional lower versions of a type; UDA describes `ssdp:all` as discovering the device's advertised capabilities.
 
-The correct engineering characterization is:
+The v1/v2 decision for a pending `ssdp:all` search is:
 
-> **The universal facade is a compatibility mode that deliberately constrains the advertised/discoverable surface presented to generic legacy discovery.**
+```text
+:all received
+    -> open a burst window (deadline = receive + MX(:all))
+    -> defer the response, do not answer yet
 
-That is materially different from claiming formal UPnP certification for every aspect of the facade.
+:2 from the same control point inside the window
+    -> classify the pending :all as v2
+    -> answer the pending :all from the v2 facade (still before its MX)
+    -> answer the :2 from the v2 facade
 
-This is exactly why the implementation should make the policy explicit rather than hiding it inside the device-description generator.
+window expires with no :2
+    -> answer the pending :all from the v1 compatibility facade
+
+:1 from the same control point
+    -> independent request: answered from the v1 facade immediately;
+       never influences the :all classification
+```
+
+The window bound is the implementation parameter
+`DISCOVERY_DEBOUNCE = 1 s`: the server's assumed-MX floor (per UDA the
+server may assume a smaller MX, and a well-formed request carries at
+least the default of 1 s), so the window never exceeds any valid MX of
+the pending `:all`. Per-control-point burst state is short-lived: it
+exists only while at least one `:all` response is deferred, and
+expires with it. There is no long-lived client database, no source-IP
+learning beyond identifying the control point for the window's
+duration, and no state is kept once the window closes.
+
+This replaces the earlier fixed rule "ssdp:all is always answered from
+the v1 facade" (see 12 for the reversal rationale and 28.3 for the
+superseded decision).
 
 ---
 
@@ -509,43 +535,72 @@ UPnP explicitly defines LOCATION as the URL for the root-device description, and
 
 ---
 
-# 12. Do not use future-packet debounce to decide `:all`
+# 12. Bounded burst debounce: the deliberate exception
 
-The tempting implementation is:
+This section supersedes an earlier absolute in this document: "a
+server MUST NOT make the semantic result of an already received
+M-SEARCH dependent on a future M-SEARCH that has not yet arrived",
+and its consequence "classification MUST be based on the ST of the
+individual search, not on a future-search debounce heuristic". The
+reversal is recorded in call/0021. The rejection that stands is of
+UNBOUNDED debounce; the mechanism adopted is a BOUNDED, deterministic
+one.
+
+The adopted state machine is per discovery burst, per control point:
 
 ```text
-t0: receive :all
-       |
-       | wait for possible :2
-       |
-t1: receive :2
-       |
-       +--> turn original :all into v2
+BURST {
+    start = receive(:all)
+    deadline = start + MX(:all)
+    seen_v2 = false
+}
 ```
 
-This SHOULD NOT be implemented.
+At `:all`: create the burst and defer the response. At `:2` from the
+same control point inside the window: set `seen_v2 = true` and
+schedule the `:all` and `:2` responses together, both still before
+their respective MX deadlines. At window expiry: answer the pending
+`:all` from `seen_v2 ? v2 : v1`. An `:1` search is never consulted:
+it is an independent request answered from the v1 facade immediately.
 
-The reasons are:
+The constraints that keep this bounded and deterministic:
 
-1. The `:all` transaction already has an MX response deadline.
-2. UDA does not define cross-search correlation as negotiation.
-3. A control point can send searches independently or repeatedly.
-4. A later `:2` may arrive after the server has legitimately answered `:all`.
-5. A server cannot know whether a later `:2` will ever arrive.
+1. The window is the implementation parameter `DISCOVERY_DEBOUNCE
+   = 1 s` (section 9.3). One second is the UDA default for a missing
+   MX, so the server may assume it as the MX floor, and the window
+   never exceeds any valid MX of the pending `:all`.
+2. The window state is per control point, keyed only for the window's
+   lifetime; it expires with the deferred response. No long-lived
+   client database is created.
+3. A delayed `:all` response is always sent before its own MX (the
+   debounce expires at 1 s, which is at most that MX), so no search is
+   starved while another is awaited beyond the allowed response
+   window.
+4. Duplicate `:all` retransmissions inside the window coalesce onto
+   the single pending response schedule (section 13).
+5. `:1` never triggers or suppresses the v2 classification.
 
-The permitted randomized delay is useful only within the response window of the individual request.
+The implementation holds the `:all` response for up to
+`DISCOVERY_DEBOUNCE = 1 s`, releasing early only when an observed
+`:2` permits an earlier v2 answer. The `:2` response itself obeys its
+own MX deadline independently. This is deliberate product behavior,
+not an accidental compatibility heuristic (call/0020 records the
+decision).
 
-Therefore:
-
-> **Classification MUST be based on the ST of the individual search, not on a future-search debounce heuristic.**
+Why this is adopted despite being a deviation: it makes `ssdp:all` a
+capability-probing request with the explicit `:2` search as the
+disambiguator, solving the practical Xbox-versus-modern split without
+permanently fixing generic discovery to v1. The Livebox
+reverse-engineering (section 28) showed production serves `ssdp:all`
+from v2; the burst rule decides *when* v2 is safe to present, with the
+v1 compatibility presentation as the drop-dead default.
 
 ---
 
-# 13. Optional response coalescing
+# 13. Response coalescing within the burst window
 
-An implementation MAY coalesce duplicate or near-duplicate searches from the same control point, but this is an optimization, not protocol negotiation.
-
-For example:
+Duplicate or near-duplicate searches from the same control point are
+collapsed onto the burst's single response schedule:
 
 ```text
 t=0.000 :all
@@ -553,7 +608,12 @@ t=0.002 :all
 t=0.008 :all
 ```
 
-may be collapsed into a single response schedule, provided all required responses are ultimately emitted according to the `ssdp:all` response rules.
+All three retransmissions are answered by the burst's one response
+(deferred per section 12, then resolved from `seen_v2 ? v2 : v1`),
+provided every required response is emitted before its own MX. The
+coalescing window IS the capability window: it exists only while a
+response is deferred and doubles as the span in which an `:2` flips
+the classification.
 
 The server MAY select:
 
@@ -561,9 +621,11 @@ The server MAY select:
 response_delay = random(0, MX)
 ```
 
-or any deterministic delay no greater than the applicable MX that satisfies the specification.
-
-It MUST NOT wait for a hypothetical future `:2` beyond the response window of the current M-SEARCH.
+or any deterministic delay no greater than the applicable MX that
+satisfies the specification. The response to a search is never delayed
+beyond that search's own window, and no search is held open waiting
+for a hypothetical future `:2` past the deadline of section 12's
+burst window.
 
 ---
 
@@ -580,22 +642,25 @@ A modern client such as Syncthing may actively probe:
 
 and other real clients may also issue generic searches.
 
-The server SHOULD treat each search as an independent request:
+Under the burst rule the behavior is:
 
 ```text
 M-SEARCH :all
-    → v1 facade
+    -> burst window opens; response deferred (section 12)
 
-M-SEARCH :2
-    → v2 facade
+M-SEARCH :2   (same control point, inside the window)
+    -> pending :all resolves to v2
+    -> both :all and :2 answered from the v2 facade
 
 M-SEARCH :1
-    → v1 facade
+    -> independent; answered from the v1 facade immediately
 ```
 
-A control point that knows v2 exists will discover the v2 location from the response to the explicit `:2` search.
-
-This is vastly preferable to trying to retroactively rewrite the `:all` response.
+A burst that contains an explicit `:2` therefore yields the v2
+presentation for BOTH the generic and the versioned search of the same
+control point, without permanently attaching v1 to generic discovery.
+A control point that never issues `:2` receives the v1 compatibility
+presentation for its `:all` once the window expires.
 
 ---
 
@@ -765,14 +830,15 @@ validate:
 switch ST:
 
     ssdp:all:
-        schedule v1-compatible discovery response(s)
+        open a burst window and defer (see 9.3)
+        resolve at the window deadline from seen_v2 ? v2 : v1
 
     IGD:1:
         schedule v1 response
         ST := IGD:1
 
     IGD:2:
-        schedule v2 response
+        mark the burst seen_v2 (if any), schedule v2 response
         ST := IGD:2
 
     WIP:1:
@@ -815,23 +881,22 @@ with:
 0 <= delay <= MX
 ```
 
-The server MAY use a smaller effective maximum than the client supplied, as permitted by the architecture.
+The server MAY use a smaller effective maximum than the client
+supplied, as permitted by the architecture. For a pending `ssdp:all`
+search the effective deadline is `receive_time + DISCOVERY_DEBOUNCE`
+(1 s), the assumed-MX floor that also bounds the burst window
+(sections 9.3 and 12); the deferred response is released at or before
+that deadline, early if a `:2` flips the classification.
 
-For a burst of duplicate requests, the server may coalesce internal work, but every required response must remain attributable to the corresponding search.
+For a burst of duplicate requests, the server may coalesce internal
+work, but every required response must remain attributable to the
+corresponding search.
 
-The server MUST NOT do:
-
-```text
-await :2
-```
-
-before deciding how to answer an already pending:
-
-```text
-:all
-```
-
-This would turn an optional timing heuristic into a non-standard version-negotiation protocol.
+The only permitted cross-search dependency is the recorded, bounded
+one: a pending `:all` may await a `:2` from the same control point,
+but never past `DISCOVERY_DEBOUNCE`, and never involving `:1`
+(sections 12 and 14). Any unbounded form of "await `:2` before
+deciding `:all`" remains prohibited.
 
 ---
 
@@ -870,22 +935,28 @@ M-SEARCH ST=:2
 
 # 22. Interaction with `ssdp:all`
 
-The one deliberate policy exception is:
+The policy exception is now conditional via the burst rule (sections
+9.3 and 12):
 
 ```text
-ssdp:all → v1 facade
+ssdp:all (no :2 in the window) -> v1 compatibility facade
+ssdp:all (with :2 in the window) -> v2 facade
 ```
 
-This should be treated as a **compatibility profile**, not as an assertion that the gateway does not support v2.
-
-The reason for accepting that trade is empirical:
+The v1 answer remains the drop-dead default for generic discovery,
+treated as a **compatibility profile**, not as an assertion that the
+gateway does not support v2. The reasons for the conservative default
+are empirical:
 
 * Xbox One has been observed searching for IGD1 and then operating against WIP1.
 * IGD2 descriptions introduce materially different services such as DeviceProtection.
 * the same Xbox has exhibited failures when exposed to such an IGD2 description.
 * MiniUPnP added an explicit forced-v1-description compatibility switch for IGD2 mode.
 
-Thus generic discovery is intentionally conservative.
+The burst rule adds the flip side: a control point that demonstrably
+searches for IGD2 inside the window gets the v2 presentation for its
+generic discovery too, matching the Livebox production behavior of
+serving v2 to generic discovery for capable clients.
 
 ---
 
@@ -920,11 +991,17 @@ The implementation agent MUST construct at least these packet-level regression t
 
 | Search     | Expected LOCATION      | Expected ST                             | Expected description |
 | ---------- | ---------------------- | --------------------------------------- | -------------------- |
-| `ssdp:all` | `/igd/v1/rootDesc.xml` | `ssdp:all`/appropriate response targets | IGD1 facade          |
+| `ssdp:all` alone (no `:2` in window) | `/igd/v1/rootDesc.xml` | `ssdp:all`/appropriate response targets | IGD1 facade, released at `receive + DISCOVERY_DEBOUNCE` |
+| `ssdp:all` then `IGD:2` within `DISCOVERY_DEBOUNCE` | `/igd/v2/rootDesc.xml` | `ssdp:all`/appropriate targets | IGD2 facade, released early |
+| `ssdp:all` then `IGD:1` within the window | `/igd/v1/rootDesc.xml` | `ssdp:all`/appropriate targets | IGD1 facade; the `:1` does not upgrade |
 | `IGD:1`    | `/igd/v1/rootDesc.xml` | `IGD:1`                                 | IGD1                 |
 | `IGD:2`    | `/igd/v2/rootDesc.xml` | `IGD:2`                                 | IGD2                 |
 | `WIP:1`    | v1 description         | `WIP:1`                                 | WIP1                 |
 | `WIP:2`    | v2 description         | `WIP:2`                                 | WIP2                 |
+
+Every burst case MUST also assert the deadline property: the `:all`
+response arrives no later than `receive + DISCOVERY_DEBOUNCE`, and a
+`:2` response no later than its own MX.
 
 Then:
 
@@ -986,6 +1063,13 @@ R4  Explicit IGD:1 search receives IGD:1 response.
 R5  Implement the v2 features correctly and completely; no carve-outs.
     The v2 facade is not a stub: every exposed v2 service is a real,
     enforced implementation (see DeviceProtection below).
+
+R6  Deferred `ssdp:all` classification with
+    `DISCOVERY_DEBOUNCE = 1 s`: a pending `:all` is held up to one
+    second (the assumed-MX floor) and answered from the v2 facade only
+    if an `IGD:2` search from the same control point is observed in
+    the window; otherwise from the v1 facade. An `IGD:1` search never
+    influences the classification (sections 9.3, 12, 14, call/0020).
 ```
 
 ---
@@ -1767,15 +1851,14 @@ document is served only on explicit lower-version STs. The Livebox
 therefore resolves generic discovery to the v2 facade, not the v1
 compatibility facade.
 
-Decision recorded for this milestone: section 9.3's
-ssdp:all-to-v1 policy stands (it is the deliberate compatibility
-profile protecting Xbox-class clients, per sections 15 and 25), while
-the Livebox divergence is logged as a real-world counter-example to
-evaluate at bench time. The test matrix gains no rule change: explicit
-versioned searches keep R3/R4 behavior (identical to the Livebox), and
-ssdp:all keeps the profile's conservative v1 answer. The bench phase
-records how Xbox-family and modern clients behave against BOTH
-policies.
+Decision recorded for this milestone, since superseded by 9.3/12
+(call/0020): the original position kept ssdp:all permanently at v1 and
+deferred the comparison to bench time. The burst rule replaces it: the
+Livebox's production behavior of serving v2 to generic discovery is
+now the expected outcome for any control point that demonstrates an
+IGD:2 search inside the window, and v1 remains the drop-dead default
+otherwise. The bench phase records how Xbox-family and modern clients
+behave against the concrete DISCOVERY_DEBOUNCE = 1 s policy.
 
 ## 28.4 Finding B (sections 26 and 27): production DP absence confirmed from source
 
