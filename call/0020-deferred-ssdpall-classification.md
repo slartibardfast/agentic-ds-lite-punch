@@ -48,7 +48,7 @@ to capable clients that happen to begin with a generic search.
   capability-probing request with the explicit `:2` search as the
   disambiguator. It is a recorded, bounded deviation from the strict
   no-cross-request-negotiation reading of UDA; the earlier absolute in
-  plan/0008 section 12 is superseded accordingly.
+  plan/0008's bounded burst debounce is superseded accordingly.
 
 ## Consequences
 
