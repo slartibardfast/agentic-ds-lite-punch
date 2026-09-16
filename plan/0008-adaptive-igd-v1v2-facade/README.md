@@ -68,7 +68,7 @@ This document specifies an implementation architecture for a new IPv4
 UPnP Internet Gateway Device (IGD) server whose principal requirement
 is simultaneous interoperability with:
 
-* legacy IGD:1 control points, including observed Xbox One behavior;
+* legacy IGD:1 control points, among them observed Xbox One behavior;
 * modern IGD:2 control points;
 * clients that perform discovery using `ssdp:all`;
 * clients that explicitly search for `InternetGatewayDevice:2`;
@@ -639,7 +639,7 @@ The constraints that keep this bounded and deterministic:
 5. `:1` never triggers or suppresses the v2 classification.
 
 The implementation holds the `:all` response for up to
-`DISCOVERY_DEBOUNCE = 1 s`, releasing early only when an observed
+`DISCOVERY_DEBOUNCE = 1 s`. It releases early only when an observed
 `:2` permits an earlier v2 answer. The `:2` response itself obeys its
 own MX deadline independently. This is deliberate product behavior,
 not an accidental compatibility heuristic (call/0020 records the
@@ -647,7 +647,7 @@ decision).
 
 Why this is adopted despite being a deviation: it makes `ssdp:all` a
 capability-probing request with the explicit `:2` search as the
-disambiguator, solving the practical Xbox-versus-modern split without
+disambiguator, which solves the practical Xbox-versus-modern split without
 permanently fixing generic discovery to v1. The Livebox
 reverse-engineering (section 28) showed production serves `ssdp:all`
 from v2; the burst rule decides *when* v2 is safe to present, with the
@@ -1013,7 +1013,7 @@ are empirical:
 
 The burst rule adds the flip side: a control point that demonstrably
 searches for IGD2 inside the window gets the v2 presentation for its
-generic discovery too, matching the Livebox production behavior of
+generic discovery too, which matches the Livebox production behavior of
 serving v2 to generic discovery for capable clients.
 
 ---
@@ -1623,9 +1623,9 @@ control points that cannot speak DeviceProtection. Between them sat a gap
 that the specification closes for us: 2.5.16.2, 2.5.18.2, 2.5.14.2 and
 2.5.21.3 RECOMMEND a policy for unauthenticated and unauthorized control
 points, and the engine enforced none of it. It checked only that the named
-`InternalClient` lay somewhere in the LAN /24, so any device on the LAN
-could open a door for another host, on any port, including the router
-itself.
+`InternalClient` lay somewhere in the LAN /24. Any device on the LAN could
+therefore open a door for another host, on any port, and the router itself
+was within its reach.
 
 That is not bookkeeping on this box. A mapping is an ingress path punched
 through CGNAT that terminates on a host the caller names, and the mapping
@@ -1996,8 +1996,8 @@ distinct-service-URLs model.
 
 No file in the tree carries DeviceProtection; neither root description
 exposes the service. A major carrier's production IGD2 therefore ships
-without any DeviceProtection surface (and without Layer3Forwarding),
-confirming how little of the IGD2 hierarchy the deployed ecosystem
+without any DeviceProtection surface (and without Layer3Forwarding). That
+confirms how little of the IGD2 hierarchy the deployed ecosystem
 actually implements.
 
 ### 27.4.4 The field picture, updated
