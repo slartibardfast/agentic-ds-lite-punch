@@ -1747,11 +1747,12 @@ Public/Basic/Admin (section 0) with the recommended Admin-over-Basic
 hierarchy (2.6.3.2, 2.6.4.5). The v2 WIP2 mapping mutators pass the
 boundary (section 26.7); the :1 face stays legacy-unauthenticated.
 
-Recorded deferrals (the gate stays off until they land): the WIP2:2
-argument tables transcription (GetListOfPortMappings' PortListing is
-entry-derived for now), AddAnyPortMapping any-port (0) allocation, and
-the WPS registrar transport (SendSetupMessage answers 600/704 — this
-wired IGD runs no WPS registrar). Body of the conformances: dp.rs
+Deferrals at the time of the dispatch, all closed but one: the argument
+tables transcription, the AddAnyPortMapping wildcard request, the range
+refusals and the version 2 lease reading landed at components aaca491
+and a339747 (sections 27.3b and 27.3c); the WPS registrar transport is
+still absent (SendSetupMessage answers 600/704 — this wired IGD runs no
+WPS registrar). Body of the conformances: dp.rs
 26.19 suite + a wire-level suite driving the HTTP/SOAP path through
 login to the opened boundary and the logout re-close.
 
@@ -1780,13 +1781,39 @@ empty because the device does not persist the control point's
 description string; storing it is a recorded fidelity gap, not a claim
 that the control point sent nothing.
 
-Still deferred on the v2 path, and the reason the gate stays off: the
-AddAnyPortMapping wildcard (0) request is refused where the spec permits
-a device to support it, the specification-required range refusals (730
-PortMappingNotFound on an empty range, 733 InconsistentParameters on a
-crossed one) are not yet returned, the lease value 0 is not yet read as
-604800, and the WPS registrar transport is absent (SendSetupMessage
-answers 600/704).
+### 27.3c The v2 readings the transcription required (component a339747)
+
+The behaviours 27.3b named as still open are implemented, each with the
+section that requires it and a test that a name-only implementation
+fails:
+
+- `DeletePortMappingRange` and `GetListOfPortMappings` answer 730
+  PortMappingNotFound on an empty range (2.5.19.2, 2.5.21.3) and 733
+  InconsistentParameters when the start port is above the end (2.5.19.6,
+  2.5.21.7). Both codes joined the fault table as 730 and 733.
+- `AddAnyPortMapping` with `NewExternalPort` 0 reserves the lowest
+  requested port at or above 1024 that no entry of the protocol claims
+  and returns it as `NewReservedPort` (2.5.17). The spec's other reading
+  of 2.5.17.3, a wildcard mapping answered as 0, is not installable here:
+  the AFTR is the mapper and it maps one tuple at a time.
+- A lease of 0 on the v2 face is read as 604800 (table 2-6), while the v1
+  face keeps 0 as the permanent mapping a legacy control point means by
+  it.
+
+The wire suite drives all four through HTTP/SOAP under an open session;
+two unit tests pin the port choice, the lease reading, the Listing
+fragment's shape and its remaining-lease value.
+
+Two items remain open on the v2 path. The WPS registrar transport is
+still absent (SendSetupMessage answers 600/704; this wired IGD runs no
+WPS registrar). And the access control policy the device applies is now
+stated in the transcription rather than inferred: the mapping mutators
+require an authenticated `Basic` session, while the reads, an
+unauthenticated `GetListOfPortMappings` among them, are public. Section
+2.5.21.3 recommends restricting that listing to the control point's own
+entries and to ports at or above 1024, so this is a deliberate policy
+choice with a named consequence, to be settled here rather than in the
+transcription.
 
 ## 27.4 The second reference: Orange igd2-for-linux
 
