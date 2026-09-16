@@ -63,11 +63,12 @@
 
 # cross-references: name the content
 the section 24 matrix => the test matrix
-section 24 v2 rows => the test matrix's v2 rows
+the section 24 v2 rows => the test matrix's v2 rows
 section 24 and the discovery-deadline => the test matrix and the discovery deadline
-section 26.19 conformance suite => the conformance suite
-sections 26.7 and 26.18 => the WANIPConnection integration and the authorization boundary
-Section 26.18 places => The authorization boundary places
+the section 26.19 conformance suite => the conformance suite
+DeviceProtection authorization boundary (sections 26.7 and 26.18), => DeviceProtection authorization boundary,
+sections 26.7 and 26.18 => the WANIPConnection integration and the engine gate
+Section 26.18 places the DeviceProtection boundary => The authorization boundary sits
 section 26.18 => the authorization boundary
 section 26.15 => the persistence rules
 section 26.12 => the v1 facade isolation
@@ -79,6 +80,7 @@ section 17 => the version-specific SOAP semantics
 section 13 => the burst-window coalescing
 sections 9.3, 12, 14 => the ssdp:all rule, the bounded burst debounce, the same-client rule
 sections 9.3 and 12 => the ssdp:all rule and the bounded burst debounce
+(plan section 9.3) => (the ssdp:all rule)
 section 9.3 => the ssdp:all rule
 9.3 and 12) => the ssdp:all rule and the bounded burst debounce)
 see 12 for the reversal rationale and 28.3 for the => see the bounded burst debounce for the reversal rationale and the Livebox disclosure finding for the
@@ -86,8 +88,10 @@ see 9.3 => see the ssdp:all rule
 26.19 suite => the conformance suite
 26.12 keeps the v1 face unauthenticated => the v1 facade isolation keeps the v1 face unauthenticated
 27.1); the IGD2 presentation => the miniupnpd reference); the IGD2 presentation
+the section 12/22 policy => the burst policy
 section 12 => the bounded burst debounce
 section 28 => the research annex
+from section 6) => from the precedent implementation)
 section 6 => the existing implementation precedent
 section 4 => the Xbox One legacy facts
 section 0 => the DeviceProtection role definitions
