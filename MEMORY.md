@@ -4,6 +4,42 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-16 — the naming audit is clean: the milestone's sections read by content
+
+David: "alright let's fix up prose" — the prose lane was five tropes (done,
+verify HAZARD closed), and with it the naming lane's 78 tells. The verify
+gate now exits 0 for the first time in this project: no HAZARDs at all.
+
+- The naming lane's tells were one shape family: plan/0008's own section
+  numbering (44 dotted subsection headings and ~30 cross-references). Both
+  remedies the tool offers for that shape are closed by the tool itself:
+  host-lint refuses a LEXICON entry for it ('section 26.15' carries the
+  position noun as a word, so masking it would blank that token out of a
+  real tell), and it names the remedy as a rename. Every subsection already
+  had a content name, so the numbers went and the names stayed; the two
+  findings lost their A/B labels for what they found.
+- `UPnP Device Architecture 1.0` went the other way and was *declared*
+  (`host-lint lexicon add`), accepted in the same session that refused the
+  section shape. That contrast is the declaration rule working: a document's
+  name and version is provenance; a positional reference is a tell.
+- `.host-remap` cannot express a heading rule: `load_remap` skips any line
+  whose trimmed form starts with '#' as a comment, so `## 26.15 => ##` loads
+  as nothing (44 such rules loaded as 0, silently). The heading strips were
+  applied as a direct edit and the gap is recorded in the dictionary for the
+  tool author. Remedy upstream: treat a line as a comment only when it
+  carries no ' => '.
+- `.host-task-receipts` was missing from `.host-lintignore` while the other
+  two ledgers were listed. It quotes the milestone text it was recorded
+  from, so it is the record layer and is now excluded.
+- Renaming plan text that receipts quote makes those receipts stale, and the
+  task gate says so ("the task's verify changed since the receipt was
+  recorded; re-derive"). The remedy is to re-record, not to re-derive a
+  prose verify line.
+- Live citations were repointed with it: the two decision records (by the
+  tool) and the component's transcriptions and comments (by hand, 58 sites).
+  Records that are excluded (MEMORY, the receipts) keep their old numbers,
+  which is the disclosed cost of the rename.
+
 ## 2026-09-16 — the reads are contained too; one view for both faces
 
 - David's question ("they can only affect self, so is a read of others even
