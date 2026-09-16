@@ -1,0 +1,95 @@
+# .host-remap — the rename dictionary for the naming audit.
+#
+# `old => new` per line; the tool applies the substitutions literally and
+# longest-`old`-first, and coins nothing itself: every `new` below is
+# content the milestone already names its sections by.
+#
+# Why the milestone's own section numbers are here: the naming audit flags a
+# dotted numeral and the phrase "section N" as tells, and host-lint refuses to
+# sanction them ('section 26.15' carries the position noun 'section' as a word,
+# so masking it would blank that token out of a real tell), naming the remedy
+# as a rename. The plan's subsections all carry content names already, so the
+# rules strip the number and let the name stand, and the cross-references name
+# the content they point at.
+#
+# The top-level `# N. Title` headings are not flagged by the audit and keep
+# their numbers.
+
+# headings: strip the dotted number
+## 2.1 => ##
+## 2.2 => ##
+## 2.3 => ##
+## 3.1 => ##
+## 3.2 => ##
+## 9.1 => ##
+## 9.2 => ##
+## 9.3 => ##
+## 26.1 => ##
+## 26.2 => ##
+## 26.3 => ##
+## 26.4 => ##
+## 26.5 => ##
+## 26.6 => ##
+## 26.7 => ##
+## 26.8 => ##
+## 26.9 => ##
+## 26.10 => ##
+## 26.11 => ##
+## 26.12 => ##
+## 26.13 => ##
+## 26.14 => ##
+## 26.15 => ##
+## 26.16 => ##
+## 26.17 => ##
+## 26.18 => ##
+## 26.19 => ##
+## 26.20 => ##
+## 26.21 => ##
+## 26.22 => ##
+## 27.1 => ##
+## 27.2 => ##
+## 27.3 => ##
+## 27.3a => ##
+### 27.3b => ###
+### 27.3c => ###
+### 27.3d => ###
+### 27.3e => ###
+## 27.4 => ##
+## 27.5 => ##
+## 28.1 => ##
+## 28.2 => ##
+## 28.3 => ##
+## 28.4 => ##
+
+# cross-references: name the content
+the section 24 matrix => the test matrix
+section 24 v2 rows => the test matrix's v2 rows
+section 24 and the discovery-deadline => the test matrix and the discovery deadline
+section 26.19 conformance suite => the conformance suite
+sections 26.7 and 26.18 => the WANIPConnection integration and the authorization boundary
+Section 26.18 places => The authorization boundary places
+section 26.18 => the authorization boundary
+section 26.15 => the persistence rules
+section 26.12 => the v1 facade isolation
+section 26.8 => the security context
+section 26.7 => the WANIPConnection integration
+section 27.5 => the DeviceProtection-causation re-read
+section 21 => the LOCATION design
+section 17 => the version-specific SOAP semantics
+section 13 => the burst-window coalescing
+sections 9.3, 12, 14 => the ssdp:all rule, the bounded burst debounce, the same-client rule
+sections 9.3 and 12 => the ssdp:all rule and the bounded burst debounce
+section 9.3 => the ssdp:all rule
+9.3 and 12) => the ssdp:all rule and the bounded burst debounce)
+see 12 for the reversal rationale and 28.3 for the => see the bounded burst debounce for the reversal rationale and the Livebox disclosure finding for the
+see 9.3 => see the ssdp:all rule
+26.19 suite => the conformance suite
+26.12 keeps the v1 face unauthenticated => the v1 facade isolation keeps the v1 face unauthenticated
+27.1); the IGD2 presentation => the miniupnpd reference); the IGD2 presentation
+section 12 => the bounded burst debounce
+section 28 => the research annex
+section 6 => the existing implementation precedent
+section 4 => the Xbox One legacy facts
+section 0 => the DeviceProtection role definitions
+plan/0008 section 12 => plan/0008's bounded burst debounce
+plan/0008 section 26.8 => plan/0008's security context
