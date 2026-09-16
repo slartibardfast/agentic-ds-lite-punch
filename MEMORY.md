@@ -636,3 +636,42 @@ Still open on the v2 path (the IGD_V2 gate stays off): the AddAnyPortMapping
 wildcard (0) request is refused, the 730 and 733 refusals are not returned,
 the lease 0 rule is not implemented, and the description string a control
 point sends is not persisted (the listing reports it empty).
+
+## The v2 readings that replaced the placeholder's refusals
+
+Component a339747 closed the v2 behaviours the transcription named. The
+facts worth keeping:
+
+- The AddAnyPortMapping wildcard (NewExternalPort 0) was refused 402 by
+  the argument parser before the facade ever saw it. The parser now
+  admits the wildcard for this action only (parse_add_args_impl's
+  wildcard_ext flag), and the facade reserves the lowest requested port at
+  or above 1024 that no entry of the protocol claims. AddPortMapping keeps
+  refusing it, as the v1 facade always has.
+- The range parsers reported a start above the end as a generic 402; the
+  spec's own code is 733 InconsistentParameters, and 730
+  PortMappingNotFound is required when a range action finds nothing. Both
+  joined the fault table. A range action that finds nothing touches no
+  engine, so those two paths are wire-testable without nft.
+- A lease of 0 stays the permanent mapping on the v1 face (a legacy
+  control point's static mapping) and means 604800 on the v2 face
+  (table 2-6). The translation sits at the dispatch arms, keyed on the
+  SOAPACTION URN version, not inside add_mapping.
+- The facade's lan containment check rejects a client outside the /24, so
+  a wire test that wants to reach the engine past it must use
+  127.0.0.1 with the loopback LAN. nft still fails in tests, so an
+  accepted request answers 501, which is what an anti-stub assertion
+  looks for.
+
+## The unauthenticated listing is a plan decision, not an oversight
+
+The device's policy (required_role in dp.rs) protects the four mapping
+mutators behind an authenticated Basic session and leaves every other
+WANIPConnection:2 action public. So an unauthenticated GetListOfPortMappings
+is answered in full, where the spec's 2.5.21.3 recommends restricting it
+to the control point's own entries and to ports at or above 1024.
+
+This is recorded in the component transcription and in plan/0008 section
+27.3c as the reading not taken, deliberately. Tightening it would change
+the section 24 matrix and the boundary design, so it is a plan change to
+be taken with the operator, never a quiet transcription detail.
