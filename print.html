@@ -2383,6 +2383,72 @@ this milestone is therefore a deliberate superset of the reference,
 not a parity target. Every action the specification defines is
 implemented and enforced; nothing is scaffolded by name only.</strong></p>
 </blockquote>
+<h2 id="2622-the-containment-for-callers-without-the-lift"><a class="header" href="#2622-the-containment-for-callers-without-the-lift">26.22 The containment for callers without the lift</a></h2>
+<p>Section 26.18 places the DeviceProtection boundary in front of the mapping
+engine, and 26.12 keeps the v1 face unauthenticated for the console-class
+control points that cannot speak DeviceProtection. Between them sat a gap
+that the specification closes for us: 2.5.16.2, 2.5.18.2, 2.5.14.2 and
+2.5.21.3 RECOMMEND a policy for unauthenticated and unauthorized control
+points, and the engine enforced none of it. It checked only that the named
+<code>InternalClient</code> lay somewhere in the LAN /24, so any device on the LAN
+could open a door for another host, on any port, including the router
+itself.</p>
+<p>That is not bookkeeping on this box. A mapping is an ingress path punched
+through CGNAT that terminates on a host the caller names, and the mapping
+table is therefore the set of doors into the LAN. The recommended policy is
+the ceremony-free half of protecting it, and it is now enforced.</p>
+<h3 id="the-clauses-and-where-each-binds"><a class="header" href="#the-clauses-and-where-each-binds">The clauses and where each binds</a></h3>
+<ul>
+<li><strong>The caller's own host.</strong> A request that names another host is 606, and
+an entry that is not the caller's own is not listed, not enumerable and
+not deletable. This clause needs no remedy, so it binds <strong>both faces</strong>,
+and it is the one that matters on the v1 face, where no authentication
+exists.</li>
+<li><strong>The port floor.</strong> Internal and external ports at or above 1024, with
+the wildcard external port admitted because it resolves above the floor
+by construction. This clause binds <strong>the v2 face</strong>, where a control point
+can lift it by authenticating; low-port self-mapping is common enough
+that a remedy-free refusal on the legacy face would be a compatibility
+break rather than a policy.</li>
+<li><strong>The reads.</strong> A contained caller's Listing and enumeration hold only its
+own entries at or above the floor, and a specific read of another
+client's entry is 606 rather than "not found". This binds <strong>the v2
+face</strong> for the same reason, and the v1 reads stay whole so that anonymous
+LAN diagnostics still see the table. The v1 read surface is therefore a
+known information leak, accepted deliberately: closing it would remove
+the operator's own view of the table for clients that cannot
+authenticate.</li>
+</ul>
+<h3 id="the-lift"><a class="header" href="#the-lift">The lift</a></h3>
+<p>A live DeviceProtection session whose roles satisfy Basic lifts all three
+clauses; Admin satisfies Basic, so it lifts them too. The lift is decided
+by the same policy function the boundary gate uses (<code>dp::authorize</code> against
+<code>DpAuthz::Roles(["Basic"])</code>), so the two cannot drift apart. On the v2 face
+an unauthenticated mutator is refused by the gate before the containment is
+consulted, and the containment is the reason a <em>public</em> v2 read is still
+confined.</p>
+<h3 id="mechanics"><a class="header" href="#mechanics">Mechanics</a></h3>
+<p>A <code>Contain { caller, high_port }</code> value is computed once in the dispatcher
+and passed into the engine as a view, so the containment sits under the
+boundary gate rather than beside it. The two allocation entry points take a
+<code>MappingReq</code>, which is also what makes the exact and preferred pair differ
+in port resolution alone. A range delete skips what the caller may not
+touch and continues, which is the rule 2.5.19.2 gives, with an empty
+selection still 730.</p>
+<h3 id="evidence"><a class="header" href="#evidence">Evidence</a></h3>
+<ul>
+<li><code>containment_predicates</code> pins both clauses, the wildcard, and the "the
+floor never licenses another host" case.</li>
+<li><code>containment_view_over_the_table</code> drives a contained caller over seeded
+entries: the listing, the specific read (606 for another client's entry),
+the enumeration (the index space is what the caller may see, so a walk
+past the end still terminates on 714), the single delete, and the range
+delete with the skip rule.</li>
+<li>The <code>dp_boundary_wire</code> wire test asserts that the v1 face refuses a
+request naming another host with 606 while admitting the caller's own
+request past the containment to the engine.</li>
+</ul>
+<p>Component 58fed63, host pin recorded with it.</p>
 <h2 id="271-the-reference-implementation-miniupnpd"><a class="header" href="#271-the-reference-implementation-miniupnpd">27.1 The reference implementation: miniupnpd</a></h2>
 <p>Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
 widespread open implementation. Its own description generator
@@ -2777,7 +2843,7 @@ superset of every one.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>979aafd8bbdfb31a96c535f6696c1622ef7b0543</code></li>
+<li>pin: <code>73a2adfe23ee3ca60f2e12be4c7c4e085493ca7e</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
