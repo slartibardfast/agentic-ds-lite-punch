@@ -123,3 +123,11 @@
     evidence = component 4d0160f (host pin 4734203): IGD_V2_ENABLED on; section 24 discovery rows asserted by ssdp_loop_answers_the_mounted_surface (explicit IGD:2 and WIP:2 answered from v2 with the v2 LOCATION; a bare ssdp:all deferred to the debounce deadline and answered v1; an in-window :2 flips both answers to v2) and the document rows by versioned_doc_routing (v2 root desc carries DeviceProtection:1 beside WANIPConnection:2; /igd/v2/WANIPCn.xml publishes the 14 required actions; /igd/v2/DP.xml the 13); dp19_conformance_suite and dp_boundary_wire green; wip2_connection_actions_wire drives the four connection actions (731 ReadOnly, 704 with no tuple, RSIP 0 / NAT 1, 501); cargo test = 116 passed, 0 failed, 1 ignored. OPEN in this receipt: SendSetupMessage dispatches with 600 for an unknown ProtocolType and 704 for WPS, because the WPS Registration Protocol of Appendix A needs the Wifi Alliance specification (not internalized) and a certificate-authenticated TLS channel this plain-HTTP facade does not carry.
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-16
+
+[receipt "plan/0008#canonical-api"]
+    disposition = done
+    verify = unit tests for allocate_exact versus allocate_preferred
+    inputs = the current upsert/add_mapping paths
+    evidence = component b22a96d (host pin 266a6d6): the engine is reached through allocate_exact (WIP1/WIP2 AddPortMapping) and allocate_preferred (WIP2 AddAnyPortMapping) over the one mapping table; preferred_port is the pure resolution and allocate_exact_and_preferred_differ asserts the contrast on one shared table state (a port another client holds moves the request to a free port and the occupant survives, while exact surrenders the occupant to the caller for teardown); cargo test = 117 passed, 0 failed, 1 ignored.
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-16
