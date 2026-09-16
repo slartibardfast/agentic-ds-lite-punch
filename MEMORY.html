@@ -922,6 +922,34 @@ otherwise any free port of the protocol). preferred_port is the pure
 resolution, so the contrast is asserted directly rather than through a
 granted mapping; the wire and facade tests could not have caught it
 because nft is absent in tests.</p>
+<h2 id="the-wps-limb-is-a-decision-not-an-open-question-call0021"><a class="header" href="#the-wps-limb-is-a-decision-not-an-open-question-call0021">The WPS limb is a decision, not an open question (call/0021)</a></h2>
+<p>David: "WPS spec will not be available internally." The DeviceProtection
+setup ceremony's WPS limb therefore cannot be transcribed, and it is now
+recorded rather than carried as a question: call/0021</p>
+<ul>
+<li>advertise WPS, because 2.4.3.1 mandates the entry in
+SupportedProtocols and the protocol must be in the list a
+SendSetupMessage ProtocolType may name;</li>
+<li>answer a WPS setup attempt with 704 Processing Error and an empty
+OutMessage, the action's own code for a failure to process InMessage;</li>
+<li>reject 600, whose meaning ("the ProtocolType value is not supported by
+the Device") would contradict the list the device just published.</li>
+</ul>
+<p>The two reasons are worth keeping: the message encoding lives in the Wi-Fi
+Alliance WPS specification (not available, will not be internalized), and
+Appendix A requires the exchange inside a certificate-authenticated TLS
+channel, which this plain-HTTP facade does not carry. Reversing it needs
+both: the WPS specification internalized as a component source, and a TLS
+posture decision for the exchange.</p>
+<p>Recorded at plan/0008 section 27.3e, in the component transcription
+docs/upnp-dp1/TRANSCRIPTION.md, and in a fresh T2 receipt that replaces the
+one which called it open.</p>
+<p>Also repaired: plan/0008 section 12 cited call/0021 for the discovery
+reversal, and no such record existed (the refs sweep called it a dead
+pointer). The reversal it describes is call/0020, which supersedes the same
+absolute in that section, so the pointer now names it. A register citation
+written for a decision that has not been allocated yet is a trap: allocate
+first, cite second.</p>
 
                     </main>
 
