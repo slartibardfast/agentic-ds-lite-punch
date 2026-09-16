@@ -1,11 +1,57 @@
 # Milestone: adaptive UPnP IGD v1/v2 compatibility facade
 
-- Status: specified 2026-09-16; not yet started.
+- Status: specified 2026-09-16; build in progress (tasks T1-T4 below).
 - Scope: the ds-lite-punch UPnP facade (plan/0007 phase E successor);
   builds on the deployed 34d48c1-era facade and the lease policy.
 - This document is the milestone specification. The build-sequence
-  tasks are derived at kickoff; the behaviour spec (allium lane) lives
-  with the component code when implementation begins.
+  tasks are defined below; the behaviour spec (allium lane) lives with
+  the component code as implementation lands.
+
+## Build sequence
+
+### Define the discovery and presentation layer {#disc-presentation}
+
+- verify: cargo test (the section 24 matrix, burst rows included);
+  cargo clippy clean of new warnings
+- inputs: mdbook plan text, the deployed facade code
+- delivers the per-control-point burst state machine
+  (DISCOVERY_DEBOUNCE = 1 s), the :1/:2/:all classification, the
+  /igd/v1 and /igd/v2 URL structure, and the IGD_V2 gate that mounts
+  the v2 surface only when its complete service set is real.
+
+### Mount the v2 service set (WIP2 + DeviceProtection:1) {#v2-service-set}
+
+- verify: the section 24 v2 rows; the section 26.19 conformance suite;
+  the DP SCPD transcribed from the normative PDF (the authority) and
+  every one of its 14 actions enforced
+- inputs: the DeviceProtection:1 service specification PDF, internalized
+  at component docs/upnp-dp1/ (commit c5609cd: the full OCR
+  transcription with the seven List-of-Figures diagrams and the ACL
+  schema fragment re-hosted locally, the signed figure URLs expired and
+  gone; the source PDF is committed alongside as the authoritative
+  rendering), the canonical mapping engine
+- delivers WIP2 (AddAnyPortMapping, the superset SCPD set) behind the
+  DeviceProtection authorization boundary (sections 26.7 and 26.18),
+  the complete DP:1 service, ACL and role persistence, the login and
+  setup ceremonies, and the event surface. The IGD_V2 gate flips on
+  here and stays on.
+
+### Canonicalize the mapping API {#canonical-api}
+
+- verify: unit tests for allocate_exact versus allocate_preferred
+  semantics over the one engine
+- inputs: the current upsert/add_mapping paths
+- delivers the allocate_exact / allocate_preferred split (section 17)
+  so WIP1 and WIP2 resolve to the same mapping objects unchanged.
+
+### Bench the client matrix {#bench-matrix}
+
+- verified by: the Xbox-class, Syncthing-class, Tailscale-class and
+  legacy-only sequences of section 24 and the discovery-deadline
+  assertions, against the deployed box
+- inputs: the deployed facade, the console chain, a v2-capable client
+- delivers the empirical record of the section 12/22 policy and of the
+  actual IGD2-mode failure driver (section 27.5).
 
 This document specifies an implementation architecture for a new IPv4
 UPnP Internet Gateway Device (IGD) server whose principal requirement
