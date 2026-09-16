@@ -1679,7 +1679,8 @@ server MUST NOT make the semantic result of an already received
 M-SEARCH dependent on a future M-SEARCH that has not yet arrived",
 and its consequence "classification MUST be based on the ST of the
 individual search, not on a future-search debounce heuristic". The
-reversal is recorded in call/0021. The rejection that stands is of
+reversal is recorded in <a href="https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0020-deferred-ssdpall-classification.md">call/0020</a>.
+The rejection that stands is of
 UNBOUNDED debounce; the mechanism adopted is a BOUNDED, deterministic
 one.</p>
 <p>The adopted state machine is per discovery burst, per control point:</p>
@@ -2581,15 +2582,28 @@ the reason is a security one: the facade does not own the WAN lifetime
 honouring it would give every device on the LAN a lever that drops the
 household line for every client. Its own error table (2.5.5.6) has no code
 for a device that may not terminate, so the answer is the UDA generic 501.</p>
-<p>Two items remain open on the v2 path. The WPS registrar transport is
-still absent (SendSetupMessage answers 600/704; this wired IGD runs no
-WPS registrar). And the access control policy the device applies is now
-stated in the transcription rather than inferred: the mapping mutators
-require an authenticated <code>Basic</code> session, while the reads, an
-unauthenticated <code>GetListOfPortMappings</code> among them, are public. Section
+<h3 id="273e-the-wps-introduction-protocol-is-not-implemented"><a class="header" href="#273e-the-wps-introduction-protocol-is-not-implemented">27.3e The WPS introduction protocol is not implemented</a></h3>
+<p>DeviceProtection's setup ceremony has one limb that cannot be built from
+what this project can transcribe. Section 2.4.3.1 mandates the WPS entry in
+the advertised protocol list, and Appendix A defines the message exchange
+behind it by deferring to the Wi-Fi Alliance WPS specification, which is not
+available here and will not be internalized, while also requiring the
+exchange to run inside a certificate-authenticated TLS channel this
+plain-HTTP facade does not carry.</p>
+<p>The behaviour is decided rather than left open: WPS is advertised as
+mandated, and <code>SendSetupMessage</code> with <code>ProtocolType</code> WPS answers 704
+Processing Error with an empty <code>OutMessage</code>, which is the action's own code
+for a failure to process <code>InMessage</code> (2.6.1.9). The full reasoning, the
+rejected alternative (600, which would contradict the published list), and
+the two things a reversal needs are recorded in
+<a href="https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0021-wps-introduction-not-implemented.md">call/0021</a>.</p>
+<p>One item remains open on the v2 path: the access control policy the device
+applies is stated in the transcription rather than inferred, with the
+mapping mutators requiring an authenticated <code>Basic</code> session while the reads,
+an unauthenticated <code>GetListOfPortMappings</code> among them, are public. Section
 2.5.21.3 recommends restricting that listing to the control point's own
-entries and to ports at or above 1024, so this is a deliberate policy
-choice with a named consequence, to be settled here rather than in the
+entries and to ports at or above 1024, so this is a deliberate policy choice
+with a named consequence, to be settled here rather than in the
 transcription.</p>
 <h2 id="274-the-second-reference-orange-igd2-for-linux"><a class="header" href="#274-the-second-reference-orange-igd2-for-linux">27.4 The second reference: Orange igd2-for-linux</a></h2>
 <p>Orange-OpenSource's <code>igd2-for-linux</code> (imported from the retired
