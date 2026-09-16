@@ -11,3 +11,4 @@
 #   host-lint: strict            an undeclared tell-shaped token blocks, not warns
 #   host-lint: jira-key PROJ     gate a tracker key: PROJ-NNNN entries need a URL
 UPnP 1.0
+UPnP Device Architecture 1.0
