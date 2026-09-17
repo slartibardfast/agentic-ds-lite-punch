@@ -1737,6 +1737,23 @@ this section records what the facade does with it.
   itself, and a later claimant gets a different one and is told so through
   `NewReservedPort`.
 
+## The operator bootstraps the store
+
+The boundary above needs an identity to have any effect, and the
+specification's in-band way to create the first one is the introduction
+protocol this milestone defers. A fresh device therefore refuses every
+role-gated action and nothing can lift the containment. The bootstrap is the
+operator's: a root-owned `/etc/ds-lite-punch.acl` in the store's own
+tab-separated form, which the procd script copies into the state directory at
+start and only when no store exists, so it creates the first identity without
+reverting a store the device already holds. Absent it the fail-closed refusal
+stands. The reasoning and the exact consequences are in
+[call/0023](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0023-the-operator-bootstraps-deviceprotection.md);
+the file's format and the PBKDF2 derivation are in the component's
+`deploy/ds-lite-punch.env` beside the service, and the mechanism was verified
+on the deployed box (seed fires, the credential reaches Basic over the wire, a
+store already present is not clobbered).
+
 ## The miniupnpd reference
 
 Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
