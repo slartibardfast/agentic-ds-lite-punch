@@ -952,6 +952,18 @@ AddAnyPortMapping
 <pre><code class="language-text">M-SEARCH ssdp:all
 </code></pre>
 <p>must receive only the compatibility presentation defined for the mode.</p>
+<h3 id="reference-client-test-miniupnpc"><a class="header" href="#reference-client-test-miniupnpc">Reference-client test (miniupnpc)</a></h3>
+<pre><code class="language-text">GET v2 rootDesc
+GetListOfPortMappings   -- the listing must parse
+AddAnyPortMapping       -- 606 while the store holds no session
+</code></pre>
+<p>must hold against the reference implementation's own client, miniupnpc
+2.3.3, and against its description parser on both presentations. It does.
+The run is
+<a href="RESULTS-2026-09-17-miniupnpc-interop.html">RESULTS-2026-09-17-miniupnpc-interop.md</a>,
+the defect that run found in the listing's response shape is fixed at
+component ad69a49, and the divergence it recorded in the empty-range
+answer is open there.</p>
 <hr />
 <h1 id="25-final-implementation-rule-set"><a class="header" href="#25-final-implementation-rule-set">25. Final implementation rule set</a></h1>
 <p>The implementation agent should treat the following as normative requirements for this project:</p>
@@ -1281,6 +1293,15 @@ explicit v2 discovery
     → authorized WIP2
 </code></pre>
 <p>This preserves the empirically demonstrated Xbox compatibility path while allowing modern v2 control points to receive a genuinely security-aware IGD2 device.</p>
+<p>One point in this territory is a recorded divergence rather than a
+decision: <code>GetListOfPortMappings</code> finding nothing. The facade answers 730
+<code>PortMappingNotFound</code>, as the transcription requires; miniupnpd answers
+an empty <code>PortMappingList</code>, so the reference client reports our fault as
+a failed pass and prints no listing for that protocol. The evidence is in
+<a href="RESULTS-2026-09-17-miniupnpc-interop.html">RESULTS-2026-09-17-miniupnpc-interop.md</a>,
+with the check that would settle it: whether section 2.5.21's own error
+table carries that rule at all, since the transcription's cites for it
+are 2.5.19's clause numbers.</p>
 <h2 id="implementation-target"><a class="header" href="#implementation-target">Implementation target</a></h2>
 <p>The implementation agent should interpret this document as:</p>
 <blockquote>
