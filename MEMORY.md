@@ -4,6 +4,23 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the SCPDs pass a controlled XML parse, and minixmlvalid is not a validator
+
+- The four service descriptions (DeviceProtection,
+  WANCommonInterfaceConfig, WANIPConnection:2, and the
+  WANIPConnection/WANPPPConnection document the PPP constant aliases)
+  parse as well-formed XML. They were extracted from their constants and
+  parsed with Python's expat, and the parser was controlled first: three
+  deliberately malformed documents were rejected and a good one accepted.
+  No crate test covers this, because the crate carries no XML dependency
+  and its SCPD assertions are substring matches.
+- Do not reach for miniupnpc's `minixmlvalid` to re-check it. That binary
+  ignores `argc` and `argv` and tests a fixture compiled into itself,
+  printing the same "17 events" for a malformed document, for a good one,
+  and for our descriptions. It read as a clean pass until the control was
+  run, which is the same trap as reading a report instead of the result.
+  The interop record carries both facts.
+
 ## 2026-09-17 — the v2 authorization policy is decided, and plan/0004 stopped contradicting itself
 
 - call/0024 records the v2 authorization policy, which plan/0008's annex
