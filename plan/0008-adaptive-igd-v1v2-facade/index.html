@@ -1401,6 +1401,21 @@ the port: the first holder of a requested port may be given that port
 itself, and a later claimant gets a different one and is told so through
 <code>NewReservedPort</code>.</li>
 </ul>
+<h2 id="the-operator-bootstraps-the-store"><a class="header" href="#the-operator-bootstraps-the-store">The operator bootstraps the store</a></h2>
+<p>The boundary above needs an identity to have any effect, and the
+specification's in-band way to create the first one is the introduction
+protocol this milestone defers. A fresh device therefore refuses every
+role-gated action and nothing can lift the containment. The bootstrap is the
+operator's: a root-owned <code>/etc/ds-lite-punch.acl</code> in the store's own
+tab-separated form, which the procd script copies into the state directory at
+start and only when no store exists, so it creates the first identity without
+reverting a store the device already holds. Absent it the fail-closed refusal
+stands. The reasoning and the exact consequences are in
+<a href="https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0023-the-operator-bootstraps-deviceprotection.md">call/0023</a>;
+the file's format and the PBKDF2 derivation are in the component's
+<code>deploy/ds-lite-punch.env</code> beside the service, and the mechanism was verified
+on the deployed box (seed fires, the credential reaches Basic over the wire, a
+store already present is not clobbered).</p>
 <h2 id="the-miniupnpd-reference"><a class="header" href="#the-miniupnpd-reference">The miniupnpd reference</a></h2>
 <p>Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
 widespread open implementation. Its own description generator
