@@ -4,6 +4,50 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the Switch measures NAT type A on the VM line, and how the captures were misread
+
+- **The "big if" is answered.** A Nintendo Switch (`80:d2:e5:6d:d1:00`,
+  192.168.21.68, a USB Ethernet adapter) routed onto the Virgin Media
+  ds-lite path (`vm4` = dhcp on eth1 → hub → AFTR) reports **NAT type A**.
+  The evidence and the one caveat are in
+  plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.md.
+- The console's own NAT check is on tape: it asked 3.74.50.213 on ports
+  33334 and 10025 for its mapping, and 40 ms later **port 50920 of the same
+  host**, a port it had never written to, sent five 16-byte packets to its
+  mapped port 57216 and they arrived. That is the filtering test passing
+  through the AFTR, on the VM line (the Digiweb capture holds none of it).
+- Mapping: one local port (57216) served eight peers with inbound within a
+  few percent of outbound on each (16,501/16,554, 13,517/13,081,
+  10,245/9,931). Source-port preservation is not needed by this class.
+- **The PS3's P2P rode the facade, not its own NAT.** `nft`'s `dslp snat_map`
+  folds `192.168.21.138:3074 ↔ 192.168.0.21:40002`, and on the VM side
+  peers' packets arrive at the slot (4,852 from `87.59.252.198:3074` alone),
+  with the same 4,852 delivered to the console on br-lan. A real console's
+  game traffic carried end to end through the AFTR by the facade.
+- **Two of my own readings were wrong and the cause is now known.** `cat
+  file1 file2 | tcpdump -r -` does **not** merge captures: tcpdump reads the
+  first file and stops (control: 53,451 packets reported against 148,324
+  with `mergecap`). Every `cat | tcpdump` aggregate I reported was
+  first-file-only, which is exactly why the Switch's game UDP "did not
+  emerge" and why the Digiweb and PS3 inbound reads came back empty. Merge
+  with `mergecap` (installed on this host alongside tcpdump and tshark) and
+  analyse the merged capture.
+- Also corrected: my flag that the missing per-slot accept rules (none for
+  40000 or 40002, only 40001) might block inbound. Inbound arrived and was
+  delivered because the flow-matched conntrack accepts it; the caution is
+  retired.
+- **The router's clock was corrected backwards by about 38 minutes** during
+  the session, so pcap timestamps written before the correction read ahead
+  of the wall clock after it. Ordering and intervals inside a capture are
+  unaffected; quote intervals rather than absolute times when correlating.
+- The captures live at `/mnt/nvme/captures` on the router (27 files plus a
+  `MD5SUMS` manifest), mirrored on the workstation at
+  `~/captures-2026-09-17-final`. Four taps were used: br-lan, eth1 (VM
+  side), `pppoe-vdsl4` (Digiweb side) and the raw eth2 device. The Digiweb
+  IP side is `pppoe-vdsl4`; capturing the raw `eth2` shows only PPPoE
+  frames, which is why filters aimed at `84.203.115.61` on `eth2` matched
+  nothing.
+
 ## 2026-09-17 — the SCPDs pass a controlled XML parse, and minixmlvalid is not a validator
 
 - The four service descriptions (DeviceProtection,
