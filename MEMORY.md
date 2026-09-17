@@ -4,6 +4,55 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — Kani closed on this host, and the lane's true state handed to a peer
+
+- The operator closed the Kani lane on this development host: "kani
+  doesn't have enough ram here". The measurement agrees: `free -h` at
+  3843 MiB with four cores. `cargo kani 0.67.0` is installed and starts,
+  so the limit is memory and not tooling.
+- The reboot before this session wiped `/tmp`, so the full-suite attempt
+  launched earlier left no log and captured no verdict. It is not worth
+  repeating on this box.
+- The lane's state, measured this session rather than recalled: the
+  2026-09-15 relocation's 37 of 40 verdicts were earned at component
+  34d48c1, and current `main` (0cc2b04) carries the **same 40-harness
+  inventory** but not the same code under proof. `src/slot.rs` (+211) and
+  `src/upnp.rs` (+274/-17) changed their production code after the
+  relocation, and no harness was added, so 17 of the 40 verdicts are
+  stale. The three new lease-policy methods (`stamp_activity_if_stale`,
+  `gc_idle`, `evict_idle_client`) have no proof at all. The other six
+  modules are byte-identical to the relocation tree, so their 23 verdicts
+  carry over.
+- The remediation was a branch and is now two. `kani-favourable` 22b9677
+  (one commit on 34d48c1) stays as the original artifact. Its three
+  changes were ported onto current `main` as **`kani-remediation`
+  408457a** and pushed, with `cargo test` at 121 passed, 0 failed, and
+  nothing run under Kani yet. Porting by `git cherry-pick -n 22b9677`
+  applied with no conflict, which is the evidence the favourable changes
+  never depended on the drift since.
+- The hand-off runs over git, not messages: the peer takes
+  `kani-remediation`, runs the suite on a converging host, and returns a
+  component branch plus a revision of the Kani state record. The pin does
+  not move while the proofs are unsettled, so `main` stays at 0cc2b04 and
+  `software --check` attests a tree the proofs have not been run against.
+- The peer's brief, with the steps, the checks, and the properties to
+  prove for the three slot policy methods, is
+  `plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.md`.
+- The relocation's raw logs are **not on this machine**: they sit at
+  `C:\Users\dconnolly\Development\kani-evidence-2026-09-16\` on the
+  andromeda workstation, and this host's Windows side carries no
+  `dconnolly` profile. The 37-of-40 detail is known here only through the
+  2026-09-15 handoff entry above.
+- `call/0019` stands in force. The 2026-09-15 entry expected a `call/0020`
+  supersession, but that number went to the SSDP-all decision, and the
+  decision's own terms are unmet while two harnesses fail and three carry
+  no verdict.
+- The peer's brief, with the steps and their checks, is
+  `plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.md`.
+- Tooling note after the reboot: the built tools are not on PATH. They
+  are in the tree at `tools/host-lifecycle/target/release/host-lifecycle`
+  and `tools/host-lint/target/release/host-lint`.
+
 ## 2026-09-17 — this host's clone rebuilt: bootstrap, pull to origin's tip, kani 0.67.0 present
 
 The machine's copy was a bare fresh clone (no submodules, store, skills, or
