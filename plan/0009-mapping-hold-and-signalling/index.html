@@ -1,0 +1,432 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Milestone: the mapping hold, its admission, and the signalling to clients - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../../cast/operator.html"><strong aria-hidden="true">1.3.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../../plan-index.html"><strong aria-hidden="true">2.</strong> Plan</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-hold-and-signalling/index.html" class="active"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../MIGRATION.html"><strong aria-hidden="true">6.1.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../../STRUCTURE.html"><strong aria-hidden="true">6.2.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../../UPGRADING.html"><strong aria-hidden="true">6.3.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="milestone-the-mapping-hold-its-admission-and-the-signalling-to-clients"><a class="header" href="#milestone-the-mapping-hold-its-admission-and-the-signalling-to-clients">Milestone: the mapping hold, its admission, and the signalling to clients</a></h1>
+<p><strong>Status:</strong> open, started 2026-09-17. This milestone keeps a named
+device's mappings alive for the lifetimes the RFCs promise and the AFTR
+refuses, and gives the daemon a voice so a client learns the truth about
+its own mapping. The policy spine is call/0025; the measurements that
+size the work are the AFTR's UDP idle timeout (five to ten seconds on this
+node) and its TCP one (between 120 and 300 seconds), both already on the
+record.</p>
+<h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
+<p>A device behind this line can be the wrong shape for it. One console on
+this LAN maintains its own UDP mapping perfectly well, running its own
+STUN every two seconds from the same port it games on, and needs nothing
+from us. Another device may keep no mapping at all, or keep one on a
+cadence the AFTR ignores, and when its mapping dies the client is never
+told. The daemon's stated contract is to be the lifetime shim the AFTR
+will not be: on the LAN side it implements the behaviour the AFTR refuses
+(RFC 6888 lifetimes, reportable tuples, divergence notification), while
+on the WAN side it changes nothing and owns one property, that the
+mappings do not die.</p>
+<p>This milestone is the admission that names which devices get that
+treatment, the arm that performs it, and the signalling that tells a
+client when its mapping changed or died. It is scoped to the daemon and
+its operator configuration. It does not revisit the facade's authorization
+boundary (call/0024), it does not implement the introduction protocol
+call/0021 defers, and it does not change what the AFTR does.</p>
+<p>The personas it serves are the ones this host already carries: the
+operator, who needs the list to be a budget rather than a convenience,
+and the agent, who needs the mechanism to be verifiable from the outside
+rather than asserted from inside.</p>
+<h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
+<p>Bands group the work: the admission, the arm that acts on it, the voice it
+gives the daemon, the fourth admission surface, the TCP question, and the
+acceptance that closes it. Every task carries verify and inputs;
+mechanical verifies re-run at the gate.</p>
+<h3 id="allowlist"><a class="header" href="#allowlist">Seed the allowlist admission</a></h3>
+<ul>
+<li>verify: <code>nft -c</code> accepts the ruleset; a named device's quiet UDP flow
+still has a conntrack entry after 60 s of silence with a remaining
+timeout at or above the floor, while an unnamed device's entry is gone;
+the rules are carried by a file the boot reads</li>
+<li>inputs: the accepted ruleset shape (the <code>ct timeout</code> objects with
+<code>protocol udp</code> and the states this build accepts, and the per-device
+rules that select them), the DHCP-pinned addresses, the watching
+commands (<code>conntrack -L</code>, <code>nft list ruleset</code>)</li>
+</ul>
+<p>Install the policy objects and the rules that select them for a first
+allowlist, which starts with the two consoles because their addresses are
+already pinned, and prove the behaviour rather than the parse: a quiet
+allowlisted flow outlives the default single-direction timeout while an
+unallowlisted one does not. Record where the rules live so a firewall
+reload or a carrier upgrade carries them.</p>
+<h3 id="snoop"><a class="header" href="#snoop">Snoop the AFTR with our own writes</a></h3>
+<ul>
+<li>verify: the observation log carries a learned external tuple for a named
+device within two cadence periods of its first flow, with the
+last-seen stamp and the vote decision for each observation; no write
+occurs for a flow whose device is not on the allowlist</li>
+<li>inputs: the change-data-capture backends in <code>cdc.rs</code> (the nft
+<code>flow_obs</code> mirror is primary and records post-NAT tuples), <code>vote.rs</code> and
+<code>mapping.rs</code> with their existing tests, the accept syntax from
+<code>#allowlist</code></li>
+</ul>
+<p>The arm reads the AFTR the way the design already says to read it, with a
+STUN Binding Request from the flow's own post-NAT tuple, and writes it
+the way the design already says to write it, with a datagram from that
+same tuple. The capture backend already exists and its contract is a live
+bidirectional candidate at a two-second cadence, so this task is the
+per-device wiring and its reporting, not a new reader. Netlink connection
+events were tried on this build and are silent, which is why the nft
+mirror leads.</p>
+<h3 id="signal"><a class="header" href="#signal">Signal per subscriber</a></h3>
+<ul>
+<li>verify: a real control point subscribes, then a mapping is added, deleted
+and churned, and each NOTIFY carries the declared evented variables that
+changed; a contained subscriber's event carries counts for its own
+namespace alone</li>
+<li>inputs: <code>#snoop</code> for the change events, the subscription and notify path
+in <code>upnpsvc.rs</code>, the containment view the reads already build, the
+evented set the service description declares</li>
+</ul>
+<p>The daemon already knows when a mapping appears, changes and dies, and it
+already says so in its own log. This task gives that truth a second
+voice: a propertyset carrying <code>ExternalIPAddress</code>, <code>ConnectionStatus</code>,
+<code>PortMappingNumberOfEntries</code> and <code>SystemUpdateID</code> as they change, computed
+with the same containment view the reads use so an event cannot leak
+another client's namespace, and scoped to the subscription that asked. A
+re-key of the datapath tuple raises no port change, because the reported
+port is the requested label call/0022 fixed.</p>
+<h3 id="pcp"><a class="header" href="#pcp">Bind PCP and NAT-PMP on their shared port</a></h3>
+<ul>
+<li>verify: a PCP client creates, renews and deletes a mapping against the
+bound port, the response carries the granted lifetime and the result
+code the policy implies, a NAT-PMP request answers on the same socket,
+and an ANNOUNCE carries the learned tuple once discovery completes</li>
+<li>inputs: the listener, quota and result-code notes in plan/0004's
+implementation document, the slot engine, the specification's message
+shapes</li>
+</ul>
+<p>The fourth admission path, already named in the design's own mental model,
+becomes real here: a LAN-only listener carrying both protocols on the one
+port, the quota and the result codes as specified, and the one divergence
+this line forces stated in the answer itself. On the AFTR uplink the
+external port belongs to the AFTR, so the response carries the label and
+the learned tuple follows in an ANNOUNCE, which is the mechanism the
+protocol provides for exactly this.</p>
+<h3 id="tcp-answer"><a class="header" href="#tcp-answer">Answer the TCP question</a></h3>
+<ul>
+<li>verify: a decision record states the choice, its cost and its
+preconditions; if a surrogate is chosen, that work is scoped into its own
+milestone rather than left implied</li>
+<li>inputs: the measured AFTR TCP lifetime (between 120 and 300 seconds, on
+the C3 record), the TCP machinery the relay already owns
+(<code>tcpslot.rs</code>, <code>forward.rs</code>), the signalling path from <code>#signal</code></li>
+</ul>
+<p>A connection that is nominally established is reaped inside a VPN's idea
+of a keepalive, so this is a real question and not a hypothetical one. A
+router cannot write into a client's connection without owning its
+sequence space, so the honest options are to hold what the relay
+terminates, to let the client know its session is at risk, or to run an
+opt-in surrogate on the machinery the datapath already has. The decision
+record names which, and what it costs.</p>
+<h3 id="acceptance"><a class="header" href="#acceptance">Run the acceptance under silence</a></h3>
+<ul>
+<li>verify: the external vantage reaches a held mapping at 30, 60 and 120
+seconds of client silence, with the intervals printed; the client-side
+signal arrives exactly once per change; the keepalive cost is measured
+in packets per second for the allowlist as it stands</li>
+<li>inputs: the rig and the external vantage the datapath work already uses,
+the captures on the router's storage, <code>#udp-threshold</code>'s death point,
+<code>#signal</code> and <code>#pcp</code></li>
+</ul>
+<p>The acceptance is a silence test with an outside witness, because inside
+the box every layer can look healthy while the mapping is gone. It also
+records the cost, since the allowlist's size is a budget and this is where
+the budget is measured.</p>
+<h3 id="udp-threshold"><a class="header" href="#udp-threshold">Measure the AFTR's UDP threshold under silence</a></h3>
+<ul>
+<li>
+<p>depends: #allowlist, #snoop</p>
+</li>
+<li>
+<p>verify: a results record states the death point for a held flow and for
+an unheld one across silent windows of 60, 120 and 300 seconds, with the
+vantage's probe outcomes</p>
+</li>
+<li>
+<p>inputs: the external vantage, the rig, the observation log from <code>#snoop</code></p>
+</li>
+</ul>
+<p>The recorded figure of five to ten seconds was measured before the hold
+existed, and the longer-limit campaign the previous milestone carried is
+the same experiment as this one. Running it here settles the interval the
+arm should use and settles whether the RFC floor can be honoured on this
+line at all.</p>
+<h2 id="verification"><a class="header" href="#verification">Verification</a></h2>
+<p>The milestone's mechanical checks are the repository's own sweep
+(<code>validate</code>, <code>prose</code>, <code>refs --check</code>, <code>tasks --check</code>, <code>book --check</code>,
+<code>software --check</code>) at every gate, plus the two checks this work adds: an
+allowlisted flow outliving an unallowlisted one under silence, and a
+subscriber's event carrying its own namespace alone. The on-box changes
+are the ruleset policy and the deployed daemon, so the rollout says how
+each is carried and how each is reverted.</p>
+<h2 id="rollout"><a class="header" href="#rollout">Rollout</a></h2>
+<p>The policy lands in stages, and each stage is observable before the next.</p>
+<ol>
+<li><strong>Log only.</strong> The snooping arm runs with no writes, so the learned
+tuples and the vote decisions can be read against the AFTR's real
+behaviour before anything is held on a device's behalf.</li>
+<li><strong>The policy objects and two devices.</strong> The ruleset carries the timeout
+policy for the consoles that are already pinned, and the holds are
+turned on for them alone. The load is measured here, since two flows at
+the working cadence are cheap and the number is what sizes any further
+device.</li>
+<li><strong>A device that needs it.</strong> The first genuinely broken device is
+admitted only after the silence test shows it cannot hold its own
+mapping, which the snooping arm is how we learn.</li>
+<li><strong>The pcp listener last.</strong> It answers on a port nothing on the LAN uses
+today, so it carries no risk to what works, and it lands after the
+signalling is proven so its ANNOUNCE is not the first thing testing the
+truth path.</li>
+</ol>
+<p>The revert path for the ruleset is deleting the policy table and the rules
+that select it, which returns every flow to the default timeouts; the
+daemon's revert is the previously deployed build, parked beside the
+binary as the deploy procedure already does.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>The AFTR's true UDP threshold, which the silence test measures; until it
+is known, the two-second cadence is what works rather than what is
+required.</li>
+<li>Whether any device on this LAN actually needs the hold. The one console
+measured so far does not, so the allowlist may stay at the
+bootstrap pair for a long time.</li>
+<li>Whether the assigned-port divergence matters to a real PCP client, or
+whether the ANNOUNCE is enough in practice.</li>
+<li>Whether the WPS introduction limb is ever built, since the identities it
+would create should then feed the allowlist rather than sit beside it.</li>
+<li>The LAN's trust basis for an allowlist, which is the same assumption the
+DHCP pins already rest on.</li>
+</ul>
+<h2 id="results-home"><a class="header" href="#results-home">Results home</a></h2>
+<p>Records land under <code>results/</code> in this room. Raw captures from the
+acceptance stay on the router under the captures path the earlier runs
+established, with a checksum manifest alongside and a mirrored copy on the
+workstation, as the switch NAT-type record documents.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../plan/0008-adaptive-igd-v1v2-facade/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../where.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../plan/0008-adaptive-igd-v1v2-facade/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../where.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
