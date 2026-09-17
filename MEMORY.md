@@ -4,6 +4,31 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — correction: the probe-quiet soak had already run (run 3)
+
+The entry below says the probe-quiet pause "is the one concrete experiment
+plan/0004 has left" and that it "has not run". That is wrong, and the way it
+was wrong repeats the entry's own lesson. The driver
+`router-run-soak.py` already implements the probe-quiet design (it kills the
+in-container probe as well as stopping the relay), and the run happened:
+`plan/0005-test-rig/RESULTS-2026-09-13-run3.md` records 18 of 18 cells with
+`pause-arr 0` (zero packets in any pause window, from any source) and the
+**AFTR mapping surviving 30 seconds of total silence** with an unchanged
+tuple and a flat 816 to 826 ms recovery. The relay, held by its 2 s
+keepalives, is not idle-expiring at those durations.
+
+The error was reading the *analysis* that proposed the correction
+(`ANALYSIS-2026-09-13.md`) without reading the *results* that executed it.
+When a record says a measurement is owed, check for a later record that
+discharged it; the analysis predates the run by design.
+
+What run 3 leaves is not an acceptance gap but a premise question, and it is
+now plan/0004's named next step: the AFTR's UDP idle timeout on today's node
+**exceeds 30 seconds**, against the 5 to 10 second figure the relay's cadence
+was built around, so the carried item is a longer-limit campaign (60 s and
+120 s silent windows, probe-quiet design unchanged) to locate the true
+timeout. The relay's 2 s cadence stays correct either way.
+
 ## 2026-09-17 — plan/0004's ledger was lying, and multi-instance was already built
 
 The milestone record said "multi-instance and the UPnP control plane are not
