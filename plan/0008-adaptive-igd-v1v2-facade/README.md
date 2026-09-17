@@ -1713,6 +1713,30 @@ selection still 730.
 
 Component 58fed63, host pin recorded with it.
 
+## 26.23 The requested port is a per-client label
+
+The mapping table is keyed `(client, external port, protocol)`. Several
+control points may hold the same requested port, each with its own slot and
+its own real external tuple, which is what lets two consoles both ask for
+`3074/UDP`. The reasoning, and the two uplinks it covers, are in
+[call/0022](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0022-requested-port-is-a-per-client-label.md);
+this section records what the facade does with it.
+
+- A write replaces only the caller's own entry at that port. Another
+  requester's entry at the same port is never touched, and is never a stray
+  to tear down, which retires the earlier behaviour where a second claimant
+  evicted the first and silently broke its mapping.
+- `GetSpecificPortMappingEntry` and `DeletePortMapping` resolve to the
+  caller's own entry at that port, or 714, because their keys carry no client
+  and the port is the caller's handle. The containment therefore no longer
+  answers 606 for another client's port: that port is not in the caller's
+  namespace at all, and the lift is observable through the enumeration and
+  the listing, with the range delete as the bulk path.
+- The any-port path (`allocate_preferred`) still matters where the device owns
+  the port: the first holder of a requested port may be given that port
+  itself, and a later claimant gets a different one and is told so through
+  `NewReservedPort`.
+
 ## The miniupnpd reference
 
 Miniupnpd (the OpenWrt/pfSense/DD-WRT default IGD) is the sole
