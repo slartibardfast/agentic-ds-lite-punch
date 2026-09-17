@@ -33,6 +33,29 @@ open.
   session. The boundary holds against a real client, which the facade's
   own wire tests could not show on their own.
 
+## The service descriptions, checked against a real parser
+
+The four service descriptions were extracted from their constants and
+parsed as XML with a conformant parser (Python's expat through
+`xml.etree`): DeviceProtection, WANCommonInterfaceConfig,
+WANIPConnection:2, and the WANIPConnection/WANPPPConnection description
+the PPP constant aliases to. All four are well-formed. The crate carries
+no XML parser, and its SCPD assertions are substring matches. This check
+therefore stands at the record level. The listing fragment has its own
+witness: the reference client parses it as XML in the `upnpc -L` walk
+above.
+
+The parser was controlled before its verdict was read: three deliberately
+malformed documents (an unclosed element, crossed end tags, an unquoted
+attribute) were each rejected, and a good one accepted.
+
+The reference implementation's own generic validator is not usable for
+this. `minixmlvalid` takes no file argument: it ignores `argc` and `argv`,
+tests a fixture compiled into the binary, and reports the fixture's event
+count whatever path it is given, so it accepted a malformed file and the
+real descriptions alike. Its sibling `testigddescparse`, which does read a
+path, is the parser used above for the two rootDesc presentations.
+
 ## The defect it found (fixed at ad69a49)
 
 GetListOfPortMappings declares its OUT argument as `NewPortListing`,
