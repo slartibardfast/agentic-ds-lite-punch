@@ -1,10 +1,13 @@
 # Milestone: adaptive UPnP IGD v1/v2 compatibility facade
 
-- Status: specified 2026-09-16; T1 (#disc-presentation), T2
-  (#v2-service-set) and T3 (#canonical-api) receipted, T4 (#bench-matrix)
-  open. The IGD_V2 gate is on: the device presents the v1 and the v2
-  facade together (component 4d0160f), and the mapping engine is reached
-  through allocate_exact and allocate_preferred (component b22a96d).
+- Status: specified 2026-09-16; every build-sequence task receipted. T1
+  (#disc-presentation), T2 (#v2-service-set) and T3 (#canonical-api)
+  landed in the component, and T4 (#bench-matrix) ran on the deployed box
+  2026-09-17 with all 31 probes passing (RESULTS-2026-09-17-bench-matrix.md).
+  The IGD_V2 gate is on and the device presents the v1 and the v2 facade
+  together; the mapping engine is reached through allocate_exact and
+  allocate_preferred; and the running artifact is the one built from
+  component 2158485, which the router now carries.
 - Scope: the ds-lite-punch UPnP facade (plan/0007 phase E successor);
   builds on the deployed 34d48c1-era facade and the lease policy.
 - This document is the milestone specification. The build-sequence
