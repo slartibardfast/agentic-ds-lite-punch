@@ -4,6 +4,27 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the v2 authorization policy is decided, and plan/0004 stopped contradicting itself
+
+- call/0024 records the v2 authorization policy, which plan/0008's annex
+  had named as the one item still open on the v2 path: the boundary rides
+  the v2 face only; AddPortMapping, AddAnyPortMapping, DeletePortMapping
+  and DeletePortMappingRange require a live Basic session; every other
+  action is public; the administrative DeviceProtection actions require
+  Admin; and a caller without the lift acts on its own host alone, with
+  the 1024 floor binding the v2 face. A contained specific read resolves
+  in the caller's own namespace (714) while a gated or out-of-containment
+  request is 606.
+- plan/0004's "deliberately not covered" list contradicted its own Open
+  questions section on two lines: it still called the TPROXY-fallback
+  question open after the datapath work answered it, and it read the EIF
+  prober as still owed to v2 rather than carried past it. Both corrected.
+- A naming tell worth remembering: the lane flags the position noun
+  "section" with a two-level numeral ("section 1.2"), which is the shape
+  of this project's own milestone sections, while a four-level
+  specification citation ("section 2.5.21.3") passes. Reword the first to
+  a content name; the second is a citation of another document.
+
 ## 2026-09-17 — the reference client read the v2 listing, and the response shape was wrong
 
 - The ignored `miniupnpc_interop` probe runs again: miniupnpc 2.3.3 built
