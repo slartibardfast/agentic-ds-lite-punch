@@ -91,6 +91,30 @@ for whichever one holds nothing.
   list, which is both the reference behaviour and the friendlier client
   experience.
 
+## Deployed and re-verified on the box
+
+The fix is live on the router, not only in the tree. Component ad69a49 was
+built to the recorded recipe, installed as `/usr/bin/ds-lite-punch` with the
+outgoing build parked at `/root/ds-lite-punch.prev`, and the service
+restarted onto it; the new init script went with it, inert as designed
+because no `/etc/ds-lite-punch.acl` exists. The tuple re-established at
+`37.228.213.83:59304`.
+
+Driven against the deployed facade from the LAN:
+
+- a v1 `AddPortMapping` for the caller's own host answers 200 and its entry
+  appears in a v2 `GetListOfPortMappings` response **carrying the
+  NewPortListing element and its CDATA section**, which is the shape this
+  record's defect was about;
+- the description round-trips, and the argument name is the trap: the action
+  argument is `NewPortMappingDescription` while the listing's entry element
+  is `NewDescription`, so a request that names the listing's element stores
+  an empty description and reports one;
+- a v1 `DeletePortMapping` answers 200 and the entry leaves the table.
+
+The contained view behaved as a contained view should: the caller saw its
+own entry and no other.
+
 ## Scope
 
 The probe covers the v1 walk, the v2 listing, the v2 refusal, and the

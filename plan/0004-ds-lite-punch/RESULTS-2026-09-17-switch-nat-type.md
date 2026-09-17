@@ -61,6 +61,17 @@ The Digiweb line carried none of the console's probe or peer traffic, so
 the A belongs to the AFTR path rather than to the alternative uplink being
 measured by accident.
 
+## What the session did not reach
+
+The window was one evening: about nineteen minutes of console UDP, with
+four peers carrying the bulk of it, and a comparable run from the PS3
+alongside. Every game peer seen in that window was contacted by the console
+before it replied, so no peer established the first contact here; the only
+unsolicited inbound in the capture is the console's own probe. Whether a
+peer ever does send first, and how a wider peer set behaves, needs longer
+runs than this session, and the peer census itself is one evening's
+matchmaking rather than a stable set.
+
 ## Evidence
 
 Raw captures live at `/mnt/nvme/captures` on the router, with a `MD5SUMS`
