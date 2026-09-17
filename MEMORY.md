@@ -4,6 +4,20 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — this host's clone rebuilt: bootstrap, pull to origin's tip, kani 0.67.0 present
+
+The machine's copy was a bare fresh clone (no submodules, store, skills, or
+hooks). `host-lifecycle bootstrap` rebuilt the local setup: five submodules
+at their pins, the store, the worktree, and the 24 skill links (materialize
+receipt in the operational ledger). The host repo then pulled 94 commits
+from origin (through the plan/0004 reconciliation), and the component
+worktree fast-forwarded to the recorded pin `0cc2b04`; `software --check`
+and `--verify-setup` are green on it. Kani here is 0.67.0, the same build
+call/0019 recorded as non-converging on this host for the facade harnesses,
+so a peer run of those still wants the larger host or a generous timeout.
+Git identity is set repo-local only (david@connol.ly); the template
+submodule stays at baseline `41ba4e1`, matching upstream.
+
 ## 2026-09-17 — plan/0004's last sections reconciled, and what the box actually holds
 
 Finishing the reconciliation: the milestone's Testing and Open questions
