@@ -61,6 +61,19 @@ The Digiweb line carried none of the console's probe or peer traffic, so
 the A belongs to the AFTR path rather than to the alternative uplink being
 measured by accident.
 
+## The console keeps its own mapping
+
+Nothing here held a mapping open for the console, and the captures say why
+it did not need one. From the same local port it used for the games
+(57216), it exchanged STUN with a Google STUN server (74.125.250.129:19302)
+at a **2.000 s cadence**, 796 packets each way across the session, so its
+mapping is discovered and maintained by the console itself. It sent no
+UPnP at all: no SSDP on 1900, no SOAP to the facade on 49152, no
+PCP/NAT-PMP on 5351, and no row for it in the facade's entry table or in
+the slot lease table. Two NATs sat in its path and neither of them was
+this project's: the router's own masquerade on eth1, which preserved 57216
+and carried the unsolicited probe inbound, and the AFTR's CGNAT beyond it.
+
 ## What the session did not reach
 
 The window was one evening: about nineteen minutes of console UDP, with
