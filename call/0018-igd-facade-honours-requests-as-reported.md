@@ -1,6 +1,9 @@
 # The IGD facade honours requests as reported, not as NATs do
 
-- Status: accepted
+- Status: accepted, except its first decision clause: the keying is
+  superseded by call/0022, which makes the requested port a per-client label
+  because this device owns no external port on either uplink. The
+  GetExternalIPAddress and GENA clauses below stand.
 - Scope: the UPnP IGD facade (plan/0007 phase E)
 - Date: 2026-09-13
 
