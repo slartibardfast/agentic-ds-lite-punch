@@ -1473,3 +1473,51 @@ pointer). The reversal it describes is call/0020, which supersedes the same
 absolute in that section, so the pointer now names it. A register citation
 written for a decision that has not been allocated yet is a trap: allocate
 first, cite second.
+
+
+## 2026-09-17 (late): plan/0009's four code tasks are built, deployed and proved on the router
+
+The hold, its admission, the signalling and the shared port are implemented,
+and the milestone's results record is
+`plan/0009-mapping-hold-and-signalling/results/RESULTS-2026-09-17-implementation.md`.
+The component is at `acd1162` and the deployed binary is that build (md5
+`cd8e49be`); the previous ones are parked at `/root/ds-lite-punch.prev` and
+`.prev2`. The suite went from 121 tests to 168, written before their
+implementations.
+
+What the router proved, since a claim is not evidence:
+
+- the PCP and NAT-PMP surface, read back with `deploy/pcp-probe.py` (shipped
+  with the crate): ANNOUNCE, MAP, renewal and delete, the four refusals
+  (UNSUPP_PROTOCOL, EXCESSIVE_REMOTE_PEERS for a filter this datapath will not
+  install, CANNOT_PROVIDE_EXTERNAL for PREFER_FAILURE, ADDRESS_MISMATCH for a
+  client field the source does not match), the NAT-PMP public address, map and
+  delete, the unsupported opcode, and the drop-then-retry rule for a mapping
+  whose discovery is in flight;
+- the assigned tuple is the one the slot's STUN discovery learned, not a
+  suggestion echoed back;
+- both allowlist failure modes name themselves before any work is done;
+- `PCP=1` is now in `/etc/ds-lite-punch.env` on the router, so the shared port
+  is live. Its revert is that line removed and a restart.
+
+A defect the box found, and its fix: a revoked mapping left its per-slot
+tuple file behind, and because the allocator hands out the lowest free slot, a
+fresh grant on that port was answered with the dead mapping's external port
+(three such files were on the box, from mappings revoked hours earlier). Fixed
+at `acd1162`: every revoke path removes the file, and the same probe then
+showed the drop followed by the fresh tuple. The triangulation is worth
+keeping: the client's port could not have been invented by the new code,
+because the new code reads that file, and the file was on the box.
+
+Deliberately not done, and waiting on the operator: installing the conntrack
+policy. It is the one change that puts new nftables rules on the live firewall,
+so it was left alone rather than attempted around; the results record carries
+the exact command. The acceptance under silence and the AFTR's own threshold
+need the same session.
+
+Two traps this session hit, both worth the ink. A pin is a value, not a
+recollection: a hand-typed SHA suffix was wrong at the first attempt, and only
+the tool's own echo of `rev-parse` caught it. And a verbatim client transcript
+in an authored doc trips the naming lane on its protocol quantities (`epoch
+18`), which is the case the sanctioned boxed block exists for: the block stays
+verbatim, the rest of the file stays linted.
