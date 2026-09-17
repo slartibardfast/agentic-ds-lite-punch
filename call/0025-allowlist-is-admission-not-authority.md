@@ -19,8 +19,8 @@ the RFCs set, and its TCP idle timeout was measured at between 120 and
 reaped inside a VPN's idea of a keepalive interval.
 
 A device can be the wrong shape for that. One console here maintains its
-own mapping perfectly well, running its own STUN every two seconds from
-the same port it games on. Another device may not, and a device whose
+own mapping perfectly well: it runs its own STUN every two seconds from the
+same port it games on. Another device may not, and a device whose
 keepalive is absent, sparse or disabled behind a contended peer loses a
 mapping that the client never learns is gone. The response is to hold
 such a device's mappings open ourselves, invisibly, and to tell the
@@ -30,9 +30,9 @@ client the truth when holding fails.
 
 - **The allowlist is admission for maintenance, and it carries no
   authority.** A named device's flows get the long timeouts and the
-  invisible keepalive; the entry grants no role, is operator configuration
-  rather than a protocol surface, and is neither readable nor writable
-  over UPnP. The v2 authorization boundary of call/0024 is untouched by it.
+  invisible keepalive. The entry grants no role, lives in operator
+  configuration, and no UPnP action can read or write it. The v2
+  authorization boundary of call/0024 is untouched by it.
 - **The local half follows the RFC norms, declared in the ruleset.**
   Allowlisted devices' UDP flows get at least the RFC 6888 floor of 120
   seconds in both directions, and their TCP flows the RFC 5382 established
@@ -53,7 +53,7 @@ client the truth when holding fails.
   chosen ahead of that measurement is a guess with a cost attached: at two
   seconds, one held flow spends half a packet per second, so the allowlist
   stays small or the cadence becomes adaptive.
-- **One truth, projected per dialect, and scoped per subscriber.** The
+- **One truth, projected per dialect and scoped per subscriber.** The
   churn and tuple path is the internal truth that already feeds the log
   and the reported external address. The client-facing signals are this
   model's own: a GENA propertyset carrying the declared evented variables
@@ -61,7 +61,7 @@ client the truth when holding fails.
   the standard faults where a query must fail. A re-key of the datapath
   tuple is **not** a client-visible port change, because the reported port
   is the requested label of call/0022, so no event invents one.
-- **PCP is the fourth admission, riding the same slot table.** The
+- **PCP is the fourth admission and rides the same slot table.** The
   listener, its shared port with NAT-PMP, its quota and its result codes
   are already specified in plan/0004's implementation notes; what this
   decision adds is that its ANNOUNCE is the standards-shaped home for the
