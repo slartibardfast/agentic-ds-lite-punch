@@ -4,6 +4,32 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — plan/0004's last sections reconciled, and what the box actually holds
+
+Finishing the reconciliation: the milestone's Testing and Open questions
+sections were stale in the same way its ledger was.
+
+- The Kani suite is **40 harnesses across eight modules** (stun 6, slot 9,
+  upnp 8, obs 5, vote 5, mapping 3, engine 2, tcpslot 2), not the eight the
+  section recorded, and the full-suite re-derivation is call/0019's deferral;
+  the partial re-derivations are in the entries about the E7 parity proof and
+  the TCP datapath.
+- The TPROXY question is **answered**: the TCP datapath needed none. A
+  listener and an outbound holder cannot share a tuple under any plain-socket
+  reuse combination, so the holder folds an ephemeral local port to the slot
+  through the relay's own `snat_map` (`src/tcpslot.rs`); grep finds no TPROXY
+  in the tree.
+- EIF-loss detection was deferred "to v2", and v2 landed without it: it is
+  **carried past v2**, not delivered.
+- The PS3 acceptance question is closed by plan/0006 and call/0015.
+
+And one correction of what the deployed table holds: `14572/UDP` belongs to
+`192.168.21.12:4444`, which is the `dslp-sink` container's echo, so that row
+is the **rig's** mapping, not a household one. The console-class `3074` was
+the only household mapping in the table, and it is the one that was lost.
+Both rig containers (`dslp-probe`, `dslp-sink`) are still RUNNING on the
+router, so the rig is materially ready for the carried longer-limit run.
+
 ## 2026-09-17 — correction: the probe-quiet soak had already run (run 3)
 
 The entry below says the probe-quiet pause "is the one concrete experiment
