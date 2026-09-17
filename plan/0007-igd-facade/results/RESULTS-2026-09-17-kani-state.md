@@ -72,22 +72,26 @@ The exchange is branches and records, not messages.
 - `kani-remediation` at component 408457a is based on `main` at 0cc2b04
   and is pushed. It carries 22b9677's three changes ported onto current
   code, and `cargo test` is 121 passed, 0 failed, 1 ignored. Nothing has
-  run it under Kani yet.
+  run it under Kani yet. `main` has since moved to ad69a49 for the v2
+  listing fix that the miniupnpc interop probe found, and that commit
+  touches `src/upnpsvc.rs` alone: no proof-bearing module differs between
+  the branch's base and it, and the branch rebases with no conflicts, so
+  verdicts earned from the branch stay meaningful either way.
 - `kani-favourable` at 22b9677 stays as the original artifact against
   34d48c1. Work from `kani-remediation`, which is its port onto current
   code, and leave `kani-favourable` unmerged.
 - The peer's results come back the same way, as a component branch plus a
   revision of this record. The verdict counts live here, so the milestone
   ledger keeps one home for them.
-- The pin does not move while the proofs are unsettled. `main` stays at
-  0cc2b04, so `software --check` attests a tree the proofs have not been
-  run against. That is the honest state and this record says so.
+- The pin moved to ad69a49 with that listing fix, so `software --check`
+  attests a tree the proofs have not been run against. That is the honest
+  state and this record says so.
 - Run the suite with the component worktree on `kani-remediation`. While
   it sits there the host gate reports `DRIFT software/ds-lite-punch/main
-  at 408457a3479b but pinned to 0cc2b0426d83` and exits 1, which is the
-  pin check doing its job. Return the worktree to `main` before you run
-  `software --check`, or run the suite from a clone of your own and leave
-  this worktree alone.
+  at <the worktree's HEAD> but pinned to ad69a4934494` and exits 1, which
+  is the pin check doing its job. Return the worktree to `main` at the pin
+  before you run `software --check`, or run the suite from a clone of your
+  own and leave this worktree alone.
 
 ## The work, in order, each step with its check
 

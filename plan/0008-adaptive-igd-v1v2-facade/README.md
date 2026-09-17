@@ -1113,6 +1113,22 @@ M-SEARCH ssdp:all
 
 must receive only the compatibility presentation defined for the mode.
 
+### Reference-client test (miniupnpc)
+
+```text
+GET v2 rootDesc
+GetListOfPortMappings   -- the listing must parse
+AddAnyPortMapping       -- 606 while the store holds no session
+```
+
+must hold against the reference implementation's own client, miniupnpc
+2.3.3, and against its description parser on both presentations. It does.
+The run is
+[RESULTS-2026-09-17-miniupnpc-interop.md](RESULTS-2026-09-17-miniupnpc-interop.md),
+the defect that run found in the listing's response shape is fixed at
+component ad69a49, and the divergence it recorded in the empty-range
+answer is open there.
+
 ---
 
 # 25. Final implementation rule set
@@ -1602,6 +1618,16 @@ explicit v2 discovery
 ```
 
 This preserves the empirically demonstrated Xbox compatibility path while allowing modern v2 control points to receive a genuinely security-aware IGD2 device.
+
+One point in this territory is a recorded divergence rather than a
+decision: `GetListOfPortMappings` finding nothing. The facade answers 730
+`PortMappingNotFound`, as the transcription requires; miniupnpd answers
+an empty `PortMappingList`, so the reference client reports our fault as
+a failed pass and prints no listing for that protocol. The evidence is in
+[RESULTS-2026-09-17-miniupnpc-interop.md](RESULTS-2026-09-17-miniupnpc-interop.md),
+with the check that would settle it: whether section 2.5.21's own error
+table carries that rule at all, since the transcription's cites for it
+are 2.5.19's clause numbers.
 
 ## Implementation target
 
