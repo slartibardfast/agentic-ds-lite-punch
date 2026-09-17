@@ -4,6 +4,39 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — three residual one-holder assumptions, and the bench at 37 of 37
+
+The per-client key (call/0022) took three passes to become true, and the
+deployed bench caught every residue: the unit tests held two holders *in* the
+table but never enumerated or deleted through it.
+
+1. `get_generic` indexed a list of `(req_ext, proto)` keys and then looked the
+   entry up by those two fields, so a two-holder table enumerated as two
+   copies of the earlier holder (a fabricated mapping to any control point
+   walking it). Fixed by indexing the visible list directly.
+2. The entry's `client` field is the request's `NewInternalClient` (the
+   datapath target) and the per-client key read that same field, so an entry a
+   lifted control point made on another host's behalf was keyed by that host
+   and its owner could not read or delete it. Fixed by recording `owner` (the
+   requester) alongside `client` (the target), in the record and in the
+   persisted row, with older rows reading the target as the requester.
+3. The delete teardown's `retain` was still keyed on `(req_ext, proto)` alone,
+   so one client's delete drained every holder's entry at that port. Fixed by
+   retaining on the owner too.
+
+The way the third one was found is worth keeping: the replay walked the table
+after each step, and the tell was the *router's* delete answering 200 while
+the *workstation's* mapping vanished with it. A hypothesis-probe had already
+exonerated the obvious suspects (vantage address stability, six clean
+add/read/delete cycles), so the failure had to be inside the sequence, and
+walking after each step localized it in one run.
+
+With all three in and deployed, the T4 matrix is **37 of 37**, including the
+case that matters: two LAN clients each hold `3074/UDP`, each reads its own
+label, each delete removes only its own mapping. The store is left
+fail-closed and the household's `14572/UDP` mapping is the only row in the
+table.
+
 ## 2026-09-17 — the requested port is a per-client label, and the bench caught two real defects
 
 David: "UPnP was not written for ds-lite. we are superseeding specification",
