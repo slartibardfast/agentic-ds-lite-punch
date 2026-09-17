@@ -177,6 +177,55 @@
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--kani-closed-on-this-host-and-the-lanes-true-state-handed-to-a-peer"><a class="header" href="#2026-09-17--kani-closed-on-this-host-and-the-lanes-true-state-handed-to-a-peer">2026-09-17 — Kani closed on this host, and the lane's true state handed to a peer</a></h2>
+<ul>
+<li>The operator closed the Kani lane on this development host: "kani
+doesn't have enough ram here". The measurement agrees: <code>free -h</code> at
+3843 MiB with four cores. <code>cargo kani 0.67.0</code> is installed and starts,
+so the limit is memory and not tooling.</li>
+<li>The reboot before this session wiped <code>/tmp</code>, so the full-suite attempt
+launched earlier left no log and captured no verdict. It is not worth
+repeating on this box.</li>
+<li>The lane's state, measured this session rather than recalled: the
+2026-09-15 relocation's 37 of 40 verdicts were earned at component
+34d48c1, and current <code>main</code> (0cc2b04) carries the <strong>same 40-harness
+inventory</strong> but not the same code under proof. <code>src/slot.rs</code> (+211) and
+<code>src/upnp.rs</code> (+274/-17) changed their production code after the
+relocation, and no harness was added, so 17 of the 40 verdicts are
+stale. The three new lease-policy methods (<code>stamp_activity_if_stale</code>,
+<code>gc_idle</code>, <code>evict_idle_client</code>) have no proof at all. The other six
+modules are byte-identical to the relocation tree, so their 23 verdicts
+carry over.</li>
+<li>The remediation was a branch and is now two. <code>kani-favourable</code> 22b9677
+(one commit on 34d48c1) stays as the original artifact. Its three
+changes were ported onto current <code>main</code> as <strong><code>kani-remediation</code>
+408457a</strong> and pushed, with <code>cargo test</code> at 121 passed, 0 failed, and
+nothing run under Kani yet. Porting by <code>git cherry-pick -n 22b9677</code>
+applied with no conflict, which is the evidence the favourable changes
+never depended on the drift since.</li>
+<li>The hand-off runs over git, not messages: the peer takes
+<code>kani-remediation</code>, runs the suite on a converging host, and returns a
+component branch plus a revision of the Kani state record. The pin does
+not move while the proofs are unsettled, so <code>main</code> stays at 0cc2b04 and
+<code>software --check</code> attests a tree the proofs have not been run against.</li>
+<li>The peer's brief, with the steps, the checks, and the properties to
+prove for the three slot policy methods, is
+<code>plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.md</code>.</li>
+<li>The relocation's raw logs are <strong>not on this machine</strong>: they sit at
+<code>C:\Users\dconnolly\Development\kani-evidence-2026-09-16\</code> on the
+andromeda workstation, and this host's Windows side carries no
+<code>dconnolly</code> profile. The 37-of-40 detail is known here only through the
+2026-09-15 handoff entry above.</li>
+<li><code>call/0019</code> stands in force. The 2026-09-15 entry expected a <code>call/0020</code>
+supersession, but that number went to the SSDP-all decision, and the
+decision's own terms are unmet while two harnesses fail and three carry
+no verdict.</li>
+<li>The peer's brief, with the steps and their checks, is
+<code>plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.md</code>.</li>
+<li>Tooling note after the reboot: the built tools are not on PATH. They
+are in the tree at <code>tools/host-lifecycle/target/release/host-lifecycle</code>
+and <code>tools/host-lint/target/release/host-lint</code>.</li>
+</ul>
 <h2 id="2026-09-17--this-hosts-clone-rebuilt-bootstrap-pull-to-origins-tip-kani-0670-present"><a class="header" href="#2026-09-17--this-hosts-clone-rebuilt-bootstrap-pull-to-origins-tip-kani-0670-present">2026-09-17 — this host's clone rebuilt: bootstrap, pull to origin's tip, kani 0.67.0 present</a></h2>
 <p>The machine's copy was a bare fresh clone (no submodules, store, skills, or
 hooks). <code>host-lifecycle bootstrap</code> rebuilt the local setup: five submodules
