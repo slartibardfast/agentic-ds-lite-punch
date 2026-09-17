@@ -22,15 +22,20 @@ consequence a reader will later ask about:
 ## Decision
 
 - The boundary rides the v2 face only. Four actions on that face are gated
-  in front of the canonical mapping engine: AddPortMapping,
-  AddAnyPortMapping, DeletePortMapping and DeletePortMappingRange. Each
-  one requires a live session whose roles include Basic, which Admin also
-  satisfies. The v1 face stays the unauthenticated legacy compatibility
-  surface of the specification's isolation rule, and its AddPortMapping
-  keeps working: DeviceProtection is advertised on the v2 presentation
-  alone, so a v1 control point can hold no session, and gating the v1 face
-  would break the console-era path this milestone exists to serve while
-  protecting nothing the v1 description offers.
+  in front of the canonical mapping engine:
+
+  - AddPortMapping
+  - AddAnyPortMapping
+  - DeletePortMapping
+  - DeletePortMappingRange
+
+  Each one requires a live session whose roles include Basic, which Admin
+  also satisfies. The v1 face stays the unauthenticated legacy
+  compatibility surface of the specification's isolation rule, and its
+  AddPortMapping keeps working: DeviceProtection is advertised on the v2
+  presentation alone, so a v1 control point can hold no session, and
+  gating the v1 face would break the console-era path this milestone
+  exists to serve while protecting nothing the v1 description offers.
 - Every other action is public on both faces. That includes the mapping
   reads (GetExternalIPAddress, GetGenericPortMappingEntry,
   GetSpecificPortMappingEntry and GetListOfPortMappings) and the
