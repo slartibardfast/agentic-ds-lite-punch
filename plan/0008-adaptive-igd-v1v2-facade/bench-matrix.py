@@ -170,8 +170,8 @@ def xbox():
     code, body = soap(f"{BASE}/ctl/IPConn", URN1, "GetSpecificPortMappingEntry",
                       '<NewRemoteHost></NewRemoteHost><NewExternalPort>%d</NewExternalPort>'
                       '<NewProtocol>%s</NewProtocol>' % (LAN_ENTRY[0], LAN_ENTRY[1]))
-    check("v1 read of the LAN client's entry", "606 (containment)",
-          f"{code} err={err(body)}", err(body) == "606")
+    check("v1 read of another client's port", "714 (the key is the caller's own)",
+          f"{code} err={err(body)}", err(body) == "714")
 
 
 
@@ -198,13 +198,65 @@ def own_mapping():
           code == 200 and tag(body, "NewPortMappingDescription") == "bench-self")
 
 
-def cleanup_own():
-    ext = OWN_ENTRY[0]
-    code, body = soap(f"{BASE}/ctl/IPConn", URN1, "DeletePortMapping",
+def two_holders():
+    """The supersession itself (call/0022). Two vantages claim the same
+    requested port: this workstation, and the router itself as a second LAN
+    control point. Under the retired one-holder rule the second claim would
+    have evicted the first silently; both now hold 3074/UDP, each with its
+    own slot and its own real tuple, and each reads back its own label. The
+    console-class 3074 mapping the household used to hold is gone (see the
+    results), so the probe carries its own second holder rather than
+    depending on it."""
+    ext, proto = 3074, "UDP"
+    out = subprocess.run(["ssh", "-o", "BatchMode=yes", ROUTER, "EXT=3074 INT=3074 sh -s create"],
+                         input=open("bench-lan-client.sh").read(),
+                         capture_output=True, text=True, timeout=60)
+    check("the router (a second LAN client) claims 3074/UDP", "200",
+          "http=200" if "http=200" in out.stdout else out.stdout.strip()[-60:],
+          out.stdout.count("http=200") >= 1)
+    code, body = soap(f"{BASE}/ctl/IPConn", URN1, "AddPortMapping",
                       f'<NewRemoteHost></NewRemoteHost><NewExternalPort>{ext}</NewExternalPort>'
-                      f'<NewProtocol>{OWN_ENTRY[1]}</NewProtocol>')
-    check("v1 DeletePortMapping of the caller's own entry", "200",
+                      f'<NewProtocol>{proto}</NewProtocol><NewInternalPort>{ext}</NewInternalPort>'
+                      f'<NewInternalClient>{CALLER}</NewInternalClient><NewEnabled>1</NewEnabled>'
+                      '<NewPortMappingDescription>bench-3074</NewPortMappingDescription>'
+                      '<NewLeaseDuration>600</NewLeaseDuration>')
+    check("a second holder of 3074/UDP is admitted", "200",
           f"{code} err={err(body)}", code == 200 and not err(body))
+
+    code, body = soap(f"{BASE}/ctl/IPConn", URN1, "GetSpecificPortMappingEntry",
+                      f'<NewRemoteHost></NewRemoteHost><NewExternalPort>{ext}</NewExternalPort>'
+                      f'<NewProtocol>{proto}</NewProtocol>')
+    check("the second holder reads its own 3074", "200 + the label it set",
+          f"{code} {tag(body, 'NewPortMappingDescription')}",
+          code == 200 and tag(body, "NewPortMappingDescription") == "bench-3074")
+
+    holders = []
+    for i in range(8):
+        code, body = soap(f"{BASE}/ctl/IPConn", URN2, "GetGenericPortMappingEntry",
+                          f"<NewPortMappingIndex>{i}</NewPortMappingIndex>")
+        if code != 200:
+            break
+        if tag(body, "NewExternalPort") == str(ext) and tag(body, "NewProtocol") == proto:
+            holders.append(tag(body, "NewInternalClient"))
+    check("both holders of 3074/UDP are in the table", "two entries, two clients",
+          f"holders={holders}",
+          len(holders) == 2 and CALLER in holders and "192.168.21.1" in holders)
+
+
+def cleanup_own():
+    out = subprocess.run(["ssh", "-o", "BatchMode=yes", ROUTER, "EXT=3074 INT=3074 sh -s clean"],
+                         input=open("bench-lan-client.sh").read(),
+                         capture_output=True, text=True, timeout=60)
+    check("the router releases its 3074/UDP", "200",
+          "http=200" if "http=200" in out.stdout else out.stdout.strip()[-60:],
+          "http=200" in out.stdout)
+    for ext, proto, label in [(OWN_ENTRY[0], OWN_ENTRY[1], "the caller's own entry"),
+                              (3074, "UDP", "the workstation's 3074/UDP holder")]:
+        code, body = soap(f"{BASE}/ctl/IPConn", URN1, "DeletePortMapping",
+                          f'<NewRemoteHost></NewRemoteHost><NewExternalPort>{ext}</NewExternalPort>'
+                          f'<NewProtocol>{proto}</NewProtocol>')
+        check(f"v1 DeletePortMapping, {label}", "200",
+              f"{code} err={err(body)}", code == 200 and not err(body))
 
 
 # -------------------------------------------------------------- syncthing
@@ -294,12 +346,13 @@ def tailscale():
 
     # the lift: the same reads that were contracted become whole
     ext, proto, client = LAN_ENTRY
+    # The specific read is "mine" whether or not the session holds the lift
+    # (call/0022), so the lift shows through the enumeration below.
     code, body = soap(f"{BASE}/ctl/IPConn", URN2, "GetSpecificPortMappingEntry",
                       f'<NewRemoteHost></NewRemoteHost><NewExternalPort>{ext}</NewExternalPort>'
                       f'<NewProtocol>{proto}</NewProtocol>')
-    check("v2 read of the LAN client's entry, lifted", "200 + the entry",
-          f"{code} {tag(body, 'NewInternalClient')} {tag(body, 'NewPortMappingDescription')}",
-          code == 200 and tag(body, "NewInternalClient") == client)
+    check("v2 read of another client's port, lifted", "714 (still the caller's own key)",
+          f"{code} err={err(body)}", err(body) == "714")
 
     # the lifted view holds every entry, so walk it for the LAN client's
     walked = []
@@ -336,6 +389,23 @@ def main():
     code, body = soap(f"{BASE}/ctl/DP", URNDP, "GetAssignedRoles", "")
     print(f"GetAssignedRoles after logout: {tag(body, 'RoleList')!r}")
 
+    # Start from this caller's own zero: an unauthenticated walk is already
+    # contained to its own namespace, so anything it lists here is a leftover
+    # from an earlier run or experiment, and it would make the "nothing
+    # visible" probes below read as a lifted view.
+    leftovers = []
+    for i in range(16):
+        code, body = soap(f"{BASE}/ctl/IPConn", URN1, "GetGenericPortMappingEntry",
+                          f"<NewPortMappingIndex>{i}</NewPortMappingIndex>")
+        if code != 200:
+            break
+        leftovers.append((tag(body, "NewExternalPort"), tag(body, "NewProtocol")))
+    for ext, proto in leftovers:
+        soap(f"{BASE}/ctl/IPConn", URN1, "DeletePortMapping",
+              f'<NewRemoteHost></NewRemoteHost><NewExternalPort>{ext}</NewExternalPort>'
+              f'<NewProtocol>{proto}</NewProtocol>')
+    print(f"cleared {len(leftovers)} leftover entr(y/ies) of the caller's own: {leftovers}")
+
     # the LAN vantage creates the entry the contained reads must hide
     print("== LAN vantage: create the entry the contained reads must hide ==")
     out = subprocess.run(["ssh", "-o", "BatchMode=yes", ROUTER,
@@ -353,6 +423,7 @@ def main():
     syncthing()
     tailscale()
     own_mapping()
+    two_holders()
 
     print("\n== LAN vantage: clean up ==")
     out = subprocess.run(["ssh", "-o", "BatchMode=yes", ROUTER,
