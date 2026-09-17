@@ -177,6 +177,33 @@
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--the-pin-is-deployed-and-verified-on-the-box-and-a-tag-name-trap"><a class="header" href="#2026-09-17--the-pin-is-deployed-and-verified-on-the-box-and-a-tag-name-trap">2026-09-17 — the pin is deployed and verified on the box, and a tag-name trap</a></h2>
+<ul>
+<li>The pin (ad69a49) is <strong>live on the router</strong>: built to the recorded recipe,
+installed as <code>/usr/bin/ds-lite-punch</code> (md5 <code>1518f455…</code>), outgoing build
+parked at <code>/root/ds-lite-punch.prev</code>, service restarted onto it (pid
+32329) with the new init script; the seed stayed inert for want of
+<code>/etc/ds-lite-punch.acl</code>. The tuple re-established at
+<code>37.228.213.83:59304</code>.</li>
+<li><strong>The listing fix is verified on the deployed box</strong>, not only in the tree:
+a v1 <code>AddPortMapping</code> for the caller's own host answers 200, and the v2
+<code>GetListOfPortMappings</code> response carries <code>&lt;NewPortListing&gt;&lt;![CDATA[</code> with
+the entry inside; the v1 delete answers 200 and it leaves the table. The
+contained caller saw its own entry and no other.</li>
+<li><strong>Trap worth remembering:</strong> the AddPortMapping <em>argument</em> is
+<code>NewPortMappingDescription</code>, while the <em>listing entry element</em> is
+<code>NewDescription</code>. A request that names the listing's element stores an
+empty description and the listing reports one, which reads like a defect
+until the tag is checked. <code>parse_desc</code> reads the argument name.</li>
+<li>The stale-slot inconsistency survives the restart: <code>upnp.tsv</code> still holds
+the rig's row <code>14572 … bind_port 40002</code> alongside the PS3's <code>3074 … 40002</code>
+while <code>leases.tsv</code> grants 40002 to the console alone. A delete of the rig's
+entry would revoke the console's slot through <code>delete_by_bind_port</code>. Not
+touched; it needs its own investigation and fix.</li>
+<li>The peer-inbound picture is a one-evening census: every game peer was
+contacted by the console first, so no peer sent first in the window. Both
+records carry that limitation; longer runs are needed to widen it.</li>
+</ul>
 <h2 id="2026-09-17--the-switch-measures-nat-type-a-on-the-vm-line-and-how-the-captures-were-misread"><a class="header" href="#2026-09-17--the-switch-measures-nat-type-a-on-the-vm-line-and-how-the-captures-were-misread">2026-09-17 — the Switch measures NAT type A on the VM line, and how the captures were misread</a></h2>
 <ul>
 <li><strong>The "big if" is answered.</strong> A Nintendo Switch (<code>80:d2:e5:6d:d1:00</code>,
