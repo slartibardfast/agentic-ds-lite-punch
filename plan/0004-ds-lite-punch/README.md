@@ -413,10 +413,16 @@ soak runs end to end via that rig; no phone hotspot is needed.
   recorded: it now stands at **40 harnesses across eight modules** (stun 6,
   slot 9, upnp 8, obs 5, vote 5, mapping 3, engine 2, tcpslot 2), and several
   of the later ones were restructured for tractability (the E7 parity proof,
-  the TCP datapath's proofs). A **full-suite re-derivation is deferred** to a
-  larger host by call/0019, with the partial re-derivations recorded in
-  `MEMORY.md`, so the honest state is "40 harnesses exist, the last full green
-  sweep on this host is the older one this section records".
+  the TCP datapath's proofs). The full-suite re-derivation call/0019 asked for
+  ran on the andromeda workstation at 34d48c1: 37 of 40 verdicts, 35
+  successful, two failures classified as a CBMC artifact and an unwind bound
+  rather than code defects, and three harnesses unresolved. This development
+  host cannot run it (3843 MiB and four cores, operator-confirmed
+  2026-09-17), and the proofs have since drifted from the tree: `src/slot.rs`
+  gained three unproven lease-policy methods, and `src/upnp.rs` changed the
+  code under proof for the WANIPConnection:2 surface.
+  [plan/0007's Kani state record](../0007-igd-facade/results/RESULTS-2026-09-17-kani-state.md)
+  holds the state and the steps that close it.
 - On-router soak: **run**, not owed. The pause grid ran through
   [plan/0005](../0005-test-rig/README.md)'s rig, including the probe-quiet
   variant, and the mapping survived every silent window up to 30 seconds; the

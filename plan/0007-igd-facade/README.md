@@ -132,8 +132,12 @@ model comes from C3.
 - verify: upnpc -l / -a / -d full verb set with captures; M-POST parity
   via curl with the MAN header; TCP and UDP Adds deliver data from an
   external vantage; GENA SUBSCRIBE and NOTIFY on churn; the unit suite
-  passes (86); the facade Kani structural proofs deferred to a larger
-  host (attested call/0019)
+  passes (86); the facade Kani structural proofs re-derived on a larger
+  host at 34d48c1, 37 of 40 verdicts with two failures classified and
+  three unresolved, and stale against `main` in `src/slot.rs` and
+  `src/upnp.rs`
+  (results/RESULTS-2026-09-17-kani-state.md, remediation branch
+  `kani-remediation`, open under call/0019)
 - inputs: the relay source, the phase E spec, the pinning result
 
 E1 SSDP: join 239.255.255.250:1900 on br-lan with REUSEPORT, M-SEARCH
