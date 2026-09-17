@@ -94,10 +94,16 @@ The exchange is branches and records, not messages.
 1. Done: the port. Check met by `cargo test` at 121 passed on
    `kani-remediation`, and by both parity harnesses reading
    `unwind(200)`.
-2. Re-derive on a host where CBMC converges. Check:
+2. Re-derive on the andromeda workstation, the 192 GiB machine where the
+   relocation ran, from `kani-remediation`. Check:
    `cargo kani --jobs=4 --output-format=terse` (the tool requires terse
    with `--jobs`) reports a verdict for each of the 40, and the counts
-   are written into this record.
+   are written into this record. Before committing hours to it, confirm
+   the guest is stable: the 2026-09-16 entry in `MEMORY.md` records that
+   workstation's WSL guest restart-looping at idle on a 60-90 s cadence,
+   which killed three runs mid-solve, and that it was blocked on
+   `wsl --update`, a Windows reboot, or a distro repair. That entry
+   stands until a later one retires it.
 3. Disposition the two known failures. Check: `entry_at_bounds_proof` is
    reshaped to concrete-index enumeration and passes, and the
    `mpost_post_parity` unwinding assertion is gone at the raised bound.
@@ -141,3 +147,7 @@ The exchange is branches and records, not messages.
 After this host's reboot the built tools are not on PATH. They are in the
 tree at `tools/host-lifecycle/target/release/host-lifecycle` and
 `tools/host-lint/target/release/host-lint`.
+
+No access route to the andromeda workstation is recorded in this
+repository. The evidence path `C:\Users\dconnolly\Development\kani-evidence-2026-09-16\`
+is the only handle on it that these records carry.
