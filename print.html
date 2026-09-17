@@ -693,27 +693,43 @@ soak runs end to end via that rig; no phone hotspot is needed.</p>
 <ul>
 <li>Unit (example-based): STUN parser vectors; tuple-compare/churn state machine.</li>
 <li><strong>Formal (Kani, <code>cargo kani</code>):</strong> bit-precise proofs over ALL inputs for the
-parser and the pure state machine. Parse never panics on any byte stream;
+parser and the pure state machines. Parse never panics on any byte stream;
 (XOR-)MAPPED-ADDRESS decode is an exact inverse of encode; the Binding
 Request always has the RFC 5389 layout; a <code>Some</code> implies a genuine Binding
 Success Response; STUN-server rotation fires exactly at its threshold.
 <code>forward.rs</code> is <code>libc</code> FFI (not Kani-modelable) and stays covered by the
-on-box PoC + end-to-end probes. Green on Kani 0.67.0: 8 harnesses, 0
-failures (about 21 s). Unwind bounds must cover the 4-iteration XOR loop as
-well as the attribute loop; <code>#[kani::unwind]</code> is per-harness, not per-loop.</li>
-<li>On-router soak: reuse the 2026-08-29 harness (port stability under
-keepalives; pause keepalives 10 s, expect churn + re-publish on resume).</li>
-<li>End-to-end: Globalping UDP to the published tuple from at least 4 countries;
-then a real PSN NAT test on the console.</li>
+on-box PoC + end-to-end probes. Unwind bounds must cover the 4-iteration XOR
+loop as well as the attribute loop; <code>#[kani::unwind]</code> is per-harness, not
+per-loop.
+The suite has grown well past the eight harnesses this section first
+recorded: it now stands at <strong>40 harnesses across eight modules</strong> (stun 6,
+slot 9, upnp 8, obs 5, vote 5, mapping 3, engine 2, tcpslot 2), and several
+of the later ones were restructured for tractability (the E7 parity proof,
+the TCP datapath's proofs). A <strong>full-suite re-derivation is deferred</strong> to a
+larger host by call/0019, with the partial re-derivations recorded in
+<code>MEMORY.md</code>, so the honest state is "40 harnesses exist, the last full green
+sweep on this host is the older one this section records".</li>
+<li>On-router soak: <strong>run</strong>, not owed. The pause grid ran through
+<a href="plan/0004-ds-lite-punch/../0005-test-rig/README.html">plan/0005</a>'s rig, including the probe-quiet
+variant, and the mapping survived every silent window up to 30 seconds; the
+section on acceptance above states what it left.</li>
+<li>End-to-end: Globalping UDP to the published tuple from at least 4 countries
+<strong>done</strong>; the PSN NAT test on the console is closed by reframing, see above.</li>
 </ul>
 <h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
 <ul>
-<li>EIF-loss detection (needs an external prober; deferred to v2).</li>
+<li>EIF-loss detection (needs an external prober). The v2 facade landed without
+it, so the deferral this bullet first recorded did not discharge: the
+external prober is <strong>carried past v2</strong>, not delivered by it.</li>
 <li>Whether the SNAT-to-bound-port trick needs the TPROXY fallback on this
-kernel (verify in integration; cheap either way).</li>
-<li>PS3-specific acceptance: v1 advertisement makes discovery work, but real-
-world PS3 NAT-type behavior needs a physical PS3 to confirm (PS3's UPnP
-stack is older/quirkier than PS4's).</li>
+kernel. <strong>Answered:</strong> the TCP datapath needed no TPROXY. A listener and an
+outbound mapping-holder cannot share one tuple under any plain-socket reuse
+combination, so the holder originates from an ephemeral local port that the
+relay's own <code>snat_map</code> folds to the slot's tuple (plan/0007's tcp-datapath
+task, <code>src/tcpslot.rs</code>); there is no TPROXY in the tree.</li>
+<li>PS3-specific acceptance: <strong>closed.</strong> The console reached PSN NAT Type 2 and
+MW2 NAT Open along the organic path, with the IGD facade deprioritised
+(plan/0006, call/0015).</li>
 <li><strong>Switch / Switch 2 NAT type on this CGNAT</strong> (the "big if"): is it satisfied
 by EIM+EIF (NAT B) or does it truly need source-port preservation (NAT D)?
 Cannot be settled from sources; measure on the hardware via
@@ -5160,6 +5176,30 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--plan0004s-last-sections-reconciled-and-what-the-box-actually-holds"><a class="header" href="#2026-09-17--plan0004s-last-sections-reconciled-and-what-the-box-actually-holds">2026-09-17 — plan/0004's last sections reconciled, and what the box actually holds</a></h2>
+<p>Finishing the reconciliation: the milestone's Testing and Open questions
+sections were stale in the same way its ledger was.</p>
+<ul>
+<li>The Kani suite is <strong>40 harnesses across eight modules</strong> (stun 6, slot 9,
+upnp 8, obs 5, vote 5, mapping 3, engine 2, tcpslot 2), not the eight the
+section recorded, and the full-suite re-derivation is call/0019's deferral;
+the partial re-derivations are in the entries about the E7 parity proof and
+the TCP datapath.</li>
+<li>The TPROXY question is <strong>answered</strong>: the TCP datapath needed none. A
+listener and an outbound holder cannot share a tuple under any plain-socket
+reuse combination, so the holder folds an ephemeral local port to the slot
+through the relay's own <code>snat_map</code> (<code>src/tcpslot.rs</code>); grep finds no TPROXY
+in the tree.</li>
+<li>EIF-loss detection was deferred "to v2", and v2 landed without it: it is
+<strong>carried past v2</strong>, not delivered.</li>
+<li>The PS3 acceptance question is closed by plan/0006 and call/0015.</li>
+</ul>
+<p>And one correction of what the deployed table holds: <code>14572/UDP</code> belongs to
+<code>192.168.21.12:4444</code>, which is the <code>dslp-sink</code> container's echo, so that row
+is the <strong>rig's</strong> mapping, not a household one. The console-class <code>3074</code> was
+the only household mapping in the table, and it is the one that was lost.
+Both rig containers (<code>dslp-probe</code>, <code>dslp-sink</code>) are still RUNNING on the
+router, so the rig is materially ready for the carried longer-limit run.</p>
 <h2 id="2026-09-17--correction-the-probe-quiet-soak-had-already-run-run-3"><a class="header" href="#2026-09-17--correction-the-probe-quiet-soak-had-already-run-run-3">2026-09-17 — correction: the probe-quiet soak had already run (run 3)</a></h2>
 <p>The entry below says the probe-quiet pause "is the one concrete experiment
 plan/0004 has left" and that it "has not run". That is wrong, and the way it
