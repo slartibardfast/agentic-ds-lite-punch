@@ -57,7 +57,7 @@
 
 ### Bench the client matrix {#bench-matrix}
 
-- verified by: the Xbox-class, Syncthing-class, Tailscale-class and
+- verify: the Xbox-class, Syncthing-class, Tailscale-class and
   legacy-only sequences of the test matrix and the discovery deadline
   assertions, against the deployed box
 - inputs: the deployed facade, the console chain, a v2-capable client
