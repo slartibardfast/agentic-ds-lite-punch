@@ -102,8 +102,8 @@ the default (the policy is not being applied where the entry is created).
 
 ### Snoop the AFTR with our own writes {#snoop}
 
-1. Wire the capture side: use `cdc.rs`'s mirror backend to enumerate
-   candidate tuples, filtering to the allowlist. Each candidate already
+1. Wire the capture side: the mirror backend in `cdc.rs` enumerates the
+   candidate tuples and the allowlist filters them. Each candidate already
    carries the shadow-bind tuple and the br-lan origin (`host`,
    `host_port`), which is what a write needs.
 2. Wire the read: a STUN Binding Request from the flow's own post-NAT
@@ -133,9 +133,9 @@ failure mode, and `cdc.rs` already reads both for that reason).
 1. Extend the subscription record with the **caller's** address, captured
    at SUBSCRIBE, since containment keys on the caller and the record today
    holds only the callback. Reject nothing new; this is an added field.
-2. Generalise the body builder: from the changed declared evented
-   variables, emit a propertyset carrying each one that moved, keeping the
-   existing eventKey and SEQ discipline and the initial event's zero.
+2. Generalise the body builder: emit a propertyset for the declared
+   evented variables that moved, with the existing eventKey and SEQ
+   discipline and a zero eventKey for a subscription's initial event.
 3. Compute each notification with the subscriber's view, using the same
    containment function the reads use, so `PortMappingNumberOfEntries` and
    the mapping-derived parts of the body are scoped to what that subscriber
