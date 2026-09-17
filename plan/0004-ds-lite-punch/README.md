@@ -1,12 +1,13 @@
 # Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line
 
 **Status:** The v1 core is built, deployed, and formally verified
-(2026-08-29); multi-instance and the UPnP control plane are not started.
-Crate in the ds-lite-punch component (software/ds-lite-punch);
+(2026-08-29); multi-instance is built and its CLI contract is tested; the UPnP
+control plane this milestone named is delivered and exceeded by plan/0007 and
+plan/0008. Crate in the ds-lite-punch component (software/ds-lite-punch);
 musl-static binary under procd on the router that holds a live CGNAT mapping
 and forwards inbound UDP to a br-lan target with source preserved.
-Two v1 acceptance items remain unsigned (console NAT-type test, keepalive-pause
-soak), see *Where we stand*. Ground truth from the 2026-08-28/29 experiments:
+The two v1 acceptance items are reconciled rather than outstanding (one closed
+by reframing, one run with a named remainder), see *Where we stand*. Ground truth from the 2026-08-28/29 experiments:
 see `MEMORY.md` "UDP hole punching works" and "CGNAT UDP timeout measured".
 
 ## What this is
@@ -137,6 +138,13 @@ the product; the design must not grow PSN-shaped branches.
   everything stays behind our router.
 
 ## UPnP control plane (v2 phase)
+
+The research below is what the facade was built from: the IGDv1-versus-v2
+advertisement decision and the console-compatibility facts it rests on. It
+landed as [plan/0007](../0007-igd-facade/README.md)'s facade and then as
+[plan/0008](../0008-adaptive-igd-v1v2-facade/README.md)'s dual presentation
+with the DeviceProtection boundary, so this section is the design record it
+came from rather than work still to do.
 
 **Version: advertise IGDv1 (`WANIPConnection:1`), deliberately.** Researched
 2026-08-29; this is the decision behind "PS3 doesn't work with UPnP v2":
@@ -287,10 +295,10 @@ Update it whenever a phase or an acceptance item moves.
 | Phase | State | Evidence |
 |---|---|---|
 | Toolchain smoke test | **done** | musl-static x86_64 cross-compile runs on ImmortalWrt |
-| v1 core, one static mapping | **built + deployed; acceptance partial** | live tuple `37.228.213.52:24258` held stable under 2 s keepalive; external UDP probes from 4+ countries forwarded with peer source preserved |
+| v1 core, one static mapping | **built + deployed; acceptance reconciled below** | live tuple held stable under a 2 s keepalive (the line's tuple moves as the AFTR re-grants it: `37.228.213.83:59304` on 2026-09-17); external UDP probes from 4+ countries forwarded with peer source preserved |
 | v1 formal verification | **done** | `cargo kani` 8 harnesses / 192 checks / 0 failures (about 21 s, Kani 0.67.0); 5 unit tests |
-| Multi-instance | **not started** | CLI is still scalar `--bind` / `--target`; no `--map` |
-| UPnP-IGDv1 control plane | **not started** | `upnp.rs` does not exist |
+| Multi-instance | **built; contract tested** | the CLI carries a repeatable `--static-map R=ip:port` beside the legacy single-map pair, and the two are mutually exclusive by design; `static_map_parse_is_repeatable_and_exclusive` pins both forms and every malformed shape (component `a5833a2` era, 120 tests). The deployed env file still uses the legacy pair, so N=1 in production |
+| UPnP control plane | **delivered, and exceeded** | the IGDv1 facade landed in [plan/0007](../0007-igd-facade/README.md) and the v1/v2 facade with an enforced DeviceProtection surface in [plan/0008](../0008-adaptive-igd-v1v2-facade/README.md); the deployed artifact serves both faces on br-lan and its client matrix is receipted |
 | TCP EIF characterization | **done (2026-08-31)** | TCP EIF through the AFTR is proven: 5/5 globalping HTTP-200 probes (DE/BR/JP/US/AU) forwarded to the mapped inner tuple via a dual-homed source-port oracle (our vdsl4 line as third party); 1:1 accept-log/IP cross-match; unmapped port RSTs on control. Full method in `MEMORY.md` (TCP EIF) |
 
 Shipped with the v1 core: `stun.rs`, `mapping.rs`, `forward.rs`, `publish.rs`,
@@ -313,19 +321,30 @@ and `deploy/install.sh`.
 > out"); a future TCP variant is unblocked at the AFTR level. Not re-measured:
 > TCP mapping idle lifetime (UDP is 5 to 10 s, node-dependent; TCP untested).
 
-### v1 acceptance still unsigned
+### v1 acceptance, reconciled
 
-Both are prerequisites for calling the v1 core complete; neither blocks
-starting multi-instance.
+Neither item is unsigned in the sense this section first meant, and both are
+recorded here as they actually resolved.
 
-- **Live PSN NAT-type test on a real console.** The end-to-end probes passed
-  against a **sink target**, not a console. The console path additionally needs
-  its own nft SNAT + `ip rule` for the egress, which is per-target config that
-  has never been exercised. This is the one remaining item that could still
-  invalidate the forwarding model.
-- **Keepalive-pause soak.** Pause keepalives about 10 s, expect churn detected
-  and re-publish on resume. Only the initial discovery churn has been observed
-  so far. The soak runs end to end via [plan/0005](../0005-test-rig/README.md).
+- **The console PSN NAT-type test.** It is closed by reframing rather than by
+  the test: the console's NAT probe uses ephemeral source ports a single-target
+  pin cannot demux, so a fold-attributed PSN NAT type is impossible by
+  construction (call/0014), and the console was then measured reaching PSN NAT
+  Type 2 and MW2 NAT Open along the organic path, with the IGD facade
+  deprioritised (plan/0006, call/0015). The forwarding model was not
+  invalidated; the console story is "works alongside the relay" rather than
+  "enabled by" it.
+- **The keepalive-pause soak.** It ran on 2026-09-13 through the rig's
+  `router-run-soak.py`: the pause grid `[5, 7, 10, 12, 20, 30]` seconds, three
+  repetitions per cell, the mapping stopped with `kill -STOP` and resumed with
+  `-CONT`, with detection, re-publish and recovery timed and a resurrection
+  watch on the old tuple. The relay **survived every cell**. The analysis
+  (plan/0005's `ANALYSIS-2026-09-13.md`) records the confound that limits what
+  the run measured: the probes kept sending through the pause, so the cells
+  measured survival under pause plus traffic rather than the mapping's death.
+  The remaining measurement is named there and has not run: a **probe-quiet
+  pause**, silencing both the keepalives and the probe across the window and
+  resuming both, which is the shape that can observe death and resurrection.
 
 ### What is deliberately not covered
 
@@ -338,12 +357,12 @@ starting multi-instance.
 
 ### Next step
 
-Take **multi-instance** next: a pure refactor of code that is already proven.
-Hoist the scalar `--bind`/`--target` into a repeatable `--map R=C`, spawn the
-v1 core per instance, share STUN-server rotation. But if a console is
-physically available, close the PSN NAT-type test first; it retires strictly
-more risk than multi-instance does, because multi-instance multiplies a
-forwarding model that test could still falsify.
+Multi-instance itself is built (the repeatable `--static-map`), so the step
+this section first named is done; what remains is the one measurement above
+that has not run, the probe-quiet pause, and it is a rig run rather than a
+code change. The operator's config may stay on the legacy single-map pair
+until a second mapping is wanted, at which point the env file moves to
+`--static-map` lines and nothing else changes.
 
 ## Failure modes
 
