@@ -334,17 +334,28 @@ recorded here as they actually resolved.
   deprioritised (plan/0006, call/0015). The forwarding model was not
   invalidated; the console story is "works alongside the relay" rather than
   "enabled by" it.
-- **The keepalive-pause soak.** It ran on 2026-09-13 through the rig's
-  `router-run-soak.py`: the pause grid `[5, 7, 10, 12, 20, 30]` seconds, three
-  repetitions per cell, the mapping stopped with `kill -STOP` and resumed with
-  `-CONT`, with detection, re-publish and recovery timed and a resurrection
-  watch on the old tuple. The relay **survived every cell**. The analysis
-  (plan/0005's `ANALYSIS-2026-09-13.md`) records the confound that limits what
-  the run measured: the probes kept sending through the pause, so the cells
-  measured survival under pause plus traffic rather than the mapping's death.
-  The remaining measurement is named there and has not run: a **probe-quiet
-  pause**, silencing both the keepalives and the probe across the window and
-  resuming both, which is the shape that can observe death and resurrection.
+- **The keepalive-pause soak, discharged including the correction.** It ran on
+  2026-09-13: first with the probes in flight (the pause grid `[5, 7, 10, 12,
+  20, 30]` seconds, three repetitions per cell, relay stopped with `kill
+  -STOP` and resumed with `-CONT`, detection, re-publish and recovery timed,
+  a resurrection watch on the old tuple), which the relay survived in every
+  cell; the analysis `ANALYSIS-2026-09-13.md` then showed that run was
+  confounded, because the probes kept sending through the pause, and named the
+  probe-quiet variant. **That variant then ran** as
+  `RESULTS-2026-09-13-run3.md`: 18 of 18 cells with `pause-arr 0` (zero
+  packets in any pause window, from any source), and the AFTR mapping
+  **survived 30 seconds of total silence** with an unchanged tuple and a flat
+  816 to 826 ms recovery.
+  Two things follow. The survival is survival and not death plus re-issue, by
+  the recovery-spread signature. And the run found the premise under question:
+  the AFTR's UDP idle timeout on today's node **exceeds 30 seconds**, where the
+  figure the relay was built around is 5 to 10 seconds, node-dependent. The
+  carried item is therefore not an acceptance gap but a **longer-limit
+  campaign** (60 s and 120 s silent windows, the probe-quiet design unchanged,
+  RFC 6888's 120 s floor as the outer bound), the natural run 4, which is what
+  would locate today's true timeout and reconcile it with the recorded one. The
+  relay's own contract is unaffected either way: its 2 s cadence sits inside
+  the floor whichever figure is right.
 
 ### What is deliberately not covered
 
@@ -358,11 +369,14 @@ recorded here as they actually resolved.
 ### Next step
 
 Multi-instance itself is built (the repeatable `--static-map`), so the step
-this section first named is done; what remains is the one measurement above
-that has not run, the probe-quiet pause, and it is a rig run rather than a
-code change. The operator's config may stay on the legacy single-map pair
-until a second mapping is wanted, at which point the env file moves to
-`--static-map` lines and nothing else changes.
+this section first named is done, and the pause acceptance is discharged
+including its probe-quiet correction. What is left is one rig run rather than
+a code change: the **longer-limit campaign** above, 60 s and 120 s silent
+windows, which locates the AFTR's true idle timeout on today's node and
+reconciles it with the 5 to 10 second figure this milestone was built around.
+The operator's config may stay on the legacy single-map pair until a second
+mapping is wanted, at which point the env file moves to `--static-map` lines
+and nothing else changes.
 
 ## Failure modes
 
