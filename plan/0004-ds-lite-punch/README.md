@@ -446,8 +446,10 @@ soak runs end to end via that rig; no phone hotspot is needed.
 - PS3-specific acceptance: **closed.** The console reached PSN NAT Type 2 and
   MW2 NAT Open along the organic path, with the IGD facade deprioritised
   (plan/0006, call/0015).
-- **Switch / Switch 2 NAT type on this CGNAT** (the "big if"): is it satisfied
-  by EIM+EIF (NAT B) or does it truly need source-port preservation (NAT D)?
-  Cannot be settled from sources; measure on the hardware via
-  Settings, Internet, Test Connection, VM line vs vdsl4 as control. Does not
-  block the build; it bounds expectations for one workload class.
+- **Switch / Switch 2 NAT type on this CGNAT** (the "big if"): **answered**,
+  on the EIM+EIF side of the question. The console reports NAT type A on the
+  VM line, one local port serves every peer with symmetric volumes each way,
+  and the unsolicited inbound of its own filtering probe arrives through the
+  AFTR. Source-port preservation is not needed by this workload class. The
+  measurement, the packets, and the one thing it does not establish are in
+  [RESULTS-2026-09-17-switch-nat-type.md](RESULTS-2026-09-17-switch-nat-type.md).
