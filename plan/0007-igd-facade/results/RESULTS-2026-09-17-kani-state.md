@@ -82,6 +82,12 @@ The exchange is branches and records, not messages.
 - The pin does not move while the proofs are unsettled. `main` stays at
   0cc2b04, so `software --check` attests a tree the proofs have not been
   run against. That is the honest state and this record says so.
+- Run the suite with the component worktree on `kani-remediation`. While
+  it sits there the host gate reports `DRIFT software/ds-lite-punch/main
+  at 408457a3479b but pinned to 0cc2b0426d83` and exits 1, which is the
+  pin check doing its job. Return the worktree to `main` before you run
+  `software --check`, or run the suite from a clone of your own and leave
+  this worktree alone.
 
 ## The work, in order, each step with its check
 
