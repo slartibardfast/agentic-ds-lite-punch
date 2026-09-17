@@ -47,8 +47,8 @@ world, and the same key serves an IPv4 uplink we control.
 - `GetSpecificPortMappingEntry` and `DeletePortMapping` resolve to the caller's
   own entry at that port, or 714. Their keys carry no client, so with
   duplicates some resolution rule is needed; "mine" is the rule, because the
-  port is the caller's own handle. A contained caller therefore no longer
-  answers 606 for another client's port: that port is simply not in its
+  port is the caller's own handle. A contained caller's read of another
+  client's port therefore answers 714, since that port lies outside its
   namespace. A lifted caller's view of other clients' mappings is the
   enumeration and the listing, and its bulk path is `DeletePortMappingRange`
   with `NewManage` (2.5.19), which is the specification's own mechanism for

@@ -1713,7 +1713,7 @@ selection still 730.
 
 Component 58fed63, host pin recorded with it.
 
-## 26.23 The requested port is a per-client label
+## The requested port is a per-client label
 
 The mapping table is keyed `(client, external port, protocol)`. Several
 control points may hold the same requested port, each with its own slot and

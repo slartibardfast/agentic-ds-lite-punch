@@ -92,8 +92,8 @@ the answer arrived, inside the 850-1800 ms window the design allows.
   computed as `HMAC-SHA-256(STORED, Challenge‖DeviceID‖CPID)[:16]` with
   STORED from PBKDF2-HMAC-SHA-256 at c=5000 over `Name‖Salt`, and the session
   then reports **Basic**.
-- **The supersession is proven on the box** (`call/0022`): two LAN clients —
-  the router and the workstation — each claim `3074/UDP`, both are admitted,
+- **The supersession is proven on the box** (`call/0022`): two LAN clients,
+  the router and the workstation, each claim `3074/UDP`, both are admitted,
   each reads back **its own** label, and the lifted walk shows **two holders,
   two clients** (`192.168.21.1`, `192.168.21.97`). Under the retired
   one-holder rule the second claim would have evicted the first.
@@ -115,7 +115,7 @@ deployed bench is for.
 One probe fails and L can place it: after the two-holder exchange, the
 workstation's own `DeletePortMapping(3074)` answers 714 even though its entry
 exists and enumerates. The entry record's `client` field is the request's
-`NewInternalClient` — the **datapath target** — and the per-client key is
+`NewInternalClient`, which is the **datapath target**, and the per-client key is
 read from that same field, so an entry created by a lifted control point
 naming *another* host is keyed by that host rather than by its owner. The key
 must be the **requester**, distinct from the target. That is the next change;
