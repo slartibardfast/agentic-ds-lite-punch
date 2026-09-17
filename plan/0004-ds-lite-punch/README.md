@@ -401,27 +401,43 @@ soak runs end to end via that rig; no phone hotspot is needed.
 
 - Unit (example-based): STUN parser vectors; tuple-compare/churn state machine.
 - **Formal (Kani, `cargo kani`):** bit-precise proofs over ALL inputs for the
-  parser and the pure state machine. Parse never panics on any byte stream;
+  parser and the pure state machines. Parse never panics on any byte stream;
   (XOR-)MAPPED-ADDRESS decode is an exact inverse of encode; the Binding
   Request always has the RFC 5389 layout; a `Some` implies a genuine Binding
   Success Response; STUN-server rotation fires exactly at its threshold.
   `forward.rs` is `libc` FFI (not Kani-modelable) and stays covered by the
-  on-box PoC + end-to-end probes. Green on Kani 0.67.0: 8 harnesses, 0
-  failures (about 21 s). Unwind bounds must cover the 4-iteration XOR loop as
-  well as the attribute loop; `#[kani::unwind]` is per-harness, not per-loop.
-- On-router soak: reuse the 2026-08-29 harness (port stability under
-  keepalives; pause keepalives 10 s, expect churn + re-publish on resume).
-- End-to-end: Globalping UDP to the published tuple from at least 4 countries;
-  then a real PSN NAT test on the console.
+  on-box PoC + end-to-end probes. Unwind bounds must cover the 4-iteration XOR
+  loop as well as the attribute loop; `#[kani::unwind]` is per-harness, not
+  per-loop.
+  The suite has grown well past the eight harnesses this section first
+  recorded: it now stands at **40 harnesses across eight modules** (stun 6,
+  slot 9, upnp 8, obs 5, vote 5, mapping 3, engine 2, tcpslot 2), and several
+  of the later ones were restructured for tractability (the E7 parity proof,
+  the TCP datapath's proofs). A **full-suite re-derivation is deferred** to a
+  larger host by call/0019, with the partial re-derivations recorded in
+  `MEMORY.md`, so the honest state is "40 harnesses exist, the last full green
+  sweep on this host is the older one this section records".
+- On-router soak: **run**, not owed. The pause grid ran through
+  [plan/0005](../0005-test-rig/README.md)'s rig, including the probe-quiet
+  variant, and the mapping survived every silent window up to 30 seconds; the
+  section on acceptance above states what it left.
+- End-to-end: Globalping UDP to the published tuple from at least 4 countries
+  **done**; the PSN NAT test on the console is closed by reframing, see above.
 
 ## Open questions
 
-- EIF-loss detection (needs an external prober; deferred to v2).
+- EIF-loss detection (needs an external prober). The v2 facade landed without
+  it, so the deferral this bullet first recorded did not discharge: the
+  external prober is **carried past v2**, not delivered by it.
 - Whether the SNAT-to-bound-port trick needs the TPROXY fallback on this
-  kernel (verify in integration; cheap either way).
-- PS3-specific acceptance: v1 advertisement makes discovery work, but real-
-  world PS3 NAT-type behavior needs a physical PS3 to confirm (PS3's UPnP
-  stack is older/quirkier than PS4's).
+  kernel. **Answered:** the TCP datapath needed no TPROXY. A listener and an
+  outbound mapping-holder cannot share one tuple under any plain-socket reuse
+  combination, so the holder originates from an ephemeral local port that the
+  relay's own `snat_map` folds to the slot's tuple (plan/0007's tcp-datapath
+  task, `src/tcpslot.rs`); there is no TPROXY in the tree.
+- PS3-specific acceptance: **closed.** The console reached PSN NAT Type 2 and
+  MW2 NAT Open along the organic path, with the IGD facade deprioritised
+  (plan/0006, call/0015).
 - **Switch / Switch 2 NAT type on this CGNAT** (the "big if"): is it satisfied
   by EIM+EIF (NAT B) or does it truly need source-port preservation (NAT D)?
   Cannot be settled from sources; measure on the hardware via
