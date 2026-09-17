@@ -4,6 +4,33 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the pin is deployed and verified on the box, and a tag-name trap
+
+- The pin (ad69a49) is **live on the router**: built to the recorded recipe,
+  installed as `/usr/bin/ds-lite-punch` (md5 `1518f455…`), outgoing build
+  parked at `/root/ds-lite-punch.prev`, service restarted onto it (pid
+  32329) with the new init script; the seed stayed inert for want of
+  `/etc/ds-lite-punch.acl`. The tuple re-established at
+  `37.228.213.83:59304`.
+- **The listing fix is verified on the deployed box**, not only in the tree:
+  a v1 `AddPortMapping` for the caller's own host answers 200, and the v2
+  `GetListOfPortMappings` response carries `<NewPortListing><![CDATA[` with
+  the entry inside; the v1 delete answers 200 and it leaves the table. The
+  contained caller saw its own entry and no other.
+- **Trap worth remembering:** the AddPortMapping *argument* is
+  `NewPortMappingDescription`, while the *listing entry element* is
+  `NewDescription`. A request that names the listing's element stores an
+  empty description and the listing reports one, which reads like a defect
+  until the tag is checked. `parse_desc` reads the argument name.
+- The stale-slot inconsistency survives the restart: `upnp.tsv` still holds
+  the rig's row `14572 … bind_port 40002` alongside the PS3's `3074 … 40002`
+  while `leases.tsv` grants 40002 to the console alone. A delete of the rig's
+  entry would revoke the console's slot through `delete_by_bind_port`. Not
+  touched; it needs its own investigation and fix.
+- The peer-inbound picture is a one-evening census: every game peer was
+  contacted by the console first, so no peer sent first in the window. Both
+  records carry that limitation; longer runs are needed to widen it.
+
 ## 2026-09-17 — the Switch measures NAT type A on the VM line, and how the captures were misread
 
 - **The "big if" is answered.** A Nintendo Switch (`80:d2:e5:6d:d1:00`,
