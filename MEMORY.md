@@ -4,6 +4,43 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the reference client read the v2 listing, and the response shape was wrong
+
+- The ignored `miniupnpc_interop` probe runs again: miniupnpc 2.3.3 built
+  at `/tmp/localupnpc` (`upnpc-static` and `testigddescparse`, from
+  `github.com/miniupnp/miniupnp` at b2b496a), driving the facade's HTTP
+  layer on loopback. The fixture build is written into the probe's doc
+  comment, so a reboot that wipes `/tmp` costs a rebuild rather than a
+  rediscovery of how to do it.
+- What the reference implementation accepted: its description parser
+  resolves both presentations; `upnpc -l` accepts the v1 face as a valid
+  IGD; `upnpc -L` parses our v2 listing with the entry's fields; and
+  `upnpc -n` takes 606 from the DeviceProtection boundary while the store
+  holds no session.
+- The defect it found, fixed at component **ad69a49** with the pin moved:
+  the GetListOfPortMappings response emitted the PortMappingList as the
+  response's own children, while the SCPD declares the OUT argument
+  `NewPortListing` and the reference client collects the listing only from
+  that element's character data. It found neither a listing nor an error
+  code and reported -1. The reference server wraps the fragment in that
+  element inside a CDATA section, which is now the shape the facade emits.
+  The fragment's contents were already right.
+- One divergence is recorded and left open: our 730 PortMappingNotFound
+  for a listing range that holds nothing (which the transcription
+  requires) against miniupnpd's 200 with an empty PortMappingList, so the
+  reference client shows a failed pass for whichever protocol holds
+  nothing. The check owed when the PDF is at hand: whether 2.5.21's own
+  error table carries that rule at all, since the transcription's cites
+  for it are 2.5.19's clause numbers.
+- The `artifact` hash in `.host-software` is stale with the pin move and
+  is owed a re-derivation on the canonical build host. This host's musl
+  build hashes to `5cbd9a9e` against the recorded `496d0e29`, so a hash
+  recorded from here would be a false anchor; the recipe says so.
+- The Kani lane is unaffected by the pin move: ad69a49 touches
+  `src/upnpsvc.rs` alone, no proof-bearing module differs between it and
+  the branch's base, and `kani-remediation` rebases onto it with no
+  conflicts.
+
 ## 2026-09-17 — Kani closed on this host, and the lane's true state handed to a peer
 
 - The operator closed the Kani lane on this development host: "kani
