@@ -2473,7 +2473,7 @@ DeviceProtection session is established, the same read answers on either
 face, which is the lift riding the principal rather than the face.</li>
 </ul>
 <p>Component 58fed63, host pin recorded with it.</p>
-<h2 id="2623-the-requested-port-is-a-per-client-label"><a class="header" href="#2623-the-requested-port-is-a-per-client-label">26.23 The requested port is a per-client label</a></h2>
+<h2 id="the-requested-port-is-a-per-client-label"><a class="header" href="#the-requested-port-is-a-per-client-label">The requested port is a per-client label</a></h2>
 <p>The mapping table is keyed <code>(client, external port, protocol)</code>. Several
 control points may hold the same requested port, each with its own slot and
 its own real external tuple, which is what lets two consoles both ask for
@@ -3482,8 +3482,8 @@ taken port.</li>
 <li><code>GetSpecificPortMappingEntry</code> and <code>DeletePortMapping</code> resolve to the caller's
 own entry at that port, or 714. Their keys carry no client, so with
 duplicates some resolution rule is needed; "mine" is the rule, because the
-port is the caller's own handle. A contained caller therefore no longer
-answers 606 for another client's port: that port is simply not in its
+port is the caller's own handle. A contained caller's read of another
+client's port therefore answers 714, since that port lies outside its
 namespace. A lifted caller's view of other clients' mappings is the
 enumeration and the listing, and its bulk path is <code>DeletePortMappingRange</code>
 with <code>NewManage</code> (2.5.19), which is the specification's own mechanism for
