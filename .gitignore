@@ -14,7 +14,7 @@
 # The local environment fingerprint: this machine's state, never shared.
 .host-envhash
 
-# The local environment fingerprint: this machine's state, never shared.
+# Skill symlinks again, in the exact form `host-lifecycle bootstrap` checks for.
 /.claude/skills/*
 
 # Python bytecode caches written by the test-rig drivers. The two .pyc files
