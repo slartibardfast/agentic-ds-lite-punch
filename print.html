@@ -5055,6 +5055,52 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--the-requested-port-is-a-per-client-label-and-the-bench-caught-two-real-defects"><a class="header" href="#2026-09-17--the-requested-port-is-a-per-client-label-and-the-bench-caught-two-real-defects">2026-09-17 — the requested port is a per-client label, and the bench caught two real defects</a></h2>
+<p>David: "UPnP was not written for ds-lite. we are superseeding specification",
+then "superseed IGDv1 behaviour here for ds-lite world", and "without an
+AFTR ds-lite-punch directly controls external udp port". That is call/0022,
+which supersedes the keying clause of call/0018: the requested external port
+is a <strong>per-client label</strong>, the key is <code>(client, external port, protocol)</code>,
+and several clients may hold 3074.</p>
+<p>What that disposed of, and what it needed:</p>
+<ul>
+<li>The retired one-holder rule was not even the specification's: a second
+claimant <strong>evicted</strong> the first, silently breaking a working mapping. With a
+per-client key a write can only ever replace the caller's own entry at that
+port, so the eviction (and the need for 718) disappears.</li>
+<li><code>GetSpecificPortMappingEntry</code> and <code>DeletePortMapping</code> carry no client in
+their spec keys, so they resolve inside the caller's own namespace, or 714.
+That retires the containment's 606 for a specific read.</li>
+<li>Per uplink: with an AFTR the label is never bound; where we own the port,
+the first holder may be given the requested port and a later claimant goes
+through the any-port path. If a "bind the requested port" mode is ever added,
+uniqueness returns for that uplink alone.</li>
+</ul>
+<p>Two defects the deployed bench found, both real and both now fixed:</p>
+<ol>
+<li><strong>The enumeration fabricated a holder.</strong> <code>get_generic</code> resolved the index
+against a list of <code>(req_ext, proto)</code> keys and then looked the entry up by
+those two fields, which stopped being unique the moment the key became per
+client: a two-holder table enumerated as two copies of the earlier holder.
+Fixed by indexing the visible list directly (simpler and exact). The unit
+tests had two holders in the table but never <em>walked</em> it, which is what a
+deployed bench is for.</li>
+<li><strong>The key reads the target, not the owner.</strong> The entry's <code>client</code> field is
+the request's <code>NewInternalClient</code>, the datapath target, and the per-client
+key is read from that same field: an entry created by a lifted control
+point naming another host is keyed by that host, so its owner cannot delete
+it (714). That is the open item; the key must be the requester.</li>
+</ol>
+<p>Measurement notes worth keeping: the discovery misses from this vantage are
+<strong>path loss</strong>, not a device rule (single queries lost 15% and 40% in two
+samples, spread across targets; one retry ~350 ms later answered 20 of 20);
+and the deadline property measured 1004 ms both times it arrived.</p>
+<p>And one thing that is not a defect but must be said: the household's
+console-class <code>3074/UDP → 192.168.21.138</code> mapping <strong>is gone</strong>, lost inside the
+session's deployment window. The persisted index's last write and three
+DeletePortMapping calls sit in that window, and two of those three are this
+session's own cleanup. It is recorded as a loss rather than attributed to the
+bench, and the per-client key makes the class impossible going forward.</p>
 <h2 id="2026-09-17--plan0008-is-deployed-and-t4-is-receipted"><a class="header" href="#2026-09-17--plan0008-is-deployed-and-t4-is-receipted">2026-09-17 — plan/0008 is deployed and T4 is receipted</a></h2>
 <p>David: "deploy to the router and run T4". Deployed the artifact built to
 the recorded recipe (component 2158485, sha256 c9b246c5..., static musl,
