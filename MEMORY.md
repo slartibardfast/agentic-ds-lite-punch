@@ -4,6 +4,39 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — plan/0004's ledger was lying, and multi-instance was already built
+
+The milestone record said "multi-instance and the UPnP control plane are not
+started" in its status header and in two ledger rows. Both were false: the CLI
+carries a repeatable `--static-map R=ip:port` beside the legacy single-map
+pair (labelled B3 in the code, mutually exclusive by design), and the UPnP
+control plane ran ahead of this milestone into plan/0007 and plan/0008. The
+ledger is now reconciled, and the sections that researched those features
+point at where they landed rather than reading as work still to do.
+
+What the reconciliation turned up, worth keeping:
+
+- **A ledger is evidence, not memory.** Three rows were stale, and each was
+  checkable in one grep or one read of the deployed box. Before trusting a
+  "not started" row, check the artifact it names.
+- **The two "unsigned acceptance" items were not unsigned.** The console
+  NAT-type test is closed by reframing (the probe cannot ride a single-target
+  pin, call/0014; the console reached PSN Type 2 organically, plan/0006; the
+  facade was deprioritised, call/0015). The keepalive-pause soak **ran** on
+  2026-09-13 through the rig, a 5-to-30 second grid three times each, and the
+  relay survived every cell; the analysis records the confound (the probes
+  kept sending through the pause) and names the measurement that is still
+  missing: a **probe-quiet pause**, silencing keepalives and probe together.
+  That is the one concrete experiment plan/0004 has left.
+- **Multi-instance had no test.** The parser read `std::env::args()` directly,
+  so `--static-map` could only be exercised by running the binary. The parser
+  is split (`parse_args_from(argv)`), and the contract is pinned: two maps in
+  order, the legacy pair as sugar, the refusal to combine the forms, and each
+  malformed shape named in its own message. 120 tests at component `0cc2b04`.
+- The naming audit flags the word "era" as a tell ("component `a5833a2` era"),
+  which is fair: it periodises instead of naming. Write the commit and the
+  count.
+
 ## 2026-09-17 — the DeviceProtection bootstrap is the operator's (call/0023)
 
 The last structural gap in the v2 surface closed as a decision plus a
