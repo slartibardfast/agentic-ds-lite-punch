@@ -4,6 +4,44 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the admission policy and its milestone written, and what PCP already had
+
+- **call/0025** fixes the allowlist as *admission for maintenance* with no
+  authority attached, alongside the RFC-norm timeouts declared in the
+  ruleset, the pairing of the local conntrack half with our own writes to
+  the AFTR, the cadence set from the measured threshold, one truth
+  projected per dialect with per-subscriber scoping, PCP as the fourth
+  admission, the TCP bound, and the WPS boundary.
+- **plan/0009** is the build: seven tasks with anchors, verify and inputs,
+  a four-stage rollout, and a silence acceptance with an outside witness.
+  The index row is in `plan/PLAN.md`.
+- **PCP was already the design.** `plan/0004/IMPLEMENTATION.md`'s mental
+  model reads "Admission: config | PCP | UPnP | observation", and the same
+  document specifies the listener (192.168.21.1:5351/udp, LAN-only, PCP and
+  NAT-PMP sharing the port, quota 16, result codes 0 to 8 plus 9). It is
+  unbuilt, and nothing on the LAN speaks it today.
+- **Conntrack-as-CDC was already decided too.** `cdc.rs` carries the three
+  backends with the nft `flow_obs` mirror primary (post-routing observer
+  whose elements are the post-NAT tuples), `/proc` as fallback and an
+  unwired Aya TC tier; netlink CT events are silent on this build. So
+  Track 1 is an extension of the existing path, not a new reader.
+- **The AFTR's TCP idle lifetime is measured**: between 120 and 300
+  seconds, so a VPN connection with sparse keepalives really does lose its
+  mapping — the TCP question is real, and the answer is bounded by what
+  the relay terminates because a router cannot write into a client's
+  sequence space.
+- **The ruleset shape this build accepts** (validated inertly, then
+  removed): `ct timeout <name> { protocol udp; policy = { unreplied : 5m,
+  replied : 5m } }` with `protocol`, **not** `l4proto`, and the TCP state
+  set narrower than upstream (`unacknowledged` is rejected). Selection is
+  by source address, which is stable because the allowlisted devices are
+  DHCP-pinned; `ether saddr` is not available in the inet family.
+- **The WPS boundary, recorded**: the allowlist confers no identity, so it
+  does not substitute for the introduction protocol call/0021 defers; if
+  that limb is ever built its identities should feed the list, and
+  deriving device authorization from the list would reverse call/0021 by
+  policy and needs its own decision.
+
 ## 2026-09-17 — the pin is deployed and verified on the box, and a tag-name trap
 
 - The pin (ad69a49) is **live on the router**: built to the recorded recipe,
