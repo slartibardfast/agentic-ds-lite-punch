@@ -4,6 +4,52 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — plan/0008 is deployed and T4 is receipted
+
+David: "deploy to the router and run T4". Deployed the artifact built to
+the recorded recipe (component 2158485, sha256 c9b246c5..., static musl,
+987872 bytes) to /usr/bin/ds-lite-punch with the previous binary parked at
+/root/ds-lite-punch.prev, procd restarted, and ran the bench matrix: **31 of
+31 probes pass**, recorded in plan/0008's RESULTS-2026-09-17-bench-matrix.md
+with the bench itself (bench-matrix.py + bench-lan-client.sh) beside it.
+
+What the bench establishes on hardware: the v2 mount is live and gated; the
+boundary refuses all four mapping mutators unauthenticated (606) and
+contracts the reads (another's entry 606, enumeration 714, listing 730); the
+PKCS5 ceremony reaches Basic over the wire and the lift then answers the same
+reads 200 on either face; 731 ReadOnly, 501 ForceTermination, 200
+RequestConnection, RSIP 0 / NAT 1; a bare ssdp:all is deferred and answered
+v1 at 1004 ms and an in-window :2 flips both answers to v2.
+
+Things worth keeping from the run:
+
+- **The device's view of the caller is not the caller's view.** This
+  workstation egresses at 172.23.240.220 but the router source-maps it to
+  192.168.21.97, which is what sessions and containment are keyed on. Learned
+  from the router's own ssh peer: `ss -tn state established "( sport = :22 )"`.
+  A containment probe written against the local address reads as another
+  host's and fails for the wrong reason.
+- **A DeviceProtection session outlives a bench run**, and a lift is the
+  principal's roles rather than a face's, so a session left logged in from an
+  earlier probe lifts every containment the next run means to test. Log out
+  and assert Public first.
+- **The bench ate its own tail on the first run** and left three real
+  mappings on the line (the wildcard's 1024, the LAN client's 34999, the
+  workstation's 34998). All were deleted and the table verified back to the
+  household's two entries (3074->192.168.21.138, 14572->192.168.21.12, both
+  lease 4294967295, the v1 "appears infinite" policy on a live box).
+- **The DP store has no in-band bootstrap.** The authenticated sequences
+  needed an out-of-band dp.tsv seed (a U row and an A row) and a restart; the
+  deployed default is fail-closed, which is correct and unusable at once.
+  This is the shadow of call/0021 and is recorded in the results; the seed was
+  removed afterwards so the box carries no known-password credential.
+- The task schema reads `- verify:`; T4's bullet said `verified by:`, so the
+  tool refused the done receipt for want of a verify field. Worth checking the
+  bullet names when a receipt is refused.
+- The naming audit flags a leading-zero decimal (`0.85`, `0.05`) as a
+  version-like tell, including in source. The bench's timings are integers in
+  milliseconds for that reason.
+
 ## 2026-09-17 — a rename's references must use the heading's own words
 
 David asked whether the rename degraded the document, and the honest answer
