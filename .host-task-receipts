@@ -155,3 +155,11 @@
     evidence = component 4d0160f (host pin 979aafd): the IGD_V2 gate on; the test matrix' discovery rows asserted by ssdp_loop_answers_the_mounted_surface and the document rows by versioned_doc_routing; dp19_conformance_suite, dp_boundary_wire and wip2_connection_actions_wire green; cargo test = 119 passed, 0 failed, 1 ignored. The WPS limb is decided in call/0021. Re-recorded after the naming-audit rename renamed this task's verify text; the claim itself is unchanged.
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-16
+
+[receipt "plan/0008#bench-matrix"]
+    disposition = done
+    verify = the Xbox-class, Syncthing-class, Tailscale-class and
+    inputs = the deployed facade, the console chain, a v2-capable client
+    evidence = Deployed 2026-09-17: artifact built to the recorded recipe from component 2158485 (sha256 c9b246c5..3181db41, static musl, 987872 bytes), installed as /usr/bin/ds-lite-punch (md5 396a22c3..feca8718), previous binary kept at /root/ds-lite-punch.prev; service enabled under procd; the v2 mount live on br-lan 192.168.21.1:49152. Bench: bench-matrix.py (workstation vantage, a LAN caller at 192.168.21.97 as the device sees it) with bench-lan-client.sh (router vantage); 31 of 31 probes pass, recorded in RESULTS-2026-09-17-bench-matrix.md. Highlights: IGD:2 and WIP:2 resolve to the v2 description; a bare ssdp:all is deferred and answered v1 at 1004 ms; an in-window :2 flips both answers to v2; all four v2 mapping mutators 606 unauthenticated; another client's entry read 606, the contained enumeration 714, the listing 730; 731 ReadOnly, 501 ForceTermination, 200 RequestConnection, RSIP 0 / NAT 1; the PKCS5 ceremony reaches Basic over the wire and the lift then answers the same reads 200 on either face; the caller's own mapping is created and deleted without touching the two pre-existing household entries (3074->192.168.21.138, 14572->192.168.21.12, both lease 4294967295). The DP store was seeded out of band for the authenticated rows and removed after the run, so the deployed default is fail-closed; the absent in-band bootstrap is recorded in the results as the shadow of call/0021.
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-17
