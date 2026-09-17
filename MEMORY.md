@@ -4,6 +4,63 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — state hand-off: where the work stands and what is on the box
+
+Written for a session with no memory of this conversation. Everything below
+is committed and pushed unless it says otherwise.
+
+- **The programme.** `call/0025` is the policy spine (the allowlist as
+  admission for maintenance, the RFC-norm timeouts in the ruleset, the
+  cadence from the measured threshold, one truth projected per dialect,
+  PCP as the fourth admission, the TCP bound, the WPS boundary).
+  `plan/0009-mapping-hold-and-signalling/` is the build: its README carries
+  the milestone, the seven anchored tasks, the four-stage rollout and the
+  acceptance, and its `IMPLEMENTATION.md` carries the line-by-line detail
+  with the validated ruleset, the exact commands and what falsifies each
+  task. `plan/PLAN.md` carries the index row. The newest component pin is
+  `ad69a49`.
+- **On the router, deployed and persistent:** the daemon at `ad69a49`
+  (md5 `1518f455…`, pid 32329 at hand-off) installed as
+  `/usr/bin/ds-lite-punch` with the outgoing build parked at
+  `/root/ds-lite-punch.prev`; the deploy assets installed from the pin; the
+  DHCP static host `switch` = `80:d2:e5:6d:d1:00` = 192.168.21.68
+  committed through uci; the relay tuple around `37.228.213.83:59304`.
+- **On the router, runtime only and lost on reboot or a netifd reload:**
+  the two source rules that put the consoles on the Virgin Media line,
+  `from 192.168.21.68 lookup 1000 priority 25000` and
+  `from 192.168.21.138 lookup 1000 priority 25001`, with table 1000
+  holding `192.168.0.0/24 dev eth1` and `default via 192.168.0.1 dev eth1`.
+  Without them the consoles fall back to the main default, which is the
+  Digiweb pppoe line. Revert with `ip rule del from <addr> lookup 1000`
+  and `ip route flush table 1000`. Making them persistent is an open
+  operator question, as is installing the timeout policy.
+- **Not installed:** the conntrack timeout policy itself. Rollout stage 2
+  of plan/0009 is where it lands, and it awaits the operator's word. The
+  validation on 2026-09-17 applied nothing: the objects were created
+  inertly and the table deleted.
+- **The capture taps are stopped** and their output is at
+  `/mnt/nvme/captures` on the router (27 files plus `MD5SUMS`), mirrored on
+  the workstation at `~/captures-2026-09-17-final`, with an earlier
+  snapshot under `~/captures-switch-2026-09-17/`. Nothing further is being
+  recorded on the wire.
+- **The next step.** plan/0009's first task: seed the allowlist admission
+  for the two pinned consoles, with the policy objects and the selection
+  rules in the shape `IMPLEMENTATION.md` records, then prove that a quiet
+  allowlisted flow outlives an unallowlisted one.
+- **Two defects and one deferral still open**, none of them touched since
+  they were found: the rig's stale `upnp.tsv` row (`14572` claiming the
+  console's slot `40002`, which a delete would revoke through
+  `delete_by_bind_port`); the household `3074/UDP` mapping that went
+  missing inside the first deployment window of the 2026-09-17 session and
+  was never restored; and the WPS introduction limb (call/0021), which
+  needs the Wi-Fi Alliance specification plus a certificate-authenticated
+  transport, or an explicit acceptance of the operator bootstrap
+  (call/0023) as the administration path.
+- **Carried work with a home:** the AFTR's UDP threshold under silence
+  (plan/0009 `#udp-threshold`, with the shorter windows the earlier
+  milestone already named), the Kani re-derivation (the remediation branch
+  and the state record on this host), and EIF-loss detection.
+
 ## 2026-09-17 — the admission policy and its milestone written, and what PCP already had
 
 - **call/0025** fixes the allowlist as *admission for maintenance* with no
