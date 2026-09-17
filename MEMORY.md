@@ -4,6 +4,35 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-09-17 — the DeviceProtection bootstrap is the operator's (call/0023)
+
+The last structural gap in the v2 surface closed as a decision plus a
+deploy-script change: the store lives in tmpfs, the daemon has no in-band way
+to create its first identity (the introduction protocol is call/0021's
+deferral), so a fresh device refuses every role-gated action and nothing can
+lift the containment. T4's bench had to seed dp.tsv by hand and restart, which
+is a bench trick rather than an operator path.
+
+Now: a root-owned `/etc/ds-lite-punch.acl` in the store's own tab-separated
+form, and the procd script copies it into the state directory **at start and
+only when no store exists**. That last clause is the load-bearing one: a seed
+that fired every start would revert whatever a control point had since changed
+over the wire, and seeding once creates the first identity while leaving the
+store the device's own thereafter. Absent the file the fail-closed refusal
+stands; `DEVICE_PROTECTION_ACL=none` disables it.
+
+Verified on the deployed box in four steps, which is the pattern to reuse for
+a bootstrap change: (1) with no store and the file present, the seed fired and
+dp.tsv appeared; (2) the seeded credential reached **Basic** over the wire
+(Public before login, 200 on UserLogin, Basic after); (3) a marker row written
+into the store survived a restart, so the seed does not clobber; (4) the file
+and the store removed, the device reads Public and answers 606, the documented
+default. The bench's own credential is never left in place.
+
+Still a bootstrap, not the introduction protocol: a control point cannot
+introduce itself, and a reversal at call/0021 would make this decision
+unnecessary rather than wrong.
+
 ## 2026-09-17 — three residual one-holder assumptions, and the bench at 37 of 37
 
 The per-client key (call/0022) took three passes to become true, and the
