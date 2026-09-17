@@ -3688,24 +3688,36 @@ consequence a reader will later ask about:</p>
 </ol>
 <h2 id="decision-13"><a class="header" href="#decision-13">Decision</a></h2>
 <ul>
-<li>The boundary rides the v2 face only. Four actions on that face are gated
-in front of the canonical mapping engine: AddPortMapping,
-AddAnyPortMapping, DeletePortMapping and DeletePortMappingRange. Each
-one requires a live session whose roles include Basic, which Admin also
-satisfies. The v1 face stays the unauthenticated legacy compatibility
-surface of the specification's isolation rule, and its AddPortMapping
-keeps working: DeviceProtection is advertised on the v2 presentation
-alone, so a v1 control point can hold no session, and gating the v1 face
-would break the console-era path this milestone exists to serve while
-protecting nothing the v1 description offers.</li>
-<li>Every other action is public on both faces. That includes the mapping
+<li>
+<p>The boundary rides the v2 face only. Four actions on that face are gated
+in front of the canonical mapping engine:</p>
+<ul>
+<li>AddPortMapping</li>
+<li>AddAnyPortMapping</li>
+<li>DeletePortMapping</li>
+<li>DeletePortMappingRange</li>
+</ul>
+<p>Each one requires a live session whose roles include Basic, which Admin
+also satisfies. The v1 face stays the unauthenticated legacy
+compatibility surface of the specification's isolation rule, and its
+AddPortMapping keeps working: DeviceProtection is advertised on the v2
+presentation alone, so a v1 control point can hold no session, and
+gating the v1 face would break the console-era path this milestone
+exists to serve while protecting nothing the v1 description offers.</p>
+</li>
+<li>
+<p>Every other action is public on both faces. That includes the mapping
 reads (GetExternalIPAddress, GetGenericPortMappingEntry,
 GetSpecificPortMappingEntry and GetListOfPortMappings) and the
-DeviceProtection reads that are not administrative.</li>
-<li>The administrative DeviceProtection actions require Admin: GetACLData,
+DeviceProtection reads that are not administrative.</p>
+</li>
+<li>
+<p>The administrative DeviceProtection actions require Admin: GetACLData,
 AddIdentityList, RemoveIdentity, SetUserLoginPassword,
-AddRolesForIdentity and RemoveRolesForIdentity.</li>
-<li>A control point without the lift is contained. The lift is a live
+AddRolesForIdentity and RemoveRolesForIdentity.</p>
+</li>
+<li>
+<p>A control point without the lift is contained. The lift is a live
 session whose roles include Basic, decided by the same policy function
 the boundary itself calls, so the containment cannot drift from the
 gate. A contained caller acts on its own host alone: it may add,
@@ -3713,14 +3725,17 @@ enumerate, read and delete mappings whose internal client is itself, and
 on the v2 face only at ports at or above 1024. That is section 2.5.21.3's
 recommendation taken as policy. The lift belongs to the principal's
 roles, so a control point that authenticates reaches the whole table
-from either face.</li>
-<li>The refusals are codes a control point can act on. A gated mutator
+from either face.</p>
+</li>
+<li>
+<p>The refusals are codes a control point can act on. A gated mutator
 without a session answers 606 Action not authorized, and so does a
 contained caller that names another host or a port below the floor. A
 contained caller's specific read or delete resolves inside its own
 namespace, so a port it does not own answers 714 NoSuchEntry, which is
 the terminator its enumeration loop already handles; its own entry below
-the floor answers 606.</li>
+the floor answers 606.</p>
+</li>
 </ul>
 <h2 id="consequences-13"><a class="header" href="#consequences-13">Consequences</a></h2>
 <ul>
@@ -5281,6 +5296,23 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--the-scpds-pass-a-controlled-xml-parse-and-minixmlvalid-is-not-a-validator"><a class="header" href="#2026-09-17--the-scpds-pass-a-controlled-xml-parse-and-minixmlvalid-is-not-a-validator">2026-09-17 — the SCPDs pass a controlled XML parse, and minixmlvalid is not a validator</a></h2>
+<ul>
+<li>The four service descriptions (DeviceProtection,
+WANCommonInterfaceConfig, WANIPConnection:2, and the
+WANIPConnection/WANPPPConnection document the PPP constant aliases)
+parse as well-formed XML. They were extracted from their constants and
+parsed with Python's expat, and the parser was controlled first: three
+deliberately malformed documents were rejected and a good one accepted.
+No crate test covers this, because the crate carries no XML dependency
+and its SCPD assertions are substring matches.</li>
+<li>Do not reach for miniupnpc's <code>minixmlvalid</code> to re-check it. That binary
+ignores <code>argc</code> and <code>argv</code> and tests a fixture compiled into itself,
+printing the same "17 events" for a malformed document, for a good one,
+and for our descriptions. It read as a clean pass until the control was
+run, which is the same trap as reading a report instead of the result.
+The interop record carries both facts.</li>
+</ul>
 <h2 id="2026-09-17--the-v2-authorization-policy-is-decided-and-plan0004-stopped-contradicting-itself"><a class="header" href="#2026-09-17--the-v2-authorization-policy-is-decided-and-plan0004-stopped-contradicting-itself">2026-09-17 — the v2 authorization policy is decided, and plan/0004 stopped contradicting itself</a></h2>
 <ul>
 <li>call/0024 records the v2 authorization policy, which plan/0008's annex
