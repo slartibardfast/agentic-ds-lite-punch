@@ -2028,14 +2028,13 @@ rejected alternative (600, which would contradict the published list), and
 the two things a reversal needs are recorded in
 [call/0021](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0021-wps-introduction-not-implemented.md).
 
-One item remains open on the v2 path: the access control policy the device
-applies is stated in the transcription rather than inferred, with the
-mapping mutators requiring an authenticated `Basic` session while the reads,
-an unauthenticated `GetListOfPortMappings` among them, are public. Section
-2.5.21.3 recommends restricting that listing to the control point's own
-entries and to ports at or above 1024, so this is a deliberate policy choice
-with a named consequence, to be settled here rather than in the
-transcription.
+The access control policy the device applies is settled in
+[call/0024](https://github.com/slartibardfast/agentic-ds-lite-punch/blob/main/call/0024-the-v2-authorization-policy.md):
+the mapping mutators require an authenticated `Basic` session on the v2
+face, the reads, an unauthenticated `GetListOfPortMappings` among them, are
+public, and a caller without the lift acts on its own host alone, at or
+above 1024 on the v2 face. That is section 2.5.21.3's recommendation taken
+as policy, and the decision records the refusal each case receives.
 
 ## The second reference: Orange igd2-for-linux
 

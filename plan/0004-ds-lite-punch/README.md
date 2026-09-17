@@ -362,9 +362,11 @@ recorded here as they actually resolved.
 - `forward.rs` is `libc` FFI (`IP_TRANSPARENT` bind + `sendto`) and is not
   Kani-modelable; `Instant`/`SystemTime` keep `note_response` out of the proofs
   too. Both stay covered by the on-box PoC and end-to-end probes.
-- EIF loss remains invisible in v1 (external prober deferred to v2).
-- The TPROXY-fallback question for the SNAT-to-bound-port trick is still open,
-  see *Open questions*.
+- EIF loss remains invisible: the external prober was deferred to v2 and
+  v2 landed without it, so the item is carried past v2, see *Open
+  questions*.
+- The TPROXY-fallback question for the SNAT-to-bound-port trick is
+  answered: the TCP datapath needed none, and *Open questions* records why.
 
 ### Next step
 
