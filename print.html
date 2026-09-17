@@ -3980,8 +3980,8 @@ the RFCs set, and its TCP idle timeout was measured at between 120 and
 300 seconds, so even a connection that is nominally established is
 reaped inside a VPN's idea of a keepalive interval.</p>
 <p>A device can be the wrong shape for that. One console here maintains its
-own mapping perfectly well, running its own STUN every two seconds from
-the same port it games on. Another device may not, and a device whose
+own mapping perfectly well: it runs its own STUN every two seconds from the
+same port it games on. Another device may not, and a device whose
 keepalive is absent, sparse or disabled behind a contended peer loses a
 mapping that the client never learns is gone. The response is to hold
 such a device's mappings open ourselves, invisibly, and to tell the
@@ -3990,9 +3990,9 @@ client the truth when holding fails.</p>
 <ul>
 <li><strong>The allowlist is admission for maintenance, and it carries no
 authority.</strong> A named device's flows get the long timeouts and the
-invisible keepalive; the entry grants no role, is operator configuration
-rather than a protocol surface, and is neither readable nor writable
-over UPnP. The v2 authorization boundary of call/0024 is untouched by it.</li>
+invisible keepalive. The entry grants no role, lives in operator
+configuration, and no UPnP action can read or write it. The v2
+authorization boundary of call/0024 is untouched by it.</li>
 <li><strong>The local half follows the RFC norms, declared in the ruleset.</strong>
 Allowlisted devices' UDP flows get at least the RFC 6888 floor of 120
 seconds in both directions, and their TCP flows the RFC 5382 established
@@ -4012,7 +4012,7 @@ longer than the two-second cadence that is known to work. A cadence
 chosen ahead of that measurement is a guess with a cost attached: at two
 seconds, one held flow spends half a packet per second, so the allowlist
 stays small or the cadence becomes adaptive.</li>
-<li><strong>One truth, projected per dialect, and scoped per subscriber.</strong> The
+<li><strong>One truth, projected per dialect and scoped per subscriber.</strong> The
 churn and tuple path is the internal truth that already feeds the log
 and the reported external address. The client-facing signals are this
 model's own: a GENA propertyset carrying the declared evented variables
@@ -4020,7 +4020,7 @@ that changed, computed with the same containment view the reads use, and
 the standard faults where a query must fail. A re-key of the datapath
 tuple is <strong>not</strong> a client-visible port change, because the reported port
 is the requested label of call/0022, so no event invents one.</li>
-<li><strong>PCP is the fourth admission, riding the same slot table.</strong> The
+<li><strong>PCP is the fourth admission and rides the same slot table.</strong> The
 listener, its shared port with NAT-PMP, its quota and its result codes
 are already specified in plan/0004's implementation notes; what this
 decision adds is that its ANNOUNCE is the standards-shaped home for the
@@ -5608,6 +5608,62 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--state-hand-off-where-the-work-stands-and-what-is-on-the-box"><a class="header" href="#2026-09-17--state-hand-off-where-the-work-stands-and-what-is-on-the-box">2026-09-17 — state hand-off: where the work stands and what is on the box</a></h2>
+<p>Written for a session with no memory of this conversation. Everything below
+is committed and pushed unless it says otherwise.</p>
+<ul>
+<li><strong>The programme.</strong> <code>call/0025</code> is the policy spine (the allowlist as
+admission for maintenance, the RFC-norm timeouts in the ruleset, the
+cadence from the measured threshold, one truth projected per dialect,
+PCP as the fourth admission, the TCP bound, the WPS boundary).
+<code>plan/0009-mapping-hold-and-signalling/</code> is the build: its README carries
+the milestone, the seven anchored tasks, the four-stage rollout and the
+acceptance, and its <code>IMPLEMENTATION.md</code> carries the line-by-line detail
+with the validated ruleset, the exact commands and what falsifies each
+task. <code>plan/PLAN.md</code> carries the index row. The newest component pin is
+<code>ad69a49</code>.</li>
+<li><strong>On the router, deployed and persistent:</strong> the daemon at <code>ad69a49</code>
+(md5 <code>1518f455…</code>, pid 32329 at hand-off) installed as
+<code>/usr/bin/ds-lite-punch</code> with the outgoing build parked at
+<code>/root/ds-lite-punch.prev</code>; the deploy assets installed from the pin; the
+DHCP static host <code>switch</code> = <code>80:d2:e5:6d:d1:00</code> = 192.168.21.68
+committed through uci; the relay tuple around <code>37.228.213.83:59304</code>.</li>
+<li><strong>On the router, runtime only and lost on reboot or a netifd reload:</strong>
+the two source rules that put the consoles on the Virgin Media line,
+<code>from 192.168.21.68 lookup 1000 priority 25000</code> and
+<code>from 192.168.21.138 lookup 1000 priority 25001</code>, with table 1000
+holding <code>192.168.0.0/24 dev eth1</code> and <code>default via 192.168.0.1 dev eth1</code>.
+Without them the consoles fall back to the main default, which is the
+Digiweb pppoe line. Revert with <code>ip rule del from &lt;addr&gt; lookup 1000</code>
+and <code>ip route flush table 1000</code>. Making them persistent is an open
+operator question, as is installing the timeout policy.</li>
+<li><strong>Not installed:</strong> the conntrack timeout policy itself. Rollout stage 2
+of plan/0009 is where it lands, and it awaits the operator's word. The
+validation on 2026-09-17 applied nothing: the objects were created
+inertly and the table deleted.</li>
+<li><strong>The capture taps are stopped</strong> and their output is at
+<code>/mnt/nvme/captures</code> on the router (27 files plus <code>MD5SUMS</code>), mirrored on
+the workstation at <code>~/captures-2026-09-17-final</code>, with an earlier
+snapshot under <code>~/captures-switch-2026-09-17/</code>. Nothing further is being
+recorded on the wire.</li>
+<li><strong>The next step.</strong> plan/0009's first task: seed the allowlist admission
+for the two pinned consoles, with the policy objects and the selection
+rules in the shape <code>IMPLEMENTATION.md</code> records, then prove that a quiet
+allowlisted flow outlives an unallowlisted one.</li>
+<li><strong>Two defects and one deferral still open</strong>, none of them touched since
+they were found: the rig's stale <code>upnp.tsv</code> row (<code>14572</code> claiming the
+console's slot <code>40002</code>, which a delete would revoke through
+<code>delete_by_bind_port</code>); the household <code>3074/UDP</code> mapping that went
+missing inside the first deployment window of the 2026-09-17 session and
+was never restored; and the WPS introduction limb (call/0021), which
+needs the Wi-Fi Alliance specification plus a certificate-authenticated
+transport, or an explicit acceptance of the operator bootstrap
+(call/0023) as the administration path.</li>
+<li><strong>Carried work with a home:</strong> the AFTR's UDP threshold under silence
+(plan/0009 <code>#udp-threshold</code>, with the shorter windows the earlier
+milestone already named), the Kani re-derivation (the remediation branch
+and the state record on this host), and EIF-loss detection.</li>
+</ul>
 <h2 id="2026-09-17--the-admission-policy-and-its-milestone-written-and-what-pcp-already-had"><a class="header" href="#2026-09-17--the-admission-policy-and-its-milestone-written-and-what-pcp-already-had">2026-09-17 — the admission policy and its milestone written, and what PCP already had</a></h2>
 <ul>
 <li><strong>call/0025</strong> fixes the allowlist as <em>admission for maintenance</em> with no
