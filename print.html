@@ -5148,6 +5148,37 @@ verify   = host-lifecycle capability active-corpus</p>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.</p>
+<h2 id="2026-09-17--plan0004s-ledger-was-lying-and-multi-instance-was-already-built"><a class="header" href="#2026-09-17--plan0004s-ledger-was-lying-and-multi-instance-was-already-built">2026-09-17 — plan/0004's ledger was lying, and multi-instance was already built</a></h2>
+<p>The milestone record said "multi-instance and the UPnP control plane are not
+started" in its status header and in two ledger rows. Both were false: the CLI
+carries a repeatable <code>--static-map R=ip:port</code> beside the legacy single-map
+pair (labelled B3 in the code, mutually exclusive by design), and the UPnP
+control plane ran ahead of this milestone into plan/0007 and plan/0008. The
+ledger is now reconciled, and the sections that researched those features
+point at where they landed rather than reading as work still to do.</p>
+<p>What the reconciliation turned up, worth keeping:</p>
+<ul>
+<li><strong>A ledger is evidence, not memory.</strong> Three rows were stale, and each was
+checkable in one grep or one read of the deployed box. Before trusting a
+"not started" row, check the artifact it names.</li>
+<li><strong>The two "unsigned acceptance" items were not unsigned.</strong> The console
+NAT-type test is closed by reframing (the probe cannot ride a single-target
+pin, call/0014; the console reached PSN Type 2 organically, plan/0006; the
+facade was deprioritised, call/0015). The keepalive-pause soak <strong>ran</strong> on
+2026-09-13 through the rig, a 5-to-30 second grid three times each, and the
+relay survived every cell; the analysis records the confound (the probes
+kept sending through the pause) and names the measurement that is still
+missing: a <strong>probe-quiet pause</strong>, silencing keepalives and probe together.
+That is the one concrete experiment plan/0004 has left.</li>
+<li><strong>Multi-instance had no test.</strong> The parser read <code>std::env::args()</code> directly,
+so <code>--static-map</code> could only be exercised by running the binary. The parser
+is split (<code>parse_args_from(argv)</code>), and the contract is pinned: two maps in
+order, the legacy pair as sugar, the refusal to combine the forms, and each
+malformed shape named in its own message. 120 tests at component <code>0cc2b04</code>.</li>
+<li>The naming audit flags the word "era" as a tell ("component <code>a5833a2</code> era"),
+which is fair: it periodises instead of naming. Write the commit and the
+count.</li>
+</ul>
 <h2 id="2026-09-17--the-deviceprotection-bootstrap-is-the-operators-call0023"><a class="header" href="#2026-09-17--the-deviceprotection-bootstrap-is-the-operators-call0023">2026-09-17 — the DeviceProtection bootstrap is the operator's (call/0023)</a></h2>
 <p>The last structural gap in the v2 surface closed as a decision plus a
 deploy-script change: the store lives in tmpfs, the daemon has no in-band way
