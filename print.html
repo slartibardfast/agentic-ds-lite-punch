@@ -323,12 +323,13 @@ are skipped in favor of trade-offs and hypotheses.</li>
 <p>Milestones in this project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-ds-lite-punch-a-cgnat-aware-udp-relay-for-the-virgin-media-line"><a class="header" href="#milestone-ds-lite-punch-a-cgnat-aware-udp-relay-for-the-virgin-media-line">Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></h1>
 <p><strong>Status:</strong> The v1 core is built, deployed, and formally verified
-(2026-08-29); multi-instance and the UPnP control plane are not started.
-Crate in the ds-lite-punch component (software/ds-lite-punch);
+(2026-08-29); multi-instance is built and its CLI contract is tested; the UPnP
+control plane this milestone named is delivered and exceeded by plan/0007 and
+plan/0008. Crate in the ds-lite-punch component (software/ds-lite-punch);
 musl-static binary under procd on the router that holds a live CGNAT mapping
 and forwards inbound UDP to a br-lan target with source preserved.
-Two v1 acceptance items remain unsigned (console NAT-type test, keepalive-pause
-soak), see <em>Where we stand</em>. Ground truth from the 2026-08-28/29 experiments:
+The two v1 acceptance items are reconciled rather than outstanding (one closed
+by reframing, one run with a named remainder), see <em>Where we stand</em>. Ground truth from the 2026-08-28/29 experiments:
 see <code>MEMORY.md</code> "UDP hole punching works" and "CGNAT UDP timeout measured".</p>
 <h2 id="what-this-is"><a class="header" href="#what-this-is">What this is</a></h2>
 <p>A single-binary Rust daemon on the router that makes UDP services behind br-lan
@@ -453,6 +454,12 @@ net-new work that the CGNAT does not block. Hub-LAN placement NAK'd;
 everything stays behind our router.</li>
 </ul>
 <h2 id="upnp-control-plane-v2-phase"><a class="header" href="#upnp-control-plane-v2-phase">UPnP control plane (v2 phase)</a></h2>
+<p>The research below is what the facade was built from: the IGDv1-versus-v2
+advertisement decision and the console-compatibility facts it rests on. It
+landed as <a href="plan/0004-ds-lite-punch/../0007-igd-facade/README.html">plan/0007</a>'s facade and then as
+<a href="plan/0004-ds-lite-punch/../0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a>'s dual presentation
+with the DeviceProtection boundary, so this section is the design record it
+came from rather than work still to do.</p>
 <p><strong>Version: advertise IGDv1 (<code>WANIPConnection:1</code>), deliberately.</strong> Researched
 2026-08-29; this is the decision behind "PS3 doesn't work with UPnP v2":</p>
 <ul>
@@ -587,10 +594,10 @@ target; a real console adds the SNAT + <code>ip rule</code> for its egress).</p>
 Update it whenever a phase or an acceptance item moves.</p>
 <div class="table-wrapper"><table><thead><tr><th>Phase</th><th>State</th><th>Evidence</th></tr></thead><tbody>
 <tr><td>Toolchain smoke test</td><td><strong>done</strong></td><td>musl-static x86_64 cross-compile runs on ImmortalWrt</td></tr>
-<tr><td>v1 core, one static mapping</td><td><strong>built + deployed; acceptance partial</strong></td><td>live tuple <code>37.228.213.52:24258</code> held stable under 2 s keepalive; external UDP probes from 4+ countries forwarded with peer source preserved</td></tr>
+<tr><td>v1 core, one static mapping</td><td><strong>built + deployed; acceptance reconciled below</strong></td><td>live tuple held stable under a 2 s keepalive (the line's tuple moves as the AFTR re-grants it: <code>37.228.213.83:59304</code> on 2026-09-17); external UDP probes from 4+ countries forwarded with peer source preserved</td></tr>
 <tr><td>v1 formal verification</td><td><strong>done</strong></td><td><code>cargo kani</code> 8 harnesses / 192 checks / 0 failures (about 21 s, Kani 0.67.0); 5 unit tests</td></tr>
-<tr><td>Multi-instance</td><td><strong>not started</strong></td><td>CLI is still scalar <code>--bind</code> / <code>--target</code>; no <code>--map</code></td></tr>
-<tr><td>UPnP-IGDv1 control plane</td><td><strong>not started</strong></td><td><code>upnp.rs</code> does not exist</td></tr>
+<tr><td>Multi-instance</td><td><strong>built; contract tested</strong></td><td>the CLI carries a repeatable <code>--static-map R=ip:port</code> beside the legacy single-map pair, and the two are mutually exclusive by design; <code>static_map_parse_is_repeatable_and_exclusive</code> pins both forms and every malformed shape (component <code>a5833a2</code> era, 120 tests). The deployed env file still uses the legacy pair, so N=1 in production</td></tr>
+<tr><td>UPnP control plane</td><td><strong>delivered, and exceeded</strong></td><td>the IGDv1 facade landed in <a href="plan/0004-ds-lite-punch/../0007-igd-facade/README.html">plan/0007</a> and the v1/v2 facade with an enforced DeviceProtection surface in <a href="plan/0004-ds-lite-punch/../0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a>; the deployed artifact serves both faces on br-lan and its client matrix is receipted</td></tr>
 <tr><td>TCP EIF characterization</td><td><strong>done (2026-08-31)</strong></td><td>TCP EIF through the AFTR is proven: 5/5 globalping HTTP-200 probes (DE/BR/JP/US/AU) forwarded to the mapped inner tuple via a dual-homed source-port oracle (our vdsl4 line as third party); 1:1 accept-log/IP cross-match; unmapped port RSTs on control. Full method in <code>MEMORY.md</code> (TCP EIF)</td></tr>
 </tbody></table>
 </div>
@@ -614,18 +621,29 @@ relay stays UDP-only by decision, not by CGNAT limitation (see "Explicitly
 out"); a future TCP variant is unblocked at the AFTR level. Not re-measured:
 TCP mapping idle lifetime (UDP is 5 to 10 s, node-dependent; TCP untested).</p>
 </blockquote>
-<h3 id="v1-acceptance-still-unsigned"><a class="header" href="#v1-acceptance-still-unsigned">v1 acceptance still unsigned</a></h3>
-<p>Both are prerequisites for calling the v1 core complete; neither blocks
-starting multi-instance.</p>
+<h3 id="v1-acceptance-reconciled"><a class="header" href="#v1-acceptance-reconciled">v1 acceptance, reconciled</a></h3>
+<p>Neither item is unsigned in the sense this section first meant, and both are
+recorded here as they actually resolved.</p>
 <ul>
-<li><strong>Live PSN NAT-type test on a real console.</strong> The end-to-end probes passed
-against a <strong>sink target</strong>, not a console. The console path additionally needs
-its own nft SNAT + <code>ip rule</code> for the egress, which is per-target config that
-has never been exercised. This is the one remaining item that could still
-invalidate the forwarding model.</li>
-<li><strong>Keepalive-pause soak.</strong> Pause keepalives about 10 s, expect churn detected
-and re-publish on resume. Only the initial discovery churn has been observed
-so far. The soak runs end to end via <a href="plan/0004-ds-lite-punch/../0005-test-rig/README.html">plan/0005</a>.</li>
+<li><strong>The console PSN NAT-type test.</strong> It is closed by reframing rather than by
+the test: the console's NAT probe uses ephemeral source ports a single-target
+pin cannot demux, so a fold-attributed PSN NAT type is impossible by
+construction (call/0014), and the console was then measured reaching PSN NAT
+Type 2 and MW2 NAT Open along the organic path, with the IGD facade
+deprioritised (plan/0006, call/0015). The forwarding model was not
+invalidated; the console story is "works alongside the relay" rather than
+"enabled by" it.</li>
+<li><strong>The keepalive-pause soak.</strong> It ran on 2026-09-13 through the rig's
+<code>router-run-soak.py</code>: the pause grid <code>[5, 7, 10, 12, 20, 30]</code> seconds, three
+repetitions per cell, the mapping stopped with <code>kill -STOP</code> and resumed with
+<code>-CONT</code>, with detection, re-publish and recovery timed and a resurrection
+watch on the old tuple. The relay <strong>survived every cell</strong>. The analysis
+(plan/0005's <code>ANALYSIS-2026-09-13.md</code>) records the confound that limits what
+the run measured: the probes kept sending through the pause, so the cells
+measured survival under pause plus traffic rather than the mapping's death.
+The remaining measurement is named there and has not run: a <strong>probe-quiet
+pause</strong>, silencing both the keepalives and the probe across the window and
+resuming both, which is the shape that can observe death and resurrection.</li>
 </ul>
 <h3 id="what-is-deliberately-not-covered"><a class="header" href="#what-is-deliberately-not-covered">What is deliberately not covered</a></h3>
 <ul>
@@ -637,12 +655,12 @@ too. Both stay covered by the on-box PoC and end-to-end probes.</li>
 see <em>Open questions</em>.</li>
 </ul>
 <h3 id="next-step"><a class="header" href="#next-step">Next step</a></h3>
-<p>Take <strong>multi-instance</strong> next: a pure refactor of code that is already proven.
-Hoist the scalar <code>--bind</code>/<code>--target</code> into a repeatable <code>--map R=C</code>, spawn the
-v1 core per instance, share STUN-server rotation. But if a console is
-physically available, close the PSN NAT-type test first; it retires strictly
-more risk than multi-instance does, because multi-instance multiplies a
-forwarding model that test could still falsify.</p>
+<p>Multi-instance itself is built (the repeatable <code>--static-map</code>), so the step
+this section first named is done; what remains is the one measurement above
+that has not run, the probe-quiet pause, and it is a rig run rather than a
+code change. The operator's config may stay on the legacy single-map pair
+until a second mapping is wanted, at which point the env file moves to
+<code>--static-map</code> lines and nothing else changes.</p>
 <h2 id="failure-modes"><a class="header" href="#failure-modes">Failure modes</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>Mode</th><th>Detection</th><th>Response</th></tr></thead><tbody>
 <tr><td>Tuple expiry (idle gap)</td><td>churn on next STUN response</td><td>auto re-publish; cadence already at most half the worst-case timeout</td></tr>
@@ -2905,7 +2923,7 @@ superset of every one.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>eed0760a45501c22dc826d72dbdb7e4859839769</code></li>
+<li>pin: <code>0cc2b0426d833c9512f9f772888bde4e377fcbe0</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
