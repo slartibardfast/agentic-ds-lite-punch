@@ -1826,6 +1826,37 @@ an instrument that cannot run answers present. Lucky timing: the boxes were
 idle, so the arm had claimed nothing and the bad probe never fired.</p>
 <p>Worth separating from the instrument: the PS3 was genuinely absent at that
 moment (<code>FAILED</code>, no ARP), which is why the arm was holding nothing at all.</p>
+<h2 id="2026-09-18-in-game-the-two-tuple-fault-found-live"><a class="header" href="#2026-09-18-in-game-the-two-tuple-fault-found-live">2026-09-18 (in game): the two-tuple fault, found live</a></h2>
+<p>The console's type was Strict because <strong>its game flows egressed on two
+different external tuples at once</strong>: some on its own preserved 3074 and some
+on a slot's port. The connection table made it plain — one flow with 14,740
+packets on the slot's port beside siblings keeping 3074 — and two external
+tuples for one game is what a console scores Strict or Moderate. <code>call/0014</code>
+had already settled the principle: the console's story is organic, "works
+alongside, not enabled by" the relay.</p>
+<p>Three mechanisms pinned the <em>device's</em> key, and each had to be found against
+the map rather than reasoned about, because I attributed it to the facade
+first, then the statics, and only the third reading showed the arm doing it
+too:</p>
+<ul>
+<li>the arm pinned <code>(client, port) -&gt; our port</code> when what its shadow needs is
+its own egress pinned;</li>
+<li>the facade's grant pinned the client's own key (removed: the relay's inbound
+needs the accept rule and its own socket, never the client's egress);</li>
+<li>the operator's static relay keeps its own target pin, which is the legacy
+design for the rig and is left alone.</li>
+</ul>
+<p>Also fixed on the way, all found live: a claim now waits for the device to
+stop refreshing a flow (the DNS churn had filled the device's capacity, so its
+game tuple could not be held); a hold is no longer released for going quiet,
+because quiet is what a hold is for; a pin that meets a stale element replaces
+it rather than refusing, since a stale value mis-translates a device's traffic
+while nothing looks wrong; and device presence for the GC comes from the
+neighbour table, because both consoles drop ICMP.</p>
+<p>Deployed <code>03a36a67</code> (component <code>13a67143</code>). Measured after: one claim in
+thirty seconds instead of twenty-three DNS claims, no releases on quiet, the
+map holding only the operator's static pin, and the console's live flows back
+on 3074.</p>
 
                     </main>
 
