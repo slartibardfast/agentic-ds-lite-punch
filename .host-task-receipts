@@ -227,3 +227,11 @@
     evidence = an unheld flow's mapping was alive at t0+13.4 s and gone by t0+21.3 s on validated captures, so the AFTR reaps between thirteen and twenty-one seconds; the held flow was still reachable at 301.4 s
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-18
+
+[receipt "plan/0009#collisions"]
+    disposition = done
+    verify = a fresh grant on a port a live tuple holds takes another port and
+    inputs = the change-data-capture mirror the arm already reads, the lease
+    evidence = the allocator steers around live tuples and says so (the box line from 2026-09-17); the lease marks a device flow on its bind tuple, moves to a probe-free port keeping client, internal port and label, reports the move, and rolls back when a move cannot complete (182 tests, seven new); the deployed detection ran over live traffic and correctly stayed silent on the slot's own punch
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
