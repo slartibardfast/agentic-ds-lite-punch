@@ -3228,7 +3228,7 @@ workstation, as the switch NAT-type record documents.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>e3701dc22e81c47d6d508e41af7b18fadf059c08</code></li>
+<li>pin: <code>0f150da1c4bf344e8f018e9b86053084783b46e1</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -7876,6 +7876,24 @@ rule now reads the way call/0030 states it: a static is reported and left, a
 granted lease is yielded. The deployed binary is deliberately <em>not</em> rebuilt:
 the six-hour soak runs on the binary under test, and a redeploy mid-soak would
 end the run. The fix ships with the next deploy.</p>
+<p><strong>Item (4): the per-slot learned tuples analysed, and call/0027's second
+question answered for the observed window</strong> (2026-09-18). <code>deploy/tuple-analysis.py</code>
+reads the daemon's own tuple events and prints three views: one inner under
+several externals (the client-visible split), one external under several
+inners (the uplink's own collision), and externals shared between a slot and
+an inner. Liveness is decided from event times, so sequential reuse hours
+apart is reported apart from a genuine concurrency. Over 14:53:44 to 22:02:35
+(353 events, 35 inner tuples, 35 external tuples, 83 pairs) <strong>no external
+tuple was in two inner tuples' hands at once</strong>: the two shared externals
+(<code>59205</code>, <code>59230</code>) were recycled three hours later. What the same log does
+show, concurrently, is the mirror case: <code>192.168.21.138:3074</code> learned 59343,
+59220 and 59211 inside a six-second span at 18:53, which is the console split
+call/0014 fixed. So the console's Strict/Moderate was never the uplink
+allocating one external port twice — it was the local device-key pinning —
+and the downstream question stays open only as a standing property to watch.
+The sample is dominated by two browsers' churn, and the soak window widens it
+in the morning with no new code. Results:
+<code>results/RESULTS-2026-09-18-tuple-analysis.md</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
