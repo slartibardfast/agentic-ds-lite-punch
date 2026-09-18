@@ -1742,3 +1742,39 @@ idle, so the arm had claimed nothing and the bad probe never fired.
 
 Worth separating from the instrument: the PS3 was genuinely absent at that
 moment (`FAILED`, no ARP), which is why the arm was holding nothing at all.
+
+
+## 2026-09-18 (in game): the two-tuple fault, found live
+
+The console's type was Strict because **its game flows egressed on two
+different external tuples at once**: some on its own preserved 3074 and some
+on a slot's port. The connection table made it plain — one flow with 14,740
+packets on the slot's port beside siblings keeping 3074 — and two external
+tuples for one game is what a console scores Strict or Moderate. `call/0014`
+had already settled the principle: the console's story is organic, "works
+alongside, not enabled by" the relay.
+
+Three mechanisms pinned the *device's* key, and each had to be found against
+the map rather than reasoned about, because I attributed it to the facade
+first, then the statics, and only the third reading showed the arm doing it
+too:
+
+- the arm pinned `(client, port) -> our port` when what its shadow needs is
+  its own egress pinned;
+- the facade's grant pinned the client's own key (removed: the relay's inbound
+  needs the accept rule and its own socket, never the client's egress);
+- the operator's static relay keeps its own target pin, which is the legacy
+  design for the rig and is left alone.
+
+Also fixed on the way, all found live: a claim now waits for the device to
+stop refreshing a flow (the DNS churn had filled the device's capacity, so its
+game tuple could not be held); a hold is no longer released for going quiet,
+because quiet is what a hold is for; a pin that meets a stale element replaces
+it rather than refusing, since a stale value mis-translates a device's traffic
+while nothing looks wrong; and device presence for the GC comes from the
+neighbour table, because both consoles drop ICMP.
+
+Deployed `03a36a67` (component `13a67143`). Measured after: one claim in
+thirty seconds instead of twenty-three DNS claims, no releases on quiet, the
+map holding only the operator's static pin, and the console's live flows back
+on 3074.
