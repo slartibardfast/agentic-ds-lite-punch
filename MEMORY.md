@@ -1662,3 +1662,36 @@ Deferred, not attested: the yield's end-to-end acceptance. A forwarded flow
 must take a leased port for that, which needs its inlet port known and pinned,
 and the workstation sits behind a second NAT that rewrites it. A console on
 the LAN can be the client, and the run is recorded as owed.
+
+
+## 2026-09-18 (field session): two consoles, the hold under real play, and a state-directory incident
+
+The arm held both consoles' *own* flows for the first time (the Switch on a
+game flow to port 10025, the PS3 on its own), and the Switch still negotiated
+**NAT Type A** — the field confirmation of `call/0028`'s precedence: a device
+keeps the inbound its flow earned, so our hold costs it nothing. The PS3 read
+Moderate (Type 2) with its 3074 mapping live through a facade slot; that slot
+has been 40002 in one reading and 40003 in another, because a restart
+re-grants the entries and the allocator picks a free port, so the console's
+external tuple moves when the daemon restarts and the game relearns it.
+
+Then an incident worth the ink. `/tmp` filled and every write into the state
+directory failed. The cause was mine: four stale `tcpdump` processes were still
+writing into *deleted* files and held gigabytes of the tmpfs. Killing them
+returned 52 MB of 7.7 G in use. But the consequence was already on the record
+as a mystery: `upnp.tsv` was 0 bytes, so the entry table had not been durable
+since 03:16, and **the household 3074 mapping "lost in the first deployment
+window" was this defect** — the entries record was renamed into place
+unconditionally, so a failed write published an empty tmpfile over the good
+table. Fixed at `4795061d`: rename only on success (with a test that forces the
+failure), and the tuples and tables now live in memory first, with the first
+failure and first success each reported once. The recovery is verified on the
+box: after the filesystem was freed, a lease renewal made both tables come back
+with their real content, the PS3's 3074 row included.
+
+A new reading trap: `ls -l /proc/<pid>/fd/<n>` prints the **symlink's** length
+for a deleted file, not the file's size, so a deleted-file scan reported 64
+bytes each while those processes held gigabytes.
+
+The new build is committed and pushed and deliberately not deployed: the daemon
+was mid-session, and the running build persists correctly now.
