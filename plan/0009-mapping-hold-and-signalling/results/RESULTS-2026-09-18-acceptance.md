@@ -118,6 +118,32 @@ made over PCP and was answered with a drop, because its discovery was still
 in flight; the subscriber was told the table moved even though the client was
 told nothing yet, which is the two views doing their separate jobs.
 
+## The console run, which closes the client hop
+
+The workstation's second NAT was the only reason the client-application hop
+was unproven, so the acceptance was run again against a real device: the arm
+was holding four of a console's flows (shadows bound on `65400`-`65403`, the
+tuples `59251` and `59220` learned beside them), and the external vantage
+probed those tuples after several minutes of the console's own silence. Both
+arrived, and the router's connection table shows where they went:
+
+```host-lint:ignore
+170.9.238.141.39897 > 192.168.0.21.65401: UDP, length 9
+192.168.0.21 > 170.9.238.141: ICMP 192.168.0.21 udp port 65401 unreachable
+```
+
+The probe reached the console. Its own stack answered with a port-unreachable
+because that flow's socket had closed, and the connection table's reply tuple
+reads `src=192.168.21.138`: the router translated the datagram to the device's
+address, not to the shadow socket bound on the same port. A listener-less port
+is exactly what answers that way, so the ICMP is the receipt that the device
+received it, and the milestone's client hop is closed with a real client.
+
+That run also answered a question this milestone had left to measurement: a
+shared tuple resolves in the incumbent's favour. `call/0028` records it,
+together with the other measurement, that the NAPT will translate a flow into
+a port a local socket already holds.
+
 ## What this run leaves open
 
 - The last hop to a client application behind a second NAT. Nothing in the
