@@ -81,16 +81,16 @@ mapping must outlast all of them.
 
 ## Defects this run exposed
 
-1. **A named device's unreplied flow is refused.** `obs.rs`'s `should_rescue`
-   ends with `if e.reply_dst != ctx.vm_nat { return false; }`, which requires
-   the flow to have *seen a reply*: for an unreplied flow there is no reply
-   tuple to carry the NAT address, so the gate refuses it. That contradicts
-   call/0029 ("the named device is the admission") and the function's own
-   comment ("for a named device our own writes are what let it care at all").
-   Measured: an allowlisted client's flow to a black-hole peer was never
-   claimed across 60 s with a freshly started daemon and an empty budget,
-   while `.97`'s replied flows were claimed. A failing test first, then the
-   gate admitted for a named source.
+1. ~~**A named device's unreplied flow is refused.**~~ **RETRACTED the same
+   evening; it was not the gate.** The flow in that experiment never reached
+   the mirror at all: a synthetic client inside the container had no policy
+   route, so its packets took the main table's lowest-metric default out
+   `pppoe-vdsl4` (84.203.115.61) rather than `eth1`, and the observation arm
+   only ever sees `oifname eth1`. With one `ip rule` added for the client's
+   address, the same unreplied flow was claimed at once
+   (`claim 192.168.21.11:47077 -> 192.0.2.1:45678 -> 47077 (cdc nft)`), and
+   the gate passed because eth1's fullcone masquerade sets the NAT source to
+   192.168.0.21 even with no reply. The predicate is correct as written.
 2. **The `nft` CLI segfaults inside libnftables at daemon start.** Kernel
    traces (`segfault at 20040 … error 4 in libnftables.so.1.1.0[643d4,…]`,
    identical code bytes every time) coincide with daemon starts, which run
@@ -99,13 +99,15 @@ mapping must outlast all of them.
    No user-visible harm tonight: the policy is in force after every start
    (`"ruleset_in_force":true`). A call whose failure is not tolerated would
    fail silently instead.
-3. **The shadow keepalive cannot write.** `warn: shadow keepalive
-   <peer> failed: Operation not permitted (os error 1)`, repeatedly, for the
-   observation arm's rescue of a device's flow. The arm's hold therefore
-   rests on the *device's* own traffic, not on the daemon's writes, while the
-   facade's slot holds by its own punch. The asymmetry is real and is why
-   this acceptance used a lease: the facade path is the one that holds
-   without its client.
+3. ~~**The shadow keepalive cannot write.**~~ **RETRACTED; the hold works.**
+   The `warn: shadow keepalive … failed: Operation not permitted` lines all
+   belong to earlier daemon pids (3026, 31093, 32114); the last is at
+   21:57:53, and the daemon started at 21:57:59 has logged **none**, with no
+   warnings of any kind. Two candidate mechanisms were tested and excluded by
+   hand on the box: a socket bound to (192.168.0.21, port) sends to the STUN
+   servers fine with and without a `snat_map` element pinning that tuple to
+   itself. And the hold is *demonstrably* the daemon's own writes — see
+   "The hold is the daemon's own writes" below.
 4. **The collision rule would move the operator's static.** `collided()`
    includes every slot in the binding table, `Lease::Static` among them, so a
    device flow landing on a static's port would make the yield move a port
@@ -113,23 +115,79 @@ mapping must outlast all of them.
    configuration and presence never releases it; the collision rule should
    read the same way.
 
+## The hold proper, proven the same way (the second run)
+
+The acceptance above used a facade lease. The daemon's *hold* — the
+observation arm claiming a named device's own flow — was then run the same
+way, once the client's policy route was corrected: one datagram from
+`192.168.21.11:47077`, after which the client was silent.
+
+```
+{"event":"rescue","detail":"claim 192.168.21.11:47077 -> 192.0.2.1:45678 -> 47077 (cdc nft)"}
+{"event":"observed-tuple","detail":"192.168.21.11:47077 -> 37.228.213.83:59251 (Churn((37.228.213.83, 59251)))"}
+```
+
+| window | probe sent | arrived on eth1 (router's WAN capture) | client socket |
+|---|---|---|---|
+| 30 s | `1789770277.415` | `1789770277.491663 IP 170.9.238.141.57800 > 192.168.0.21.47077: UDP, length 10` | `RX 1 … at 1789770277.492` |
+| 60 s | `1789770307.403` | `1789770307.479707 IP 170.9.238.141.57800 > 192.168.0.21.47077: UDP, length 10` | `RX 2 … at 1789770307.480` |
+| 120 s | `1789770367.419` | `1789770367.496559 IP 170.9.238.141.57800 > 192.168.0.21.47077: UDP, length 11` | `RX 3 … at 1789770367.497` |
+| 300 s | `1789770547.401` | `1789770547.481522 IP 170.9.238.141.57800 > 192.168.0.21.47077: UDP, length 11` | `RX 4 … at 1789770547.482` |
+
+Every arrival reached the client's own socket, which is the strongest form of
+the evidence: not only did the mapping answer at the router's WAN, the
+datagram was delivered to a client that had sent nothing for five minutes.
+
+## The hold is the daemon's own writes
+
+The client was silent from 22:24:07. Its conntrack entry, read eight seconds
+apart:
+
+```
+src=192.168.0.21 dst=74.125.250.129 sport=47077 dport=19302 packets=252 bytes=12096
+src=74.125.250.129 dst=192.168.0.21 sport=19302 dport=47077 packets=252 bytes=15120 [ASSURED]
+src=192.168.0.21 dst=74.125.250.129 sport=47077 dport=19302 packets=256 bytes=12288
+src=74.125.250.129 dst=192.168.0.21 sport=19302 dport=47077 packets=256 bytes=15360 [ASSURED]
+```
+
+Four packets in eight seconds, both directions, all of them the shadow
+keepalive to the STUN server and its replies. Nothing else could have
+produced them: the client's socket has sent one datagram and no more. This is
+the mechanism that lets an AFTR mapping outlive its client's silence. The
+earlier measurement of 13 to 21 seconds of idle reaping describes a mapping
+nobody writes for, and the two facts are consistent: without the daemon's
+writes it dies in seconds, with them it lives past five minutes.
+
+The cost, which an operator should know: the interval is two seconds, so a
+silent console costs one small STUN exchange every two seconds for as long as
+the daemon holds its tuple.
+
 ## Still open
 
-- Goal item (2): a device flow onto a leased port making the daemon move the
-  lease. The device-key pins are gone by design (call/0014), so a device
-  cannot be *driven* onto an actively punched slot; the static pin
-  (`.12 . 40002 : NAT . 40000`) is the remaining path, and it is also the
-  route that would expose defect 4.
+- Goal item (2): **done, driven live** — see
+  `results/RESULTS-2026-09-18-collision-yield.md`. The UDP door is closed by
+  the slot's own conntrack entry (the kernel NATs a device's UDP flow to 1024)
+  and by the allocator steering around live tuples; the TCP door was the one
+  open, and through it the lease moved from 40001 to 40003 with the client
+  still holding.
 - Goal item (3): the soak. The sampler runs at one line per minute into
-  `/mnt/nvme/captures/overnight/soak.log`; the before reading is
-  `rss 1344–1472 kB, fds 17–18, ct 1651, holds 5` at 21:47, and the clean
-  window starts at the last restart, 21:57:59. The after reading is owed.
-- Goal item (4): the per-slot learned tuples analysed for one external port
-  under two inner tuples. The smoking gun is in the log of 18:53
-  (`3074 → 59343/59220/59211`), and the analysis is owed as a results file.
-- Goal item (5): the fixes for defects 1 and 4, each behind a failing test.
-- Cleanup, at the end of the run and not before: the temporary ip rule
-  `from 192.168.21.97 lookup 1000 priority 25002`, `/tmp/synth*.py`,
+  `/mnt/nvme/captures/overnight/soak.log`; the clean window starts at the last
+  restart, 21:57:59 (`1789768700 rss=1136 fds=13 ct=881 holds=1`). The after
+  reading is owed in the morning; the last value tonight is
+  `1789770921 rss=1332 fds=18 ct=504 holds=4`.
+- Goal item (4): **done** — `results/RESULTS-2026-09-18-tuple-analysis.md`,
+  with `deploy/tuple-analysis.py`. No external tuple was in two inner tuples'
+  hands at once; the mirror case (one inner, several externals, concurrent)
+  was found and it is the split call/0014 fixed.
+- Goal item (5): defect 4 is fixed with a failing test first
+  (`a_static_is_the_operators_and_is_never_the_slot_that_moves`) and the pin
+  bumped. Defects 1 and 3 are retracted above. Defect 2 (the `nft` segfault)
+  and the stale accept rules are open, and they are the same family: the
+  delete-by-handle path.
+- Cleanup, at the end of the run and not before: the temporary ip rules
+  `from 192.168.21.97 lookup 1000 priority 25002` and
+  `from 192.168.21.11 lookup 1000 priority 25003`, `/tmp/synth*.py`,
   `/tmp/holdrun.sh`, and the harness files; the captures and the sampler stay
   while the soak runs. The other observer's capture (pid 14409) is not mine
-  and is not touched.
+  and is not touched. The two stale accept rules should be removed by hand
+  once the fix lands.

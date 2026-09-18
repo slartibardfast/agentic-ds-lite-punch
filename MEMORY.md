@@ -1940,3 +1940,56 @@ and the downstream question stays open only as a standing property to watch.
 The sample is dominated by two browsers' churn, and the soak window widens it
 in the morning with no new code. Results:
 `results/RESULTS-2026-09-18-tuple-analysis.md`.
+
+**Items (1) and (2) are both driven and passing, and two of the four defects I
+recorded earlier are retracted** (2026-09-18, pin 0f150da). Item (1) again,
+through the *hold* proper rather than a lease: a silent container client
+(`192.168.21.11:47077`), one datagram, then the vantage's probes at 30, 60,
+120 and 300 s each arrived at the WAN and were delivered to the client's own
+socket (`RX 1..4` at 1789770277.492, …307.480, …367.497, …547.482). Item (2),
+driven live: a device's TCP flow from `.11:40001` (the leased port) made the
+daemon move the lease — `collision-yield slot 40001 yielded to a device's flow
+and moved to 40003 (label 0 kept)` — and the slot confirmed a fresh external
+tuple `59241` in the same second, with its state file, its accept rule and the
+client's lease all following. Evidence:
+`results/RESULTS-2026-09-18-collision-yield.md`.
+
+**The two retractions matter more than the two confirmations.**
+(1) "a named device's unreplied flow is refused" was **wrong**: the synthetic
+client had no policy route, so its packets left by `pppoe-vdsl4`
+(84.203.115.61) instead of `eth1`, and the observation arm only sees
+`oifname eth1`. With `ip rule add from 192.168.21.11 lookup 1000` the same
+unreplied flow was claimed at once — eth1's fullcone masquerade sets the NAT
+source to 192.168.0.21 even with no reply, so `reply_dst == vm_nat` holds.
+(2) "the shadow keepalive cannot write (EPERM)" was **stale**: every such
+warning belongs to pids 3026/31093/32114, the last at 21:57:53, and the
+daemon started at 21:57:59 has logged none. A socket bound to
+`(192.168.0.21, port)` sends to the STUN servers fine, with and without a
+`snat_map` pin of that tuple to itself. Lesson: attribute a warning to the
+process that emitted it before calling it a defect of the current build.
+
+**The hold is the daemon's own writes, measured.** With the client silent
+since 22:24:07, its conntrack entry ran 252 → 256 packets in 8 s in both
+directions (`src=192.168.0.21 sport=47077 → 74.125.250.129:19302 [ASSURED]`):
+one small STUN exchange every two seconds, all of it the shadow keepalive.
+That is why a mapping survives silence, and why the earlier "13–21 s idle
+reaping" and tonight's 300 s both stand: without writes the mapping dies in
+seconds, with them it lives.
+
+**A synthetic client must be policy-routed like the consoles.** `.68`, `.138`
+and `.97` have `ip rule → table 1000` (default via 192.168.0.1 dev eth1); a
+container or any new address otherwise takes the main table's lowest-metric
+default out `pppoe-vdsl4`, which is invisible to the mirror and to
+`collided()`. Add the rule (I added 25003 for `.11`) and remember it in the
+cleanup list.
+
+**Two doors onto a leased port, and only one is open.** A device's *UDP* flow
+cannot take a leased port while the slot's relay socket holds it — the kernel
+NAT'd it to 1024, reproduced twice — and the allocator steers new slots around
+live mirrored tuples (`collision-avoided`). A device's *TCP* flow can, because
+conntrack keeps the port space per protocol; the rule is protocol-blind and
+fired. Worth a decision: scope R4 to the entry's protocol, or state that a
+cross-protocol port conflict is in scope. Also: two stale inbound accept rules
+(`dslitepunch-40002-tcp`, the legacy `dslitepunch`) survive from earlier
+daemons, because the accept rule is deleted by *handle* parsed from
+`nft -a list` — the same path the libnftables segfaults come from.
