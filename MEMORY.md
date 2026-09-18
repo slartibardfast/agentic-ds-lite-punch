@@ -1797,3 +1797,29 @@ second holding an AFTR mapping for a device that is not on the LAN. The same
 device-presence rule answers it: a mapping whose client has gone should be
 released, and the client re-requests it when it returns. Until then the cost
 is one slot and one mapping per absent client.
+
+
+## 2026-09-18 (from scratch): the presence rule, and a mapping that ends with its device
+
+`call/0030` states it: a client-requested mapping ends when its client leaves
+the LAN and never when it is quiet. Quiet is a lobby, a paused game and a
+sleeping screen, which is exactly what a mapping must survive; a device that
+is gone has nothing to be promised, and it asks again when it returns. One
+rule (`src/presence.rs`) now decides presence for both mechanisms that hold
+something for a device, the arm's holds and the facade's leases.
+
+Measured live with both consoles off: the arm's release rule and the facade's
+hand disagreed before, and the console's mapping sat there with its keepalive
+running for a device that was not on the LAN. After the deploy, the presence
+pass released it on its second tick:
+
+    {"event":"mapping-released","detail":"192.168.21.138:3074 asked for 3074 and is no longer on the LAN; its mapping goes"}
+
+the entries file emptied, the only socket left was the operator's static, and
+the rig (present, STALE with its MAC) was untouched. Component `68c2e2d5`,
+deployed `ce6cc566`, 192 tests.
+
+Two mistakes of mine that the live test caught and the code now records: the
+GC runs as one pass per tick, so a miss counter local to the pass resets
+before it reaches any threshold (it belongs on the facade), and a guard must
+not be held across the release await (decide under the lock, work after).
