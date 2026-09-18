@@ -1860,3 +1860,51 @@ the acceptance.
 3.8 GB and growing at about a megabyte a second): stop or rotate them before
 an overnight run, and use *simple* tcpdump filters that busybox accepts, each
 validated by a known event.
+
+**The held mapping answers across its client's silence: item (4) of that list
+is measured and passes, and four defects fell out of it** (2026-09-18, pin
+68c2e2d). Two leases were asked for over PCP from inside the router's
+`dslp-probe` container (192.168.21.11). A container's flow is *forwarded*, so
+the observation arm's mirror sees it, and its admission budget is its own,
+which is what the workstation's spent browser flows kept refusing. Each client
+then went fully silent, and the external vantage probed the learned external
+tuple at 30, 60, 120 and 300 seconds of that silence, with the schedule armed
+from the silence's own epoch so each probe landed at its window rather than
+past it. All eight arrivals are pasted in
+`results/RESULTS-2026-09-18-held-mapping-silence.md` (29.96, 59.97, 119.97 and
+299.97 s; 29.35, 59.34, 119.34 and 299.34 s), each also forwarded to the
+client. What it settles: the AFTR's 13 to 21 s idle reaping does not claim a
+mapping the daemon holds, because the slot's own punch is more frequent than
+the reaper. The lease was asked for with a 600 s lifetime, because the granted
+lifetime is the ceiling the windows must fit in.
+
+**Read the WAN capture by the router's own slot port, not by the CGNAT tuple.**
+On eth1 the AFTR has already translated the destination back, so the arrival
+that the vantage sent to `37.228.213.83:59281` appears as
+`> 192.168.0.21.40001`. A filter by the CGNAT port finds nothing and reads as
+a lost packet.
+
+**Four defects the run exposed** (evidence in that results file):
+1. `obs.rs`'s `should_rescue` ends with `reply_dst != ctx.vm_nat`, which
+   requires the flow to have *seen a reply*: a named device's unreplied flow
+   is therefore refused, against call/0029 and the function's own comment.
+   Measured: an allowlisted client's flow to a black-hole peer was never
+   claimed across 60 s with a fresh daemon and an empty budget.
+2. The `nft` CLI segfaults inside libnftables at daemon start (`apply_hold`'s
+   batch is the suspect; the same commands run by hand all succeed). The
+   policy is in force after every start, so nothing broke tonight.
+3. The shadow keepalive fails `EPERM`, so the *arm*'s hold rests on the
+   device's own traffic while the *facade*'s rests on its own punch. That is
+   why this acceptance had to use a lease.
+4. `collided()` includes `Lease::Static`, so a device flow landing on a
+   static's port would make the late-collision yield move a port the operator
+   configured, against call/0030.
+
+**Harness footguns, rediscovered or new:** the router's shell has no `timeout`
+and no `pkill` (it is `ash`); the router's ssh *hangs* on an unknown host key,
+so drive the vantage from the workstation; `pgrep -f` self-matches the ssh
+wrapper, so use the bracket trick; a container's `/tmp` is a separate mount,
+so stage files under `/root` in the rootfs (`/mnt/nvme/lxc/<ct>/rootfs/`); and
+a UDP socket that has been `connect`ed delivers only from its peer, so a held
+client must dissolve the association before probes from the vantage can reach
+it. `pcp-probe.py` gained `--lifetime` and `--hold` for this run.
