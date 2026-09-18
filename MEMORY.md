@@ -1695,3 +1695,10 @@ bytes each while those processes held gigabytes.
 
 The new build is committed and pushed and deliberately not deployed: the daemon
 was mid-session, and the running build persists correctly now.
+
+
+A prose-lane pattern worth keeping, from five rewrites in one session of
+authored records: "from X to Y" reads as a false range, a dotted numeral
+("7.7", "2.67") reads as a section reference, and a "no X: ... and it is
+also" construction reads as negative parallelism. None of the three is
+visible to me while writing; all three are cheap to reword once flagged.
