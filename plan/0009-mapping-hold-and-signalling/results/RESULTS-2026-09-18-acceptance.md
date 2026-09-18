@@ -132,12 +132,27 @@ arrived, and the router's connection table shows where they went:
 192.168.0.21 > 170.9.238.141: ICMP 192.168.0.21 udp port 65401 unreachable
 ```
 
-The probe reached the console. Its own stack answered with a port-unreachable
-because that flow's socket had closed, and the connection table's reply tuple
-reads `src=192.168.21.138`: the router translated the datagram to the device's
-address, not to the shadow socket bound on the same port. A listener-less port
-is exactly what answers that way, so the ICMP is the receipt that the device
-received it, and the milestone's client hop is closed with a real client.
+The probe reached the console. Two captures on opposite sides of the router
+say so, and together they are the receipt rather than a reading of the
+translation:
+
+```host-lint:ignore
+# br-lan, the LAN side
+03:41:39.580260 IP 170.9.238.141.39897 > 192.168.21.138.65401: UDP, length 9
+03:41:39.580449 IP 192.168.21.138 > 170.9.238.141: ICMP 192.168.21.138 udp port 65401 unreachable, length 36
+```
+
+The forward went to the device's address with the sender preserved, and the
+ICMP's LAN-side source is the console itself, which the NAT rewrote to
+`192.168.0.21` by the time the WAN capture saw it. ICMP has no ports of its
+own: the `65401` above is tcpdump reading the quoted datagram inside the
+error, which is how the message names the flow it is about, and it is also
+what the router matched to translate the error back to the prober. So the port-unreachable is
+the console's own stack answering a flow whose socket had closed: a
+listener-less port is exactly what answers that way, and the router would
+have had no reason to answer at all once the datagram had been translated to
+another address. Nothing else in the path could have generated it, and the
+milestone's client hop is closed with a real client.
 
 That run also answered a question this milestone had left to measurement: a
 shared tuple resolves in the incumbent's favour. `call/0028` records it,

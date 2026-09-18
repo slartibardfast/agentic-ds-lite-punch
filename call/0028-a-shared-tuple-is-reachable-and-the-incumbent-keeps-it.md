@@ -43,11 +43,17 @@ silence:
 192.168.0.21 > 170.9.238.141: ICMP 192.168.0.21 udp port 65401 unreachable
 ```
 
-The reply tuple of that connection reads `src=192.168.21.138`, so the
-datagram went to the device's address and not to the shadow socket bound on
-the same port. The ICMP is the console's own stack answering a port whose
-socket had closed, which is what proves the delivery: a listener-less port is
-exactly what answers that way, and nothing else in the path would have.
+The LAN-side capture names the actor on both lines: the forward went to the
+device's address, and the ICMP's source there is the console itself, which
+the NAT rewrote to `192.168.0.21` by the time the WAN capture saw it. The
+port in that line is the quoted datagram's, since ICMP carries none, and the
+quoted tuple is both how the error names its flow and what the router matched
+to translate it. So the
+datagram went to the device and not to the shadow socket bound on the same
+port, and the port-unreachable is the console's own stack answering a flow
+whose socket had closed. A listener-less port is exactly what answers that
+way, and the router had no reason to answer once the datagram had been
+translated to another address.
 
 Both facts are worth separating from the third. The mapping survived five
 minutes of a real device's silence and was reachable from outside for all of
