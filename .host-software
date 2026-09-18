@@ -8,14 +8,14 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = b70ec19263f51544a11db7ca7310882c6eefbbc9
+	pin   = 81f4fa0cf60e8b70e818cb0184c4184b296ff27b
 	branch = main
 	toolchain = x86_64-unknown-linux-musl
 	build = cargo build --release --target x86_64-unknown-linux-musl
 	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 496d0e291f11cbb9f380667347ad32dea69e296fd6dad4ac7603d499100b63b5
 # The artifact hash above was derived on the canonical build host before
 # the v2 listing fix (ad69a49) and before plan/0009's hold, shared-port and
-# collision work (b70ec19), so several code changes have landed since. This
+# collision work (81f4fa0), so several code changes have landed since. This
 # development host's builds differ from canonical (the deployed binary is md5
 # a9e5bd19, a local build), so a hash recorded from here would be a false
 # anchor; the re-derivation is owed on the canonical host, or by
