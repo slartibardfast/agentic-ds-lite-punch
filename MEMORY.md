@@ -1521,3 +1521,31 @@ the tool's own echo of `rev-parse` caught it. And a verbatim client transcript
 in an authored doc trips the naming lane on its protocol quantities (`epoch
 18`), which is the case the sanctioned boxed block exists for: the block stays
 verbatim, the rest of the file stays linted.
+
+
+## 2026-09-18: the collision rules for punched ports, and what the box proved
+
+A port becomes this daemon's in two ways: an allocation (a lease, a row, a
+bind port) and a punch (a datagram the AFTR maps because it saw one). Only the
+first had a rule, so `call/0027` states both in the RFC idiom the PCP and
+NAT-PMP work was held to: the incumbent keeps the tuple, an allocation probes
+before it claims, a late collision moves the allocation and never the punch,
+the requested port is a label rather than a reservation, and no collision is
+resolved in silence.
+
+Three of the rules are enforced at `a9e5bd19` (deployed, md5 `a9e5bd199b75`):
+the allocator's probe over the live post-NAT set, the observation arm reading
+the live lease table each tick instead of the snapshot it started with, and a
+log line for every steering decision. The box read the rule back on the first
+fresh grant:
+
+    {"event":"collision-avoided","detail":"slot 40003 steered around the live tuple(s) [40001]"}
+
+Slot 40001 was live and unallocated, which is exactly the case the rules were
+written for; the two slots the table held are absent from the list because
+avoiding those is the allocator's ordinary business.
+
+Two questions are named as experiments rather than answered: whether the local
+NAPT can punch a port a local socket already holds (the trigger for the
+late-collision rule), and whether the AFTR ever answers one external port to
+two inner tuples. The second is observable passively in the per-slot reads.
