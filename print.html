@@ -7785,6 +7785,39 @@ deployed <code>ce6cc566</code>, 192 tests.</p>
 GC runs as one pass per tick, so a miss counter local to the pass resets
 before it reaches any threshold (it belongs on the facade), and a guard must
 not be held across the release await (decide under the lock, work after).</p>
+<h2 id="2026-09-18-hand-off-before-compact-the-state-and-what-the-overnight-run-is-for"><a class="header" href="#2026-09-18-hand-off-before-compact-the-state-and-what-the-overnight-run-is-for">2026-09-18 (hand-off before compact): the state, and what the overnight run is for</a></h2>
+<p><strong>Deployed:</strong> component <code>68c2e2d5</code>, binary <code>ce6cc566</code> (pid 16100), host <code>44481a9</code>,
+pin in step, 192 tests. Policy in force for both consoles; PCP live; the
+observation arm up with <code>allowed: 2</code>.</p>
+<p><strong>Where the overall goal stands.</strong> The daemon's purpose is met and verified:
+the PS3 reads Open and the Switch Type A, with the mechanism understood and
+fixed — three mechanisms were pinning the <em>device's</em> key so one game egressed
+on two external tuples at once (measured: one flow with 14,740 packets on a
+slot's port beside siblings on its own), the arm refused the console's own
+unanswered flows and spent its budget on DNS churn it held forever, holds were
+released for going quiet, and a mapping outlived its device. All four are
+fixed, with a shared presence rule (<code>call/0030</code>), and the consoles' state is
+the acceptance.</p>
+<p><strong>Open, in the order I would take them:</strong></p>
+<ol>
+<li>The <em>lobby</em> case with a real console — the one unexercised case, and it
+needs the operator (three minutes when either console sits in a lobby).</li>
+<li>The yield acceptance (<code>call/0027</code>'s late-collision rule) — runnable alone
+by driving a device flow onto a leased port with the IP_TRANSPARENT trick
+in <code>deploy/collision-probe.py</code>.</li>
+<li>A soak: the new GC logic has never run for hours, and the daemon's memory,
+fds, state writes and presence transitions under load are unmeasured.</li>
+<li>The objective outside-probe of a held tuple across a silence window (the
+synthetic client makes this possible without a console).</li>
+<li><code>call/0027</code>'s second question: whether the uplink ever answers one external
+port to two inner tuples (passive; the per-slot reads would show it).</li>
+<li>Hygiene: the artifact hash on the canonical build host; the Kani
+re-derivation on the larger host; EIF-loss detection, carried past v2.</li>
+</ol>
+<p><strong>Session captures are still running</strong> on the NVMe (<code>session-2026-09-18/</code>,
+3.8 GB and growing at about a megabyte a second): stop or rotate them before
+an overnight run, and use <em>simple</em> tcpdump filters that busybox accepts, each
+validated by a known event.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
