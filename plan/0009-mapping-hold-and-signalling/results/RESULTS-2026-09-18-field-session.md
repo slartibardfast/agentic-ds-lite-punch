@@ -80,6 +80,37 @@ trap worth keeping: `ls -l /proc/<pid>/fd/<n>` prints the **symlink's** length
 for a deleted file, not the file's size, so a scan of deleted-file holders
 reported 64 bytes each while those processes held gigabytes.
 
+## The root cause of the console's type, and the fix
+
+The console's NAT type is decided by one tuple, the console's own
+post-NAT `(address, port)`; everything else is bookkeeping. Measured on the
+router during the session, that tuple was held by nothing we own:
+
+- the facade's slot keeps a *different* inner tuple, because a slot's relay
+  socket binds the slot port and its keepalive maps that port rather than the
+  device's;
+- the arm, the only mechanism that can hold an arbitrary device tuple,
+  refused those flows twice. Its predicate required a reply, and the console's
+  flows to game peers read `[UNREPLIED]`; and its budget was spent on the same
+  console's one-second DNS lookups, which it then held forever because its
+  liveness test read the same mirror its own writes keep populated;
+- the local conntrack policy cannot compensate, because the uplink reaps at
+  thirteen to twenty-one seconds, well below the router's own sixty and one
+  hundred and eighty.
+
+The other console is the control. Its game flow was answered, so the arm
+claimed it and its mapping never lapsed; that console's type stayed the best
+one available.
+
+Fixed at component `0b986268` (built as `c3351220`, 189 tests): the allowlist
+admits an unanswered flow (`call/0029`), liveness is the device's own packet
+counters or a peer's probe and never our writes, the GC releases a device that
+stops answering on the LAN, capacity is per device, and a failed write can no
+longer take the daemon down by construction.
+
+**Pending:** the field check this fix exists for, the console's type back at
+Open, which needs the deploy.
+
 ## Deferred, and why
 
 The new build is committed and pushed, and deliberately **not deployed**: the
