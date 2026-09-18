@@ -163,3 +163,67 @@
     evidence = Deployed 2026-09-17: artifact built to the recorded recipe from component 2158485 (sha256 c9b246c5..3181db41, static musl, 987872 bytes), installed as /usr/bin/ds-lite-punch (md5 396a22c3..feca8718), previous binary kept at /root/ds-lite-punch.prev; service enabled under procd; the v2 mount live on br-lan 192.168.21.1:49152. Bench: bench-matrix.py (workstation vantage, a LAN caller at 192.168.21.97 as the device sees it) with bench-lan-client.sh (router vantage); 31 of 31 probes pass, recorded in RESULTS-2026-09-17-bench-matrix.md. Highlights: IGD:2 and WIP:2 resolve to the v2 description; a bare ssdp:all is deferred and answered v1 at 1004 ms; an in-window :2 flips both answers to v2; all four v2 mapping mutators 606 unauthenticated; another client's entry read 606, the contained enumeration 714, the listing 730; 731 ReadOnly, 501 ForceTermination, 200 RequestConnection, RSIP 0 / NAT 1; the PKCS5 ceremony reaches Basic over the wire and the lift then answers the same reads 200 on either face; the caller's own mapping is created and deleted without touching the two pre-existing household entries (3074->192.168.21.138, 14572->192.168.21.12, both lease 4294967295). The DP store was seeded out of band for the authenticated rows and removed after the run, so the deployed default is fail-closed; the absent in-band bootstrap is recorded in the results as the shadow of call/0021.
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-17
+
+[receipt "plan/0009#allowlist"]
+    disposition = done
+    verify = `nft -c` accepts the ruleset; a named device's quiet UDP flow
+    inputs = the accepted ruleset shape (the `ct timeout` objects with
+    evidence = the policy is installed and read back from the live table (ruleset_in_force true); a named device's quiet flow read 296 s and was alive at t+65 s, the same device unnamed read 55 s and was gone; results/RESULTS-2026-09-18-acceptance.md
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#snoop"]
+    disposition = done
+    verify = the observation log carries a learned external tuple for a named
+    inputs = the change-data-capture backends in `cdc.rs` (the nft
+    evidence = the arm claimed a named flow, learned its tuple (agreeing with the client's own STUN read) and reported the vote decision; a re-key is now reported per observation (observe_report, tested); results record
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#signal"]
+    disposition = done
+    verify = a real control point subscribes, then a mapping is added, deleted
+    inputs = `#snoop` for the change events, the subscription and notify path
+    evidence = a real control point subscribed with a router-side callback; the initial event carried the four declared variables, and add then delete carried only the two that moved; a contained subscriber's count was its own namespace alone
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#pcp"]
+    disposition = done
+    verify = a PCP client creates, renews and deletes a mapping against the
+    inputs = the listener, quota and result-code notes in plan/0004's
+    evidence = the client-visible surface read back from the router with deploy/pcp-probe.py: the drop-then-retry rule, the four refusals, and NAT-PMP on the same socket; results/RESULTS-2026-09-17-implementation.md
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#tcp-answer"]
+    disposition = done
+    verify = a decision record states the choice, its cost and its
+    inputs = the measured AFTR TCP lifetime (between 120 and 300 seconds, on
+    evidence = call/0026 states the decision: a mapping the daemon terminates is held, a client's own connection is signalled and never held, and the surrogate is scoped into its own milestone
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#collisions"]
+    disposition = done
+    verify = a fresh grant on a port a live tuple holds takes another port and
+    inputs = the change-data-capture mirror the arm already reads, the lease
+    evidence = the allocator steers around live tuples and says so (slot 40003 steered around the live tuple(s) [40001]), and the arm reads the live lease table each tick; call/0027 states the rules with their experiments
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#acceptance"]
+    disposition = done
+    verify = the external vantage reaches a held mapping at 30, 60 and 120
+    inputs = the rig and the external vantage the datapath work already uses
+    evidence = the external vantage's probes reached the held mapping at t0+31.4, 61.4, 121.4 and 301.4 s of client silence and were forwarded to the client with the sender preserved; the event surface was driven by a real control point
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
+
+[receipt "plan/0009#udp-threshold"]
+    disposition = done
+    verify = a results record states the death point for a held flow and for
+    inputs = the external vantage, the rig, the observation log from `#snoop`
+    evidence = an unheld flow's mapping was alive at t0+13.4 s and gone by t0+21.3 s on validated captures, so the AFTR reaps between thirteen and twenty-one seconds; the held flow was still reachable at 301.4 s
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-18
