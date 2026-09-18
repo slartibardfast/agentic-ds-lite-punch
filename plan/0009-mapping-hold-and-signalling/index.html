@@ -312,8 +312,11 @@ record names which, and what it costs.</p>
 <li>
 <p>verify: a fresh grant on a port a live tuple holds takes another port and
 logs the one it steered around; a renewal keeps the port it has; the arm
-refuses a tuple an allocation holds; the rules are stated as requirements
-in call/0027 and each one names its experiment</p>
+refuses a tuple an allocation holds and reports the refusal; a lease whose
+bind tuple a device's flow has taken moves to a free port, keeping its
+client, its internal port and its label, with the move reported; the rules
+are stated as requirements in call/0027 and call/0028 and each one names
+what settles it</p>
 </li>
 <li>
 <p>inputs: the change-data-capture mirror the arm already reads, the lease

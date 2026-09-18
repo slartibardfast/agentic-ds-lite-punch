@@ -3117,8 +3117,11 @@ record names which, and what it costs.</p>
 <li>
 <p>verify: a fresh grant on a port a live tuple holds takes another port and
 logs the one it steered around; a renewal keeps the port it has; the arm
-refuses a tuple an allocation holds; the rules are stated as requirements
-in call/0027 and each one names its experiment</p>
+refuses a tuple an allocation holds and reports the refusal; a lease whose
+bind tuple a device's flow has taken moves to a free port, keeping its
+client, its internal port and its label, with the move reported; the rules
+are stated as requirements in call/0027 and call/0028 and each one names
+what settles it</p>
 </li>
 <li>
 <p>inputs: the change-data-capture mirror the arm already reads, the lease
@@ -3225,7 +3228,7 @@ workstation, as the switch NAT-type record documents.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>df2b8adef189a9427b0b796edf4ae63690cf4d8a</code></li>
+<li>pin: <code>72094526036892960cb35374aae71c90332a4a8b</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -7494,6 +7497,32 @@ connection entry whose pre-NAT origin is a device, which is state the daemon
 already reads for identity.</p>
 <p><code>call/0028</code> records all of it; the experiment ships as
 <code>deploy/collision-probe.py</code> so the next run is one command.</p>
+<h2 id="2026-09-18-later-still-the-late-collision-rule-is-implemented-and-the-router-narrowed-it"><a class="header" href="#2026-09-18-later-still-the-late-collision-rule-is-implemented-and-the-router-narrowed-it">2026-09-18 (later still): the late-collision rule is implemented, and the router narrowed it</a></h2>
+<p><code>call/0027</code>'s R4 now lives in the daemon: the table detects the signature
+<code>call/0028</code> named (a connection entry whose NAT side is one of our bind tuples
+while its origin is a br-lan host), the facade moves the lease to a port the
+probe leaves free and reports the substitution, the arm reports a tuple it
+refuses instead of capturing, and a move that cannot complete leaves the slot
+working where it was. 182 tests, seven of them new.</p>
+<p>The router then narrowed the rule instead of widening it, and the readings are
+worth keeping:</p>
+<ul>
+<li>a bare socket holding <code>(192.168.0.21, 52021)</code> did not stop a console-sourced
+flow being translated with <code>sport=52021</code> (call/0028);</li>
+<li>a live slot did stop it: with the daemon's shadow on <code>40001</code>, the same flow
+came back at <code>1024</code>, because the slot's own keepalive holds the tuple in the
+connection table and the port selection reads that table. So the reachable
+window is a held port with no live entry: granted-but-not-punching, a relay
+gone quiet, or a configured port whose holder is idle.</li>
+</ul>
+<p>The deployment gave the detection a real negative control: the live table held
+an entry whose NAT side was the lease's port (the slot's own 68-packet punch)
+and the detection did not fire, because its origin was the NAT address rather
+than a device.</p>
+<p>Deferred, not attested: the yield's end-to-end acceptance. A forwarded flow
+must take a leased port for that, which needs its inlet port known and pinned,
+and the workstation sits behind a second NAT that rewrites it. A console on
+the LAN can be the client, and the run is recorded as owed.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
