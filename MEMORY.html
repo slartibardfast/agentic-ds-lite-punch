@@ -1763,6 +1763,33 @@ than a device.</p>
 must take a leased port for that, which needs its inlet port known and pinned,
 and the workstation sits behind a second NAT that rewrites it. A console on
 the LAN can be the client, and the run is recorded as owed.</p>
+<h2 id="2026-09-18-field-session-two-consoles-the-hold-under-real-play-and-a-state-directory-incident"><a class="header" href="#2026-09-18-field-session-two-consoles-the-hold-under-real-play-and-a-state-directory-incident">2026-09-18 (field session): two consoles, the hold under real play, and a state-directory incident</a></h2>
+<p>The arm held both consoles' <em>own</em> flows for the first time (the Switch on a
+game flow to port 10025, the PS3 on its own), and the Switch still negotiated
+<strong>NAT Type A</strong> — the field confirmation of <code>call/0028</code>'s precedence: a device
+keeps the inbound its flow earned, so our hold costs it nothing. The PS3 read
+Moderate (Type 2) with its 3074 mapping live through a facade slot; that slot
+has been 40002 in one reading and 40003 in another, because a restart
+re-grants the entries and the allocator picks a free port, so the console's
+external tuple moves when the daemon restarts and the game relearns it.</p>
+<p>Then an incident worth the ink. <code>/tmp</code> filled and every write into the state
+directory failed. The cause was mine: four stale <code>tcpdump</code> processes were still
+writing into <em>deleted</em> files and held gigabytes of the tmpfs. Killing them
+returned 52 MB of 7.7 G in use. But the consequence was already on the record
+as a mystery: <code>upnp.tsv</code> was 0 bytes, so the entry table had not been durable
+since 03:16, and <strong>the household 3074 mapping "lost in the first deployment
+window" was this defect</strong> — the entries record was renamed into place
+unconditionally, so a failed write published an empty tmpfile over the good
+table. Fixed at <code>4795061d</code>: rename only on success (with a test that forces the
+failure), and the tuples and tables now live in memory first, with the first
+failure and first success each reported once. The recovery is verified on the
+box: after the filesystem was freed, a lease renewal made both tables come back
+with their real content, the PS3's 3074 row included.</p>
+<p>A new reading trap: <code>ls -l /proc/&lt;pid&gt;/fd/&lt;n&gt;</code> prints the <strong>symlink's</strong> length
+for a deleted file, not the file's size, so a deleted-file scan reported 64
+bytes each while those processes held gigabytes.</p>
+<p>The new build is committed and pushed and deliberately not deployed: the daemon
+was mid-session, and the running build persists correctly now.</p>
 
                     </main>
 
