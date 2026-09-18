@@ -105,6 +105,42 @@ probe: the first MAP is dropped, the retry carries the fresh tuple, and no
 stale file survives the run. The three historical files were removed by hand,
 and the state directory now holds only its live slots' tuples.
 
+## The collision rules, and the port the rule steered around
+
+A port becomes the daemon's in two ways and only one of them had a rule: an
+allocation has a lease, and a punch has nothing but its packet while the AFTR
+honours it anyway. `call/0027` states the rules in the form the RFC paths are
+stated in, and three of them are enforced in this build:
+
+- the allocator probes the live post-NAT set before a fresh allocation and
+  skips a port a punch already holds (the table's reservation, refreshed from
+  the same mirror the observation arm reads, so both mechanisms see one set of
+  tuples);
+- the observation arm reads the live lease table each tick, so a tuple a grant
+  took after the arm started is not one it captures (the frozen start-up
+  snapshot could not see that grant);
+- every steering decision is logged with the ports it involved, because a
+  collision resolved in silence is the one outcome the rules forbid.
+
+The box read it back on the first fresh grant after the deploy:
+
+```host-lint:ignore
+{"event":"collision-avoided","detail":"slot 40003 steered around the live tuple(s) [40001]"}
+```
+
+Which is the rule working on exactly the case it was written for: slot 40001
+was live and nobody had allocated it, so the grant took the next port instead
+of sharing a tuple the AFTR keys as one mapping. Two slots the table already
+held (40000 and 40002) are not in that list, because avoiding a port the
+allocator holds is its ordinary business rather than a collision decision.
+
+Two things the decision leaves to measurement, and neither is settled by
+assumption: whether the local NAPT can punch a port a local socket already
+holds (if it cannot, the probe is complete and the late-collision rule is
+unreachable; if it can, that rule is the one that matters), and whether the
+AFTR ever answers one external port to two inner tuples, which the per-slot
+reads would show as a repeat and which is an uplink defect when it appears.
+
 ## Where this build diverges from the implementation notes
 
 The notes said to verify the protocol details against the RFCs and to expect

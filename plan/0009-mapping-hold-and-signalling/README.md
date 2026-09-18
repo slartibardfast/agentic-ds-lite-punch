@@ -132,6 +132,27 @@ terminates, to let the client know its session is at risk, or to run an
 opt-in surrogate on the machinery the datapath already has. The decision
 record names which, and what it costs.
 
+### Reconcile the punch and the allocation {#collisions}
+
+- depends: #allowlist, #pcp
+
+- verify: a fresh grant on a port a live tuple holds takes another port and
+  logs the one it steered around; a renewal keeps the port it has; the arm
+  refuses a tuple an allocation holds; the rules are stated as requirements
+  in call/0027 and each one names its experiment
+- inputs: the change-data-capture mirror the arm already reads, the lease
+  table, call/0027's rules, the live-tuple set on the box
+
+A port becomes the daemon's in two ways, and only one of them was specified.
+An allocation has a lease and a row; a punch has nothing but its packet, and
+the AFTR honours it anyway. The rules that keep the two apart are call/0027's,
+and they are written as requirements because that is what they are: the
+incumbent keeps the tuple, an allocation probes before it claims, a late
+collision moves the allocation and never the punch, and every collision is
+reported rather than resolved in silence. Two things the decision leaves open
+are experiments rather than opinions, and both are named there with the
+measurement that would settle them.
+
 ### Run the acceptance under silence {#acceptance}
 
 - verify: the external vantage reaches a held mapping at 30, 60 and 120
