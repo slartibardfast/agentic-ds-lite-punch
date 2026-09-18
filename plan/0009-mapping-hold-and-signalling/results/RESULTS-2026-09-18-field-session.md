@@ -46,8 +46,8 @@ seen in the field.
 `/tmp` reported full, and every write into the daemon's state directory failed
 with ENOSPC. The cause was mine: four `tcpdump` processes of an earlier
 capture attempt were still running and writing into **deleted** files, and
-between them they held gigabytes of the tmpfs. Killing those four returned the filesystem to 52 MB of
-7.7 G in use.
+between them they held gigabytes of the tmpfs. Killing those four returned the filesystem from full
+to 52 MB in use.
 
 The consequence was already on the record as a mystery. `upnp.tsv` was 0 bytes
 while the daemon had been running for hours, so the entry table had not been
