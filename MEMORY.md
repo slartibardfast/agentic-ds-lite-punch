@@ -1921,3 +1921,22 @@ rule now reads the way call/0030 states it: a static is reported and left, a
 granted lease is yielded. The deployed binary is deliberately *not* rebuilt:
 the six-hour soak runs on the binary under test, and a redeploy mid-soak would
 end the run. The fix ships with the next deploy.
+
+**Item (4): the per-slot learned tuples analysed, and call/0027's second
+question answered for the observed window** (2026-09-18). `deploy/tuple-analysis.py`
+reads the daemon's own tuple events and prints three views: one inner under
+several externals (the client-visible split), one external under several
+inners (the uplink's own collision), and externals shared between a slot and
+an inner. Liveness is decided from event times, so sequential reuse hours
+apart is reported apart from a genuine concurrency. Over 14:53:44 to 22:02:35
+(353 events, 35 inner tuples, 35 external tuples, 83 pairs) **no external
+tuple was in two inner tuples' hands at once**: the two shared externals
+(`59205`, `59230`) were recycled three hours later. What the same log does
+show, concurrently, is the mirror case: `192.168.21.138:3074` learned 59343,
+59220 and 59211 inside a six-second span at 18:53, which is the console split
+call/0014 fixed. So the console's Strict/Moderate was never the uplink
+allocating one external port twice — it was the local device-key pinning —
+and the downstream question stays open only as a standing property to watch.
+The sample is dominated by two browsers' churn, and the soak window widens it
+in the morning with no new code. Results:
+`results/RESULTS-2026-09-18-tuple-analysis.md`.
