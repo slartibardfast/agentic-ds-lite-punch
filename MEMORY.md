@@ -1631,3 +1631,34 @@ already reads for identity.
 
 `call/0028` records all of it; the experiment ships as
 `deploy/collision-probe.py` so the next run is one command.
+
+
+## 2026-09-18 (later still): the late-collision rule is implemented, and the router narrowed it
+
+`call/0027`'s R4 now lives in the daemon: the table detects the signature
+`call/0028` named (a connection entry whose NAT side is one of our bind tuples
+while its origin is a br-lan host), the facade moves the lease to a port the
+probe leaves free and reports the substitution, the arm reports a tuple it
+refuses instead of capturing, and a move that cannot complete leaves the slot
+working where it was. 182 tests, seven of them new.
+
+The router then narrowed the rule instead of widening it, and the readings are
+worth keeping:
+
+- a bare socket holding `(192.168.0.21, 52021)` did not stop a console-sourced
+  flow being translated with `sport=52021` (call/0028);
+- a live slot did stop it: with the daemon's shadow on `40001`, the same flow
+  came back at `1024`, because the slot's own keepalive holds the tuple in the
+  connection table and the port selection reads that table. So the reachable
+  window is a held port with no live entry: granted-but-not-punching, a relay
+  gone quiet, or a configured port whose holder is idle.
+
+The deployment gave the detection a real negative control: the live table held
+an entry whose NAT side was the lease's port (the slot's own 68-packet punch)
+and the detection did not fire, because its origin was the NAT address rather
+than a device.
+
+Deferred, not attested: the yield's end-to-end acceptance. A forwarded flow
+must take a leased port for that, which needs its inlet port known and pinned,
+and the workstation sits behind a second NAT that rewrites it. A console on
+the LAN can be the client, and the run is recorded as owed.
