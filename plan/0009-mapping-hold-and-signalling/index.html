@@ -174,7 +174,17 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="milestone-the-mapping-hold-its-admission-and-the-signalling-to-clients"><a class="header" href="#milestone-the-mapping-hold-its-admission-and-the-signalling-to-clients">Milestone: the mapping hold, its admission, and the signalling to clients</a></h1>
-<p><strong>Status:</strong> open, started 2026-09-17. This milestone keeps a named
+<p><strong>Status:</strong> done, 2026-09-18. Every task in the build sequence is built,
+verified on the router, and recorded: the hold's admission and its local
+policy, the arm that holds, the signalling, the shared port, the collision
+rules, the TCP decision, and the acceptance under silence. Two results
+records carry the measurements:
+<code>results/RESULTS-2026-09-17-implementation.md</code> (what was built, the tests, the
+shared port read back from the router) and
+<code>results/RESULTS-2026-09-18-acceptance.md</code> (the policy installed, the hook the
+statement needs, the silent windows, the AFTR's threshold, and the event
+surface driven by a real control point).</p>
+<p>This milestone keeps a named
 device's mappings alive for the lifetimes the RFCs promise and the AFTR
 refuses, and gives the daemon a voice so a client learns the truth about
 its own mapping. The policy spine is call/0025; the measurements that
