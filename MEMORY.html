@@ -1925,6 +1925,52 @@ re-derivation on the larger host; EIF-loss detection, carried past v2.</li>
 3.8 GB and growing at about a megabyte a second): stop or rotate them before
 an overnight run, and use <em>simple</em> tcpdump filters that busybox accepts, each
 validated by a known event.</p>
+<p><strong>The held mapping answers across its client's silence: item (4) of that list
+is measured and passes, and four defects fell out of it</strong> (2026-09-18, pin
+68c2e2d). Two leases were asked for over PCP from inside the router's
+<code>dslp-probe</code> container (192.168.21.11). A container's flow is <em>forwarded</em>, so
+the observation arm's mirror sees it, and its admission budget is its own,
+which is what the workstation's spent browser flows kept refusing. Each client
+then went fully silent, and the external vantage probed the learned external
+tuple at 30, 60, 120 and 300 seconds of that silence, with the schedule armed
+from the silence's own epoch so each probe landed at its window rather than
+past it. All eight arrivals are pasted in
+<code>results/RESULTS-2026-09-18-held-mapping-silence.md</code> (29.96, 59.97, 119.97 and
+299.97 s; 29.35, 59.34, 119.34 and 299.34 s), each also forwarded to the
+client. What it settles: the AFTR's 13 to 21 s idle reaping does not claim a
+mapping the daemon holds, because the slot's own punch is more frequent than
+the reaper. The lease was asked for with a 600 s lifetime, because the granted
+lifetime is the ceiling the windows must fit in.</p>
+<p><strong>Read the WAN capture by the router's own slot port, not by the CGNAT tuple.</strong>
+On eth1 the AFTR has already translated the destination back, so the arrival
+that the vantage sent to <code>37.228.213.83:59281</code> appears as
+<code>&gt; 192.168.0.21.40001</code>. A filter by the CGNAT port finds nothing and reads as
+a lost packet.</p>
+<p><strong>Four defects the run exposed</strong> (evidence in that results file):</p>
+<ol>
+<li><code>obs.rs</code>'s <code>should_rescue</code> ends with <code>reply_dst != ctx.vm_nat</code>, which
+requires the flow to have <em>seen a reply</em>: a named device's unreplied flow
+is therefore refused, against call/0029 and the function's own comment.
+Measured: an allowlisted client's flow to a black-hole peer was never
+claimed across 60 s with a fresh daemon and an empty budget.</li>
+<li>The <code>nft</code> CLI segfaults inside libnftables at daemon start (<code>apply_hold</code>'s
+batch is the suspect; the same commands run by hand all succeed). The
+policy is in force after every start, so nothing broke tonight.</li>
+<li>The shadow keepalive fails <code>EPERM</code>, so the <em>arm</em>'s hold rests on the
+device's own traffic while the <em>facade</em>'s rests on its own punch. That is
+why this acceptance had to use a lease.</li>
+<li><code>collided()</code> includes <code>Lease::Static</code>, so a device flow landing on a
+static's port would make the late-collision yield move a port the operator
+configured, against call/0030.</li>
+</ol>
+<p><strong>Harness footguns, rediscovered or new:</strong> the router's shell has no <code>timeout</code>
+and no <code>pkill</code> (it is <code>ash</code>); the router's ssh <em>hangs</em> on an unknown host key,
+so drive the vantage from the workstation; <code>pgrep -f</code> self-matches the ssh
+wrapper, so use the bracket trick; a container's <code>/tmp</code> is a separate mount,
+so stage files under <code>/root</code> in the rootfs (<code>/mnt/nvme/lxc/&lt;ct&gt;/rootfs/</code>); and
+a UDP socket that has been <code>connect</code>ed delivers only from its peer, so a held
+client must dissolve the association before probes from the vantage can reach
+it. <code>pcp-probe.py</code> gained <code>--lifetime</code> and <code>--hold</code> for this run.</p>
 
                     </main>
 
