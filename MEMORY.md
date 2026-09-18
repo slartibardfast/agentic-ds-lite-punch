@@ -1724,3 +1724,21 @@ emitted line drops its error). Component `0b986268`, 189 tests, built as
 
 Pending: the deploy and the field check it exists for, the console's type back
 at Open.
+
+
+## 2026-09-18 (deploy): the fix is on the router, and the presence probe had to change
+
+Deployed `171af463` (component `1b98cc71`). The hold's admission fix went on
+first, and then the GC's instrument was measured before a run could rely on
+it: **both consoles drop ICMP** — `ping` to the Switch and the PS3 answered
+"does NOT answer" while the Switch was demonstrably present — so an
+echo-based presence probe would have read a live console as gone and released
+every hold for it about twenty seconds after claiming it. The neighbour table
+is the instrument: a console that drops ICMP still answers ARP, `STALE` or
+`REACHABLE` with a MAC means present, `FAILED` or `INCOMPLETE` means a probe
+went unanswered, an echo is only a trigger when there is no entry to read, and
+an instrument that cannot run answers present. Lucky timing: the boxes were
+idle, so the arm had claimed nothing and the bad probe never fired.
+
+Worth separating from the instrument: the PS3 was genuinely absent at that
+moment (`FAILED`, no ARP), which is why the arm was holding nothing at all.
