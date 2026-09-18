@@ -1908,3 +1908,16 @@ so stage files under `/root` in the rootfs (`/mnt/nvme/lxc/<ct>/rootfs/`); and
 a UDP socket that has been `connect`ed delivers only from its peer, so a held
 client must dissolve the association before probes from the vantage can reach
 it. `pcp-probe.py` gained `--lifetime` and `--hold` for this run.
+
+**The collision rule moved the operator's static; found by the acceptance and
+fixed test-first** (2026-09-18). `LeaseTable::collided()` matched *any* slot's
+bind port, `Lease::Static` among them, so a device's flow landing on a
+static's port was reported as a collision for the yield to move: the running
+state would have diverged from the config that produced it, against
+call/0030. The test that failed first is
+`a_static_is_the_operators_and_is_never_the_slot_that_moves` (red with
+"a static's port is the operator's, not a lease the yield may move"), and the
+rule now reads the way call/0030 states it: a static is reported and left, a
+granted lease is yielded. The deployed binary is deliberately *not* rebuilt:
+the six-hour soak runs on the binary under test, and a redeploy mid-soak would
+end the run. The fix ships with the next deploy.
