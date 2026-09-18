@@ -1823,3 +1823,40 @@ Two mistakes of mine that the live test caught and the code now records: the
 GC runs as one pass per tick, so a miss counter local to the pass resets
 before it reaches any threshold (it belongs on the facade), and a guard must
 not be held across the release await (decide under the lock, work after).
+
+
+## 2026-09-18 (hand-off before compact): the state, and what the overnight run is for
+
+**Deployed:** component `68c2e2d5`, binary `ce6cc566` (pid 16100), host `44481a9`,
+pin in step, 192 tests. Policy in force for both consoles; PCP live; the
+observation arm up with `allowed: 2`.
+
+**Where the overall goal stands.** The daemon's purpose is met and verified:
+the PS3 reads Open and the Switch Type A, with the mechanism understood and
+fixed — three mechanisms were pinning the *device's* key so one game egressed
+on two external tuples at once (measured: one flow with 14,740 packets on a
+slot's port beside siblings on its own), the arm refused the console's own
+unanswered flows and spent its budget on DNS churn it held forever, holds were
+released for going quiet, and a mapping outlived its device. All four are
+fixed, with a shared presence rule (`call/0030`), and the consoles' state is
+the acceptance.
+
+**Open, in the order I would take them:**
+1. The *lobby* case with a real console — the one unexercised case, and it
+   needs the operator (three minutes when either console sits in a lobby).
+2. The yield acceptance (`call/0027`'s late-collision rule) — runnable alone
+   by driving a device flow onto a leased port with the IP_TRANSPARENT trick
+   in `deploy/collision-probe.py`.
+3. A soak: the new GC logic has never run for hours, and the daemon's memory,
+   fds, state writes and presence transitions under load are unmeasured.
+4. The objective outside-probe of a held tuple across a silence window (the
+   synthetic client makes this possible without a console).
+5. `call/0027`'s second question: whether the uplink ever answers one external
+   port to two inner tuples (passive; the per-slot reads would show it).
+6. Hygiene: the artifact hash on the canonical build host; the Kani
+   re-derivation on the larger host; EIF-loss detection, carried past v2.
+
+**Session captures are still running** on the NVMe (`session-2026-09-18/`,
+3.8 GB and growing at about a megabyte a second): stop or rotate them before
+an overnight run, and use *simple* tcpdump filters that busybox accepts, each
+validated by a known event.
