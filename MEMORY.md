@@ -1596,3 +1596,38 @@ anything.
 
 Still open: whether any device here needs the hold in the field, and the last
 hop to a client behind a second NAT.
+
+
+## 2026-09-18 (later): the collision is reachable, the incumbent keeps the tuple, and a console closed the client hop
+
+Three measurements from the same session, all on the router with captures
+that had recorded a known event first (the earlier run's zeros were an
+instrument that never started):
+
+- **The NAPT translates into a held port.** A socket holding `(192.168.0.21,
+  52021)` did not stop a console-sourced flow from being masqueraded with
+  `sport=52021`: port preservation asks for the source port first and the
+  selection consults connection state, not socket bindings. So a device whose
+  own outlet port falls inside the slot range lands on a slot's tuple, and
+  `call/0027`'s late-collision rule is reachable rather than hypothetical.
+- **The incumbent wins the inbound.** On a shared tuple the AFTR-forwarded
+  datagram went to the *device* (`src=192.168.21.138` in the reply tuple), not
+  to the shadow socket bound on the same port, and the device's own stack
+  answered ICMP port-unreachable because its socket had closed. The harm of a
+  collision therefore falls on the slot, whose peer expected to reach a
+  different client, and the device's working session is untouched, which is
+  the right direction.
+- **A console closed the acceptance's client hop.** The arm held four console
+  flows; probes to their learned tuples arrived after several minutes of the
+  console's silence and were delivered to the device with the sender
+  preserved. The workstation run could not show this because its own second
+  NAT drops a packet from a peer its flow never spoke to.
+
+The precedence is a feature for the device and a defect for the slot, so the
+slot must yield on detection and the substitution must be reported. The
+detection signature is the daemon's own bound socket appearing in a
+connection entry whose pre-NAT origin is a device, which is state the daemon
+already reads for identity.
+
+`call/0028` records all of it; the experiment ships as
+`deploy/collision-probe.py` so the next run is one command.
