@@ -1702,3 +1702,25 @@ authored records: "from X to Y" reads as a false range, a dotted numeral
 ("7.7", "2.67") reads as a section reference, and a "no X: ... and it is
 also" construction reads as negative parallelism. None of the three is
 visible to me while writing; all three are cheap to reword once flagged.
+
+
+## 2026-09-18 (root cause): the tuple a console's type rides was held by nobody
+
+The PS3 read Strict while the Switch read Type A, and the difference was one
+predicate. A console's NAT type is decided by its *own* post-NAT tuple; the
+facade's slot keeps a different inner tuple (its relay port, not the device's),
+and the arm — the only mechanism that can hold an arbitrary tuple — refused the
+console's flows because they were `[UNREPLIED]`, while its budget went on the
+same console's one-second DNS lookups, which it held forever because the exit
+rule read the mirror its own writes keep populated.
+
+`call/0029` states the rule: the allowlist admits an unanswered flow, liveness
+is the device's packet counters or a peer's probe and never ours, device
+presence is a LAN ICMP probe for the GC, capacity is per device, and a failed
+write is never fatal (with `panic = "abort"` set, a poisoned lock or a broken
+stdout pipe would otherwise abort the daemon: every lock now recovers, every
+emitted line drops its error). Component `0b986268`, 189 tests, built as
+`c3351220`.
+
+Pending: the deploy and the field check it exists for, the console's type back
+at Open.
