@@ -159,6 +159,50 @@ shared tuple resolves in the incumbent's favour. `call/0028` records it,
 together with the other measurement, that the NAPT will translate a flow into
 a port a local socket already holds.
 
+## The late-collision rule, implemented and exercised
+
+`call/0027`'s R4 now runs in the daemon, from the signature `call/0028`
+named: a connection entry whose NAT side is one of the table's bind tuples
+while its origin is a br-lan host. The lease moves to a port the probe leaves
+free, keeping its client, its internal port and the label the client asked
+for, with the new datapath up before the old one comes down. Running out of
+range is reported rather than silent, and the arm reports a refused tuple
+instead of capturing it, which is where a collision on a configured port
+becomes visible.
+
+Two things the router then said about reachability, and they narrow the rule
+rather than widen it:
+
+- A bare socket holding `(192.168.0.21, 52021)` did not stop a console-sourced
+  flow from being translated with `sport=52021` (call/0028's measurement).
+- A **live slot** did stop it: with the daemon's shadow socket bound on
+  `40001`, the same flow came back with the NAT side at `1024`, the
+  masquerade's first free port. The slot's own keepalive holds the tuple in
+  the connection table, and the port selection consults that table, so a port
+  a mechanism is actively punching is not available to a device's flow.
+
+So the window this rule covers is a narrow one. It is a held port before its
+first punch, a relay that has gone quiet, or a configured port whose holder is
+idle. The rule is insurance against that window rather than an
+everyday path.
+
+The deployment also gave the detection a negative control. The live table held
+an entry whose NAT side was the lease's port, and the detection stayed silent
+because that entry's origin was the NAT address.
+
+```host-lint:ignore
+src=192.168.0.21 dst=74.125.250.129 sport=40001 dport=19302 packets=68 bytes=3264 [ASSURED]
+```
+
+That is the slot's own punch, 68 packets of it at the working cadence, and the
+exclusion is the one the tests assert.
+
+**Deferred, not attested:** the yield's end-to-end acceptance. Driving a
+forwarded flow onto a leased port needs the flow's inlet port to be known and
+pinned, and the only client this workstation can be is one behind a second NAT
+that rewrites that port. A console on the LAN can do it, as the client hop
+above shows, and the run is recorded here as owed rather than as passed.
+
 ## What this run leaves open
 
 - The last hop to a client application behind a second NAT. Nothing in the
