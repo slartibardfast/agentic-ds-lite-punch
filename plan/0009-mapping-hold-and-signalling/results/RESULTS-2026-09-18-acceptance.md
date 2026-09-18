@@ -144,10 +144,10 @@ translation:
 
 The forward went to the device's address with the sender preserved, and the
 ICMP's LAN-side source is the console itself, which the NAT rewrote to
-`192.168.0.21` by the time the WAN capture saw it. ICMP has no ports of its
-own: the `65401` above is tcpdump reading the quoted datagram inside the
-error, which is how the message names the flow it is about, and it is also
-what the router matched to translate the error back to the prober. So the port-unreachable is
+`192.168.0.21` by the time the WAN capture saw it. ICMP carries no ports: the
+`65401` above is tcpdump reading the quoted datagram inside the error. That
+quoted tuple is how the message names the flow it concerns, and it is what
+the router matched when it translated the error back to the prober. So the port-unreachable is
 the console's own stack answering a flow whose socket had closed: a
 listener-less port is exactly what answers that way, and the router would
 have had no reason to answer at all once the datagram had been translated to

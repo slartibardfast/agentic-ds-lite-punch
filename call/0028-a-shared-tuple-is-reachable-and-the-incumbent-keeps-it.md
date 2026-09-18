@@ -46,9 +46,9 @@ silence:
 The LAN-side capture names the actor on both lines: the forward went to the
 device's address, and the ICMP's source there is the console itself, which
 the NAT rewrote to `192.168.0.21` by the time the WAN capture saw it. The
-port in that line is the quoted datagram's, since ICMP carries none, and the
-quoted tuple is both how the error names its flow and what the router matched
-to translate it. So the
+port in that line belongs to the quoted datagram, since ICMP carries none.
+That quoted tuple is how the error names its flow, and it is what the router
+matched when it translated the error. So the
 datagram went to the device and not to the shadow socket bound on the same
 port, and the port-unreachable is the console's own stack answering a flow
 whose socket had closed. A listener-less port is exactly what answers that
