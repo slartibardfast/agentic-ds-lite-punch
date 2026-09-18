@@ -1778,3 +1778,22 @@ Deployed `03a36a67` (component `13a67143`). Measured after: one claim in
 thirty seconds instead of twenty-three DNS claims, no releases on quiet, the
 map holding only the operator's static pin, and the console's live flows back
 on 3074.
+
+
+## 2026-09-18 (consoles off): what the daemon does with nobody home, and one asymmetry
+
+With both consoles off, the daemon is idle and clean: no claims, no releases,
+no holds for the absent devices, no fatal or state-write failures, and the
+policy still in force. The arm holds nothing because the flows ended and the
+capture reports none, and the budget is untouched for the next session. The
+presence reads were the PS3 at FAILED (no ARP) and the Switch at STALE with
+its MAC, which is last-known rather than live: the daemon only probes devices
+it holds, and it holds none.
+
+The asymmetry worth naming: the **facade's** slots are not covered by this
+GC. The console's 3074 mapping was requested with no expiry, so its slot
+(socket 40004) persists and its keepalive spends about half a packet per
+second holding an AFTR mapping for a device that is not on the LAN. The same
+device-presence rule answers it: a mapping whose client has gone should be
+released, and the client re-requests it when it returns. Until then the cost
+is one slot and one mapping per absent client.
