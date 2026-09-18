@@ -1549,3 +1549,50 @@ Two questions are named as experiments rather than answered: whether the local
 NAPT can punch a port a local socket already holds (the trigger for the
 late-collision rule), and whether the AFTR ever answers one external port to
 two inner tuples. The second is observable passively in the per-slot reads.
+
+
+## 2026-09-18: the acceptance run, and the two defects it found
+
+plan/0009 is done and its records are
+`results/RESULTS-2026-09-18-acceptance.md` (the box work) beside the earlier
+`RESULTS-2026-09-17-implementation.md`. The component is at `5bcc9d6a` and the
+deployed binary is `9049ba42`.
+
+The measurements, in the order they falsified something:
+
+- **`ct timeout set` needs a post-conntrack hook on this build.** The policy
+  installed cleanly and did nothing: an allowlisted flow read 57 s, the
+  router's default. One hook later (mangle priority, where the conntrack hook
+  has already created the entry) the same statement read 297. The chain moved
+  to mangle and was renamed `hold`, because `preraw` described a hook that
+  does not work. The plan predicted this class of failure in its own
+  falsifier, and the falsifier is what fired.
+- **The proof, same device, one list edit apart**: named read 296 s and was
+  alive at t+65 s; unnamed read 55 s and was gone by then.
+- **The held mapping was reachable from outside** at t0+31.4, 61.4, 121.4 and
+  301.4 s of client silence, and the router forwarded each to the client's
+  address with the sender preserved. The client application did not receive
+  them, and the reason is the test client's own second NAT (WSL): a packet
+  from a peer its flow never spoke to has no mapping there. The router's hops
+  are the ones the daemon owns.
+- **The AFTR reaps an idle UDP mapping between thirteen and twenty-one
+  seconds**, not the five to ten the milestone was written against: an unheld
+  flow was still reachable at t0+13.4 s and gone by t0+21.3 s. The two-second
+  cadence sits comfortably inside that.
+- **The event surface, driven by a real control point**: an initial event with
+  all four declared variables and a count of zero while the table held the
+  consoles' mappings, then add and delete each carrying only the two variables
+  that moved, the contained subscriber seeing its own namespace alone.
+- **An arm defect, found by asking where a re-key would show**: the arm
+  reported only the first tuple, so a mapping the AFTR moved under a held flow
+  would have been invisible. It now reports per observation.
+
+Two lessons worth more than the numbers. An instrument has not been shown to
+work until it has recorded a known event: a capture whose filter busybox
+refused never started, and its zeros read as "no arrival" until a control
+showed the difference. And a policy can be installed, readable in the table,
+and inert: only a reading of the flow's own state says whether it is doing
+anything.
+
+Still open: whether any device here needs the hold in the field, and the last
+hop to a client behind a second NAT.
