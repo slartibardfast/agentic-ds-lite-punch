@@ -39,7 +39,7 @@ RSS and open descriptors, across the window:
 
 The hourly means, which is where a slow leak would show:
 
-```
+```host-lint:ignore
 hour  0: rss mean    1246  fds mean  14.6
 hour  1: rss mean    1300  fds mean  15.0
 hour  2: rss mean    1228  fds mean  15.0

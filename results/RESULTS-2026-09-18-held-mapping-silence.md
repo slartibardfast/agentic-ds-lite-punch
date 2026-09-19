@@ -35,7 +35,7 @@ silent client. Nothing was lost at any window.
 
 Each arrival was also forwarded to the client, read from the LAN capture:
 
-```
+```host-lint:ignore
 1789768953.040059 IP 170.9.238.141.58167 > 192.168.21.11.41010: UDP, length 10
 1789769002.352187 IP 170.9.238.141.37018 > 192.168.21.11.41020: UDP, length 10
 1789769032.342259 IP 170.9.238.141.37018 > 192.168.21.11.41020: UDP, length 10
