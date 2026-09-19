@@ -3228,7 +3228,7 @@ workstation, as the switch NAT-type record documents.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>0f150da1c4bf344e8f018e9b86053084783b46e1</code></li>
+<li>pin: <code>1dc50be4dbcac05e3bb119061618c955c52fe7df</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -7941,6 +7941,22 @@ cross-protocol port conflict is in scope. Also: two stale inbound accept rules
 (<code>dslitepunch-40002-tcp</code>, the legacy <code>dslitepunch</code>) survive from earlier
 daemons, because the accept rule is deleted by <em>handle</em> parsed from
 <code>nft -a list</code> — the same path the libnftables segfaults come from.</p>
+<p><strong>Item (5), second fix: the accept rule was deleted by a handle, so it could
+outlive its slot</strong> (2026-09-18). <code>nft::del_input_accept</code> ran
+<code>nft -a list chain inet fw4 input</code>, parsed <code># handle N</code> out of the listing and
+deleted by handle. Two consequences, both measured on the test router: the
+delete depended on a listing at all (and that listing is the one the
+libnftables segfaults come from), and when it failed the rule stayed — two
+accept rules from earlier daemons are still installed, <code>dslitepunch-40002-tcp</code>
+for a protocol this build does not enable and a legacy <code>dslitepunch</code> with no
+port in its comment. Now <code>accept_match()</code> is the single definition of the
+rule's match: <code>accept_rule</code> builds the insert from it, <code>del_input_accept</code>
+deletes by it (bounded loop, so a duplicate from an older daemon goes too) and
+<code>revoke_datapath</code>'s batch uses it, so insert and delete cannot drift. Tests
+first: <code>a_slots_accept_rule_is_matched_by_expression_never_by_handle</code> and
+<code>the_insert_and_the_delete_share_one_match</code>; suite 195 passed. Committed and
+the pin bumped, but <strong>not deployed</strong> — the six-hour soak runs on the running
+binary and a redeploy would end the run.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
