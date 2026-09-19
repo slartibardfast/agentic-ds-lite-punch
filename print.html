@@ -8058,6 +8058,39 @@ frees, 2 collision events. Zero warnings from the running daemon and no state
 write failed; the 659 <code>EPERM</code> lines belong to earlier pids, the last of them
 six seconds before this window opened. Readings in
 <code>results/RESULTS-2026-09-19-soak.md</code>.</p>
+<p><strong>The overnight goal's five items are done, the fixes are committed, and the
+router is as it was found</strong> (2026-09-19). Items: (1) a synthetic client's held
+mapping answered the external vantage at 30, 60, 120 and 300 seconds of its
+own silence, twice, once through a facade lease and once through the arm's own
+hold, each arrival pasted from the router's WAN capture and each delivered to
+the client's socket; (2) a device's TCP flow onto a leased port made the
+daemon move the lease, <code>slot 40001 yielded to a device's flow and moved to 40003</code>, with the slot confirming a fresh external tuple in the same second;
+(3) seventeen hours of soak, one process, RSS flat across the hourly means
+(1220 to 1337 kB), descriptors at 15.0, zero warnings from the running daemon
+and no failed state write; (4) the tuple analysis, which found no external
+tuple in two inner tuples' hands at once and did find the concurrent split
+call/0014 fixed; (5) three defects fixed with a failing test first (a static
+port the collision rule may not move; the inbound accept deleted by a handle,
+twice: the second, set-based fix replaced the first, which relied on a
+<code>delete rule</code> by expression that this nft refuses), and one defect dispositioned
+rather than fixed because it is an upstream libnftables crash that 4,260
+hand-run invocations of the daemon's own shapes could not reproduce
+(call/0031). Two defects I had recorded are retracted with evidence: the
+<code>reply_dst</code> gate was never reached (the client had no policy route) and the
+<code>EPERM</code> shadow warnings belong to earlier pids.</p>
+<p><strong>What the operator still holds</strong>: the lobby case with a real console; the
+artifact hash on the canonical build host; the Kani re-derivation on the larger
+host; and the next deploy, which carries the three fixes and the set-based
+accept. Also open by decision: whether R4 should be scoped to the entry's
+protocol (recorded in <code>results/RESULTS-2026-09-18-collision-yield.md</code>).</p>
+<p><strong>Cleaned up on the test router</strong>: the sampler and the two overnight captures
+stopped, the capture files removed (their evidence is in the results files),
+the PCP clients and listeners killed, the harness files removed from <code>/tmp</code>
+and from the container's root, the temporary ip rules 25002 and 25003 removed,
+<code>/etc/ds-lite-punch.allow</code> restored to the operator's three, and the daemon
+restarted (pid 27551) so those apply. <code>soak.log</code> is kept on the NVMe as the
+series the soak reading cites. The other observer's capture (pid 14409) was
+never touched.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
