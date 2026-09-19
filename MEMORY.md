@@ -2101,3 +2101,51 @@ operator, unchanged from the hand-off: the lobby case with a real console, the
 artifact hash on the canonical build host, the Kani re-derivation, the next
 deploy (which carries the three fixes and the set-based accept), and the
 question of whether R4 should be scoped to the entry's protocol.
+
+**CI fixed on both repositories: the reproducible lane never ran, and the
+component had no lane at all** (2026-09-19). The host's Reproducible build job
+had failed on every push since it was written, and the reason was one field:
+`host-lifecycle software --verify-build` runs the *recorded `build`* inside the
+*recorded `toolchain`*, and `.host-software` held `toolchain =
+x86_64-unknown-linux-musl`, a Rust target triple. Docker read that as an image
+name and the lane died with `pull access denied for x86_64-unknown-linux-musl:
+repository does not exist` before it built anything.
+
+**A `toolchain` in `.host-software` is a container image, and it should be a
+digest.** It is now
+`ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a`,
+which carries the musl cross toolchain and the target already, and the digest
+is the same on Docker Hub and ghcr. Two things had to be checked from the
+registry rather than assumed, because this development host has no docker and
+no podman: the image has **no ENTRYPOINT** (the tool appends `sh -c`, so an
+entrypoint would swallow it), and it exposes `CARGO_BUILD_TARGET` and the musl
+toolchain. Both were read from the registry API with a token from
+`ghcr.io/token`; the recipe is in this session.
+
+**The artifact hash can only be re-derived where the toolchain can run.** With
+no container runtime here, the component's own CI is the re-deriver: its new
+lane builds in that image and prints `artifact = <path> <hash>` in the form the
+record uses. Two consecutive runs produced the identical
+`ab0f9bd517ef075885fd5b6e6a91b9fcc7e64ad9805e7d6450f2bd3eefd11a45`, and the
+host's lane then reproduced it from the pin on a GitHub runner, in the same
+image, at the same `/src` mount. That is the first time the chain
+CI-build → recorded anchor → independent rebuild has actually closed here.
+
+**The component's lane runs its tests inside the pinned toolchain, and that is
+not stylistic.** The crate's `.cargo/config.toml` sets
+`[build] target = x86_64-unknown-linux-musl` for every cargo command, so a bare
+`cargo test` on an ubuntu runner fails with `can't find crate for core` before
+it reaches a test. Both jobs therefore `docker run -v "$PWD":/src -w /src
+"$TOOLCHAIN" sh -c '… --locked'`, which also removes the second compiler: the
+release profile carries `lto`, `codegen-units = 1` and `strip`, so a test built
+by a different rustc would be a different program from the one that ships. The
+suite is 196 passed, 1 ignored, in CI as on the dev host.
+
+**Housekeeping the same run exposed**: the naming lane had flagged 23 tokens in
+the two results files, which are pasted packet timestamps and the sampler's
+hourly means. Fenced blocks are still scanned; a fence tagged
+```` ```host-lint:ignore ```` is not, which is the disposition the methodology
+gives an irreducible literal citation, so those two blocks are boxed and the
+surrounding prose stays linted. `software --check` reports 0 undispositioned
+tells, prose and reconcile are clean, and the refs sweep resolves every
+reference in 62 documents.
