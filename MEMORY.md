@@ -2149,3 +2149,43 @@ gives an irreducible literal citation, so those two blocks are boxed and the
 surrounding prose stays linted. `software --check` reports 0 undispositioned
 tells, prose and reconcile are clean, and the refs sweep resolves every
 reference in 62 documents.
+
+**CI failure drift filed as a methodology bug: connollydavid/host#21**
+(2026-09-19). The finding is not that a lane was red, it is that the rules
+cannot see a lane's outcome. Measured in this host repository over the whole
+life of its workflows: the Reproducible build lane ran 67 times and failed 64
+of them, the Prose lane failed 24, and only Site ever passed (66 of 66). The
+component repository had no `.github/workflows/` at all for the same period and
+nothing in the spine owed it one, because the mandatory-lane rules are
+conditional on a spec of a kind existing (`.allium`, `.tla`, a declared rung)
+and this component carries none. Every local gate stayed green throughout:
+`validate`, `software --check`, `obligations`, `book --check`, prose, refs,
+reconcile, and each phase receipt.
+
+**The consequence is three hashes for one component, and only two agree.** The
+recorded anchor, built in the pinned image, is `ab0f9bd517ef…`; the binary the
+test router runs is `8e21070e3a42c5240aed01900af3c451095bff263a28d36438e4aae403a814be`;
+and a build of the same pin on this development host is that same
+`8e21070e…`. The deployed artifact and the local build agree because the
+deployment was made from here, and the record anchors another toolchain's
+output, so a release input existed that no receipt could vouch for.
+
+**The ask in the report is that addressing CI failures become a function of the
+rules, per turn**: a per-turn duty in the operating manual (read the default
+branch's recent conclusions, fix or receipt them), a mechanical CI clause in
+the verify phase's recheck that HAZARDs on any non-green conclusion and on a
+declared lane with **no runs at all** (absence must fail, not pass vacuously),
+and forge-anchored re-derivation so a receipt names the run that discharged the
+claim rather than only a digest. Filed at
+https://github.com/connollydavid/host/issues/21 with the two documentation gaps
+the work exposed: the `[software]` `toolchain` key never says *container image*
+(which is how a Rust target triple got recorded there), and the conditional
+lane rule does not name its residue, a component whose tests never ran anywhere
+except a laptop.
+
+**Open decision from the same session**: aligning this host with CI byte for
+byte. The choices are to upload the component's release artifact from its lane
+and deploy from the run (one builder, nothing to install here), to bring the
+pinned image to this host so local builds match CI, or both. The image has no
+ENTRYPOINT and this host has no docker or podman, which was verified from the
+registry rather than assumed.
