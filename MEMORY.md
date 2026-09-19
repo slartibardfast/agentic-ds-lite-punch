@@ -2219,3 +2219,27 @@ component's upload commit), because the pin is a recorded fact the gate can
 read. It stayed green for two and a half days while the *lane* failed 64 times,
 because a lane's outcome is a forge fact no local gate reads. Both are drift;
 only one is visible from here.
+
+**CI thread closed; the forge, the record and the router are one artifact**
+(2026-09-19). End state: the host's three lanes and the component's lane are
+green, `software --check` reports every component at its pinned SHA with no
+worktree-symlink hazards, and the recorded `toolchain` is the digest-pinned
+image, the recorded `artifact` is `ab0f9bd517ef…`, and the daemon on the test
+router is those same bytes (pid 12490). The pin is the component's upload
+commit `1b758047…`, which the reproducible lane rebuilt and reproduced. The
+filed report of the drift that hid all this is connollydavid/host#21.
+
+**What the next session inherits**: the lobby case with a real console, the
+Kani re-derivation on a larger host (call/0019), and the open question from
+the collision work, whether R4 should be scoped to the entry's protocol.
+Two `software --check` notes stay by design: this host's `target/` is an
+ambient build that differs from the anchor (it is not a deployment source,
+call/0032), and the `.host` stamp has no `baseline` yet, which
+`host-lifecycle upgrade` migrates when the next upgrade lands.
+
+**A habit worth keeping from today**: the prose audit went red twice on my own
+new decision record, and both times the shape was a negation or a contrast the
+detector reads as a trope ("has no X, so Y"; "the record anchors A while the
+host hashes B"). Stating it positively cleared it. The auditor is the oracle:
+reword, re-run, repeat, and do it in the same turn as the push rather than
+letting a lane carry the failure.
