@@ -2297,3 +2297,21 @@ note advises rather than gates.
 from 2026-09-15. Nothing is committed, the tree is not mine, and a careless
 `git add -A` in that worktree would sweep it in; the operator may delete it or
 keep it on purpose.
+
+## 2026-09-19 — the derivation reads as the full name, with the short name beside it
+
+**The operator reordered the derivation sentence.** Both READMEs now read
+`**DS-Lite Proxy UPnP NAT/CGNAT Holder (ds-lite-punch).**`, the full name first
+and the short name in the parentheses. The entry above quotes the earlier form
+(`ds-lite-punch = DS-Lite Proxy UPnP NAT/CGNAT Holder`); this entry corrects
+that quote and points back to it, and the two READMEs carry the live text.
+Both copies remain one identical sentence, so a diff still shows any drift in a
+single line.
+
+**The change is `9b860c6` in the component and `54226ff` in the host README**,
+and the pin moves with the component commit. Nothing touched the code, and the
+artifact hash is unmoved: the component lane at `9b860c6` (35465214784) is
+green, reporting `196 passed; 0 failed; 1 ignored` and printing the artifact
+line with `ab0f9bd517ef…`, identical to the record. Prose is clean, every
+reference resolves across 63 documents, and `software --check` puts every
+component at its pinned SHA.
