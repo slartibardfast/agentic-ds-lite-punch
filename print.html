@@ -175,45 +175,76 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="agentic-ds-lite-punch"><a class="header" href="#agentic-ds-lite-punch">agentic-ds-lite-punch</a></h1>
-<p>The host repository for the <strong>ds-lite-punch</strong> software: a Rust daemon that keeps
-a CGNAT UDP mapping alive on the Virgin Media Ireland ds-lite line and forwards
-inbound UDP to a target behind br-lan, with zero ISP cooperation.</p>
-<p>This is the <em>thought</em> home. The software itself, the <em>action</em>, is hosted beneath
-the project as a bare store with worktrees (<code>software/</code>, recipe in
-<code>.host-software</code>). Thought lives here, versioned and audited; action lives in
-the component repo.</p>
+<p><strong>ds-lite-punch = DS-Lite Proxy UPnP NAT/CGNAT Holder.</strong></p>
+<p>This repository holds the thought about that software: the plans and the
+decisions for it. The software itself, the action, is a separate repository and
+it lives beneath this one as a hosted component (<code>software/</code>, with the recipe in
+<code>.host-software</code>).</p>
+<ul>
+<li>The software: <a href="https://github.com/slartibardfast/ds-lite-punch">slartibardfast/ds-lite-punch</a>.</li>
+<li>The job it does: a daemon on the router holds one mapping through the carrier
+CGNAT open, and it forwards inbound UDP and TCP to one host on the local
+network.</li>
+</ul>
 <h2 id="rooms"><a class="header" href="#rooms">Rooms</a></h2>
+<p>Each file belongs to one of five rooms. A room answers one question about the
+work.</p>
 <div class="table-wrapper"><table><thead><tr><th>Question</th><th>Room</th><th>Holds</th></tr></thead><tbody>
-<tr><td>Who</td><td><code>cast/</code></td><td>personas: the human operator and the agentic LLM developer</td></tr>
-<tr><td>When</td><td><code>plan/</code></td><td>the milestone index and <code>0004-ds-lite-punch/</code> (the active milestone)</td></tr>
-<tr><td>Where</td><td><code>software/ds-lite-punch</code></td><td>the hosted software, a bare store with worktrees</td></tr>
-<tr><td>Why</td><td><code>call/</code></td><td>decisions in MADR format, from <code>0011</code> (the /57 redesign) and <code>0012</code> (this adoption)</td></tr>
-<tr><td>How</td><td><code>AGENTS.md</code> + <code>tools/</code></td><td>the operating manual and the verification tools</td></tr>
+<tr><td>Who</td><td><code>cast/</code></td><td>personas: the people the software serves</td></tr>
+<tr><td>What</td><td>with the software</td><td>specifications, tested in the software's CI</td></tr>
+<tr><td>When</td><td><code>plan/</code></td><td>the milestone index and one folder per milestone</td></tr>
+<tr><td>Where</td><td><code>software/</code></td><td>the hosted software: a bare store with worktrees</td></tr>
+<tr><td>Why</td><td><code>call/</code></td><td>decisions in MADR form</td></tr>
+<tr><td>How</td><td><code>AGENTS.md</code> + <code>tools/</code></td><td>the manual and the verification lanes</td></tr>
 </tbody></table>
 </div>
-<p><code>plan/0004-ds-lite-punch/INVESTIGATION.md</code> is the rewritten possibility-space
-exploration of the Virgin Media AFTR that fed the milestone.</p>
-<h2 id="working-here"><a class="header" href="#working-here">Working here</a></h2>
-<p>Read <code>AGENTS.md</code> first: it is the operating manual and it is normative. <code>CLAUDE.md</code>
-is a one-line pointer to it. <code>STRUCTURE.md</code> is the one-page map. <code>MEMORY.md</code> is the
-append-only working memory.</p>
-<h2 id="status"><a class="header" href="#status">Status</a></h2>
+<h2 id="state-at-2026-09-19"><a class="header" href="#state-at-2026-09-19">State at 2026-09-19</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Milestone</th><th>State</th></tr></thead><tbody>
+<tr><td><a href="plan/0004-ds-lite-punch/README.html">plan/0004</a></td><td>v1 core built, deployed and verified; multi-instance built; the UPnP control plane delivered by <a href="plan/0007-igd-facade/README.html">plan/0007</a> and <a href="plan/0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a></td></tr>
+<tr><td><a href="plan/0005-test-rig/README.html">plan/0005</a></td><td>the acceptance rig</td></tr>
+<tr><td><a href="plan/0006-ps3-requirements/README.html">plan/0006</a></td><td>the console requirements; closed by reframing (<a href="call/0014-a2-acceptance-reframe.html">call/0014</a>)</td></tr>
+<tr><td><a href="plan/0007-igd-facade/README.html">plan/0007</a></td><td>the UPnP facade; closed 2026-09-15</td></tr>
+<tr><td><a href="plan/0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a></td><td>the adaptive v1 and v2 facade with DeviceProtection; 31 probes pass on the box</td></tr>
+<tr><td><a href="plan/0009-mapping-hold-and-signalling/README.html">plan/0009</a></td><td>the mapping hold and its signalling; done 2026-09-18</td></tr>
+</tbody></table>
+</div>
+<p>The component:</p>
 <ul>
-<li><code>plan/0004-ds-lite-punch/</code>: P1 built, deployed, formally verified. P2 (multi-
-instance) and P3 (UPnP-IGDv1 control plane) not started.</li>
-<li><code>call/0011</code>: the VM line /57 + DHCPv6-PD decision, accepted.</li>
-<li><code>call/0012</code>: adoption of the agentic-host methodology (this template revision),
-which moved the DSLITE.md investigation into the plan room as INVESTIGATION.md.</li>
-<li>The ds-lite-punch crate is being migrated into the <code>ds-lite-punch</code> component
-repo from the former rope-agentic monorepo; until then the component carries a
-<code>repro-waiver</code> recorded in <code>call/0012</code>.</li>
+<li>The record in <a href=".host-software"><code>.host-software</code></a> names the pin, the toolchain
+and the artifact hash. The artifact hash today is
+<code>ab0f9bd517ef075885fd5b6e6a91b9fcc7e64ad9805e7d6450f2bd3eefd11a45</code>.</li>
+<li>The component lane runs the test suite and the release build inside the
+pinned toolchain image, and it publishes the binary from the run.</li>
+<li>The test router runs the bytes from that lane.</li>
+<li>The three host lanes pass: Reproducible build, Prose and Site.</li>
+<li>The adopted template revision is <code>41ba4e10</code>, recorded in <a href=".host"><code>.host</code></a>.</li>
 </ul>
+<h2 id="future-work"><a class="header" href="#future-work">Future work</a></h2>
+<ol>
+<li><strong>The lobby case.</strong> A console in a lobby sends no traffic. The hold must
+survive that silence on a real console. The operator runs this test
+(<a href="plan/0009-mapping-hold-and-signalling/README.html">plan/0009</a>).</li>
+<li><strong>The Kani suite on a larger host</strong>
+(<a href="call/0019-facade-kani-deferred-to-larger-host.html">call/0019</a>).</li>
+<li><strong>The R4 rule.</strong> A late collision moves an allocation, and it never moves a
+punch. Decide if the rule must follow the protocol of the entry
+(<a href="call/0027-collisions-for-punched-ports.html">call/0027</a>).</li>
+<li><strong>EIF loss.</strong> Detect a change in the filtering behaviour of the carrier
+(<a href="plan/0004-ds-lite-punch/README.html">plan/0004</a>).</li>
+</ol>
+<h2 id="working-here"><a class="header" href="#working-here">Working here</a></h2>
+<ol>
+<li>Read <code>AGENTS.md</code> first. It is the manual, and it is normative.</li>
+<li>Read <code>STRUCTURE.md</code> for the one-page map of the same rooms.</li>
+<li>Read <code>MEMORY.md</code> for the append-only memory of this project.</li>
+<li>Record new work in <code>plan/</code>. Record new decisions in <code>call/</code>.</li>
+</ol>
 <h2 id="provenance"><a class="header" href="#provenance">Provenance</a></h2>
-<p>The methodology is adopted from
-<a href="https://github.com/connollydavid/host"><code>connollydavid/host</code></a>, applied via
-<a href="https://github.com/connollydavid/host-template"><code>connollydavid/host-template</code></a>
-at the revision recorded in <code>.host</code>. This repository and the spine documents are
-public domain (Unlicense); see <code>LICENSE</code>.</p>
+<p>The method comes from <a href="https://github.com/connollydavid/host">connollydavid/host</a>
+and is applied through
+<a href="https://github.com/connollydavid/host-template">connollydavid/host-template</a>.
+This repository and the spine documents are in the public domain (Unlicense);
+see <code>LICENSE</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cast-the-projects-who"><a class="header" href="#cast-the-projects-who">Cast: the project's Who</a></h1>
 <p>Personas: hypothetical archetypal actors, grounded in research, that keep the
 work anchored in who it serves. The process comes from Powell, Keenan and McDaid
