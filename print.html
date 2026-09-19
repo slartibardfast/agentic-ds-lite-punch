@@ -8371,6 +8371,21 @@ note advises rather than gates.</p>
 from 2026-09-15. Nothing is committed, the tree is not mine, and a careless
 <code>git add -A</code> in that worktree would sweep it in; the operator may delete it or
 keep it on purpose.</p>
+<h2 id="2026-09-19--the-derivation-reads-as-the-full-name-with-the-short-name-beside-it"><a class="header" href="#2026-09-19--the-derivation-reads-as-the-full-name-with-the-short-name-beside-it">2026-09-19 — the derivation reads as the full name, with the short name beside it</a></h2>
+<p><strong>The operator reordered the derivation sentence.</strong> Both READMEs now read
+<code>**DS-Lite Proxy UPnP NAT/CGNAT Holder (ds-lite-punch).**</code>, the full name first
+and the short name in the parentheses. The entry above quotes the earlier form
+(<code>ds-lite-punch = DS-Lite Proxy UPnP NAT/CGNAT Holder</code>); this entry corrects
+that quote and points back to it, and the two READMEs carry the live text.
+Both copies remain one identical sentence, so a diff still shows any drift in a
+single line.</p>
+<p><strong>The change is <code>9b860c6</code> in the component and <code>54226ff</code> in the host README</strong>,
+and the pin moves with the component commit. Nothing touched the code, and the
+artifact hash is unmoved: the component lane at <code>9b860c6</code> (35465214784) is
+green, reporting <code>196 passed; 0 failed; 1 ignored</code> and printing the artifact
+line with <code>ab0f9bd517ef…</code>, identical to the record. Prose is clean, every
+reference resolves across 63 documents, and <code>software --check</code> puts every
+component at its pinned SHA.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
