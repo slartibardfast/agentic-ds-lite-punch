@@ -82,11 +82,10 @@ mapping must outlast all of them.
 ## Defects this run exposed
 
 1. ~~**A named device's unreplied flow is refused.**~~ **RETRACTED the same
-   evening; it was not the gate.** The flow in that experiment never reached
-   the mirror at all: a synthetic client inside the container had no policy
-   route, so its packets left by
-   `pppoe-vdsl4` (84.203.115.61); the observation arm sees only flows on
-   `oifname eth1`. With one `ip rule` added for the client's
+   evening; it was not the gate.** A policy route is what the mirror
+   requires. The synthetic client inside the container went without one, so
+   its packets left by `pppoe-vdsl4` (84.203.115.61), and the arm's mirror
+   watches `oifname eth1`. With one `ip rule` added for the client's
    address, the same unreplied flow was claimed at once
    (`claim 192.168.21.11:47077 -> 192.0.2.1:45678 -> 47077 (cdc nft)`), and
    the gate passed because eth1's fullcone masquerade sets the NAT source to
