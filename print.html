@@ -5767,13 +5767,13 @@ the thought about the ds-lite-punch software; the software itself is the hosted
 component described in <code>.host-software</code>.</li>
 <li><strong>The component.</strong> <code>ds-lite-punch</code> is a Rust daemon (musl-static, procd-managed
 on the ImmortalWrt router) that keeps a CGNAT UDP mapping alive on the Virgin
-Media ds-lite line and forwards inbound UDP to a br-lan target. Its code is
-being migrated into the <code>ds-lite-punch</code> component repo from the former
-rope-agentic monorepo (<code>tools/ds-lite-punch/</code>); until the crate lands with a
-recorded build recipe, the component carries a <code>repro-waiver</code> (see <code>call/0012</code>).</li>
+Media ds-lite line and forwards inbound UDP to a br-lan target. Its code lives
+in the <code>ds-lite-punch</code> component repo; the crate migrated there from the former
+rope-agentic monorepo (<code>tools/ds-lite-punch/</code>) on 2026-09-13, and the
+<code>repro-waiver</code> is retired (see <code>call/0016</code>).</li>
 <li><strong>Rooms kept from the pre-adoption history.</strong> <code>plan/0004-ds-lite-punch/</code> is the
-active milestone (the v1 core is done; multi-instance and the UPnP control
-plane are open). <code>call/0011-redesign-vm-line-57-pd.md</code>
+active milestone (the v1 core is done; multi-instance is built, and plan/0007
+and plan/0008 deliver the UPnP control plane). <code>call/0011-redesign-vm-line-57-pd.md</code>
 is the accepted decision that created the problem space. Numbering continues
 from 0004 for plan and 0012 for call; <code>host-lifecycle next</code> allocates.</li>
 <li><strong>The investigation record.</strong> <code>plan/0004-ds-lite-punch/INVESTIGATION.md</code> was the
