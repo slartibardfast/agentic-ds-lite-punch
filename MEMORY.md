@@ -2086,3 +2086,18 @@ and from the container's root, the temporary ip rules 25002 and 25003 removed,
 restarted (pid 27551) so those apply. `soak.log` is kept on the NVMe as the
 series the soak reading cites. The other observer's capture (pid 14409) was
 never touched.
+
+**The overnight goal is closed: its work is done and committed, and the Goal
+mechanism stopped on its own bookkeeping limit** (2026-09-19). All five checks
+are met with committed evidence: the held mapping's four windows, the driven
+collision-yield, the seventeen-hour soak, the tuple analysis, and three
+defects fixed behind failing tests with the pin bumped. The runtime reports
+the Goal `usage_limited` after three consecutive evidence-checkpoint overflows
+(the catalog could not fit the claim list inside its bound), not because any
+check failed, and it asks for a narrower objective if the Goal is to be
+resumed. Nothing is left running: the repo is clean and pushed at 6efba91, the
+component at 41f63ae, and the router is as it was found. Open for the
+operator, unchanged from the hand-off: the lobby case with a real console, the
+artifact hash on the canonical build host, the Kani re-derivation, the next
+deploy (which carries the three fixes and the set-based accept), and the
+question of whether R4 should be scoped to the entry's protocol.
