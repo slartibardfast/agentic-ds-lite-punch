@@ -60,8 +60,8 @@ hour 16: rss mean    1222  fds mean  15.0
 hour 17: rss mean    1279  fds mean  15.0
 ```
 
-RSS moves inside a band of about a hundred kilobytes from hour to hour with no
-direction over seventeen hours, ending lower than it started. Descriptors sit
+RSS moves inside a band of about a hundred kilobytes across the hourly means,
+with no direction over seventeen hours, and it ends lower than it began. Descriptors sit
 at fifteen, which is the daemon's sockets and the slot sockets it holds; the
 extremes of three and twenty-two are the moments the table emptied and the
 moments the arm held several rescued tuples, and the hourly means show they
