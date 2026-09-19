@@ -2036,3 +2036,16 @@ claimed. Tests first: `a_slots_accept_is_a_set_element_never_a_rule_handle`,
 `the_two_protocols_use_two_sets`, `the_legacy_sweep_takes_only_the_daemons_per_port_rules`;
 suite 196 passed. Committed, pin bumped, **not deployed** (the soak runs on the
 running binary).
+
+**Item (3) done: seventeen hours of soak, flat, with no failed state write**
+(2026-09-18 21:57:59 to 2026-09-19 15:11:33). One process (pid 4496) for the
+whole window, 1034 one-minute samples: before `1789768700 rss=1136 fds=13
+ct=881 holds=1`, after `1789830693 rss=1100 fds=15 ct=616 holds=3`. The
+hourly RSS means move inside 1220 to 1337 kB with no direction over seventeen
+hours and end lower than they began; descriptors sit at 15.0 with excursions
+to 3 and 22 when the slot table emptied and when the arm held several rescued
+tuples. The daemon was busy throughout: 833 rescues, 13 churn events, 3 GC
+frees, 2 collision events. Zero warnings from the running daemon and no state
+write failed; the 659 `EPERM` lines belong to earlier pids, the last of them
+six seconds before this window opened. Readings in
+`results/RESULTS-2026-09-19-soak.md`.
