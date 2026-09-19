@@ -1,6 +1,6 @@
 # agentic-ds-lite-punch
 
-**ds-lite-punch = DS-Lite Proxy UPnP NAT/CGNAT Holder.**
+**DS-Lite Proxy UPnP NAT/CGNAT Holder (ds-lite-punch).**
 
 This repository holds the thought about that software: the plans and the
 decisions for it. The software itself, the action, is a separate repository and
