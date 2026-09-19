@@ -1993,3 +1993,20 @@ cross-protocol port conflict is in scope. Also: two stale inbound accept rules
 (`dslitepunch-40002-tcp`, the legacy `dslitepunch`) survive from earlier
 daemons, because the accept rule is deleted by *handle* parsed from
 `nft -a list` — the same path the libnftables segfaults come from.
+
+**Item (5), second fix: the accept rule was deleted by a handle, so it could
+outlive its slot** (2026-09-18). `nft::del_input_accept` ran
+`nft -a list chain inet fw4 input`, parsed `# handle N` out of the listing and
+deleted by handle. Two consequences, both measured on the test router: the
+delete depended on a listing at all (and that listing is the one the
+libnftables segfaults come from), and when it failed the rule stayed — two
+accept rules from earlier daemons are still installed, `dslitepunch-40002-tcp`
+for a protocol this build does not enable and a legacy `dslitepunch` with no
+port in its comment. Now `accept_match()` is the single definition of the
+rule's match: `accept_rule` builds the insert from it, `del_input_accept`
+deletes by it (bounded loop, so a duplicate from an older daemon goes too) and
+`revoke_datapath`'s batch uses it, so insert and delete cannot drift. Tests
+first: `a_slots_accept_rule_is_matched_by_expression_never_by_handle` and
+`the_insert_and_the_delete_share_one_match`; suite 195 passed. Committed and
+the pin bumped, but **not deployed** — the six-hour soak runs on the running
+binary and a redeploy would end the run.
