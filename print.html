@@ -4544,7 +4544,7 @@ wrong with it, both measured on the test router on 2026-09-18:</p>
 <li><code>delete rule</code> by expression is refused by this build. The attempt
 <code>nft delete rule inet fw4 input iifname "eth1" udp dport 49001 accept comment "dslitepunch-49001"</code> answers <code>syntax error, unexpected iifname, expecting handle</code>, so a handle is the only way and a listing is the only
 source of one.</li>
-<li>A delete that could not read the listing left its rule installed. Two accept
+<li>When a delete could not read the listing, the rule stayed installed. Two accept
 rules from earlier daemons were still in the chain, <code>dslitepunch-40002-tcp</code>
 for a protocol the running daemon does not enable and a legacy
 <code>dslitepunch</code> with no port in its comment. An inbound accept that outlives
