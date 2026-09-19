@@ -2189,3 +2189,33 @@ and deploy from the run (one builder, nothing to install here), to bring the
 pinned image to this host so local builds match CI, or both. The image has no
 ENTRYPOINT and this host has no docker or podman, which was verified from the
 registry rather than assumed.
+
+**CI and this host are aligned onto GitHub's bytes, and the router runs them**
+(2026-09-19). The operator ruled the direction: GitHub is the builder and the
+host matches it, because reproducibility has to hold widely rather than on one
+machine's ambient compiler. Recorded as call/0032. The component's lane now
+publishes the artifact it builds together with the `artifact = path hash` line
+the record uses, and fails the job if the upload produces nothing.
+
+**Verified end to end**: the artifact downloaded from run 35459015279 hashes to
+`ab0f9bd517ef…`, which is the recorded anchor; the test router's
+`/usr/bin/ds-lite-punch` was replaced with exactly those bytes and checked
+against the record before the daemon was started; it came up (`start`, `hold`
+with the ruleset in force, `observe` with the three allowlisted devices, `pcp`)
+and confirmed a slot tuple in the swap second (`slot 40000 confirmed
+37.228.213.83:59278` at 17:47:25), so its datapath worked. The replaced binary
+is parked at `/root/ds-lite-punch.prev14` for rollback. The record, the lane's
+output and the running daemon are now one hash.
+
+**Local ambient builds still differ** (`8e21070e…`) because this host has no
+container runtime, and they are now explicitly a development aid rather than a
+deployment source: the `.host-software` note says so, and a deployment checks
+the downloaded artifact against the record first.
+
+**One observation worth keeping, and it sharpens the filed report**: the local
+gate caught a *pin* drift within a minute of it happening (`DRIFT
+software/ds-lite-punch/main at 1b758047 but pinned to 9a4f1c0e` after the
+component's upload commit), because the pin is a recorded fact the gate can
+read. It stayed green for two and a half days while the *lane* failed 64 times,
+because a lane's outcome is a forge fact no local gate reads. Both are drift;
+only one is visible from here.
