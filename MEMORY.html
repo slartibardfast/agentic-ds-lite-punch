@@ -2064,6 +2064,30 @@ first: <code>a_slots_accept_rule_is_matched_by_expression_never_by_handle</code>
 <code>the_insert_and_the_delete_share_one_match</code>; suite 195 passed. Committed and
 the pin bumped, but <strong>not deployed</strong> — the six-hour soak runs on the running
 binary and a redeploy would end the run.</p>
+<p><strong>Item (5), correction and third fix: the accept rule cannot be deleted by
+expression, so it is a set element now</strong> (2026-09-18). My previous entry said
+the delete was fixed by using the rule's match expression. That was wrong, and
+the router said so: <code>nft delete rule inet fw4 input iifname "eth1" udp dport 49001 accept comment "dslitepunch-49001"</code> is refused with "syntax error,
+unexpected iifname, expecting handle" on this build (libnftables 1.1.0). The
+committed version would therefore have failed every delete and let accept
+rules <em>accumulate</em>. The real fix is structural: a slot's inbound accept is now
+an <strong>element</strong> of one of two daemon-named sets inside fw4
+(<code>dslp_ports_udp</code>, <code>dslp_ports_tcp</code>), with the two accept rules installed once
+by <code>ensure_accept_sets</code>, which also empties both sets and sweeps any per-port
+rule an older daemon left (by handle, from the one listing it already reads).
+Every per-slot operation is by key, so no handle is needed in the datapath at
+all, and the boot path re-adds an element per restored slot after
+<code>ensure_ruleset</code>, so a restart keeps exactly the ports its table holds.
+Verified on the box in a scratch table: set create, rule add (rendering exactly
+the text the code builds), element add/list/delete, delete-of-non-member
+refused, flush, table delete. The live fw4 chain now holds only
+<code>dslitepunch-47077</code> and <code>dslitepunch-1024</code>, the arm's two rescues; the two
+stale rules and my own leaked <code>dslitepunch-49001</code> are gone, and how they went
+is not attributable from the log — recorded as unexplained rather than
+claimed. Tests first: <code>a_slots_accept_is_a_set_element_never_a_rule_handle</code>,
+<code>the_two_protocols_use_two_sets</code>, <code>the_legacy_sweep_takes_only_the_daemons_per_port_rules</code>;
+suite 196 passed. Committed, pin bumped, <strong>not deployed</strong> (the soak runs on the
+running binary).</p>
 
                     </main>
 
