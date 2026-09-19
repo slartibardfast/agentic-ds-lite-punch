@@ -16,13 +16,14 @@ not agree.
 The pinned toolchain is a digest-pinned container image
 (`ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e917...`), which the host's
 `--verify-build` clause and the component's continuous integration lane both
-run. This development host has no container runtime, so its builds use the
-ambient toolchain, and the two produce different bytes. The record anchors
+run. This development host builds with the ambient toolchain, its container runtime
+being absent, and the two produce different bytes. The record anchors
 `ab0f9bd517ef...`. The development host's build of the same pin hashes
 `8e21070e3a42c5240aed01900af3c451095bff263a28d36438e4aae403a814be`. On
 2026-09-19 the binary on the test router was the second of those, because the
-deployment had been made from the development host, so the record and the
-running daemon disagreed about what was running and no receipt could tell.
+deployment had been made from the development host. The record and the running
+daemon therefore disagreed about what was running, and every receipt stayed
+silent about it.
 
 The reproducibility lane had been failing on every push since it was written,
 which is how that divergence survived: see the report filed as
