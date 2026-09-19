@@ -2243,3 +2243,57 @@ detector reads as a trope ("has no X, so Y"; "the record anchors A while the
 host hashes B"). Stating it positively cleared it. The auditor is the oracle:
 reword, re-run, repeat, and do it in the same turn as the push rather than
 letting a lane carry the failure.
+
+## 2026-09-19 — the name is derived, and both READMEs state it
+
+**`punch` = Proxy UPnP NAT/CGNAT Holder.** The operator supplied the derivation
+in session; before today no file in either repository carried it. A search for
+"Proxy UPnP", "NAT/CGNAT" and "Holder" found only the imported sense of
+"holder" (the STUN and mapping holder in code), and the field was empty in the
+host's tracked docs, in `call/` and here. One search lesson: `software/` is
+gitignored, so workspace-wide greps skip the component worktree entirely (an
+earlier pass therefore reported "no component README" when one exists); search
+the component by explicit path.
+
+**Both READMEs carry the derivation in one identical sentence** (the operator
+chose to state it in full rather than point): `**ds-lite-punch = DS-Lite Proxy
+UPnP NAT/CGNAT Holder.**` Two copies of one sentence is the recorded cost of
+that choice, and a diff of the two files shows any drift in one line.
+
+**The rewrite is ASD-STE100 Simplified Technical English**, ultra-terse, for a
+general reader: one fact per sentence, active voice, vertical lists, no
+addresses, and a `Terms` list at the end. Both files gained a dated state line
+and a future-work section holding the inherited open list (the lobby case with
+a real console; the Kani re-derivation on a larger host; the R4 protocol
+question; EIF-loss detection).
+
+**The component README's evidence table points at the record for the pin, and
+that is deliberate**: a file cannot name the commit that carries it, because
+writing the SHA into the file changes the commit. The artifact hash, the
+toolchain digest and the test count are stated exactly; the pin is a link to
+`.host-software`, which is the authority.
+
+**Re-verified rather than copied**: the lane run at `c8b067d` (35463976941)
+reported `196 passed; 0 failed; 1 ignored` and printed the artifact line with
+`ab0f9bd517ef…`, identical to the record, so a README-only change did not move
+the artifact. The pin is bumped to `c8b067d`; `software --check` reports every
+component at its pinned SHA, with no worktree-symlink hazards.
+
+**Two stale claims in `AGENTS.md` project specifics were corrected**, because
+the new README would have contradicted them: the crate "is being migrated" and
+the component "carries a `repro-waiver`" (the migration landed 2026-09-13, and
+call/0016 retired the waiver), and "(multi-instance and the UPnP control plane
+are open)" (multi-instance is built; plan/0007 and plan/0008 deliver the
+control plane).
+
+**Lane state at the push**: prose clean, every reference resolved across 63
+documents, and the naming lane's advisories unchanged apart from one new note
+on the host README (four of its seven paragraphs are single-sentence) — the
+terse register produces that note, the prose lane does not flag it, and the
+note advises rather than gates.
+
+**One stray untracked tree was left alone**:
+`software/ds-lite-punch/main/.qwen/tmp/` holds two `qwen-review-*.json` files
+from 2026-09-15. Nothing is committed, the tree is not mine, and a careless
+`git add -A` in that worktree would sweep it in; the operator may delete it or
+keep it on purpose.
