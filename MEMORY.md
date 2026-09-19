@@ -2010,3 +2010,29 @@ first: `a_slots_accept_rule_is_matched_by_expression_never_by_handle` and
 `the_insert_and_the_delete_share_one_match`; suite 195 passed. Committed and
 the pin bumped, but **not deployed** — the six-hour soak runs on the running
 binary and a redeploy would end the run.
+
+**Item (5), correction and third fix: the accept rule cannot be deleted by
+expression, so it is a set element now** (2026-09-18). My previous entry said
+the delete was fixed by using the rule's match expression. That was wrong, and
+the router said so: `nft delete rule inet fw4 input iifname "eth1" udp dport
+49001 accept comment "dslitepunch-49001"` is refused with "syntax error,
+unexpected iifname, expecting handle" on this build (libnftables 1.1.0). The
+committed version would therefore have failed every delete and let accept
+rules *accumulate*. The real fix is structural: a slot's inbound accept is now
+an **element** of one of two daemon-named sets inside fw4
+(`dslp_ports_udp`, `dslp_ports_tcp`), with the two accept rules installed once
+by `ensure_accept_sets`, which also empties both sets and sweeps any per-port
+rule an older daemon left (by handle, from the one listing it already reads).
+Every per-slot operation is by key, so no handle is needed in the datapath at
+all, and the boot path re-adds an element per restored slot after
+`ensure_ruleset`, so a restart keeps exactly the ports its table holds.
+Verified on the box in a scratch table: set create, rule add (rendering exactly
+the text the code builds), element add/list/delete, delete-of-non-member
+refused, flush, table delete. The live fw4 chain now holds only
+`dslitepunch-47077` and `dslitepunch-1024`, the arm's two rescues; the two
+stale rules and my own leaked `dslitepunch-49001` are gone, and how they went
+is not attributable from the log — recorded as unexplained rather than
+claimed. Tests first: `a_slots_accept_is_a_set_element_never_a_rule_handle`,
+`the_two_protocols_use_two_sets`, `the_legacy_sweep_takes_only_the_daemons_per_port_rules`;
+suite 196 passed. Committed, pin bumped, **not deployed** (the soak runs on the
+running binary).
