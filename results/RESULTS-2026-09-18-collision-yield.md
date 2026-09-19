@@ -53,7 +53,7 @@ ipv4  2 tcp  6 114 SYN_SENT src=192.168.21.11 dst=192.0.2.7 sport=40001 dport=99
      src=192.0.2.7 dst=192.168.0.21 sport=9999 dport=40001
 ```
 
-A device's TCP flow from `.11:40001` to `192.0.2.7:9999` therefore landed on
+A device's TCP flow with source `.11:40001` and destination `192.0.2.7:9999` therefore landed on
 `(192.168.0.21, 40001)`: **the leased port**, with a br-lan origin. That is
 exactly what the collision rule reads.
 

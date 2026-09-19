@@ -84,9 +84,9 @@ mapping must outlast all of them.
 1. ~~**A named device's unreplied flow is refused.**~~ **RETRACTED the same
    evening; it was not the gate.** The flow in that experiment never reached
    the mirror at all: a synthetic client inside the container had no policy
-   route, so its packets took the main table's lowest-metric default out
-   `pppoe-vdsl4` (84.203.115.61) rather than `eth1`, and the observation arm
-   only ever sees `oifname eth1`. With one `ip rule` added for the client's
+   route, so its packets left by
+   `pppoe-vdsl4` (84.203.115.61); the observation arm sees only flows on
+   `oifname eth1`. With one `ip rule` added for the client's
    address, the same unreplied flow was claimed at once
    (`claim 192.168.21.11:47077 -> 192.0.2.1:45678 -> 47077 (cdc nft)`), and
    the gate passed because eth1's fullcone masquerade sets the NAT source to
@@ -97,8 +97,8 @@ mapping must outlast all of them.
    `apply_hold` (`remove_hold`, then the `ct timeout` policy batch). The read
    commands all succeed when run by hand, so the suspect is the batch form.
    No user-visible harm tonight: the policy is in force after every start
-   (`"ruleset_in_force":true`). A call whose failure is not tolerated would
-   fail silently instead.
+   (`"ruleset_in_force":true`). Were such a failure on a call the daemon
+   requires, it would be silent.
 3. ~~**The shadow keepalive cannot write.**~~ **RETRACTED; the hold works.**
    The `warn: shadow keepalive … failed: Operation not permitted` lines all
    belong to earlier daemon pids (3026, 31093, 32114); the last is at
@@ -106,7 +106,7 @@ mapping must outlast all of them.
    warnings of any kind. Two candidate mechanisms were tested and excluded by
    hand on the box: a socket bound to (192.168.0.21, port) sends to the STUN
    servers fine with and without a `snat_map` element pinning that tuple to
-   itself. And the hold is *demonstrably* the daemon's own writes — see
+   itself. And the hold is *demonstrably* the daemon's own writes, measured in
    "The hold is the daemon's own writes" below.
 4. **The collision rule would move the operator's static.** `collided()`
    includes every slot in the binding table, `Lease::Static` among them, so a
@@ -117,8 +117,8 @@ mapping must outlast all of them.
 
 ## The hold proper, proven the same way (the second run)
 
-The acceptance above used a facade lease. The daemon's *hold* — the
-observation arm claiming a named device's own flow — was then run the same
+The acceptance above used a facade lease. The daemon's *hold* itself (the
+observation arm claiming a named device's own flow) was then run the same
 way, once the client's policy route was corrected: one datagram from
 `192.168.21.11:47077`, after which the client was silent.
 
@@ -164,18 +164,18 @@ the daemon holds its tuple.
 
 ## Still open
 
-- Goal item (2): **done, driven live** — see
+- Goal item (2): **done, driven live**, in
   `results/RESULTS-2026-09-18-collision-yield.md`. The UDP door is closed by
   the slot's own conntrack entry (the kernel NATs a device's UDP flow to 1024)
   and by the allocator steering around live tuples; the TCP door was the one
-  open, and through it the lease moved from 40001 to 40003 with the client
+  open, and through it the lease moved, 40001 becoming 40003, with the client
   still holding.
 - Goal item (3): the soak. The sampler runs at one line per minute into
   `/mnt/nvme/captures/overnight/soak.log`; the clean window starts at the last
   restart, 21:57:59 (`1789768700 rss=1136 fds=13 ct=881 holds=1`). The after
   reading is owed in the morning; the last value tonight is
   `1789770921 rss=1332 fds=18 ct=504 holds=4`.
-- Goal item (4): **done** — `results/RESULTS-2026-09-18-tuple-analysis.md`,
+- Goal item (4): **done**, in `results/RESULTS-2026-09-18-tuple-analysis.md`,
   with `deploy/tuple-analysis.py`. No external tuple was in two inner tuples'
   hands at once; the mirror case (one inner, several externals, concurrent)
   was found and it is the split call/0014 fixed.

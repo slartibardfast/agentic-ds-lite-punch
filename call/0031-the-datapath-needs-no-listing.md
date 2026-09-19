@@ -17,7 +17,7 @@ wrong with it, both measured on the test router on 2026-09-18:
   comment "dslitepunch-49001"` answers `syntax error, unexpected iifname,
   expecting handle`, so a handle is the only way and a listing is the only
   source of one.
-- A delete that could not read the listing left its rule installed. Two accept
+- When a delete could not read the listing, the rule stayed installed. Two accept
   rules from earlier daemons were still in the chain, `dslitepunch-40002-tcp`
   for a protocol the running daemon does not enable and a legacy
   `dslitepunch` with no port in its comment. An inbound accept that outlives

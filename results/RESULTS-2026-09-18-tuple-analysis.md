@@ -1,8 +1,8 @@
 # The uplink's tuple behaviour, read from the daemon's own log
 
 - Date: 2026-09-18
-- Question: call/0027's second, still-open one — does the AFTR ever answer one
-  external port to two inner tuples? — and its mirror, one inner tuple holding
+- Question: call/0027's second, still-open one, whether the AFTR answers one
+  external port to two inner tuples, and its mirror, one inner tuple holding
   two external ports at once
 - Milestone: plan/0009, the overnight goal's item (4)
 - Tool: `deploy/tuple-analysis.py` (reads the daemon's log on stdin)
@@ -58,7 +58,7 @@ No external tuple was in two inner tuples' hands at the same time. The
 reuses are three hours apart, which is an allocator recycling a port whose
 first mapping is long gone.
 
-## The mirror case: one inner tuple under two externals at once — this is real
+## The mirror case: one inner tuple under two externals at once, and it is real
 
 ```
 === one inner tuple under more than one external tuple ===
