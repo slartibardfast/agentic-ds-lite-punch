@@ -17,14 +17,12 @@
 # `--verify-build` runs the recorded `build` inside it, so the image is what
 # reproduces the artifact and a movable tag would invalidate every hash
 # recorded under it. The hash above was re-derived inside that image by the
-# component's own CI, twice, with the two runs agreeing byte for byte.
-# Re-derive it the same way, with `host-lifecycle software --verify-build .`
-# here or in CI, and record what it reports.
+# component's own CI, twice, with the two runs agreeing byte for byte, and the
+# lane publishes the binary it built, so a deployment takes those bytes rather
+# than a local build's (call/0032).
 #
-# This development host needed a second one here, and it no longer does: the
-# artifact that was deployed to the test router before this record was a local
-# build (md5 a9e5bd19) from this host's compiler, which differs from the pinned
-# image. The recorded hash is the pinned toolchain's, which is the one the
-# deployed artifact must be rebuilt into before it is treated as a release
-# input: see call/0016 for the waiver this record retired, and call/0031 for
-# the nft lanes.
+# This development host has no container runtime, so its own target/ builds
+# with the ambient compiler and hashes differently (8e21070e...). That is a
+# property of the host, not a defect in the record: a local build is for
+# iteration, and the binary on the test router was installed from the lane's
+# artifact and checked against the hash above before it was started.
