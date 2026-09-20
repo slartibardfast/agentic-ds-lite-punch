@@ -6,9 +6,11 @@ translation takes an arrival at a slot port to its client, and it is done. The
 lease churn that its proof exposed is pending.
 Records under `results/`:
 `RESULTS-2026-09-20-stranger-probe.md`,
-`RESULTS-2026-09-20-alarm-proof.md` and
-`RESULTS-2026-09-20-inbound-translation.md`. The watch is disarmed until the
-helper runs outside the line, which is the operator's decision.
+`RESULTS-2026-09-20-alarm-proof.md`,
+`RESULTS-2026-09-20-inbound-translation.md` and
+`RESULTS-2026-09-20-slot-datapath-defects.md`, which writes both datapath
+defects up in full. The watch is disarmed until the helper runs outside the
+line, which is the operator's decision.
 
 The line's promise is one property: a mapping the AFTR holds accepts an
 unsolicited datagram from a host the mapping was never used toward. That
@@ -141,16 +143,23 @@ that owns them. The client's egress stays its own.
 
 - verify: a lease granted from a named client keeps its accept element, its
   inbound set element and its map element for the length of its lifetime, and
-  no revoke names an element another lease owns
-- inputs: the revoke's read-back, the persisted lease table and its replay on
-  restart, the entries table's key, the log lines quoted in
-  `results/RESULTS-2026-09-20-inbound-translation.md`
+  no revoke names an element another lease owns; a client asking three times in
+  a row leaves one live lease, and its elements survive the two surrenders
+- inputs: the surrender path's bind port (`revoke_datapath`'s call sites in
+  `upnpsvc.rs`), `apply_entry`'s key of `(proto, owner, int_port)`, the
+  regression test `apply_entry_keyed_per_client_lets_two_holders_share_a_port`,
+  the log window in `results/RESULTS-2026-09-20-slot-datapath-defects.md`
 
-The ingress translation's own proof exposed this: leases granted at 13:09:09
-had their elements deleted at 13:09:11, each delete naming an element that was
-never there, and one revoke naming an internal port no lease in that session
-used. Until it is fixed, a lease lives seconds rather than minutes, and no
-delivery measurement can rest on one.
+The ingress translation's own proof exposed this, and the write-up in
+`results/RESULTS-2026-09-20-slot-datapath-defects.md` carries the root cause:
+an entry is keyed by its internal tuple, so a client's second request surrenders
+the first, and the surrender hands the revoke a bind port that the pool has
+since reallocated. The revoke then removes a live lease's acceptance and its
+translation, and the writes that fail are the ordinary case, because the entry
+being retired never had elements under the keys it names. The first step is to
+find which port the surrender passes, and the failing test belongs at that
+boundary: an entry whose port has been reallocated, retired by a surrender, and
+the live owner's elements asserted present afterwards.
 
 ### Record the measurement and the watch {#record}
 
