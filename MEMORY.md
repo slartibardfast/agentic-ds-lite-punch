@@ -2456,3 +2456,51 @@ the keys its revoke names. The tree's existing regression test
 was the probe's own shape: `deploy/pcp-probe.py` sends NAT-PMP legs whose
 internal port defaults to `3074`, so a run on `--int-port 41040` also asks for
 `3074` and surrenders it on the next run.
+
+## 2026-09-20 — both defects fixed, and the first write-up corrected
+
+**The mapping-coexistence defect is fixed and verified.** The cause, settled at
+the code and by a failing test: `apply_entry` refreshes on
+`(proto, owner, int_port)` and otherwise lets a request surrender the same
+client's earlier entry at the same `(req_ext, proto, owner)`, and a request
+naming no port carries `req_ext` 0, which was treated as a handle. Two
+"any port" requests therefore collided, so a client speaking PCP and NAT-PMP
+lost one mapping per pair. The failing test returned the first lease's slot
+(`Some((40002, 192.168.21.11, 41010))`) before the guard. Pins `8f179c7` and
+`0b72060b`, artifact `f4499c2c`, 211 tests.
+
+**Two more defects were found and fixed with it.** The boot restore pinned every
+restored slot while a fresh grant installs an ingress translation and no pin,
+so a restored lease carried the egress consequence call/0014 settled against
+and had no translation of its own; the restore now installs the grant datapath.
+And the revoke deleted a `snat_map` element the grant never creates, which put
+an error line in the log on every revoke (54 in one session); that statement is
+gone.
+
+**My first write-up was wrong in its harm claim, and the record now says so.**
+The log window it rested on was produced largely by my own instrument:
+`pcp-probe.py` ends every run by deleting its own mapping, so a run looks like
+a lease that lived two seconds, and its legs all name the same suggested port.
+The defect is real but narrower than "a revoke tears down another client's live
+lease", and
+`plan/0010-.../results/RESULTS-2026-09-20-slot-datapath-defects.md` is corrected
+in place: symptom, root cause, mechanism, blast radius and disposition all
+rewritten around the failing test rather than the log reading.
+
+**Verified on the box, three ways.** Three holding clients leave three leases
+with three slots and three translations; a stranger's datagram to a lease's
+external tuple reaches a listener bound to the port the lease names
+(`RX 19 bytes from 170.9.238.141:41122 at 1789941059.865`, 72 ms after the
+send), which closes the delivery defect's socket half; and after a restart the
+restored slots keep their accept and translation elements, carry no pin, and
+still deliver (`RX 22 bytes … at 1789941118.179`) with no error line following
+the restart.
+
+**Instrument and hygiene lessons.** `pkill -f` and pattern-based kill loops
+self-match: for the third time today a `case` pattern in my own command line
+matched my shell and killed it before the file removals ran, so a kill loop now
+goes in a command of its own. The box is clear: staged files removed, the three
+leases left to expire on their own, one `/tmp/ds-lite-punch.staged` from an
+earlier session deliberately left, and the router runs `f4499c2c` with
+`prev-0abae591`, `prev-d5d19d07`, `prev-86ee70fe` and `prev-ab0f9bd5` parked
+beside it.
