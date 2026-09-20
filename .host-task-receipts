@@ -251,3 +251,11 @@
     evidence = four stranger probes from 170.9.238.141:54372 arrived on eth1 (dst 192.168.0.21.40002) at 30/60/120/300 s of the client's silence; plan/0010 results/RESULTS-2026-09-20-stranger-probe.md
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-20
+
+[receipt "plan/0010#watch-design"]
+    disposition = done
+    verify = attested call/0033, which names the sender, the observer, the
+    inputs = the `#eif-now` record, the daemon's observation arm (`obs.rs`
+    evidence = call/0033 accepted: a cooperating helper on the vantage sends a marked probe on a fifteen minute interval, the daemon records its arrival as carrier-probe and raises carrier-silent after three misses
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-20
