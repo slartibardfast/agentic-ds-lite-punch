@@ -174,10 +174,12 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="milestone-the-carriers-filtering-proved-and-watched"><a class="header" href="#milestone-the-carriers-filtering-proved-and-watched">Milestone: the carrier's filtering, proved and watched</a></h1>
-<p><strong>Status:</strong> open, reopened 2026-09-20. The measurement, the watch and its alarm
-are done and recorded. The same day's acceptance added two tasks. The ingress
-translation takes an arrival at a slot port to its client, and it is done. The
-lease churn that its proof exposed is pending.
+<p><strong>Status:</strong> done, 2026-09-20. The measurement, the watch and its alarm are done
+and recorded, and the acceptance's two repairs are done with them: the ingress
+translation takes an arrival at a slot port to its client, and the
+mapping-coexistence defect its proof exposed is fixed and verified on the box
+(three leases coexisting, delivery into a listening socket, and a restore that
+keeps the translation).
 Records under <code>results/</code>:
 <code>RESULTS-2026-09-20-stranger-probe.md</code>,
 <code>RESULTS-2026-09-20-alarm-proof.md</code>,
@@ -321,14 +323,16 @@ the log window in <code>results/RESULTS-2026-09-20-slot-datapath-defects.md</cod
 </ul>
 <p>The ingress translation's own proof exposed this, and the write-up in
 <code>results/RESULTS-2026-09-20-slot-datapath-defects.md</code> carries the root cause:
-an entry is keyed by its internal tuple, so a client's second request surrenders
-the first, and the surrender hands the revoke a bind port that the pool has
-since reallocated. The revoke then removes a live lease's acceptance and its
-translation, and the writes that fail are the ordinary case, because the entry
-being retired never had elements under the keys it names. The first step is to
-find which port the surrender passes, and the failing test belongs at that
-boundary: an entry whose port has been reallocated, retired by a surrender, and
-the live owner's elements asserted present afterwards.</p>
+<code>apply_entry</code> refreshes in place on <code>(proto, owner, int_port)</code> and otherwise
+lets a request surrender the same client's earlier entry at the same
+<code>(req_ext, proto, owner)</code>. A request that names no port carries <code>req_ext</code>
+0, which was treated as a handle like any other. Two requests that both ask for
+"any port" therefore collided, so a client speaking PCP and NAT-PMP lost one
+mapping per pair of requests. Fixed by refusing to supersede when <code>req_ext</code> is
+0, by giving the boot restore the same datapath a fresh grant installs (the
+ingress translation, and no pin), and by dropping the revoke's dead pin delete.
+The record carries the failing test's own output and the three on-box
+verifications.</p>
 <h3 id="record"><a class="header" href="#record">Record the measurement and the watch</a></h3>
 <ul>
 <li>
