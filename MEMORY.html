@@ -2399,6 +2399,39 @@ must be executable in git: the lane's setup check HAZARDs <code>./script.py</cod
 <p><strong>The router runs the watcher build with the watch off</strong>, parked rollbacks
 beside it (<code>prev-ab0f9bd5</code>, <code>prev-86ee70fe</code>), and the record's pin and artifact
 hash are <code>0c7085ab</code> and <code>33091964</code>.</p>
+<h2 id="2026-09-20--the-ingress-translation-and-the-churn-behind-it"><a class="header" href="#2026-09-20--the-ingress-translation-and-the-churn-behind-it">2026-09-20 — the ingress translation, and the churn behind it</a></h2>
+<p><strong>A lease's arrival now reaches its client, and the root cause was a commit
+from the collision work.</strong> <code>4d31181</code> stopped pinning the client's own tuple,
+which was right for the reason call/0014 records (the pin gave one game two
+external tuples), and that pin's conntrack entry had also been the only thing
+that mapped an arrival at the slot port back to the client. With it gone, an
+arrival reached the port and stopped. Fixed at pins <code>56faf04</code> and <code>5214039b</code>
+(artifact <code>0abae591</code>, 210 tests): a per-slot element in <code>dslp_in_udp</code> /
+<code>dslp_in_tcp</code> and <code>dslp_dnat_udp</code> / <code>dslp_dnat_tcp</code>, a prerouting chain at
+priority <code>-150</code>, and a rule per protocol that dnat's the port's arrivals to the
+client that owns them. Egress untouched. Record:
+<code>plan/0010-.../results/RESULTS-2026-09-20-inbound-translation.md</code>.</p>
+<p><strong>Proven at the datapath, not yet into a socket.</strong> A stranger's datagram to a
+lease's external tuple appeared on br-lan at the client's own port
+(<code>13:06:36.907238 IP 170.9.238.141.41112 &gt; 192.168.21.11.41020: UDP, length 12</code>)
+and the conntrack reply tuple names that port. The socket half failed for a
+tool reason: <code>pcp-probe.py</code> requests an internal port with <code>--int-port</code> while
+its socket binds an ephemeral one, so nothing waits on the port the lease
+names. A delivery-to-socket claim needs a listener bound to the requested port.</p>
+<p><strong>A second defect, recorded and pending: lease churn.</strong> Leases granted at
+13:09:09 had their elements deleted at 13:09:11, each delete naming an element
+that was never there, one of them an internal port no lease in that session
+used (<code>192.168.21.11 . 3074</code>). The inbound set and map end empty while the
+leases live in the table. It is <code>plan/0010#lease-churn</code>, pending, and no
+delivery measurement can rest on a lease that lives seconds.</p>
+<p><strong>Two deployment lessons.</strong> A design that adds a rule to a chain must install
+the chain: the first inbound build left it out, the rule had nowhere to live,
+and the daemon refused to start rather than run blind — the parked build was
+restored within a minute while procd was respawn-looping it. And the revoke now
+runs each element delete as its own statement with a read-back, because the
+all-or-nothing batch let an absent element cancel the rest.</p>
+<p><strong>The stale captures are gone</strong>, as the operator asked: pids <code>14409</code> and
+<code>24104</code> (the wrapper loop for <code>192.168.21.138</code>) and my own leftover <code>13248</code>.</p>
 
                     </main>
 
