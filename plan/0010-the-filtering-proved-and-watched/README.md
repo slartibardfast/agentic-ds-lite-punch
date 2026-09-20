@@ -1,12 +1,14 @@
 # Milestone: the carrier's filtering, proved and watched
 
-**Status:** done, 2026-09-20. The filtering is measured from outside, the watch
-is built, deployed and proven, and both records are under `results/`:
-`RESULTS-2026-09-20-stranger-probe.md` (a stranger's source tuple accepted at
-four windows of the client's silence) and `RESULTS-2026-09-20-alarm-proof.md`
-(the counting rule, the defect the first deployment exposed, and the alarm's
-window read back to the second). The watch is disarmed until the helper runs
-outside the line, which is the operator's decision.
+**Status:** open, reopened 2026-09-20. The measurement, the watch and its alarm
+are done and recorded. The same day's acceptance added two tasks. The ingress
+translation takes an arrival at a slot port to its client, and it is done. The
+lease churn that its proof exposed is pending.
+Records under `results/`:
+`RESULTS-2026-09-20-stranger-probe.md`,
+`RESULTS-2026-09-20-alarm-proof.md` and
+`RESULTS-2026-09-20-inbound-translation.md`. The watch is disarmed until the
+helper runs outside the line, which is the operator's decision.
 
 The line's promise is one property: a mapping the AFTR holds accepts an
 unsolicited datagram from a host the mapping was never used toward. That
@@ -116,6 +118,39 @@ The carrier will not lose endpoint independence on request, so this task proves
 the half that is provable: that silence produces the alarm. Say so in the
 record, in those words, so a later reader cannot mistake it for a measurement
 of the carrier.
+
+### Translate an arrival to its client {#inbound-translation}
+
+- verify: a lease's arrival reaches the LAN at the client's own port, pasted
+  from a capture on br-lan, and the conntrack entry's reply tuple names that
+  port; a revoke removes every translation it made, and its read-back warns
+  when one survives
+- inputs: the slot ports and the arm's own pin (`src/nft.rs`), the accept-set
+  work of the same period, the client ports a lease names
+
+Found by `#eif-now`: the stranger's datagrams reached the router's WAN and
+never reached a client. The root cause is commit `4d31181`, which stopped
+pinning the client's own tuple for a good reason (call/0014: the pin gave one
+game two external tuples) and thereby removed the only thing that mapped an
+arrival back to its client, because that mapping had been the pinned flow's
+conntrack. The fix translates at ingress instead: a per-slot element in a set
+and a map, and a prerouting rule that sends the port's arrivals to the client
+that owns them. The client's egress stays its own.
+
+### Stop the lease churn {#lease-churn}
+
+- verify: a lease granted from a named client keeps its accept element, its
+  inbound set element and its map element for the length of its lifetime, and
+  no revoke names an element another lease owns
+- inputs: the revoke's read-back, the persisted lease table and its replay on
+  restart, the entries table's key, the log lines quoted in
+  `results/RESULTS-2026-09-20-inbound-translation.md`
+
+The ingress translation's own proof exposed this: leases granted at 13:09:09
+had their elements deleted at 13:09:11, each delete naming an element that was
+never there, and one revoke naming an internal port no lease in that session
+used. Until it is fixed, a lease lives seconds rather than minutes, and no
+delivery measurement can rest on one.
 
 ### Record the measurement and the watch {#record}
 

@@ -291,3 +291,11 @@
     evidence = the two results files, this milestone's status line, the record's pin and artifact hash, and the MEMORY entry of 2026-09-20
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-20
+
+[receipt "plan/0010#inbound-translation"]
+    disposition = done
+    verify = a lease's arrival reaches the LAN at the client's own port, pasted
+    inputs = the slot ports and the arm's own pin (`src/nft.rs`), the accept-set
+    evidence = the ingress translation is deployed (pin 5214039b, artifact 0abae591, 210 tests); a stranger's datagram to a lease's external tuple appeared on br-lan at the client's own port and its conntrack reply tuple names that port
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-20
