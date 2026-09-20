@@ -2360,3 +2360,45 @@ router is not mine and was left: pids `14409` and `24104`, a wrapper loop
 capturing `192.168.21.138` traffic, which predates today and wants the
 operator's decision. The daemon still runs `ab0f9bd5`, so the README rounds
 moved no bytes.
+
+## 2026-09-20 — the watch, built, deployed, proven, and disarmed
+
+**The milestone's watcher exists and its alarm was proven on the box.** Pin
+`0c7085ab`, artifact `33091964`, 205 tests. plan/0010 is done: `#vantage`,
+`#eif-now`, `#watch-design`, `#watcher`, `#alarm-proof` and `#record` all carry
+receipts. Record: `plan/0010-.../results/RESULTS-2026-09-20-alarm-proof.md`.
+
+**The proof, in the daemon's own words.** One marked datagram from the vantage
+to the slot tuple produced `{"event":"carrier-probe","count":1,"epoch":1789907858}`
+and `packets 1 bytes 44` in the counter; withholding the helper produced
+`{"event":"carrier-silent","last_probe":1789907858,"waited":60,"epoch":1789907918}`
+at exactly three intervals after the probe. The carrier's behaviour was not
+exercised; the record says so.
+
+**A defect found by deploying, and fixed test-first.** The counting rule was
+appended to fw4's input chain, after fw4's own accept rules for the same ports,
+so an accepted packet never reached it: the marked datagram arrived
+(`170.9.238.141.41000 > 192.168.0.21.40000`, 16 bytes) while the counter stayed
+at zero. The fix installs with `insert`. The test was shown failing against the
+pre-fix shape (`left: "add" right: "insert"`) before the fix was restored.
+
+**A fragility that needed a hand.** The install is idempotent by rule *text*,
+so a box already carrying the misplaced rule keeps it and the daemon adds
+nothing. This router needed `nft delete rule inet fw4 input handle 15514`
+before the restart; a fresh box gets the placement right on first install.
+
+**The watch is disarmed, deliberately.** `CARRIER_PROBE=0` in the router's env
+with the arming line beside it, and the counter and rule removed. Arming it
+obliges the helper to run outside the line, and a helper that stops and a
+carrier that stops look the same to a counter: the operator decides whether the
+vantage runs `deploy/carrier-probe.py` as a service.
+
+**Two smaller lessons.** A task's `verify: attested <call/NNNN>` must be the
+whole value: prose after the citation is read as part of the reference and
+fails to resolve, which `software --check` HAZARDs. And a documented script
+must be executable in git: the lane's setup check HAZARDs `./script.py` at mode
+`100644`, and `git update-index --chmod=+x` is the fix.
+
+**The router runs the watcher build with the watch off**, parked rollbacks
+beside it (`prev-ab0f9bd5`, `prev-86ee70fe`), and the record's pin and artifact
+hash are `0c7085ab` and `33091964`.
