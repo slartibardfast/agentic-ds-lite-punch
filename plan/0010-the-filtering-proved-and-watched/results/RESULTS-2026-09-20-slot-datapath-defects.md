@@ -2,7 +2,8 @@
 
 - Date: 2026-09-20
 - Milestone: plan/0010, the tasks `#inbound-translation` and `#lease-churn`
-- Component: `ds-lite-punch`, pins `56faf04`, `5214039b`, binary `0abae591`
+- Component: `ds-lite-punch`, pins `56faf04`, `5214039b`, then `8f179c7` and
+  `0b72060b`, binaries `0abae591` and `f4499c2c`
 - Ground truth: `MEMORY.md` entries of this date win where this file and a plan
   document disagree
 
@@ -94,14 +95,16 @@ conntrack entry names both halves:
 src=170.9.238.141 dst=192.168.0.21 sport=41112 dport=40002 packets=1 bytes=49 [UNREPLIED] src=192.168.21.11 dst=170.9.238.141 sport=41020 dport=41112 packets=0 bytes=0
 ```
 
-The component is at 210 tests, four of them new: the inbound rule's shape, the
-grant's two elements, the revoke's separate statements, and the port-set parse
-the read-back uses.
+The component reached 210 tests with this fix, four of them new: the inbound
+rule's shape, the grant's two elements, the revoke's separate statements, and
+the port-set parse the read-back uses.
 
-**Not yet proven: delivery into a listening socket.** The test client requests
-an internal port with `--int-port` while its socket binds an ephemeral one, so
-nothing waits on the port the lease names. The attempt with a listener bound to
-the requested port met defect two.
+**Delivery into a listening socket is proven**, and the proof is in defect
+two's verification below: a stranger's datagram to a lease's external tuple
+arrived at a listener bound to the port the lease names, 72 ms after it was
+sent. The first attempt failed for an instrument reason, because the test
+client requests an internal port with `--int-port` while its socket binds an
+ephemeral one, so nothing waited on the port the lease named.
 
 ## Two defects the deployment itself found
 
@@ -118,13 +121,16 @@ the requested port met defect two.
 
 ---
 
-# Defect two: a revoke tears down a live slot's datapath
+# Defect two: a request that names no port takes the client's other mapping away
 
 ## Symptom
 
-Leases disappeared seconds after being granted. A lease confirmed at 13:09:09
-had its accept element deleted at 13:09:11, and the inbound set and map ended
-empty while the leases were still in the daemon's table.
+A client's mappings did not coexist. Asking twice while measuring left one
+mapping where two were asked for. The log's own deletes were read at first as
+the daemon tearing down a lease seconds after granting it; the instrument
+accounts for part of that, and what it does not account for is the defect
+below. The second request surrendered the first, and the client's earlier
+mapping was gone while its new one lived.
 
 ## Evidence
 
@@ -140,82 +146,116 @@ Sun Sep 20 13:09:11 2026 daemon.err ds-lite-punch[18969]: delete element ip dslp
 Sun Sep 20 13:09:11 2026 daemon.err ds-lite-punch[18969]: delete element inet fw4 dslp_ports_udp { 40003 }
 ```
 
-Read that as a sequence. Three ports are revoked in the same two seconds:
-`40001` and `40002`, which the accept set no longer holds, and `40003`, which
-was granted in the same second and is the newest live slot. Every delete names
-an element that is not there. One revoke names internal port `3074`, which the
-PCP legs of that client never used: those ran on `41010`, `41020` and `41040`.
+Read that as a sequence, and then read it again with the instrument in view,
+because the first reading was wrong and the correction matters. Three ports are
+revoked in the same two seconds, and the deletes name elements that are not
+there. What the log does not show is who asked. `deploy/pcp-probe.py` ends every
+run by deleting its own mapping, so two of those revokes are the client's own
+teardown of its own lease, and the errors that accompany them are the pin
+statement below. The window proves less than it first appeared to, and the
+defect it was made to carry is narrower than the first version of this record
+claimed. The sections that follow are the corrected account.
 
 ## Root cause
 
 Two facts, each correct alone, combine:
 
-- **An entry is keyed by the internal tuple.** `apply_entry` indexes
-  `(proto, owner, int_port)`, and its comment states the rule: "One entry per
-  internal tuple". A re-Add that carries the same internal tuple refreshes the
-  entry in place; a re-Add from the same client on a different internal port is
-  a different entry and takes its own slot.
-- **The probe asks more than once per run.** `deploy/pcp-probe.py` sends a PCP
-  MAP for its `--int-port`, a second MAP for protocol 132, a FILTER-option
-  request, and NAT-PMP legs. The NAT-PMP default internal port is `3074`, which
-  is exactly the port the log names, so a run on `--int-port 41040` also asks
-  for `3074`, and the next run surrenders it.
+- **A refresh is keyed by the internal tuple, and a supersession is keyed by the
+  requested port.** `apply_entry` refreshes in place when
+  `(proto, owner, int_port)` matches, and otherwise lets a request surrender the
+  same client's earlier entry at the same `(req_ext, proto, owner)`. Its comment
+  states the rule for the second key: the requested port is the client's handle,
+  and one client holds one mapping per handle.
+- **A request that names no port carries `req_ext` 0, and 0 was treated as a
+  handle like any other.** Two requests that both ask for "any port" therefore
+  collided, and the second surrendered the first. `deploy/pcp-probe.py` shows
+  this because every leg of a run asks for the same suggested port, and a client
+  speaking PCP and NAT-PMP asks for "any port" twice by construction.
 
-The surrender is deliberate: one client, one mapping per internal tuple, so a
-new request takes the old one down. What makes it destructive is the bind port
-the surrender hands to the revoke. The entry table has a known history here,
-and the tree carries its regression test,
-`apply_entry_keyed_per_client_lets_two_holders_share_a_port`, whose own note
-says the index used to refresh on `(req_ext, proto)` and never updated
-`bind_port`, so a re-Add that moved the mapping to a new slot left the entry
-naming the old slot, and delete tore down the wrong datapath. That test guards
-the *refresh* path. The evidence above is the same failure arriving through the
-*surrender* path: the revoke receives a bind port that the pool has since
-reallocated, so it removes a slot that belongs to a different, live lease.
+The failing test states it without the box in the way: the second request
+returns `Some((40002, 192.168.21.11, 41010))`, which is the first lease's slot
+handed to the revoke.
+
+## Two further defects, both found here and both fixed
+
+- **The restore path disagreed with the grant path.** The boot loop pinned every
+  restored slot (`add_pin`) and accepted it, while a fresh grant installed an
+  ingress translation and no pin. So a restored lease carried the exact egress
+  consequence call/0014 settled against, its arrival was translated by the pin's
+  conntrack instead of the ingress map, and the revoke of a restored slot then
+  deleted elements the boot never installed.
+- **The revoke deleted a pin the grant never creates.** With the ingress design,
+  `snat_map` only ever holds the arm's self-pin, so the statement could only
+  fail, and it put an error line in the log on every revoke while the design
+  never created what it deleted: 54 of them in one session.
 
 ## Mechanism
 
-A request from a client whose earlier entry carried bind port `P` is granted on
-a new slot. The surrender retires the old entry and revokes with `P`. The pool
-has reassigned `P` in the meantime, so `delete element inet fw4 dslp_ports_udp
-{ P }` removes the *current* owner's acceptance, and the same statement list
-removes that owner's inbound set and map elements. The loser is a lease with no
-part in the exchange. Every delete of the retired entry's own elements reports
-"No such file", and that is the ordinary case: those keys were never installed,
-because the entry never had elements under them.
+Two requests from one client that each name no port, on different internal
+tuples. The first is granted its slot; the second takes a new slot, and its
+supersession key `(0, proto, owner)` matches the first's entry, so that entry
+is removed and its slot is revoked with its own bind port. The revoke is
+correct for the entry it retires. The loss is that the client's first mapping
+is gone while its second lives.
 
 ## Blast radius
 
-Any client that asks twice, which includes every PCP client that also speaks
-NAT-PMP, every client whose library retries with a different internal port, and
-every client that requests a port while an earlier entry for another internal
-port is live. The house lost its own mapping this way during the 2026-09-20
-work, twice, and the earlier accept-element deletions for the consoles'
-re-Adds are the same shape.
+Every client that asks twice without naming a port. NAT-PMP asks that way by
+definition, and a PCP client that wants any port asks that way too, so a client
+speaking both protocols lost one mapping per pair of requests. This house met
+it while measuring, and read the result as the daemon's own churn until the
+instrument was set aside and the failing test written.
 
-## Disposition: pending
+## Disposition: fixed
 
-`plan/0010#lease-churn` carries it, and it is not fixed. The first step is the
-one this write-up cannot settle from the outside: which bind port the surrender
-path hands to `revoke_datapath`, and whether the entry it retires is the entry
-the pool still believes owns that port. The failing test belongs at that
-boundary in the shape the existing regression test uses: an entry whose bind
-port has been reallocated, retired by a surrender, and the live owner's
-elements asserted still present afterwards.
+Three changes, at pins `8f179c7` and `0b72060b`, artifact `f4499c2c`:
 
-## Verification, when it is fixed
+- `apply_entry` refuses to supersede when `req_ext` is 0: a request that names
+  no port carries no handle, so it takes a new entry and leaves the client's
+  other mappings alone. The failing test ran first, and its failure named the
+  first lease's slot.
+- the boot restore installs the grant datapath: the ingress translation and the
+  accept element, with no pin. One definition of a slot's datapath, used by both
+  paths.
+- the revoke's statement list drops the pin delete, so a revoke reports what it
+  actually finds.
 
-A lease granted from a named client keeps its accept element, its inbound set
-element and its map element for the length of its lifetime, and no revoke names
-an element another lease owns. A client asking three times in a row leaves
-exactly one live lease, and that lease's elements survive the two surrenders.
+## Verification
 
-## Why it blocks the other defect's closing claim
+On the router, at `f4499c2c`, 211 tests in the lane and the same count locally:
 
-Delivery into a listening socket needs a lease that lives long enough to be
-measured. A lease that is revoked two seconds after it is granted cannot carry
-that claim, so defect one is proven at the datapath and open at the socket
-until defect two is fixed.
+- **Coexistence.** Three holding clients from one address, each with its own
+  internal port and no port named, leave three leases with three slots and three
+  translations:
+
+```host-lint:ignore
+leases.tsv   40001 -> 192.168.21.11:41050, 40003 -> 192.168.21.11:41060, 40004 -> 192.168.21.11:41070
+accept set   elements = { 40000, 40001, 40003, 40004 }
+dnat map     elements = { 40000 : 192.168.21.12 . 40002, 40001 : 192.168.21.11 . 41050, 40003 : 192.168.21.11 . 41060, 40004 : 192.168.21.11 . 41070 }
+```
+
+- **Delivery into a listening socket.** A stranger's datagram to a lease's
+  external tuple, with a listener bound to the port the lease names:
+
+```host-lint:ignore
+sent at 1789941059.793703
+RX 19 bytes from 170.9.238.141:41122 at 1789941059.865
+src=170.9.238.141 dst=192.168.0.21 sport=41122 dport=40001 packets=1 bytes=47 [UNREPLIED] src=192.168.21.11 dst=170.9.238.141 sport=41050 dport=41122 packets=0 bytes=0
+```
+
+That is defect one's socket half, closed.
+
+- **The restore.** With those leases held, the daemon restarted. The restored
+  slots came back with their accept elements, their inbound set elements and
+  their map entries, `snat_map` stayed empty, and an arrival still landed in the
+  listener:
+
+```host-lint:ignore
+RX 22 bytes from 170.9.238.141:41123 at 1789941118.179
+```
+
+No error line followed that restart, where the same restart used to produce one
+for every restored slot.
 
 ---
 

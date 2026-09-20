@@ -299,3 +299,11 @@
     evidence = the ingress translation is deployed (pin 5214039b, artifact 0abae591, 210 tests); a stranger's datagram to a lease's external tuple appeared on br-lan at the client's own port and its conntrack reply tuple names that port
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-20
+
+[receipt "plan/0010#lease-churn"]
+    disposition = done
+    verify = a lease granted from a named client keeps its accept element, its
+    inputs = the surrender path's bind port (`revoke_datapath`'s call sites in
+    evidence = pins 8f179c7 and 0b72060b (artifact f4499c2c, 211 tests): the failing test showed the second no-preference request returning the first lease's slot; fixed, three leases coexist with three translations, a stranger's datagram reaches a listener bound to the lease's own port, and a restart restores the translation with no pin
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-20

@@ -1,9 +1,11 @@
 # Milestone: the carrier's filtering, proved and watched
 
-**Status:** open, reopened 2026-09-20. The measurement, the watch and its alarm
-are done and recorded. The same day's acceptance added two tasks. The ingress
-translation takes an arrival at a slot port to its client, and it is done. The
-lease churn that its proof exposed is pending.
+**Status:** done, 2026-09-20. The measurement, the watch and its alarm are done
+and recorded, and the acceptance's two repairs are done with them: the ingress
+translation takes an arrival at a slot port to its client, and the
+mapping-coexistence defect its proof exposed is fixed and verified on the box
+(three leases coexisting, delivery into a listening socket, and a restore that
+keeps the translation).
 Records under `results/`:
 `RESULTS-2026-09-20-stranger-probe.md`,
 `RESULTS-2026-09-20-alarm-proof.md`,
@@ -152,14 +154,16 @@ that owns them. The client's egress stays its own.
 
 The ingress translation's own proof exposed this, and the write-up in
 `results/RESULTS-2026-09-20-slot-datapath-defects.md` carries the root cause:
-an entry is keyed by its internal tuple, so a client's second request surrenders
-the first, and the surrender hands the revoke a bind port that the pool has
-since reallocated. The revoke then removes a live lease's acceptance and its
-translation, and the writes that fail are the ordinary case, because the entry
-being retired never had elements under the keys it names. The first step is to
-find which port the surrender passes, and the failing test belongs at that
-boundary: an entry whose port has been reallocated, retired by a surrender, and
-the live owner's elements asserted present afterwards.
+`apply_entry` refreshes in place on `(proto, owner, int_port)` and otherwise
+lets a request surrender the same client's earlier entry at the same
+`(req_ext, proto, owner)`. A request that names no port carries `req_ext`
+0, which was treated as a handle like any other. Two requests that both ask for
+"any port" therefore collided, so a client speaking PCP and NAT-PMP lost one
+mapping per pair of requests. Fixed by refusing to supersede when `req_ext` is
+0, by giving the boot restore the same datapath a fresh grant installs (the
+ingress translation, and no pin), and by dropping the revoke's dead pin delete.
+The record carries the failing test's own output and the three on-box
+verifications.
 
 ### Record the measurement and the watch {#record}
 
