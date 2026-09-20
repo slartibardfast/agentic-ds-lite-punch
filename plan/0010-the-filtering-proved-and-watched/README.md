@@ -68,8 +68,7 @@ present a distinct port but not a distinct address.
 
 ### Decide who watches, and how the daemon is told {#watch-design}
 
-- verify: attested call/0033, which names the sender, the observer, the
-  interval and the probe's wire shape
+- verify: attested call/0033
 - inputs: the `#eif-now` record, the daemon's observation arm (`obs.rs`,
   `cdc.rs`), the candidate shapes (a cooperating helper on the vantage, a
   daemon-side recognition of the helper's probe, the helper alone with its
@@ -79,7 +78,8 @@ The daemon cannot send from a foreign address, so the watcher needs a
 cooperating host outside. The decision fixes who sends, who observes, what
 happens when the probe is absent, and what the helper's probe looks like on the
 wire, because the daemon has to tell a cooperative probe from the traffic of a
-stranger.
+stranger. call/0033 names the sender, the observer, the interval, the probe's
+wire shape, and the two events the daemon emits.
 
 ### Recognise the cooperative probe and report its absence {#watcher}
 
