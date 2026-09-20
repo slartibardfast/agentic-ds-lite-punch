@@ -235,3 +235,19 @@
     evidence = the allocator steers around live tuples and says so (the box line from 2026-09-17); the lease marks a device flow on its bind tuple, moves to a probe-free port keeping client, internal port and label, reports the move, and rolls back when a move cannot complete (182 tests, seven new); the deployed detection ran over live traffic and correctly stayed silent on the slot's own punch
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-18
+
+[receipt "plan/0010#vantage"]
+    disposition = done
+    verify = the recorded vantage answers on its public address, and a datagram
+    inputs = the vantage reference in MEMORY, the policy route and synthetic
+    evidence = the vantage egresses as 170.9.238.141, its route to the AFTR address leaves enp0s6, and its first probe to a held mapping arrived on eth1 at 1789905112.87
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-20
+
+[receipt "plan/0010#eif-now"]
+    disposition = done
+    verify = a held mapping from a synthetic allowlisted client answers a probe
+    inputs = the synthetic client, its allowlist entry, its policy route, the
+    evidence = four stranger probes from 170.9.238.141:54372 arrived on eth1 (dst 192.168.0.21.40002) at 30/60/120/300 s of the client's silence; plan/0010 results/RESULTS-2026-09-20-stranger-probe.md
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-20

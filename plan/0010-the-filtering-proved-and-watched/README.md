@@ -145,8 +145,8 @@ The stages are observable one at a time, and the first two need no deployment.
    with the artifact hash re-derived and checked against the record, and the
    previous build parked as the deploy procedure already does.
 4. **The alarm's voice.** Whether a loss reaches a person, and how, is a
-   question this milestone deliberately leaves open; the log line ships in
-   stage three and nothing louder does.
+   question this milestone deliberately leaves open; the log line ships when
+   the daemon's half lands, and nothing louder does.
 
 The revert path is the parked build plus stopping the helper, and both are
 independent of the router's ruleset.
