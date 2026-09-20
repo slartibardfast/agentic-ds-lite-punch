@@ -1,0 +1,171 @@
+# Milestone: the carrier's filtering, proved and watched
+
+**Status:** open, 2026-09-20. The console-free completion, first of two: the
+measurement, the watch, and the record. It touches no console and no device on
+the LAN, and it leaves the full Kani suite where call/0019 put it.
+
+The line's promise is one property: a mapping the AFTR holds accepts an
+unsolicited datagram from a host the mapping was never used toward. That
+property is endpoint-independent filtering, and it was measured once, on
+2026-08-28/29. Nothing notices if the carrier changes it, and a change is
+silent: every local view still shows the mapping alive, and the first symptom
+is a client that stops being reachable from outside.
+
+## What this milestone is
+
+The daemon holds a mapping by writing to it, and the AFTR carries the mapping
+because it saw the traffic. Both of those read the map from the inside. This
+milestone reads it from the outside instead: a stranger sends to the mapping,
+and the router says whether the stranger's datagram arrived.
+
+Two products follow. The first is a measurement with a name: the source tuples
+that were exercised, and the delays they were exercised at. The second is a
+watch, so that a change in the carrier's behaviour becomes an event with a
+timestamp rather than a story a client reports days later.
+
+The milestone does not change what the AFTR does, and it does not attempt to
+force a filtering policy onto the line. It does not include the lobby case,
+which needs the consoles, and it does not include the Kani re-derivation, which
+needs a host with more memory. Both remain on the inherited list.
+
+The personas it serves are the ones this host already carries: the operator,
+who needs an answer rather than an assumption, and the agent, who needs a claim
+verifiable from outside rather than asserted from inside.
+
+## Build sequence
+
+The three groups are the measurement, the watch, and the record. Every task
+carries verify and inputs; the mechanical verifies re-run at the gate, and the
+decision is attested.
+
+### Confirm the vantage can speak as a stranger {#vantage}
+
+- verify: the recorded vantage answers on its public address, and a datagram
+  from it reaches a deliberately opened mapping on the router, with the arrival
+  visible in the router's WAN capture for that mapping's inner tuple
+- inputs: the vantage reference in MEMORY, the policy route and synthetic
+  client technique the 2026-09-18 held-mapping test used, the WAN capture
+  command from that run
+
+The vantage's public address is not the AFTR's, so the vantage can be a
+stranger to the mapping. Confirm that before anything rests on it, and confirm
+the capture path too, because the arrival is the only evidence that counts.
+
+### Measure the filtering with a held mapping {#eif-now}
+
+- verify: a held mapping from a synthetic allowlisted client answers a probe
+  from the vantage at 30, 60, 120 and 300 seconds of the client's own silence,
+  each arrival pasted from the router's WAN capture, and the results record
+  names exactly which source tuples were exercised, whether a distinct source
+  port alone or a distinct source address as well
+- inputs: the synthetic client, its allowlist entry, its policy route, the
+  vantage's probe tool, the `flow_obs` mirror for a cross-check
+
+This is the same shape as the silence acceptance that closed plan/0009, with
+one change that is the whole point: the prober is a host the mapping has never
+spoken to. Record what was measured. Name the case where the vantage can
+present a distinct port but not a distinct address.
+
+### Decide who watches, and how the daemon is told {#watch-design}
+
+- verify: attested at the gate by the decision record this task writes, which
+  names the sender, the observer, the interval and the probe's wire shape
+- inputs: the `#eif-now` record, the daemon's observation arm (`obs.rs`,
+  `cdc.rs`), the candidate shapes (a cooperating helper on the vantage, a
+  daemon-side recognition of the helper's probe, the helper alone with its
+  arrivals read by hand)
+
+The daemon cannot send from a foreign address, so the watcher needs a
+cooperating host outside. The decision fixes who sends, who observes, what
+happens when the probe is absent, and what the helper's probe looks like on the
+wire, because the daemon has to tell a cooperative probe from the traffic of a
+stranger.
+
+### Recognise the cooperative probe and report its absence {#watcher}
+
+- depends: #watch-design
+
+- verify: the component's suite covers the recognition and the absence alarm,
+  and on the box the daemon logs the arrival of a cooperative probe from a
+  foreign source and logs the loss when the configured interval passes with no
+  probe
+- inputs: the wire shape from `#watch-design`, the component's observation arm
+  and configuration surface, the forwarding path a probe's datagram takes
+
+If the decision puts the observation somewhere other than the daemon, this task
+is recorded as a skip with its citation and the watcher lives where the
+decision says. What the task fixes either way is the outcome: an arrival and an
+absence both become timestamped events.
+
+### Prove the alarm without the carrier {#alarm-proof}
+
+- depends: #watcher
+
+- verify: with the helper silent, the daemon reports the loss within the
+  configured interval, pasted from the log with timestamps, and the record
+  states plainly that the alarm path was exercised while the carrier's
+  behaviour was not
+- inputs: the same rig, the helper held back by hand, the interval fixed by
+  `#watch-design`
+
+The carrier will not lose endpoint independence on request, so this task proves
+the half that is provable: that silence produces the alarm. Say so in the
+record, in those words, so a later reader cannot mistake it for a measurement
+of the carrier.
+
+### Record the measurement and the watch {#record}
+
+- depends: #eif-now, #alarm-proof
+
+- verify: the results file and the MEMORY entry exist, the design decision of
+  `#watch-design` is accepted, and the reference sweep resolves every reference
+  in the new records
+- inputs: the arrivals, the log excerpts, the vantage and interval used
+
+## Verification
+
+The milestone's mechanical checks are the repository's own sweep (`validate`,
+`prose`, `refs --check`, `tasks --check`, `book --check`, `software --check`) at
+every gate. The two checks this work adds are the arrival capture at the
+recorded delays from a foreign source, and the alarm log with its timestamps
+after a deliberately silent helper. The code change rides the component's own
+lane, so the artifact hash is re-derived rather than assumed, and the record is
+bumped to the pin that carries the watcher.
+
+## Rollout
+
+The stages are observable one at a time, and the first two need no deployment.
+
+1. **By hand.** The measurement runs as a scripted experiment, with the
+   arrival read from the capture. Nothing on the router changes.
+2. **On a schedule, still observed by hand.** The helper probes on its
+   interval, and the arrivals are read from the mirror. This is where the
+   interval's cost is measured, in packets per hour.
+3. **The daemon's half.** The recognition and the alarm deploy from a lane run,
+   with the artifact hash re-derived and checked against the record, and the
+   previous build parked as the deploy procedure already does.
+4. **The alarm's voice.** Whether a loss reaches a person, and how, is a
+   question this milestone deliberately leaves open; the log line ships in
+   stage three and nothing louder does.
+
+The revert path is the parked build plus stopping the helper, and both are
+independent of the router's ruleset.
+
+## Open questions
+
+- Whether the carrier's filtering survives a new session, a line re-provision
+  and an AFTR restart, which a longer campaign would measure.
+- What detection delay is worth what probe cost, since the interval sets both.
+- Whether the daemon should answer the probe, so the helper can confirm the
+  round trip from its own side without reading the router.
+- Whether any external host may serve as the helper, or only the recorded
+  vantage.
+- Whether a loss should also raise the LAN-side signal the hold already uses,
+  which needs a decision the hold's own record does not yet cover.
+
+## Results home
+
+Records land under `results/` in this room. The arrival captures and the alarm
+log excerpts are pasted into them, and the raw captures stay on the router
+under the path the earlier runs established, with a checksum manifest and a
+mirrored copy on the workstation.
