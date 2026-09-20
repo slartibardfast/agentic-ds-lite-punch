@@ -3429,7 +3429,7 @@ mirrored copy on the workstation.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>b5f15c083703670b01345eebabb92d412d36f7b4</code></li>
+<li>pin: <code>0c7085abfe611a38ce7a5b2457b68c0f4f8a457f</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -8665,6 +8665,40 @@ router is not mine and was left: pids <code>14409</code> and <code>24104</code>,
 capturing <code>192.168.21.138</code> traffic, which predates today and wants the
 operator's decision. The daemon still runs <code>ab0f9bd5</code>, so the README rounds
 moved no bytes.</p>
+<h2 id="2026-09-20--the-watch-built-deployed-proven-and-disarmed"><a class="header" href="#2026-09-20--the-watch-built-deployed-proven-and-disarmed">2026-09-20 — the watch, built, deployed, proven, and disarmed</a></h2>
+<p><strong>The milestone's watcher exists and its alarm was proven on the box.</strong> Pin
+<code>0c7085ab</code>, artifact <code>33091964</code>, 205 tests. plan/0010 is done: <code>#vantage</code>,
+<code>#eif-now</code>, <code>#watch-design</code>, <code>#watcher</code>, <code>#alarm-proof</code> and <code>#record</code> all carry
+receipts. Record: <code>plan/0010-.../results/RESULTS-2026-09-20-alarm-proof.md</code>.</p>
+<p><strong>The proof, in the daemon's own words.</strong> One marked datagram from the vantage
+to the slot tuple produced <code>{"event":"carrier-probe","count":1,"epoch":1789907858}</code>
+and <code>packets 1 bytes 44</code> in the counter; withholding the helper produced
+<code>{"event":"carrier-silent","last_probe":1789907858,"waited":60,"epoch":1789907918}</code>
+at exactly three intervals after the probe. The carrier's behaviour was not
+exercised; the record says so.</p>
+<p><strong>A defect found by deploying, and fixed test-first.</strong> The counting rule was
+appended to fw4's input chain, after fw4's own accept rules for the same ports,
+so an accepted packet never reached it: the marked datagram arrived
+(<code>170.9.238.141.41000 &gt; 192.168.0.21.40000</code>, 16 bytes) while the counter stayed
+at zero. The fix installs with <code>insert</code>. The test was shown failing against the
+pre-fix shape (<code>left: "add" right: "insert"</code>) before the fix was restored.</p>
+<p><strong>A fragility that needed a hand.</strong> The install is idempotent by rule <em>text</em>,
+so a box already carrying the misplaced rule keeps it and the daemon adds
+nothing. This router needed <code>nft delete rule inet fw4 input handle 15514</code>
+before the restart; a fresh box gets the placement right on first install.</p>
+<p><strong>The watch is disarmed, deliberately.</strong> <code>CARRIER_PROBE=0</code> in the router's env
+with the arming line beside it, and the counter and rule removed. Arming it
+obliges the helper to run outside the line, and a helper that stops and a
+carrier that stops look the same to a counter: the operator decides whether the
+vantage runs <code>deploy/carrier-probe.py</code> as a service.</p>
+<p><strong>Two smaller lessons.</strong> A task's <code>verify: attested &lt;call/NNNN&gt;</code> must be the
+whole value: prose after the citation is read as part of the reference and
+fails to resolve, which <code>software --check</code> HAZARDs. And a documented script
+must be executable in git: the lane's setup check HAZARDs <code>./script.py</code> at mode
+<code>100644</code>, and <code>git update-index --chmod=+x</code> is the fix.</p>
+<p><strong>The router runs the watcher build with the watch off</strong>, parked rollbacks
+beside it (<code>prev-ab0f9bd5</code>, <code>prev-86ee70fe</code>), and the record's pin and artifact
+hash are <code>0c7085ab</code> and <code>33091964</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
