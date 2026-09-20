@@ -28,15 +28,15 @@ removal in place without noticing what it had carried.
 
 ## The fix
 
-The translation moved from the client's egress to the slot's ingress:
+The translation moved to the slot's ingress. The client's egress is untouched.
 
 - a set of translated ports per protocol (`dslp_in_udp`, `dslp_in_tcp`) and a
-  map from each port to the client tuple that owns it (`dslp_dnat_udp`,
+  map holding the client tuple that owns each port (`dslp_dnat_udp`,
   `dslp_dnat_tcp`), both addressed by element;
 - a prerouting chain at priority `-150`, ahead of fw4's own `dstnat`, carrying
   one rule per protocol:
-  `iifname "eth1" udp dport @dslp_in_udp dnat ip to udp dport map @dslp_dnat_udp`
-  (and the `tcp` twin);
+  `iifname "eth1" udp dport @dslp_in_udp dnat ip to udp dport map @dslp_dnat_udp`,
+  and the same rule for `tcp`;
 - a grant adds the port to its set and its client tuple to the map, then the
   accept element as before;
 - a revoke runs every element delete as its own statement, because a batch is
