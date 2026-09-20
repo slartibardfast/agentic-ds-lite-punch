@@ -8774,6 +8774,20 @@ runs each element delete as its own statement with a read-back, because the
 all-or-nothing batch let an absent element cancel the rest.</p>
 <p><strong>The stale captures are gone</strong>, as the operator asked: pids <code>14409</code> and
 <code>24104</code> (the wrapper loop for <code>192.168.21.138</code>) and my own leftover <code>13248</code>.</p>
+<p><strong>Both datapath defects are written up, with a root cause named for each:</strong>
+<code>plan/0010-.../results/RESULTS-2026-09-20-slot-datapath-defects.md</code>. The second
+one's cause, now settled from the code and the log: an entry is keyed by its
+internal tuple (<code>apply_entry</code>, <code>(proto, owner, int_port)</code>), so a client's
+second request surrenders the first, and the surrender hands <code>revoke_datapath</code>
+a bind port that the pool has since reallocated. The revoke then removes a
+<em>live</em> lease's acceptance and its translation. The "No such file" deletes that
+accompany it are the ordinary case: the retired entry never had elements under
+the keys its revoke names. The tree's existing regression test
+(<code>apply_entry_keyed_per_client_lets_two_holders_share_a_port</code>) guards the
+<em>refresh</em> path; this arrives through the <em>surrender</em> path. What made it visible
+was the probe's own shape: <code>deploy/pcp-probe.py</code> sends NAT-PMP legs whose
+internal port defaults to <code>3074</code>, so a run on <code>--int-port 41040</code> also asks for
+<code>3074</code> and surrenders it on the next run.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
