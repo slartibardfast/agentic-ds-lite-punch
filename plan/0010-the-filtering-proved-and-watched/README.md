@@ -68,8 +68,8 @@ present a distinct port but not a distinct address.
 
 ### Decide who watches, and how the daemon is told {#watch-design}
 
-- verify: attested at the gate by the decision record this task writes, which
-  names the sender, the observer, the interval and the probe's wire shape
+- verify: attested call/0033, which names the sender, the observer, the
+  interval and the probe's wire shape
 - inputs: the `#eif-now` record, the daemon's observation arm (`obs.rs`,
   `cdc.rs`), the candidate shapes (a cooperating helper on the vantage, a
   daemon-side recognition of the helper's probe, the helper alone with its
