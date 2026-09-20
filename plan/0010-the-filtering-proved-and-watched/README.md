@@ -1,8 +1,12 @@
 # Milestone: the carrier's filtering, proved and watched
 
-**Status:** open, 2026-09-20. The console-free completion, first of two: the
-measurement, the watch, and the record. It touches no console and no device on
-the LAN, and it leaves the full Kani suite where call/0019 put it.
+**Status:** done, 2026-09-20. The filtering is measured from outside, the watch
+is built, deployed and proven, and both records are under `results/`:
+`RESULTS-2026-09-20-stranger-probe.md` (a stranger's source tuple accepted at
+four windows of the client's silence) and `RESULTS-2026-09-20-alarm-proof.md`
+(the counting rule, the defect the first deployment exposed, and the alarm's
+window read back to the second). The watch is disarmed until the helper runs
+outside the line, which is the operator's decision.
 
 The line's promise is one property: a mapping the AFTR holds accepts an
 unsolicited datagram from a host the mapping was never used toward. That
