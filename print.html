@@ -8552,6 +8552,45 @@ green, reporting <code>196 passed; 0 failed; 1 ignored</code> and printing the a
 line with <code>ab0f9bd517ef…</code>, identical to the record. Prose is clean, every
 reference resolves across 63 documents, and <code>software --check</code> puts every
 component at its pinned SHA.</p>
+<h2 id="2026-09-20--the-filtering-read-from-outside-and-one-client-asking-twice"><a class="header" href="#2026-09-20--the-filtering-read-from-outside-and-one-client-asking-twice">2026-09-20 — the filtering, read from outside, and one client asking twice</a></h2>
+<p><strong>The line forwards a stranger's datagram to a held mapping.</strong> plan/0010's
+<code>#vantage</code> and <code>#eif-now</code> are done and receipted. A client in the <code>dslp-probe</code>
+container asked for a PCP mapping (external <code>37.228.213.83:59292</code>, internal
+3075, 600 s), went silent, and the vantage <code>170.9.238.141</code> sent unsolicited
+datagrams from <code>170.9.238.141:54372</code>, a source the mapping had never used. All
+four arrived at the router's WAN at 30, 60, 120 and 300 seconds of the
+client's silence, each within 74 ms of its send. Record:
+<code>plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-stranger-probe.md</code>.</p>
+<p><strong>The mis-grep happened again.</strong> On eth1 the arrival's destination is the
+router's own slot port (<code>40002</code>); searching the capture for the CGNAT tuple
+(<code>59292</code>) finds nothing, and the 2026-09-18 record already warned about this.
+Read the capture by the slot port.</p>
+<p><strong>A new defect, recorded and not fixed: one client asking twice leaves the
+datapath uninstalled.</strong> With two leases live from the same client (internal
+3074 then 3075), the second grant revokes the first, the revoke logs
+<code>Error: Could not process rule: No such file or directory</code> for
+<code>delete element ip dslp snat_map { 192.168.21.11 . 3074 }</code>, and <code>snat_map</code> ends
+empty while the accept set holds the slot ports. The arrivals reached the
+router and were not delivered to the client (no RX in the client's log, nothing
+on the LAN capture), where the 2026-09-18 run — which asked for its two
+mappings one at a time — delivered every one. A fix owes a failing test first,
+in the shape call/0022 set for the port label.</p>
+<p><strong>Method lessons, each of which cost a round.</strong> An <code>ip rule add</code> for the
+synthetic client needs an explicit priority above <code>25000</code>, because the default
+lands behind the firewall's mark rule at <code>30000</code> and the flow leaves by the
+wrong WAN. <code>pkill -f &lt;script&gt;.py</code> kills the shell that carries the script path
+in its own command line, twice today, and the bracket form is the fix. <code>ash</code>
+has no brace expansion, so a staged-file removal written with braces removes
+nothing. The vantage needs root for a capture (<code>sudo -n</code> works), and its own
+OpenVPN server's traffic crosses <code>enp0s6</code>, so a filter on the destination host
+alone fills with that flow and misses the probe.</p>
+<p><strong>The box is as it was.</strong> The ip rule, the allowlist entry, the client, the
+sink listener and the captures are gone. The two captures are archived at
+<code>/mnt/nvme/captures/eif-2026-09-20/</code> with <code>sha256sums.txt</code>. One capture on the
+router is not mine and was left: pids <code>14409</code> and <code>24104</code>, a wrapper loop
+capturing <code>192.168.21.138</code> traffic, which predates today and wants the
+operator's decision. The daemon still runs <code>ab0f9bd5</code>, so the README rounds
+moved no bytes.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
