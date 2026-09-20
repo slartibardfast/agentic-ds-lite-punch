@@ -2402,3 +2402,42 @@ must be executable in git: the lane's setup check HAZARDs `./script.py` at mode
 **The router runs the watcher build with the watch off**, parked rollbacks
 beside it (`prev-ab0f9bd5`, `prev-86ee70fe`), and the record's pin and artifact
 hash are `0c7085ab` and `33091964`.
+
+## 2026-09-20 — the ingress translation, and the churn behind it
+
+**A lease's arrival now reaches its client, and the root cause was a commit
+from the collision work.** `4d31181` stopped pinning the client's own tuple,
+which was right for the reason call/0014 records (the pin gave one game two
+external tuples), and that pin's conntrack entry had also been the only thing
+that mapped an arrival at the slot port back to the client. With it gone, an
+arrival reached the port and stopped. Fixed at pins `56faf04` and `5214039b`
+(artifact `0abae591`, 210 tests): a per-slot element in `dslp_in_udp` /
+`dslp_in_tcp` and `dslp_dnat_udp` / `dslp_dnat_tcp`, a prerouting chain at
+priority `-150`, and a rule per protocol that dnat's the port's arrivals to the
+client that owns them. Egress untouched. Record:
+`plan/0010-.../results/RESULTS-2026-09-20-inbound-translation.md`.
+
+**Proven at the datapath, not yet into a socket.** A stranger's datagram to a
+lease's external tuple appeared on br-lan at the client's own port
+(`13:06:36.907238 IP 170.9.238.141.41112 > 192.168.21.11.41020: UDP, length 12`)
+and the conntrack reply tuple names that port. The socket half failed for a
+tool reason: `pcp-probe.py` requests an internal port with `--int-port` while
+its socket binds an ephemeral one, so nothing waits on the port the lease
+names. A delivery-to-socket claim needs a listener bound to the requested port.
+
+**A second defect, recorded and pending: lease churn.** Leases granted at
+13:09:09 had their elements deleted at 13:09:11, each delete naming an element
+that was never there, one of them an internal port no lease in that session
+used (`192.168.21.11 . 3074`). The inbound set and map end empty while the
+leases live in the table. It is `plan/0010#lease-churn`, pending, and no
+delivery measurement can rest on a lease that lives seconds.
+
+**Two deployment lessons.** A design that adds a rule to a chain must install
+the chain: the first inbound build left it out, the rule had nowhere to live,
+and the daemon refused to start rather than run blind — the parked build was
+restored within a minute while procd was respawn-looping it. And the revoke now
+runs each element delete as its own statement with a read-back, because the
+all-or-nothing batch let an absent element cancel the rest.
+
+**The stale captures are gone**, as the operator asked: pids `14409` and
+`24104` (the wrapper loop for `192.168.21.138`) and my own leftover `13248`.
