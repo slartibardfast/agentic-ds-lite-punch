@@ -8,11 +8,11 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = b5f15c083703670b01345eebabb92d412d36f7b4
+	pin   = 0c7085abfe611a38ce7a5b2457b68c0f4f8a457f
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
-	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 86ee70fe4c96723615ef3a53a54ece9fcdb1752516867ec64bd8e79c61f79367
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 33091964d00f442b911e208f1eeba84bb1c9a288acd61b982df85772d26743a8
 # The toolchain is a digest-pinned container rather than a target triple:
 # `--verify-build` runs the recorded `build` inside it, so the image is what
 # reproduces the artifact and a movable tag would invalidate every hash
