@@ -2441,3 +2441,18 @@ all-or-nothing batch let an absent element cancel the rest.
 
 **The stale captures are gone**, as the operator asked: pids `14409` and
 `24104` (the wrapper loop for `192.168.21.138`) and my own leftover `13248`.
+
+**Both datapath defects are written up, with a root cause named for each:**
+`plan/0010-.../results/RESULTS-2026-09-20-slot-datapath-defects.md`. The second
+one's cause, now settled from the code and the log: an entry is keyed by its
+internal tuple (`apply_entry`, `(proto, owner, int_port)`), so a client's
+second request surrenders the first, and the surrender hands `revoke_datapath`
+a bind port that the pool has since reallocated. The revoke then removes a
+*live* lease's acceptance and its translation. The "No such file" deletes that
+accompany it are the ordinary case: the retired entry never had elements under
+the keys its revoke names. The tree's existing regression test
+(`apply_entry_keyed_per_client_lets_two_holders_share_a_port`) guards the
+*refresh* path; this arrives through the *surrender* path. What made it visible
+was the probe's own shape: `deploy/pcp-probe.py` sends NAT-PMP legs whose
+internal port defaults to `3074`, so a run on `--int-port 41040` also asks for
+`3074` and surrenders it on the next run.
