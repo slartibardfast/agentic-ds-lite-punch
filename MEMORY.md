@@ -2504,3 +2504,20 @@ leases left to expire on their own, one `/tmp/ds-lite-punch.staged` from an
 earlier session deliberately left, and the router runs `f4499c2c` with
 `prev-0abae591`, `prev-d5d19d07`, `prev-86ee70fe` and `prev-ab0f9bd5` parked
 beside it.
+
+## 2026-09-20 — the revoke stops printing errors, and the log goes quiet
+
+**The last of the revoke's error lines is gone.** After the churn fix, three
+lines remained at 21:58, one per lease that expired at that minute, and they
+came from the tolerant `del_pin` call inside `revoke_datapath`: the facade
+installs no pin, so it could only fail and print nft's own stderr into the log.
+The statement version had already gone in the churn fix; this removed the call
+beside it, and the same removal in the grant-failure rollback. The paths that do
+pin, the arm's self-pin and the TCP holder, clean their own.
+
+**Measured, not assumed.** A lease was created and deleted through the probe
+(`internal 41090`, external `37.228.213.83:59245`): the error count is 57
+before and 57 after, and the last error line is still the old 21:58 one. Pin
+`709e7668`, artifact `ddfe3903`, 211 tests, deployed and recorded; the router
+runs it with `prev-f4499c2c` parked beside the earlier ones, and no capture of
+mine remains.

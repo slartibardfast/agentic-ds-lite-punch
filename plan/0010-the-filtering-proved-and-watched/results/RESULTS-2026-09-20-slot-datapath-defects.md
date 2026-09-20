@@ -2,8 +2,8 @@
 
 - Date: 2026-09-20
 - Milestone: plan/0010, the tasks `#inbound-translation` and `#lease-churn`
-- Component: `ds-lite-punch`, pins `56faf04`, `5214039b`, then `8f179c7` and
-  `0b72060b`, binaries `0abae591` and `f4499c2c`
+- Component: `ds-lite-punch`, pins `56faf04`, `5214039b`, then `8f179c7`,
+  `0b72060b` and `709e7668`, binaries `0abae591`, `f4499c2c` and `ddfe3903`
 - Ground truth: `MEMORY.md` entries of this date win where this file and a plan
   document disagree
 
@@ -187,7 +187,13 @@ handed to the revoke.
 - **The revoke deleted a pin the grant never creates.** With the ingress design,
   `snat_map` only ever holds the arm's self-pin, so the statement could only
   fail, and it put an error line in the log on every revoke while the design
-  never created what it deleted: 54 of them in one session.
+  never created what it deleted: 54 of them in one session. The statement went
+  in the churn fix, and the tolerant `del_pin` call beside it went after the
+  same class showed once more: three lines at 21:58, one per lease that expired
+  at that minute. The facade installs no pin, so both could only fail, and the
+  paths that do pin, the arm and the TCP holder, clean their own. Measured
+  after the removal: a lease created and deleted leaves the count unchanged, 57
+  before the probe and 57 after, with the last line still the old 21:58 one.
 
 ## Mechanism
 
@@ -217,8 +223,9 @@ Three changes, at pins `8f179c7` and `0b72060b`, artifact `f4499c2c`:
 - the boot restore installs the grant datapath: the ingress translation and the
   accept element, with no pin. One definition of a slot's datapath, used by both
   paths.
-- the revoke's statement list drops the pin delete, so a revoke reports what it
-  actually finds.
+- the revoke's statement list drops the pin delete and the revoke calls nothing
+  else that removes a pin, so an expiry reports what it finds and leaves the log
+  alone.
 
 ## Verification
 
