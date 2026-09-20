@@ -3253,9 +3253,13 @@ acceptance stay on the router under the captures path the earlier runs
 established, with a checksum manifest alongside and a mirrored copy on the
 workstation, as the switch NAT-type record documents.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-the-carriers-filtering-proved-and-watched"><a class="header" href="#milestone-the-carriers-filtering-proved-and-watched">Milestone: the carrier's filtering, proved and watched</a></h1>
-<p><strong>Status:</strong> open, 2026-09-20. The console-free completion, first of two: the
-measurement, the watch, and the record. It touches no console and no device on
-the LAN, and it leaves the full Kani suite where call/0019 put it.</p>
+<p><strong>Status:</strong> done, 2026-09-20. The filtering is measured from outside, the watch
+is built, deployed and proven, and both records are under <code>results/</code>:
+<code>RESULTS-2026-09-20-stranger-probe.md</code> (a stranger's source tuple accepted at
+four windows of the client's silence) and <code>RESULTS-2026-09-20-alarm-proof.md</code>
+(the counting rule, the defect the first deployment exposed, and the alarm's
+window read back to the second). The watch is disarmed until the helper runs
+outside the line, which is the operator's decision.</p>
 <p>The line's promise is one property: a mapping the AFTR holds accepts an
 unsolicited datagram from a host the mapping was never used toward. That
 property is endpoint-independent filtering, and it was measured once, on
@@ -3310,8 +3314,7 @@ spoken to. Record what was measured. Name the case where the vantage can
 present a distinct port but not a distinct address.</p>
 <h3 id="watch-design"><a class="header" href="#watch-design">Decide who watches, and how the daemon is told</a></h3>
 <ul>
-<li>verify: attested call/0033, which names the sender, the observer, the
-interval and the probe's wire shape</li>
+<li>verify: attested call/0033</li>
 <li>inputs: the <code>#eif-now</code> record, the daemon's observation arm (<code>obs.rs</code>,
 <code>cdc.rs</code>), the candidate shapes (a cooperating helper on the vantage, a
 daemon-side recognition of the helper's probe, the helper alone with its
@@ -3321,7 +3324,8 @@ arrivals read by hand)</li>
 cooperating host outside. The decision fixes who sends, who observes, what
 happens when the probe is absent, and what the helper's probe looks like on the
 wire, because the daemon has to tell a cooperative probe from the traffic of a
-stranger.</p>
+stranger. call/0033 names the sender, the observer, the interval, the probe's
+wire shape, and the two events the daemon emits.</p>
 <h3 id="watcher"><a class="header" href="#watcher">Recognise the cooperative probe and report its absence</a></h3>
 <ul>
 <li>
@@ -3425,7 +3429,7 @@ mirrored copy on the workstation.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>b5f15c083703670b01345eebabb92d412d36f7b4</code></li>
+<li>pin: <code>0c7085abfe611a38ce7a5b2457b68c0f4f8a457f</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
