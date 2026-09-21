@@ -71,21 +71,19 @@ jobs:
           host-lifecycle release ds-lite-punch \
             --change-class "${{ inputs.change_class }}" \
             --authorized "${{ inputs.authorized }}"
-      - name: Push the component's bump first, then the host's record and tag
+      # The phase stops at the door by design: it verifies the build, re-derives
+      # the artifact digest, and prints the outward steps it authorizes. It does
+      # not perform them, and this lane cannot either: the tag belongs to the
+      # component, whose repository the host's token has no write access to, and
+      # a long-lived token that could was retired when the component went public.
+      # So the lane's product is the verified build and the exact steps, and the
+      # operator runs them with a credential that reaches both repositories.
+      - name: State what the release is, and what remains outward
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git -C software/ds-lite-punch/main status --porcelain)" ]; then
-            git -C software/ds-lite-punch/main add -A
-            git -C software/ds-lite-punch/main commit -m "release: the version the host's release phase computed"
-            git -C software/ds-lite-punch/main push origin HEAD:main
-          fi
-          git add -A
-          git diff --cached --quiet || git commit -m "release: the phase's record, its receipt, and the pin it re-derived"
-          git push
-          git push --tags
-      - name: State what the release is
-        run: |
-          echo "### release phase" >> "$GITHUB_STEP_SUMMARY"
-          grep -E "^	(pin|artifact)" .host-software >> "$GITHUB_STEP_SUMMARY"
-          git tag --points-at HEAD >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "### release phase"
+            echo '```'
+            grep -E "^	(pin|artifact)" .host-software || true
+            echo "the phase's own outward steps are in the step above; this job performs none of them"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
