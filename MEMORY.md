@@ -2705,3 +2705,53 @@ restarts the daemon, so the helper's tuple comes from
 `/run/ds-lite-punch/tuple-40000` *after* that restart. The first attempt read it
 first; the tuple happened to be re-learned identically, so the mistake cost
 nothing, and the ordering is the lesson.
+
+## 2026-09-21 — the template upgrade, by the process, and four entries it cannot record
+
+**The template moved by the ledger, never by a diff.** `host-template` fetched to
+`b917d4d` (main HEAD), its grafted shallow clone unshallowed so the tool could
+derive a baseline, and `upgrade` migrated the legacy `revision` stamp to
+`baseline = e4ed590` by itself. The stamp has never been hand-edited. The pending
+span was **12 entries**, not the three the plan assumed, because the derived
+baseline sits earlier than the ledger tail the project's copy carried.
+
+**Applied: 8 of 12.** RETIRE-hermetic-exempt, RENAME-repro-waiver,
+LEXICON-declaration-is-a-report, PIN-two-surfaces-two-claims,
+ACTIVE-corpus-and-agents-manual, LEM-address-direction, LEM-exemplar-section,
+LEM-lane-and-mcp. Three of them failed at first only because the tool calls
+itself by name and was not on PATH; with `PATH` set they recorded. `--advance`
+compacted the contiguous run into `baseline = RENAME-repro-waiver` and the
+out-of-order ones stay in the append-only applied set.
+
+**Pending: 4, of which three are one defect's cascade.** `REFS-a-number-resolves`
+verifies `grep -rqs "A number that names something resolves to it"
+host-template/CLAUDE.md`, and `LEM-pronoun-system` verifies `grep -irqs "pronoun
+system" CLAUDE.md`. The template's own `CLAUDE.md` says "The operating manual is
+AGENTS.md. This file is a pointer", so the phrases live in AGENTS.md and in no
+CLAUDE.md at all: neither verify can pass for a compliant adopter. The ledger's
+own rule 2 warns against exactly this shape, and `GATE-refs-in-verify` and
+`REFS-a-foreign-citation-names-its-repository` are blocked behind them. A report
+to the template is offered rather than filed unasked.
+
+**Tool pins followed the template's own tip**, not only the ledger's floor:
+host-lint v0.19.0 to v0.22.0, host-lifecycle v0.53.0 to v0.54.2, both rebuilt and
+the skills re-linked (24, up from 19).
+
+**The lem contract flags nothing here.** A full `--all` run under host-lint
+v0.22.0 reports 70 advisories and none of them lem, pronoun or first-person, so
+the cleanup the operator authorised turned out to be a no-op. Stated limit: a
+probe file carrying a bare first-person token was not flagged either, so the
+lane's reach over new surfaces is unproven here while its reading of this corpus
+is clean.
+
+**The spine re-applied**: AGENTS.md is the new manual (1058 lines) with this
+project's specifics appended (30), exactly one heading, a pre-upgrade copy kept in
+`/tmp/AGENTS.md.pre-upgrade`; UPGRADING.md copied at the target (58 stanzas);
+STRUCTURE.md, CLAUDE.md, LICENSE and lifecycle.manifest were already identical,
+and .gitignore already carried the spine's three generated-artifact rules. The
+gate is green under the new tools, prose is clean and every reference resolves in
+71 documents.
+
+**MCP registered**: `host-lint mcp` as a stdio server in `.qwen/settings.json`,
+which `.qwen/` being gitignored keeps machine-local. It is effective at the next
+session rather than this one.
