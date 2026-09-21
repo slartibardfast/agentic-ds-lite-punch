@@ -46,8 +46,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          submodules: recursive
-          fetch-depth: 0 # the phase inspects tags and history
+          fetch-depth: 0 # the phase inspects the history it is about to tag
+      # One submodule, named, the way the reproducible lane does it: a
+      # recursive checkout of every submodule wedged this job for fifteen
+      # minutes with no log output on 2026-09-20, and this lane needs exactly
+      # one of them, the release tool itself.
+      - name: Fetch the release tool's sources
+        run: git submodule update --init tools/host-lifecycle
       - name: Build the release tool
         run: cargo build --release --manifest-path tools/host-lifecycle/Cargo.toml
       - name: Put the tool on the path the phase calls itself by
