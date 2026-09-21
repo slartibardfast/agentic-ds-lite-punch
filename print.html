@@ -3253,12 +3253,13 @@ acceptance stay on the router under the captures path the earlier runs
 established, with a checksum manifest alongside and a mirrored copy on the
 workstation, as the switch NAT-type record documents.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-the-carriers-filtering-proved-and-watched"><a class="header" href="#milestone-the-carriers-filtering-proved-and-watched">Milestone: the carrier's filtering, proved and watched</a></h1>
-<p><strong>Status:</strong> done, 2026-09-20. The measurement, the watch and its alarm are done
-and recorded, and the acceptance's two repairs are done with them: the ingress
-translation takes an arrival at a slot port to its client, and the
-mapping-coexistence defect its proof exposed is fixed and verified on the box
-(three leases coexisting, delivery into a listening socket, and a restore that
-keeps the translation).
+<p><strong>Status:</strong> open, reopened 2026-09-21 to add <code>#watch-forward-path</code>: arming the
+watch for its authorized day found that the milestone's own ingress translation
+had moved the probe out of the chain the counting rule lived in, so the counter
+stayed at zero while the marked datagram arrived. The fix rides the component's
+lane, and the window's record is
+<code>RESULTS-2026-09-21-the-probe-the-translation-hid.md</code>. Everything below is done
+and was verified before that.
 Records under <code>results/</code>:
 <code>RESULTS-2026-09-20-stranger-probe.md</code>,
 <code>RESULTS-2026-09-20-alarm-proof.md</code>,
@@ -3412,6 +3413,23 @@ mapping per pair of requests. Fixed by refusing to supersede when <code>req_ext<
 ingress translation, and no pin), and by dropping the revoke's dead pin delete.
 The record carries the failing test's own output and the three on-box
 verifications.</p>
+<h3 id="watch-forward-path"><a class="header" href="#watch-forward-path">Count the probe where the datapath sends it</a></h3>
+<ul>
+<li>verify: with the watch armed, a marked datagram from the helper raises the
+counter and the daemon logs <code>carrier-probe</code>, and the counting rule is present
+in both the input chain and the forward chain; a disarm removes both rules and
+the counter</li>
+<li>inputs: the counting rule's chains (<code>src/nft.rs</code>, <code>CARRIER_CHAINS</code>), the
+ingress translation of <code>#inbound-translation</code>, the arrival capture in
+<code>results/RESULTS-2026-09-21-the-probe-the-translation-hid.md</code></li>
+</ul>
+<p>Found while arming the watch on 2026-09-21: the counter stayed at zero while the
+marked datagram arrived at the slot port, and the reason is this milestone's own
+ingress translation. That translation sends a slot port's arrival to its client,
+which makes the packet forwarded traffic, so a counting rule in the input chain
+alone never sees it. The rule now goes into both paths, because which one
+applies belongs to the datapath rather than to the probe, and the test that pins
+it was shown failing against the input-only shape before the fix was restored.</p>
 <h3 id="record"><a class="header" href="#record">Record the measurement and the watch</a></h3>
 <ul>
 <li>
@@ -3475,7 +3493,7 @@ mirrored copy on the workstation.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>43df0b50a6884a7b4969360fc5ca242b048a3e51</code></li>
+<li>pin: <code>9178fa3bc80879034f3e3ee8371eaa11bf49bc85</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
