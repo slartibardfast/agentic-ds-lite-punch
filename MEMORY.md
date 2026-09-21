@@ -2765,3 +2765,17 @@ site-gh-pages, cancel-in-progress: false}`, so a second publish serialises behin
 the first. All three lanes are green on the newest commit. The book itself is
 published to `gh-pages` and GitHub Pages is not yet enabled for the repository,
 so the site URL answers 404 until that setting is turned on.
+
+**Upgrade claims re-verify raw, and two of them call the tool by name.** After the
+upgrade, `software --check` raised two HAZARDs — `4a98d92` and
+`LEXICON-declaration-is-a-report` "claimed applied but its verify no longer holds"
+— and the cause is an asymmetry in the tool: manifest conditions are rewritten by
+`self_invoking()` so a bare `host-lifecycle` token becomes the absolute path of
+the running binary, while the upgrade-claim recheck runs the entry's verify
+through `sh -c` with the inherited PATH, untouched. Both verifies therefore hold
+only when a `host-lifecycle` happens to be on PATH. `4a98d92` also pipes, which
+the ledger's own rule 3 warns does not survive a non-POSIX shell. Disposed locally
+by linking the built tool at `~/.local/bin/host-lifecycle`, which a shell here
+resolves, and the gate is green again; upstream is owed the report that the two
+recheck paths should agree. The component's own pins and the two defects are
+untouched by this: `software --check` reports every component at its pinned SHA.
