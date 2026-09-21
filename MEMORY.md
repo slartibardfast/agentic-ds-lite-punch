@@ -2600,3 +2600,44 @@ still carries the adoption-era `[receipt "release" "ds-lite-punch"] skip, reason
 = call/0012` while a release has since been cut; the `done` is owed on a host or
 a lane that has Docker, and a release-phase workflow is the natural place for
 it.
+
+## 2026-09-21 — 0.1.1 earned by the phase, and releases go immutable
+
+**The release phase earned the release.** Dispatched with the change class
+`neither` and authorized by `call/0034`, the lane ran the phase green on a
+runner: `verify: green`, version `0.1.0 -> 0.1.1`, and then it *printed the
+outward steps it authorizes* rather than performing them. That is the tool's
+design, and the lane cannot perform them either: the tag belongs to the
+component, whose repository the host's token cannot write, and the token that
+could was retired when the component went public. The lane now stops at that
+door on purpose and says so, instead of failing on a missing git identity as its
+first version did.
+
+**A defect the lane's own flag found.** My version bump left `Cargo.lock` at
+`0.1.0`, so the first `v0.1.1` tag pointed at a commit whose `--locked` build
+fails. The fix is `a2eddcd`, and with the operator's explicit approval —
+the policy refuses a tag rewrite on a repository that already carries a release,
+and it was right to — `v0.1.1` was re-pointed at it. A young tag, no release
+attached, no consumer.
+
+**The bytes agree across two machines.** The phase's digest and the Release
+lane's artifact line are both `4a6bf405838b9d55a1764b9aeed77087fb783d9505c82ac9214ba46152332c71`,
+and an anonymous fetch of
+`releases/download/v0.1.1/ds-lite-punch` returns 200 with those bytes. The lock
+fix did not move the binary, which is what one wants from a lock whose only
+change is the crate's own version string.
+
+**The receipt is earned, not asserted.** `[receipt "release" "ds-lite-punch"]
+disposition = done`, evidence `v0.1.1@4a6bf405…`, authorization `call/0034`,
+replaces the adoption-era skip that reasoned `call/0012`. The record is re-pinned
+to `a2eddcd` with that artifact, and `software --check` reports every component
+at its pinned SHA.
+
+**Immutable releases are enabled** on the component, by its own endpoint:
+`PUT /repos/{owner}/{repo}/immutable-releases`, with `GET` returning
+`{enabled, enforced_by_owner}`. The repository-update endpoint carries no such
+parameter. Existing releases stay mutable, so both read `immutable: false` and
+the setting holds from the next release onward; from then a tag whose release is
+immutable can no longer be moved, which is precisely the guard the policy
+enforced by hand today. The host's setting is still off and inert, since the
+host cuts no releases.
