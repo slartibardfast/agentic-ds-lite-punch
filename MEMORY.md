@@ -2639,5 +2639,26 @@ at its pinned SHA.
 parameter. Existing releases stay mutable, so both read `immutable: false` and
 the setting holds from the next release onward; from then a tag whose release is
 immutable can no longer be moved, which is precisely the guard the policy
-enforced by hand today. The host's setting is still off and inert, since the
-host cuts no releases.
+enforced by hand today. The host's was enabled at the operator's word for
+symmetry and reads `enabled: true`; it is inert there, since the host cuts no
+releases.
+
+**The lane is proven, and it performs nothing.** Re-dispatched after its fix
+(run 35633025190), every step succeeded: `verify: green`, `version: 0.1.1 ->
+0.1.2 (the tool computed this from the change class)`, and then the tool's own
+line, "release ds-lite-punch v0.1.2 — verified build reproduces. Outward steps,
+authorized by call/0034". That authorization is a *log line*: the remote still
+carries exactly two tags (`v0.1.0` at `b15c165b`, `v0.1.1` at `a2eddcd6`), no
+`v0.1.2` exists, and both repositories' remotes equal their local heads. A
+dispatch therefore verifies and says what a release would be, and it cannot
+release anything by itself — which is the shape that leaves the outward steps
+with a credential that reaches both repositories.
+
+**The five CI failures of the day, all closed.** The host's three release-phase
+runs: the recursive-submodule checkout that wedged (cancelled), the missing
+`host-template` ("the adopted template has none"), and the push step that failed
+on the component worktree's missing git identity — each fixed, and the last two
+proven by the clean re-dispatch. The component's two runs on `6b9dee4`: `CI` and
+`Release` both failed on the lock, and both are green at `a2eddcd`. And the
+2026-09-19 `CI` failure on `04a6666` is the one whose repair produced the pinned
+toolchain lane in the first place. Immutable releases are on for the host too.
