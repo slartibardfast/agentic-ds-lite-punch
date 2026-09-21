@@ -2703,6 +2703,19 @@ harmless, and it is now impossible: <code>site.yml</code> carries <code>concurre
 the first. All three lanes are green on the newest commit. The book itself is
 published to <code>gh-pages</code> and GitHub Pages is not yet enabled for the repository,
 so the site URL answers 404 until that setting is turned on.</p>
+<p><strong>Upgrade claims re-verify raw, and two of them call the tool by name.</strong> After the
+upgrade, <code>software --check</code> raised two HAZARDs — <code>4a98d92</code> and
+<code>LEXICON-declaration-is-a-report</code> "claimed applied but its verify no longer holds"
+— and the cause is an asymmetry in the tool: manifest conditions are rewritten by
+<code>self_invoking()</code> so a bare <code>host-lifecycle</code> token becomes the absolute path of
+the running binary, while the upgrade-claim recheck runs the entry's verify
+through <code>sh -c</code> with the inherited PATH, untouched. Both verifies therefore hold
+only when a <code>host-lifecycle</code> happens to be on PATH. <code>4a98d92</code> also pipes, which
+the ledger's own rule 3 warns does not survive a non-POSIX shell. Disposed locally
+by linking the built tool at <code>~/.local/bin/host-lifecycle</code>, which a shell here
+resolves, and the gate is green again; upstream is owed the report that the two
+recheck paths should agree. The component's own pins and the two defects are
+untouched by this: <code>software --check</code> reports every component at its pinned SHA.</p>
 
                     </main>
 
