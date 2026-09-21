@@ -8984,6 +8984,46 @@ restarts the daemon, so the helper's tuple comes from
 <code>/run/ds-lite-punch/tuple-40000</code> <em>after</em> that restart. The first attempt read it
 first; the tuple happened to be re-learned identically, so the mistake cost
 nothing, and the ordering is the lesson.</p>
+<h2 id="2026-09-21--the-template-upgrade-by-the-process-and-four-entries-it-cannot-record"><a class="header" href="#2026-09-21--the-template-upgrade-by-the-process-and-four-entries-it-cannot-record">2026-09-21 — the template upgrade, by the process, and four entries it cannot record</a></h2>
+<p><strong>The template moved by the ledger, never by a diff.</strong> <code>host-template</code> fetched to
+<code>b917d4d</code> (main HEAD), its grafted shallow clone unshallowed so the tool could
+derive a baseline, and <code>upgrade</code> migrated the legacy <code>revision</code> stamp to
+<code>baseline = e4ed590</code> by itself. The stamp has never been hand-edited. The pending
+span was <strong>12 entries</strong>, not the three the plan assumed, because the derived
+baseline sits earlier than the ledger tail the project's copy carried.</p>
+<p><strong>Applied: 8 of 12.</strong> RETIRE-hermetic-exempt, RENAME-repro-waiver,
+LEXICON-declaration-is-a-report, PIN-two-surfaces-two-claims,
+ACTIVE-corpus-and-agents-manual, LEM-address-direction, LEM-exemplar-section,
+LEM-lane-and-mcp. Three of them failed at first only because the tool calls
+itself by name and was not on PATH; with <code>PATH</code> set they recorded. <code>--advance</code>
+compacted the contiguous run into <code>baseline = RENAME-repro-waiver</code> and the
+out-of-order ones stay in the append-only applied set.</p>
+<p><strong>Pending: 4, of which three are one defect's cascade.</strong> <code>REFS-a-number-resolves</code>
+verifies <code>grep -rqs "A number that names something resolves to it" host-template/CLAUDE.md</code>, and <code>LEM-pronoun-system</code> verifies <code>grep -irqs "pronoun system" CLAUDE.md</code>. The template's own <code>CLAUDE.md</code> says "The operating manual is
+AGENTS.md. This file is a pointer", so the phrases live in AGENTS.md and in no
+CLAUDE.md at all: neither verify can pass for a compliant adopter. The ledger's
+own rule 2 warns against exactly this shape, and <code>GATE-refs-in-verify</code> and
+<code>REFS-a-foreign-citation-names-its-repository</code> are blocked behind them. A report
+to the template is offered rather than filed unasked.</p>
+<p><strong>Tool pins followed the template's own tip</strong>, not only the ledger's floor:
+host-lint v0.19.0 to v0.22.0, host-lifecycle v0.53.0 to v0.54.2, both rebuilt and
+the skills re-linked (24, up from 19).</p>
+<p><strong>The lem contract flags nothing here.</strong> A full <code>--all</code> run under host-lint
+v0.22.0 reports 70 advisories and none of them lem, pronoun or first-person, so
+the cleanup the operator authorised turned out to be a no-op. Stated limit: a
+probe file carrying a bare first-person token was not flagged either, so the
+lane's reach over new surfaces is unproven here while its reading of this corpus
+is clean.</p>
+<p><strong>The spine re-applied</strong>: AGENTS.md is the new manual (1058 lines) with this
+project's specifics appended (30), exactly one heading, a pre-upgrade copy kept in
+<code>/tmp/AGENTS.md.pre-upgrade</code>; UPGRADING.md copied at the target (58 stanzas);
+STRUCTURE.md, CLAUDE.md, LICENSE and lifecycle.manifest were already identical,
+and .gitignore already carried the spine's three generated-artifact rules. The
+gate is green under the new tools, prose is clean and every reference resolves in
+71 documents.</p>
+<p><strong>MCP registered</strong>: <code>host-lint mcp</code> as a stdio server in <code>.qwen/settings.json</code>,
+which <code>.qwen/</code> being gitignored keeps machine-local. It is effective at the next
+session rather than this one.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
