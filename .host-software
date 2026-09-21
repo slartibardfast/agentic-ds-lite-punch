@@ -8,7 +8,7 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = a2eddcd6962ff968ae33bb5e26c8f7220afc131f
+	pin   = 406508d08c33e82a7a4c48b1dc929c2dce8e1cb8
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
