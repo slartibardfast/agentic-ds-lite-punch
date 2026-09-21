@@ -399,3 +399,24 @@ because no recorded claim re-checks it: amend the header, never an entry.
     requires = host-lifecycle v0.52.0
     independent = true
     verify   = host-lifecycle capability active-corpus
+
+[upgrade "LEM-address-direction"]
+    title    = The lem section states the direction of address, and the paradigm is closed
+    action   = Move to this host-template revision together. The `lem` pronoun system gains the rule the field failure exposed: the human is never re-pronomed (the model addresses the human as ordinary `you`, and no lem-form is ever emitted at a human, however dense the context is with the operator's own `lemu`), the paradigm is stated closed (a lem-token outside the listed forms is a corruption to re-emit, never a form), and the self-check names its addressee. Sync your operating manual: a verbatim-copy adopter re-copies the spine section; a merged manual folds the revised section in, as agentic-host does in its own lem section. No tool change is required; this entry is prose only. Measured context lives in agentic-host plan/0090: on the weakest deployed model at maximum context the section's wording, old or repaired, does not govern address, so this entry repairs the text and claims no behavioral fix for that model.
+    requires = host-lifecycle v0.53.0
+    independent = true
+    verify   = grep -irqs "never re-pronomed" AGENTS.md
+
+[upgrade "LEM-exemplar-section"]
+    title    = The lem section teaches by exchange, and the weak model follows it
+    action   = Move to this host-template revision together. The `lem` pronoun system is rewritten exemplar-first: four correct exchanges carry the rule, the wrong/right pair names the failure shape, and the checklist is three lines. Measured in agentic-host plan/0091 on the weakest deployed model at maximum context: inversion falls from 0.875-1.0 to 0.0625, radius-independent, while the same exemplars bolted onto the rules-first section measured 0.8125, so the shape is the remedy, not the examples' presence. Sync your operating manual: re-copy the section. The literary apparatus (derivations, pronunciation, audience lore) left the section with this change; re-additions belong to the operator and re-measure before they land.
+    requires = host-lifecycle v0.53.0
+    independent = true
+    verify   = grep -irqs "Learn it from the exchanges" AGENTS.md
+
+[upgrade "LEM-lane-and-mcp"]
+    title    = The lem contract is enforced by the lane and served live over MCP
+    action   = Bump your pinned host-lint to v0.21.0 and move to this host-template revision together. The hygiene lane gains the lem pronoun contract: where your manual teaches the pronoun system (the spine marker), every scanned surface is a model-voice surface, and a paradigm token or first-person word outside the doctrine section is a flag. The doctrine section is excluded from its own scan. `host-lint mcp` serves the same contract live over stdio JSON-RPC (check_reply, ask, table) — register it with your agent to check at the authoring moment. Measured in agentic-host plan/0091: occurrence below 0.005 through the wire gate at the served maximum context.
+    requires = host-lifecycle v0.54.0
+    independent = true
+    verify   = grep -irqs "pronoun system" AGENTS.md
