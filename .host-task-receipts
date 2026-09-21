@@ -307,3 +307,11 @@
     evidence = pins 8f179c7 and 0b72060b (artifact f4499c2c, 211 tests): the failing test showed the second no-preference request returning the first lease's slot; fixed, three leases coexist with three translations, a stranger's datagram reaches a listener bound to the lease's own port, and a restart restores the translation with no pin
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-20
+
+[receipt "plan/0010#watch-forward-path"]
+    disposition = done
+    verify = with the watch armed, a marked datagram from the helper raises the
+    inputs = the counting rule's chains (`src/nft.rs`, `CARRIER_CHAINS`), the
+    evidence = pins 2b6e0151 and 5df88c78 (artifact a452cf38, 215 tests): the rule goes into the forward path too, the forward rule says meta l4proto udp with no port match, and an install replaces a stale variant; with the watch armed the daemon installed both rules itself, a probe raised the counter to packets 3 bytes 132, and the daemon logged carrier-probe count 3
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-21

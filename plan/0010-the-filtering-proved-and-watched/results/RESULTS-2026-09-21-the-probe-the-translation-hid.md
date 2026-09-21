@@ -78,11 +78,17 @@ own observation point was broken.
 
 ## The window's state
 
-Disarmed on both boxes. On the router: `CARRIER_PROBE=0`, the daemon restarted,
-and the log carries no new `carrier-watch`. On the vantage: the helper stopped,
-its unit disabled, its units left on disk for the re-arm. The counting rule and
-the counter are removed from the router, so nothing counts and nothing stays
-installed. The re-arm waits for the release that carries the fix.
+Armed and counting, on both boxes. The router runs the released build
+`a452cf38…`, `CARRIER_PROBE=1` with a 900 s interval, and `{"event":"carrier-watch"}`
+logged at 20:40:54. The vantage runs the helper under systemd, and its disarm
+timer is active with `NEXT Tue 2026-09-22 19:44:05 UTC`; the router half's disarm
+is a dated cron entry at the same moment, so the window closes on both sides. The
+tuple the helper names is the one the daemon reported after the restart that
+installed this build.
+
+The final reading, with nothing installed by hand: the counter at
+`packets 3 bytes 132` and the daemon's own log line
+`{"event":"carrier-probe","count":3,"epoch":1790023284}`.
 
 ## The release that carries the fix, and three lessons
 
@@ -116,3 +122,31 @@ So `v0.1.2` carries the correct source and can never carry a release. That is
 the setting behaving as designed: a released tag name is spent. The fix ships as
 the next version instead, whose lane is the corrected draft-then-publish shape,
 and the burned tag is recorded rather than hidden.
+
+## What a working watch needed, in the end
+
+Four defects sat between the watch and its first counted probe, and each one
+came out of a measurement rather than a reading.
+
+1. **The rule lived in the input chain only.** The ingress translation sends a
+   slot port's arrival to its client, which makes it forwarded traffic, so the
+   input hook never sees it. The rule goes into both paths.
+2. **The forward rule asked for the slot's port.** The translation rewrites the
+   destination to the client's port before that hook, so the port match could
+   never hold. The forward rule asks for the mark alone:
+   `iifname "eth1" meta l4proto udp @th,64,64 0x64736c702d707262 counter name "carrier_probe"`.
+3. **That rule was a syntax error, so it was never installed.** A bare `udp`
+   before a payload expression makes nft expect a UDP header field:
+   `syntax error, unexpected @, expecting length or checksum or sport or dport`.
+   The protocol is named `meta l4proto udp`, and the daemon's stderr carried the
+   refusal in a `warn: carrier watch install failed` line that was there to be
+   read.
+4. **An install that only adds leaves an older build's rule.** Two stale input
+   variants and a stale forward rule survived two releases, and a rule that is
+   merely different counts nothing. The install now replaces the rules that name
+   the counter and are not the one it means.
+
+The end state, read from the box with nothing installed by hand: the input rule
+`iifname "eth1" udp dport @dslp_ports_udp @th,64,64 …` and the forward rule
+above, both the daemon's own, and a probe that raised the counter to
+`packets 3 bytes 132`.
