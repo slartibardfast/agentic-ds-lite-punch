@@ -2539,6 +2539,33 @@ token, so it should be deleted and the lane simplified. And <code>prose.yml</cod
 component's <code>ci.yml</code> carry no <code>permissions:</code> block, so a stranger's pull
 request runs them with the repository default; <code>contents: read</code> is the
 hardening.</p>
+<h2 id="2026-09-20--the-release-is-cut-and-its-receipt-waits-for-a-container"><a class="header" href="#2026-09-20--the-release-is-cut-and-its-receipt-waits-for-a-container">2026-09-20 — the release is cut, and its receipt waits for a container</a></h2>
+<p><strong>Four things landed with the flip.</strong> <code>call/0034</code> records the visibility ruling,
+the audit and the release duty. The read token is gone: the secret is deleted,
+the host's reproducible lane materializes the component with the runner's own
+token, and the lane passes that way (checked after the change). Every lane
+declares <code>permissions:</code>, read-only except the release job that creates a
+release. And the token never entered a commit: the history holds its <em>name</em> in
+one workflow commit and <em>zero</em> token-shaped values.</p>
+<p><strong>The release exists and is verifiable by a stranger.</strong> Annotated tag <code>v0.1.0</code>
+at <code>b15c165b</code>, the commit the record pins. The component's new Release lane
+built the musl binary in the same digest-pinned image and attached
+<code>ds-lite-punch</code> and <code>artifact-record.txt</code> to the release. Fetched with no
+credentials:</p>
+<pre><code>GET https://github.com/slartibardfast/ds-lite-punch/releases/download/v0.1.0/ds-lite-punch
+-&gt; 200, 1045168 bytes, sha256 ddfe3903…  (the record's anchor, byte for byte)
+</code></pre>
+<p>That closes what the flip exposed: Actions artifacts answer 401 anonymously,
+while a release asset answers 200 with the recorded bytes.</p>
+<p><strong>The release phase receipt is owed to a host with a container runtime.</strong>
+<code>host-lifecycle release ds-lite-punch --change-class neither --authorized call/0034</code> ran the verify gate green (<code>prose: clean</code>, <code>reconcile: clean</code>, 69
+documents resolved), computed the version <code>0.1.0 -&gt; 0.1.1</code>, and then blocked:
+"no container runtime (docker/podman) — release BLOCKS; the canonical hash must
+come from the recorded toolchain, never an ambient build (R5/R6)". It left the
+tree untouched, which is the fail-safe behaving. So <code>.host-lifecycle-receipts</code>
+still carries the adoption-era <code>[receipt "release" "ds-lite-punch"] skip, reason = call/0012</code> while a release has since been cut; the <code>done</code> is owed on a host or
+a lane that has Docker, and a release-phase workflow is the natural place for
+it.</p>
 
                     </main>
 
