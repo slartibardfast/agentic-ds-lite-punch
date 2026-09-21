@@ -10,6 +10,12 @@ on:
     branches: [main]
   pull_request:
 
+# A pull request from a fork runs this job. The default token is read-only for
+# a public repository, and saying so here keeps that true if the setting
+# changes: the prose gate reads the tree and needs no write.
+permissions:
+  contents: read
+
 jobs:
   prose:
     runs-on: ubuntu-latest

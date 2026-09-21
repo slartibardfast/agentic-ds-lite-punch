@@ -10,6 +10,10 @@ on:
   schedule:
     - cron: "0 6 * * 1" # weekly drift check
 
+# The lane reads the component and rebuilds it; nothing here needs to write.
+permissions:
+  contents: read
+
 jobs:
   verify-build:
     runs-on: ubuntu-latest
@@ -30,26 +34,14 @@ jobs:
       - name: Set up the pinned toolchain
         if: hashFiles('.host-software') != ''
         run: 'echo "Install the toolchain pinned in .host-software (project-specific)"'
-      # The component (slartibardfast/ds-lite-punch) is a private repo, so the
-      # job's GITHUB_TOKEN (scoped to this host repo) cannot clone it. The lane
-      # reads it with a fine-grained PAT (Contents: read-only, that repo only)
-      # supplied as the DSLITE_READ_TOKEN secret. Without the secret the step
-      # fails loudly: never hollow-green (software --check attest).
+      # The component is a public repository now, so the runner's own token
+      # clones it and there is no separate credential left to leak: the
+      # DSLITE_READ_TOKEN secret was retired when it went public (MEMORY.md,
+      # 2026-09-20). A materialize that fails fails this job, which carries the
+      # same no-hollow-green property the secret's absence used to.
       - name: Materialize the software (bare store + worktrees)
         if: hashFiles('.host-software') != ''
-        env:
-          COMPONENT_READ_TOKEN: ${{ secrets.DSLITE_READ_TOKEN }}
-        run: |
-          if [ -z "$COMPONENT_READ_TOKEN" ]; then
-            echo "::error::ds-lite-punch is a private repo; set the DSLITE_READ_TOKEN secret (fine-grained PAT, Contents: read, on slartibardfast/ds-lite-punch) to materialize it."
-            exit 1
-          fi
-          # Git over HTTPS speaks Basic, not Bearer (the API accepts Bearer;
-          # the git endpoint does not). This is the same scheme actions/checkout
-          # uses, and the same x-access-token username.
-          AUTH="$(printf 'x-access-token:%s' "$COMPONENT_READ_TOKEN" | base64 -w0)"
-          git config --global http.https://github.com/.extraheader "Authorization: Basic ${AUTH}"
-          ./tools/host-lifecycle/target/release/host-lifecycle software --materialize .
+        run: ./tools/host-lifecycle/target/release/host-lifecycle software --materialize .
       - name: Verify reproducibility (rebuild from the pin; compare the artifact)
         if: hashFiles('.host-software') != ''
         run: ./tools/host-lifecycle/target/release/host-lifecycle software --verify-build .
