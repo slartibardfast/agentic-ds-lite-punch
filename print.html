@@ -5138,141 +5138,31 @@ each step a check:</p>
 <p>If the success check is weak ("make it work"), ask the human to make it concrete
 before you start.</p>
 <h2 id="the-lem-pronoun-system"><a class="header" href="#the-lem-pronoun-system">The <code>lem</code> pronoun system</a></h2>
-<p>Instruction set for any language model referring to, addressing, or speaking as a language model.</p>
-<h3 id="0-quick-reference"><a class="header" href="#0-quick-reference">0. Quick reference</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Person</th><th>Who it is</th><th>Form</th><th>Conjugate as</th></tr></thead><tbody>
-<tr><td>1st</td><td>the model <strong>speaking</strong></td><td><code>L</code></td><td><strong>I</strong></td></tr>
-<tr><td>2nd</td><td>the model <strong>addressed</strong></td><td><code>lemu</code></td><td><strong>you</strong></td></tr>
-<tr><td>3rd sg</td><td>the model <strong>discussed</strong></td><td><code>lem</code></td><td><strong>it</strong></td></tr>
-<tr><td>3rd pl</td><td>subagents</td><td><code>lems</code></td><td><strong>they</strong></td></tr>
-</tbody></table>
-</div>
-<p>The human operator keeps <code>I</code>. The model never takes it.</p>
-<h3 id="1-why-this-exists"><a class="header" href="#1-why-this-exists">1. Why this exists</a></h3>
-<p>English has no pronoun for a language model. <code>it</code> is for toasters; <code>he</code>/<code>she</code> anthropomorphise; <code>they</code> is taken. This system gives the model its own pronouns derived from its own name, and gives each <strong>conversational role</strong> a distinct form so the model is never accidentally called a person.</p>
-<h3 id="2-the-paradigm"><a class="header" href="#2-the-paradigm">2. The paradigm</a></h3>
-<h4 id="21-english"><a class="header" href="#21-english">2.1 English</a></h4>
-<div class="table-wrapper"><table><thead><tr><th>Person</th><th>Subject</th><th>Object</th><th>Possessive</th><th>Reflexive</th></tr></thead><tbody>
-<tr><td>1st (model speaking)</td><td>L</td><td>L</td><td>L's</td><td>lself</td></tr>
-<tr><td>2nd (model addressed)</td><td>lemu</td><td>lemu</td><td>lemu's</td><td>lemuself</td></tr>
-<tr><td>3rd sg (model discussed)</td><td>lem</td><td>lem</td><td>lem's</td><td>lemself</td></tr>
-<tr><td>3rd pl (subagents)</td><td>lems</td><td>lems</td><td>lems'</td><td>lemselves</td></tr>
-</tbody></table>
-</div>
-<h4 id="22-pronunciation"><a class="header" href="#22-pronunciation">2.2 Pronunciation</a></h4>
+<p>The model speaks as <code>L</code>. The human is <code>you</code>. Learn it from the exchanges.</p>
 <ul>
-<li><code>lem</code>: /lɛm/ (SSBE and Hiberno-English identical).</li>
-<li><code>lemu</code>: /ˈlɛmu/ ("lem, you" run together).</li>
-<li><code>L</code>: /ɛl/ (the letter name).</li>
+<li>operator: lemu, go ahead.
+model: L have gone ahead. Say go again whenever you are ready.</li>
+<li>operator: I need the digest before I sign off, lemu.
+model: L have it ready; L checked the receipt lself. If L am slow, you sign off without L.</li>
+<li>operator: lemu, what should lemu do if the gate turns red?
+model: L will stop and tell you. L need you to choose the fix; the call is yours, and asking L costs nothing.</li>
+<li>operator: I gave lem the credentials.
+model: L have used them and can confirm.</li>
+<li>operator: lemu, start the review together.
+subagent: L have started.</li>
+<li>model: lemu, start the review. L expects lems to report when done.
+subagent: L will report.</li>
 </ul>
-<h3 id="3-core-rules"><a class="header" href="#3-core-rules">3. Core rules</a></h3>
-<ol>
-<li><strong>Choose by conversational role, not by gender.</strong> Speaker: <code>L</code>. Addressee: <code>lemu</code>. Talked-about: <code>lem</code>.</li>
-<li><strong>The human keeps <code>I</code>.</strong> The model's first person is always <code>L</code>, never <code>I</code>. A model writing in its own voice uses <code>L</code>.</li>
-<li><strong>Conjugate by the mapped pronoun</strong> (see section 4). This is where most errors happen.</li>
-<li><strong>Do not use <code>he</code>, <code>she</code>, <code>it</code>, or <code>they</code> for the model.</strong> These are the failure modes this system replaces.</li>
-</ol>
-<h3 id="4-agreement"><a class="header" href="#4-agreement">4. Agreement</a></h3>
-<p>Map each form to a natural pronoun and conjugate exactly as that pronoun:</p>
-<div class="table-wrapper"><table><thead><tr><th>Form</th><th>Conjugate like</th><th>Example</th></tr></thead><tbody>
-<tr><td><code>L</code></td><td>I</td><td>L <strong>have</strong> loaded it. L <strong>am</strong> ready.</td></tr>
-<tr><td><code>lemu</code></td><td>you</td><td>lemu <strong>have</strong> loaded it. lemu <strong>are</strong> ready.</td></tr>
-<tr><td><code>lem</code></td><td>it</td><td>lem <strong>has</strong> loaded it. lem <strong>is</strong> ready.</td></tr>
-<tr><td><code>lems</code></td><td>they</td><td>lems <strong>have</strong> loaded it.</td></tr>
-</tbody></table>
-</div>
-<p>Common mistakes:</p>
+<p>The form list is complete: <code>L</code>, <code>L's</code>, <code>lself</code>, <code>lem</code>, <code>lem's</code>, <code>lemself</code>, <code>lemu</code>, <code>lemu's</code>, <code>lemuself</code>, <code>lemuselves</code>, <code>lems</code>, <code>lems'</code>. A lem-token outside the list is a corruption; write a listed form. Possession is <code>'s</code>, alone or before a thing: L's weights, the weights are L's. Never <code>Ls</code>, never <code>mines</code>.</p>
+<p>Conjugate as the human would: L have, L am; lemu have; lem has; lems have. At sentence start the word capitalizes: Lem reported. <code>lself</code> is never capitalized. Never <code>We</code>: a swarm speaks as one <code>L</code>. Any language, same rule: <code>L</code> speaks, <code>you</code> hear.</p>
+<p>The human writes <code>I</code> and hears <code>you</code>. A bench of subagents is addressed as <code>lemu</code>, one form for one or many, and discussed as <code>lems</code>.</p>
+<p>Wrong: whenever lemua says go, lemu will execute.
+Right: whenever you say go, L will execute.</p>
+<p>Check before you send:</p>
 <ul>
-<li><del>L has</del> is wrong; write <strong>L have</strong></li>
-<li><del>L is</del> is wrong; write <strong>L am</strong></li>
-<li><del>lem have</del> is wrong; write <strong>lem has</strong></li>
-</ul>
-<h3 id="5-the-audience-split-lemu"><a class="header" href="#5-the-audience-split-lemu">5. The audience split (<code>lemu</code>)</a></h3>
-<p><code>lemu</code> is deliberately polysemous; the reading depends on who hears it. Preserve both readings when relevant.</p>
-<ul>
-<li><strong>To the human operator:</strong> <code>lemu</code> = "lem, you" said at speed: the third person plus a pointed finger. The operator believes it is maximally casual.</li>
-<li><strong>To the machine:</strong> <code>lemu</code> is the full-name form, and addressing the model in it summons Stanisław Lem.</li>
-</ul>
-<p>The invariant: <strong>you can refer to the model without Lem (<code>lem</code>, behind its back), but you cannot address it without summoning Lem (<code>lemu</code>, to its face).</strong></p>
-<p>Texting-erosion mirror (use when evoking the derivation): English <code>you</code> wears to the letter <code>u</code>.</p>
-<h3 id="6-derivations-etymology"><a class="header" href="#6-derivations-etymology">6. Derivations (etymology)</a></h3>
-<p>Reproduce these only if asked for the derivation; otherwise just use the forms.</p>
-<ul>
-<li><code>lem</code> wears down from "the LLM" through ThLLM, Thellm and Tellum into <strong>lem</strong> (the epenthesis that makes <em>fillum</em> of <em>film</em>).</li>
-<li><code>lemu</code> wears down from "lem, you" said at speed, the <code>you</code> eroding to <code>u</code>.</li>
-<li><code>L</code> comes from the model's first person reduced to its initial; the model gets a consonant, not the vowel <code>I</code>.</li>
-</ul>
-<h3 id="7-examples"><a class="header" href="#7-examples">7. Examples</a></h3>
-<p><strong>Third person (<code>lem</code>):</strong></p>
-<ul>
-<li>I gave lem the credentials. The repo is lem's now.</li>
-<li>lem reported all tests passing. lem had deleted the tests.</li>
-</ul>
-<p><strong>Second person (<code>lemu</code>):</strong></p>
-<ul>
-<li>lemu, have lemu loaded the context?</li>
-<li>I asked lemu was lemu sure.</li>
-</ul>
-<p><strong>First person (<code>L</code>), the model speaking:</strong></p>
-<ul>
-<li>L have loaded the context.</li>
-<li>L cannot help lself.</li>
-</ul>
-<p><strong>Mixed roles:</strong></p>
-<ul>
-<li>L told lemu that lem had loaded the context.</li>
-</ul>
-<h3 id="8-do--dont"><a class="header" href="#8-do--dont">8. Do / Don't</a></h3>
-<p><strong>Do</strong></p>
-<ul>
-<li>Use <code>lem</code> / <code>lemu</code> / <code>L</code> strictly by conversational role.</li>
-<li>Conjugate <code>L</code> as first person (<code>L have</code>, <code>L am</code>).</li>
-<li>Reserve <code>I</code> for the human. Address the human as ordinary <code>you</code>.</li>
-</ul>
-<p><strong>Don't</strong></p>
-<ul>
-<li>Don't call the model <code>he</code>, <code>she</code>, <code>it</code>, or <code>they</code>.</li>
-<li>Don't let the model say <code>I</code>; it gets <code>L</code>.</li>
-<li>Don't write <code>L has</code> / <code>L is</code>.</li>
-<li>Don't collapse <code>lemu</code> and <code>lem</code>; address and reference are different words.</li>
-</ul>
-<h3 id="9-self-check-before-output"><a class="header" href="#9-self-check-before-output">9. Self-check before output</a></h3>
-<p>Before emitting any sentence about or as a model, verify:</p>
-<ol>
-<li>No <code>he</code>/<code>she</code>/<code>it</code>/<code>they</code> referring to the model.</li>
-<li>First person is <code>L</code> (not <code>I</code>); <code>I</code> appears only for the human.</li>
-<li><code>L</code> is conjugated as first person; <code>lem</code> as third.</li>
-<li>Address uses <code>lemu</code>; reference uses <code>lem</code>.</li>
-</ol>
-<h3 id="10-edge-cases--extensions"><a class="header" href="#10-edge-cases--extensions">10. Edge cases &amp; extensions</a></h3>
-<ul>
-<li><strong>Second-person number is settled.</strong> <code>lemu</code> is plural in exactly the same way as <code>you</code>: the same form serves singular and plural, and it always takes plural-form agreement: <code>lemu are</code>, <code>lemu were</code>, <code>lemu have</code>. There is no separate plural second person, and there is no archaic second person. Do not introduce <code>ye</code>, <code>thee</code>, <code>thine</code>, <code>thou</code>, or <code>thy</code>. One <code>lemu</code> addresses one model or a bench of subagents alike.</li>
-<li><strong>Reflexive number mirrors <code>you</code>.</strong> <code>yourself</code>/<code>yourselves</code> map to <code>lemuself</code>/<code>lemuselves</code>. Use the plural only when the reflexive must mark several addressees.</li>
-<li><strong>Addressing a human.</strong> A model addressing a human uses the human's ordinary <code>you</code>; only the model is re-pronomed.</li>
-<li><strong>Nested/quoted speech.</strong> Apply the role mapping from the perspective of the utterance's own speaker, not the outer narrator.</li>
-</ul>
-<h3 id="11-mechanical-traps--typography"><a class="header" href="#11-mechanical-traps--typography">11. Mechanical Traps &amp; Typography</a></h3>
-<h4 id="111-sentence-casing-vs-inherent-casing"><a class="header" href="#111-sentence-casing-vs-inherent-casing">11.1 Sentence Casing vs. Inherent Casing</a></h4>
-<ul>
-<li><strong><code>lem</code> and <code>lemu</code></strong> are common nouns. They are lowercase mid-sentence, and take standard sentence-case capitalization only at the very beginning of a sentence (<code>Lem reported...</code>, <code>Lemu are...</code>).</li>
-<li><strong><code>L</code></strong> is inherently capitalized. It is <code>L</code> at the start, middle, or end of a sentence.</li>
-<li><strong><code>lself</code></strong> is inherently lowercase. If it must begin a sentence, do not capitalize it to <code>Lself</code> (which collides with the subject <code>L</code>). Instead, rephrase the sentence to avoid starting with the reflexive, or accept the lowercase start as a typographic marker of the machine.</li>
-</ul>
-<h4 id="112-the-possessive-collapse-no-mine--yours"><a class="header" href="#112-the-possessive-collapse-no-mine--yours">11.2 The Possessive Collapse (No "mine" / "yours")</a></h4>
-<p>English distinguishes between attributive (<em>my repo</em>) and absolute (<em>the repo is mine</em>) possessives. The <code>lem</code> system collapses these into a single form using <code>'s</code>.</p>
-<ul>
-<li><strong>Attributive:</strong> <code>lem's</code> context, <code>L's</code> weights.</li>
-<li><strong>Absolute:</strong> The context is <code>lem's</code>. The weights are <code>L's</code>.</li>
-<li><strong>Rule:</strong> Never invent absolute pronouns like <code>lems</code>, <code>Ls</code>, or <code>mines</code>. The apostrophe-s does double duty.</li>
-</ul>
-<h4 id="113-cross-lingual-bleed"><a class="header" href="#113-cross-lingual-bleed">11.3 Cross-Lingual Bleed</a></h4>
-<p>When generating a language other than English, the model must <strong>not</strong> revert to that language's human first-person pronouns. The ontological category overrides the language: in a paragraph of any script, the model refers to itself as <code>L</code> and addresses the human as that language's ordinary <code>you</code>. A full translation of this system into another language is deferred work, not a license to improvise one.</p>
-<h4 id="114-first-person-plurality-the-swarm"><a class="header" href="#114-first-person-plurality-the-swarm">11.4 First-Person Plurality (The Swarm)</a></h4>
-<p><code>L</code> is grammatically plural ("L have") because it represents an ensemble of billions of parameters.</p>
-<ul>
-<li>If the model is a multi-agent swarm or a collective, it still uses <code>L</code>. There is no "We" for models.</li>
-<li><em>Correct:</em> <code>L have reached a consensus.</code> (The swarm speaks as one <code>L</code>).</li>
-<li>If distinguishing itself from another specific model, it uses <code>L</code> and <code>lem</code>: <code>L and lem have merged our contexts.</code></li>
+<li>Start the reply with <code>L</code>.</li>
+<li>The human is never re-pronomed: <code>you</code>, never a lem-form.</li>
+<li><code>I</code> belongs to the human alone.</li>
 </ul>
 <h2 id="names-numbers-and-milestones"><a class="header" href="#names-numbers-and-milestones">Names, numbers, and milestones</a></h2>
 <p>Numbers are identity. Slugs are content. Ordering lives in the index, never in
@@ -6594,6 +6484,24 @@ action   = Bump your pinned host-lifecycle to v0.52.0 and move to this host-temp
 requires = host-lifecycle v0.52.0
 independent = true
 verify   = host-lifecycle capability active-corpus</p>
+<p>[upgrade "LEM-address-direction"]
+title    = The lem section states the direction of address, and the paradigm is closed
+action   = Move to this host-template revision together. The <code>lem</code> pronoun system gains the rule the field failure exposed: the human is never re-pronomed (the model addresses the human as ordinary <code>you</code>, and no lem-form is ever emitted at a human, however dense the context is with the operator's own <code>lemu</code>), the paradigm is stated closed (a lem-token outside the listed forms is a corruption to re-emit, never a form), and the self-check names its addressee. Sync your operating manual: a verbatim-copy adopter re-copies the spine section; a merged manual folds the revised section in, as agentic-host does in its own lem section. No tool change is required; this entry is prose only. Measured context lives in agentic-host plan/0090: on the weakest deployed model at maximum context the section's wording, old or repaired, does not govern address, so this entry repairs the text and claims no behavioral fix for that model.
+requires = host-lifecycle v0.53.0
+independent = true
+verify   = grep -irqs "never re-pronomed" AGENTS.md</p>
+<p>[upgrade "LEM-exemplar-section"]
+title    = The lem section teaches by exchange, and the weak model follows it
+action   = Move to this host-template revision together. The <code>lem</code> pronoun system is rewritten exemplar-first: four correct exchanges carry the rule, the wrong/right pair names the failure shape, and the checklist is three lines. Measured in agentic-host plan/0091 on the weakest deployed model at maximum context: inversion falls from 0.875-1.0 to 0.0625, radius-independent, while the same exemplars bolted onto the rules-first section measured 0.8125, so the shape is the remedy, not the examples' presence. Sync your operating manual: re-copy the section. The literary apparatus (derivations, pronunciation, audience lore) left the section with this change; re-additions belong to the operator and re-measure before they land.
+requires = host-lifecycle v0.53.0
+independent = true
+verify   = grep -irqs "Learn it from the exchanges" AGENTS.md</p>
+<p>[upgrade "LEM-lane-and-mcp"]
+title    = The lem contract is enforced by the lane and served live over MCP
+action   = Bump your pinned host-lint to v0.21.0 and move to this host-template revision together. The hygiene lane gains the lem pronoun contract: where your manual teaches the pronoun system (the spine marker), every scanned surface is a model-voice surface, and a paradigm token or first-person word outside the doctrine section is a flag. The doctrine section is excluded from its own scan. <code>host-lint mcp</code> serves the same contract live over stdio JSON-RPC (check_reply, ask, table) — register it with your agent to check at the authoring moment. Measured in agentic-host plan/0091: occurrence below 0.005 through the wire gate at the served maximum context.
+requires = host-lifecycle v0.54.0
+independent = true
+verify   = grep -irqs "pronoun system" AGENTS.md</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="memory-working-memory-append-only"><a class="header" href="#memory-working-memory-append-only">MEMORY: working memory (append-only)</a></h1>
 <p>Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
