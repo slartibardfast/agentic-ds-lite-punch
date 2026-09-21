@@ -2662,3 +2662,46 @@ proven by the clean re-dispatch. The component's two runs on `6b9dee4`: `CI` and
 `Release` both failed on the lock, and both are green at `a2eddcd`. And the
 2026-09-19 `CI` failure on `04a6666` is the one whose repair produced the pinned
 toolchain lane in the first place. Immutable releases are on for the host too.
+
+## 2026-09-21 — the watch counts, after four defects, and its window closes itself
+
+**The carrier watch is armed and counting.** `CARRIER_PROBE=1`, interval 900 s,
+the router on the released `a452cf38…`, the helper under systemd on the vantage,
+and both disarms scheduled for the same moment: the vantage's timer at
+`2026-09-22 19:44 UTC` and a dated cron entry on this workstation for the router
+half, which removes its own line. Record:
+`plan/0010-.../results/RESULTS-2026-09-21-the-probe-the-translation-hid.md`.
+
+**Four defects sat between the watch and its first counted probe**, each found by
+measuring rather than reading:
+
+1. the counting rule lived in the input chain only, and the milestone's own
+   ingress translation turns a slot port's arrival into forwarded traffic;
+2. the forward rule asked for the slot's port, which the translation has already
+   rewritten to the client's before that hook;
+3. that rule was a **syntax error** (`syntax error, unexpected @, expecting
+   length or checksum or sport or dport`) because a bare `udp` before a payload
+   expression makes nft expect a UDP header field — the fix spells it
+   `meta l4proto udp`, and the daemon's own `warn: carrier watch install failed`
+   line carried the refusal the whole time;
+4. an install that only adds leaves an older build's rule, and a rule that is
+   merely different counts nothing, so the install now replaces stale variants.
+
+Final reading, with nothing installed by hand: the daemon's own two rules, the
+counter at `packets 3 bytes 132`, and `{"event":"carrier-probe","count":3}`.
+
+**Three release lessons, one of them expensive.** The phase verifies the
+*pinned* source, so the pin must name the fix before the phase runs: dispatched
+earlier, it authorised a digest for a different source than the tag's build. An
+immutable release is frozen at creation, so the asset must ride the creation —
+the lane is draft-then-publish now. And repairing that first attempt **burned the
+tag**: `v0.1.2`'s release was deleted and can never be re-created
+(`tag_name was used by an immutable release`), so the fix shipped as `v0.1.3`,
+`v0.1.4` and `v0.1.5`, each earned by the phase, attached by the lane, and
+downloaded anonymously to check the hash against the authorised digest.
+
+**A stale tuple is read after the restart, never before.** Arming the router
+restarts the daemon, so the helper's tuple comes from
+`/run/ds-lite-punch/tuple-40000` *after* that restart. The first attempt read it
+first; the tuple happened to be re-learned identically, so the mistake cost
+nothing, and the ordering is the lesson.
