@@ -1,0 +1,82 @@
+# The lifecycle's release phase, run where a container runtime exists.
+#
+# The phase refuses to run on the development host: "no container runtime
+# (docker/podman) — release BLOCKS; the canonical hash must come from the
+# recorded toolchain ..., never an ambient build (R5/R6)". That refusal is
+# correct, and a runner has Docker, so this is the lane that earns the release
+# receipt instead of a hand-cut tag: it gates on the verify sweep, re-derives
+# the artifact hash inside the recorded image, bumps the component's version,
+# re-pins `.host-software`, cuts the annotated tag and writes the receipt.
+#
+# The tag it pushes then triggers the component's own Release lane, which
+# attaches the binary and the line that records its hash as release assets, so
+# the bytes stay anonymously fetchable. This lane only does what the tool does;
+# it commits and pushes the result.
+#
+# Dispatch it deliberately, one release at a time: the change class is how the
+# tool maps to a version, and the authorization is the record that says why the
+# release is owed.
+name: Release phase
+
+on:
+  workflow_dispatch:
+    inputs:
+      change_class:
+        description: "what the release changes, which the tool maps to a version"
+        type: choice
+        options:
+          - neither
+          - adds-flag
+          - removes-flag
+        default: neither
+        required: true
+      authorized:
+        description: "the record that authorizes this release, as call/NNNN"
+        type: string
+        default: call/0034
+        required: true
+
+# It commits the phase's changes, pushes them, and cuts a tag.
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0 # the phase inspects tags and history
+      - name: Build the release tool
+        run: cargo build --release --manifest-path tools/host-lifecycle/Cargo.toml
+      - name: Put the tool on the path the phase calls itself by
+        run: echo "$PWD/tools/host-lifecycle/target/release" >> "$GITHUB_PATH"
+      # The component is public, so materializing needs no credential; the
+      # phase works in the component's worktree to bump its version and re-pin
+      # the host's record against the commit that carries the bump.
+      - name: Materialize the component
+        run: host-lifecycle software --materialize .
+      - name: Run the release phase
+        run: |
+          host-lifecycle release ds-lite-punch \
+            --change-class "${{ inputs.change_class }}" \
+            --authorized "${{ inputs.authorized }}"
+      - name: Push the component's bump first, then the host's record and tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git -C software/ds-lite-punch/main status --porcelain)" ]; then
+            git -C software/ds-lite-punch/main add -A
+            git -C software/ds-lite-punch/main commit -m "release: the version the host's release phase computed"
+            git -C software/ds-lite-punch/main push origin HEAD:main
+          fi
+          git add -A
+          git diff --cached --quiet || git commit -m "release: the phase's record, its receipt, and the pin it re-derived"
+          git push
+          git push --tags
+      - name: State what the release is
+        run: |
+          echo "### release phase" >> "$GITHUB_STEP_SUMMARY"
+          grep -E "^	(pin|artifact)" .host-software >> "$GITHUB_STEP_SUMMARY"
+          git tag --points-at HEAD >> "$GITHUB_STEP_SUMMARY"
