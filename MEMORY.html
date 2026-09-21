@@ -2502,6 +2502,43 @@ before and 57 after, and the last error line is still the old 21:58 one. Pin
 <code>709e7668</code>, artifact <code>ddfe3903</code>, 211 tests, deployed and recorded; the router
 runs it with <code>prev-f4499c2c</code> parked beside the earlier ones, and no capture of
 mine remains.</p>
+<h2 id="2026-09-20--both-repositories-are-public-after-a-clean-audit"><a class="header" href="#2026-09-20--both-repositories-are-public-after-a-clean-audit">2026-09-20 — both repositories are public, after a clean audit</a></h2>
+<p><strong>The audit found no secrets.</strong> <code>gitleaks</code> 8.29.0 over the <em>full histories</em>: the
+host's 425 commits (385 MB scanned) and the component's 83 commits, both "no
+leaks found". A targeted sweep behind it found no private keys
+(<code>BEGIN … PRIVATE KEY</code>), no WireGuard material (<code>PrivateKey =</code>, the PSK), no
+tokens (<code>ghp_</code>, <code>github_pat_</code>, <code>sk-</code>), no PUK, no PIN, no password assignment
+outside the DeviceProtection spec's own PBKDF2 language, and no UDN uuid. The
+<code>sk-</code> hits were the word <code>task-receipts</code>; the <code>password</code> hits were
+<code>password = Password, salt = Name || Salt</code> from the specification.</p>
+<p><strong>The flip, and its verification.</strong> Both repos are now <code>visibility=public</code>: the
+unauthenticated API and web URLs answer 200, an anonymous <code>git ls-remote</code>
+returns HEAD (host <code>4181cb3</code>, component <code>709e7668</code>, the deployed pin), the
+component README renders its derivation line to a stranger, and all five
+submodules were already public, so a recursive clone resolves.</p>
+<p><strong>What publishing exposes, now live</strong> (the operator chose wide reach, and this
+is the accounting): the line's external address <code>37.228.213.83</code> (97 mentions in
+the host docs), the VM line's <code>84.203.115.61</code> (1635), the vantage
+<code>170.9.238.141</code> (55), br-lan addresses (164), two device MACs, the operator's
+name and address in every commit's metadata plus one MEMORY mention, and the
+DeviceProtection:1 and WIP2 spec transcriptions (2.4 MB and 1.9 MB in the
+component) whose redistribution terms are a licensing question rather than a
+secret.</p>
+<p><strong>A gap the flip exposed: the artifact is not anonymously retrievable.</strong> The
+actions artifacts API lists 12 artifacts anonymously (200) and <em>downloads</em> them
+with 401, because Actions artifacts always need a token. Neither repo carries a
+tag or a release, so the component's <code>version = "0.1.0"</code> is exactly what the
+spine calls an unreleased version, and the tag-triggered job that builds the
+artifacts from a tag does not exist. A stranger can clone and rebuild (the
+pinned toolchain image is public), and cannot fetch the bytes the router runs.
+The fix is a <code>v0.1.0</code> tag and a tag-triggered release attaching the musl
+binary, which satisfies the spine's tag rule and makes the bytes anonymous.</p>
+<p><strong>Two follow-ups owed.</strong> <code>DSLITE_READ_TOKEN</code> on the host repo is now redundant:
+the lane used it to clone the private component, and a public clone needs no
+token, so it should be deleted and the lane simplified. And <code>prose.yml</code> and the
+component's <code>ci.yml</code> carry no <code>permissions:</code> block, so a stranger's pull
+request runs them with the repository default; <code>contents: read</code> is the
+hardening.</p>
 
                     </main>
 
