@@ -78,11 +78,11 @@ own observation point was broken.
 
 ## The window's state
 
-Disarmed on both boxes: `CARRIER_PROBE=0` on the router after a restart with no
-fresh `carrier-watch`, the helper stopped and its unit disabled on the vantage,
-its units left on disk for the re-arm. The counting rule and the counter are
-removed from the router, so nothing counts and nothing stays installed. The
-re-arm waits for the release that carries the fix.
+Disarmed on both boxes. On the router: `CARRIER_PROBE=0`, the daemon restarted,
+and the log carries no new `carrier-watch`. On the vantage: the helper stopped,
+its unit disabled, its units left on disk for the re-arm. The counting rule and
+the counter are removed from the router, so nothing counts and nothing stays
+installed. The re-arm waits for the release that carries the fix.
 
 ## The release that carries the fix, and three lessons
 
