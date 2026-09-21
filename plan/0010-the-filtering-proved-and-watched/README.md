@@ -1,11 +1,12 @@
 # Milestone: the carrier's filtering, proved and watched
 
-**Status:** done, 2026-09-20. The measurement, the watch and its alarm are done
-and recorded, and the acceptance's two repairs are done with them: the ingress
-translation takes an arrival at a slot port to its client, and the
-mapping-coexistence defect its proof exposed is fixed and verified on the box
-(three leases coexisting, delivery into a listening socket, and a restore that
-keeps the translation).
+**Status:** open, reopened 2026-09-21 to add `#watch-forward-path`: arming the
+watch for its authorized day found that the milestone's own ingress translation
+had moved the probe out of the chain the counting rule lived in, so the counter
+stayed at zero while the marked datagram arrived. The fix rides the component's
+lane, and the window's record is
+`RESULTS-2026-09-21-the-probe-the-translation-hid.md`. Everything below is done
+and was verified before that.
 Records under `results/`:
 `RESULTS-2026-09-20-stranger-probe.md`,
 `RESULTS-2026-09-20-alarm-proof.md`,
@@ -164,6 +165,24 @@ mapping per pair of requests. Fixed by refusing to supersede when `req_ext` is
 ingress translation, and no pin), and by dropping the revoke's dead pin delete.
 The record carries the failing test's own output and the three on-box
 verifications.
+
+### Count the probe where the datapath sends it {#watch-forward-path}
+
+- verify: with the watch armed, a marked datagram from the helper raises the
+  counter and the daemon logs `carrier-probe`, and the counting rule is present
+  in both the input chain and the forward chain; a disarm removes both rules and
+  the counter
+- inputs: the counting rule's chains (`src/nft.rs`, `CARRIER_CHAINS`), the
+  ingress translation of `#inbound-translation`, the arrival capture in
+  `results/RESULTS-2026-09-21-the-probe-the-translation-hid.md`
+
+Found while arming the watch on 2026-09-21: the counter stayed at zero while the
+marked datagram arrived at the slot port, and the reason is this milestone's own
+ingress translation. That translation sends a slot port's arrival to its client,
+which makes the packet forwarded traffic, so a counting rule in the input chain
+alone never sees it. The rule now goes into both paths, because which one
+applies belongs to the datapath rather than to the probe, and the test that pins
+it was shown failing against the input-only shape before the fix was restored.
 
 ### Record the measurement and the watch {#record}
 
