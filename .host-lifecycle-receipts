@@ -84,3 +84,10 @@
     authorization = call/0033
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-21
+
+[receipt "release" "ds-lite-punch"]
+    disposition = done
+    evidence = v0.1.5@a452cf38c9c76d80f354891df9fa21dc2320acd107ea9c13791ca28f2804d544
+    authorization = call/0033
+    tool = host-lifecycle@0.53.0
+    recorded = 2026-09-21
