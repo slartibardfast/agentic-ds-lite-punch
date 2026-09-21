@@ -2695,6 +2695,14 @@ gate is green under the new tools, prose is clean and every reference resolves i
 <p><strong>MCP registered</strong>: <code>host-lint mcp</code> as a stdio server in <code>.qwen/settings.json</code>,
 which <code>.qwen/</code> being gitignored keeps machine-local. It is effective at the next
 session rather than this one.</p>
+<p><strong>A Site publish race, found by the upgrade's three pushes.</strong> Landing the spine,
+the pins and the memory as three commits in a row started three Site runs at
+once; the loser's push to <code>gh-pages</code> was rejected with
+<code>! [rejected] gh-pages -&gt; gh-pages (fetch first)</code>. It was self-inflicted and
+harmless, and it is now impossible: <code>site.yml</code> carries <code>concurrency: {group: site-gh-pages, cancel-in-progress: false}</code>, so a second publish serialises behind
+the first. All three lanes are green on the newest commit. The book itself is
+published to <code>gh-pages</code> and GitHub Pages is not yet enabled for the repository,
+so the site URL answers 404 until that setting is turned on.</p>
 
                     </main>
 
