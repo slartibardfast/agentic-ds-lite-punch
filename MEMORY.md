@@ -2564,3 +2564,39 @@ token, so it should be deleted and the lane simplified. And `prose.yml` and the
 component's `ci.yml` carry no `permissions:` block, so a stranger's pull
 request runs them with the repository default; `contents: read` is the
 hardening.
+
+## 2026-09-20 — the release is cut, and its receipt waits for a container
+
+**Four things landed with the flip.** `call/0034` records the visibility ruling,
+the audit and the release duty. The read token is gone: the secret is deleted,
+the host's reproducible lane materializes the component with the runner's own
+token, and the lane passes that way (checked after the change). Every lane
+declares `permissions:`, read-only except the release job that creates a
+release. And the token never entered a commit: the history holds its *name* in
+one workflow commit and *zero* token-shaped values.
+
+**The release exists and is verifiable by a stranger.** Annotated tag `v0.1.0`
+at `b15c165b`, the commit the record pins. The component's new Release lane
+built the musl binary in the same digest-pinned image and attached
+`ds-lite-punch` and `artifact-record.txt` to the release. Fetched with no
+credentials:
+
+```
+GET https://github.com/slartibardfast/ds-lite-punch/releases/download/v0.1.0/ds-lite-punch
+-> 200, 1045168 bytes, sha256 ddfe3903…  (the record's anchor, byte for byte)
+```
+
+That closes what the flip exposed: Actions artifacts answer 401 anonymously,
+while a release asset answers 200 with the recorded bytes.
+
+**The release phase receipt is owed to a host with a container runtime.**
+`host-lifecycle release ds-lite-punch --change-class neither --authorized
+call/0034` ran the verify gate green (`prose: clean`, `reconcile: clean`, 69
+documents resolved), computed the version `0.1.0 -> 0.1.1`, and then blocked:
+"no container runtime (docker/podman) — release BLOCKS; the canonical hash must
+come from the recorded toolchain, never an ambient build (R5/R6)". It left the
+tree untouched, which is the fail-safe behaving. So `.host-lifecycle-receipts`
+still carries the adoption-era `[receipt "release" "ds-lite-punch"] skip, reason
+= call/0012` while a release has since been cut; the `done` is owed on a host or
+a lane that has Docker, and a release-phase workflow is the natural place for
+it.
