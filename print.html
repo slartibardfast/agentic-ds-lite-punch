@@ -9001,8 +9001,26 @@ at its pinned SHA.</p>
 parameter. Existing releases stay mutable, so both read <code>immutable: false</code> and
 the setting holds from the next release onward; from then a tag whose release is
 immutable can no longer be moved, which is precisely the guard the policy
-enforced by hand today. The host's setting is still off and inert, since the
-host cuts no releases.</p>
+enforced by hand today. The host's was enabled at the operator's word for
+symmetry and reads <code>enabled: true</code>; it is inert there, since the host cuts no
+releases.</p>
+<p><strong>The lane is proven, and it performs nothing.</strong> Re-dispatched after its fix
+(run 35633025190), every step succeeded: <code>verify: green</code>, <code>version: 0.1.1 -&gt; 0.1.2 (the tool computed this from the change class)</code>, and then the tool's own
+line, "release ds-lite-punch v0.1.2 — verified build reproduces. Outward steps,
+authorized by call/0034". That authorization is a <em>log line</em>: the remote still
+carries exactly two tags (<code>v0.1.0</code> at <code>b15c165b</code>, <code>v0.1.1</code> at <code>a2eddcd6</code>), no
+<code>v0.1.2</code> exists, and both repositories' remotes equal their local heads. A
+dispatch therefore verifies and says what a release would be, and it cannot
+release anything by itself — which is the shape that leaves the outward steps
+with a credential that reaches both repositories.</p>
+<p><strong>The five CI failures of the day, all closed.</strong> The host's three release-phase
+runs: the recursive-submodule checkout that wedged (cancelled), the missing
+<code>host-template</code> ("the adopted template has none"), and the push step that failed
+on the component worktree's missing git identity — each fixed, and the last two
+proven by the clean re-dispatch. The component's two runs on <code>6b9dee4</code>: <code>CI</code> and
+<code>Release</code> both failed on the lock, and both are green at <code>a2eddcd</code>. And the
+2026-09-19 <code>CI</code> failure on <code>04a6666</code> is the one whose repair produced the pinned
+toolchain lane in the first place. Immutable releases are on for the host too.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
