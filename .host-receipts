@@ -15,3 +15,9 @@
     evidence = stamp revision 41ba4e1 is the template HEAD at adoption; upgrade . finds no later ledger baseline to apply (initial adoption)
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-11
+applied = LEM-address-direction recorded=2026-09-21 via=verify
+applied = LEM-exemplar-section recorded=2026-09-21 via=verify
+applied = LEM-lane-and-mcp recorded=2026-09-21 via=verify
+applied = LEXICON-declaration-is-a-report recorded=2026-09-21 via=verify
+applied = PIN-two-surfaces-two-claims recorded=2026-09-21 via=verify
+applied = ACTIVE-corpus-and-agents-manual recorded=2026-09-21 via=verify
