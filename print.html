@@ -9350,6 +9350,58 @@ four claims, not two, that HAZARD with the tool absent from PATH (<code>4a98d92<
 <code>ACTIVE-corpus-and-agents-manual</code>), <code>software --check</code> exits 1, and the manifest's
 own <code>recheck</code> clause, calling the tool by the same bare name, stays green in that
 run.</p>
+<p><strong>The operator's surfaces shipped, and v0.2.0 carries them.</strong> plan/0011 is done,
+all nine tasks receipted, and the record is
+<code>plan/0011-operator-surfaces/results/RESULTS-2026-09-22-operator-surfaces.md</code>.
+What landed: a sectioned <code>--help</code> with <code>--version</code> and an exit-status section; a
+manual page in section 8 with ENVIRONMENT, FILES, LOG EVENTS, LIMITS and SEE
+ALSO sections the generator appends; five operator pages under <code>docs/operators/</code>;
+a site at <code>https://slartibardfast.github.io/ds-lite-punch/</code> serving <code>docs/</code> with
+all five pages answering 200; the Unlicense; eight repository topics; and a
+release whose three assets are the binary, the manual page and the recorded hash
+line. The help text and the manual page come from one clap definition in
+<code>tools/argdoc</code>, a crate with its own empty <code>[workspace]</code> table so the shipping
+crate's <code>Cargo.toml</code> and <code>Cargo.lock</code> never moved and the daemon links none of
+it; it prints the text through <code>include_str!</code>. The flag-coverage test reads the
+parser's own match arms out of the source above the test module, which is what
+catches a flag added to the parser without the help.</p>
+<p><strong>Three findings that change how the next release runs.</strong> (1) The router carries
+no <code>man</code>, no <code>mandoc</code>, no <code>nroff</code> and no <code>/usr/share/man</code> at all, so the
+installed page is for a reader who pulls it off the box or takes it from the
+release, and the on-box reader is <code>--help</code>, which prints the same generated text.
+(2) A version bump now moves the artifact bytes, because <code>--version</code> compiles the
+crate version in. The release order that follows is: apply the bump, tag that
+commit, and pin the tagged commit with the hash its build produced. Pinning a
+commit and bumping after it leaves the record describing a different source, which
+is what the host's reproducible lane said once, in its own words:
+<code>DRIFT     ds-lite-punch rebuild is 0bdb6b926485 but recorded a452cf38c9c7 — NOT reproducible</code>. The next commit set the pin and the hash together and the lane
+reproduced <code>924281b2</code> from the pin. (3) The release phase is one dispatch per
+release: it computes the version from the manifest plus the change class and
+prints the outward steps, so a dispatch after a completed release proposes the
+next version and derives the digest of a bump that exists only in that run. The
+dispatch made after 0.2.0 shipped reported <code>0.2.0 -&gt; 0.3.0</code> with a digest for a
+<code>0.3.0</code> source; that proposal was not applied, and the receipt was recorded by
+hand from the release's own evidence.</p>
+<p><strong>The release's hash was built three times and the three agree.</strong> The component's
+own lane printed <code>924281b2f6b544d6da6b17dddd312978560cdb467df58a96f15e9016bbe72db9</code>
+for the tagged commit, the Release lane attached the same value in
+<code>artifact-record.txt</code>, and an anonymous fetch of the asset hashed to the same
+value. The release is immutable, and the phase's receipt records
+<code>v0.2.0@924281b2…</code> authorized by plan/0011.</p>
+<p><strong>The component's lane gained a docs job, and each check was broken first.</strong> The
+generated artifacts are regenerated on the runner with the host target named
+against the crate tree's musl pin and then compared with <code>git diff --exit-code</code>
+(a drifted help text was staged to prove it bites); groff writes to stderr and
+still exits zero, so the render gate is a non-empty stderr file (an undefined
+macro proved it); <code>tools/link-check.sh</code> walks the authored docs and a renamed
+target proved it; and the prose audit runs the host's own <code>host-lint</code>, pinned by
+a clone and build of <code>v0.22.0</code> (which resolves to <code>0eeabc20</code>, the commit this
+host's submodule pins) from <code>/tmp</code>, because cargo reads its config from the
+working directory and the component's <code>.cargo/config.toml</code> would aim that build
+at musl. <code>.host-lintignore</code> names the two archived specification transcriptions.
+The naming half is deliberately not wired: it reports 86 findings over the
+component, every one a source comment holding an RFC section reference, a
+numbered UPnP clause, or a pre-adoption plan label.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
