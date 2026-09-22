@@ -315,3 +315,83 @@
     evidence = pins 2b6e0151 and 5df88c78 (artifact a452cf38, 215 tests): the rule goes into the forward path too, the forward rule says meta l4proto udp with no port match, and an install replaces a stale variant; with the watch armed the daemon installed both rules itself, a probe raised the counter to packets 3 bytes 132, and the daemon logged carrier-probe count 3
     tool = host-lifecycle@0.53.0
     recorded = 2026-09-21
+
+[receipt "plan/0011#argdoc"]
+    disposition = done
+    verify = the generator rewrites its two outputs and leaves the working tree
+    inputs = the parser's flag set in `src/main.rs` (`parse_args_from`), the flag
+    evidence = crate tools/argdoc lands at 856299c: clap 4.6.7 and clap_mangen 0.3.3 in a crate with its own empty [workspace] table, so the shipping Cargo.toml and Cargo.lock are untouched (git diff --stat empty) and the daemon links nothing from it; the generator writes src/help.txt and deploy/man/ds-lite-punch.8 and rewrites both identically on a second run; the page renders as ds-lite-punch(8) with man --warnings reporting nothing
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#help"]
+    disposition = done
+    verify = `ds-lite-punch --help` prints the generated text with a description
+    inputs = the generated help text, `usage()` and the error path in
+    evidence = 26f213e: ds-lite-punch --help prints the generated 99-line text on stdout and exits 0, --version prints ds-lite-punch 0.1.5 and exits 0, and an unknown flag prints error: unknown argument --nope with the same text on stderr and exits 2; the new test the_help_names_exactly_the_flags_the_parser_takes reads the parser arms from the source above the test module and passes, after being shown failing in both directions (a flag named in the help that the parser does not take, and a flag taken that the help does not name)
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#man"]
+    disposition = done
+    verify = `mandoc -T lint` and `groff -man -Tascii` report nothing on
+    inputs = the `clap_mangen` output, the init script's flag mapping, the carrier
+    evidence = 0f91786: deploy/man/ds-lite-punch.8 renders as ds-lite-punch(8) in System Manager's Manual with groff -man -Tascii clean and man --warnings reporting nothing; the page names every flag the parser takes, and the five sections the generator appends (ENVIRONMENT, FILES, LOG EVENTS, LIMITS, SEE ALSO) are present; clap_mangen's EXTRA block is dropped so the page has one ENVIRONMENT and one SEE ALSO; the test the_man_page_names_the_flags_and_keeps_its_appended_sections reads the roff and was shown failing first when an appended section was renamed
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#packaging"]
+    disposition = done
+    verify = `sh -n` accepts the installer, the page lands at
+    inputs = `deploy/install.sh`, `.github/workflows/release.yml`, the release
+    evidence = f9aff86: sh -n accepts the installer; on the router the page lands at /usr/share/man/man8/ds-lite-punch.8, mode 644, md5 acb9505c13ea88c78cbbfd7321aab78d on both sides; the router carries no man, no mandoc, no nroff and no /usr/share/man at all, so the rendering is the workstation's groff and man --warnings (clean) and the lane's, and the on-box reader is --help printed from the same generated text; release.yml refuses an empty page and uploads it beside the binary and artifact-record.txt; the tagged release that carries it is plan/0011#record's
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#operator-docs"]
+    disposition = done
+    verify = `docs/operators/` carries the five pages, every command and path in
+    inputs = the generated help and manual page, `deploy/ds-lite-punch.init`
+    evidence = 1510879: docs/operators/{install,configure,operate,upgrade,troubleshoot}.md written in the README's STE register for a stranger on another line; every command and path in them was run on the box (netstat -lnup, ss -lnup, nft list table ip dslp, nft list ruleset | grep, ip rule show showing 25100 over table 1001, ip route show table 1001, cat /run/ds-lite-punch/tuple, logread | grep ds-lite-punch, and the man page placed at /usr/share/man/man8 mode 644 md5 acb9505c); host-lint --docs over the five reports clean after three advisory notes (two tricolons and an anaphora list) were reworded; the component README carries one note about staccato paragraphs, which is the terse register it was written for, and the two spec-transcription trees carry the audit's findings as archived third-party text, which plan/0011#lanes excludes; the pages describe the build this milestone produces, and the router still runs 0.1.5, where --version is an unknown argument and --help prints the old one-line usage
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#site"]
+    disposition = done
+    verify = the component's Pages address answers 200, the landing page links each
+    inputs = `docs/index.md`, the Pages setting on the component repository, the
+    evidence = 0c179d3 plus the repository setting: Pages is enabled on the component serving the default branch at /docs, build_type legacy, https enforced; the build status is built and https://slartibardfast.github.io/ds-lite-punch/ answers 200; the landing page links all five operator pages, each of which answers 200 at /ds-lite-punch/operators/<name>.html, and its manual link points at the repository file for deploy/man/ds-lite-punch.8; the repository homepage field names the site. The site also makes the URL the manual page's SEE ALSO cites resolve.
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#metadata"]
+    disposition = done
+    verify = `gh repo view` reports the Unlicense, the topics, and the site as the
+    inputs = the host's `LICENSE` text, the repository settings
+    evidence = 6232dcf plus the repository settings: gh repo view reports licenseInfo unlicense (The Unlicense), homepageUrl https://slartibardfast.github.io/ds-lite-punch/, and eight topics (cgnat, ds-lite, igd, nat-pmp, openwrt, pcp, rust, upnp); LICENSE is the host's own Unlicense text verbatim; the README gained a Documentation section naming the site and the manual page, and a License section pointing at the file
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#man"]
+    disposition = done
+    verify = `groff -man -ww -Tascii` reports nothing on
+    inputs = the `clap_mangen` output, the init script's flag mapping, the carrier
+    evidence = re-recorded after the plan's verify text was corrected to name groff, which is the renderer this project has and the one whose warning path was exercised in both directions
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#lanes"]
+    disposition = done
+    verify = the component's lane fails on a deliberate break in the help text, in
+    inputs = `.github/workflows/ci.yml`, the man render check, the link check, the
+    evidence = 27e6657: the component's ci.yml gained a docs job with four checks, each shown failing before it landed. The generated surfaces: the job regenerates src/help.txt and deploy/man/ds-lite-punch.8 with the host target named against the crate tree's musl pin, then git diff --exit-code, proven by staging a drifted help text (exit 1 with the diff printed). The render: groff -man -ww writes to stderr and exits 0, so the gate is a non-empty stderr file, proven with an undefined macro (troff: warning: macro 'ZZ' not defined). The links: tools/link-check.sh over README.md, docs/index.md and the five operator pages, proven with a renamed target (exit 1, 'broken link: configure-missing.md'). The register: host-lint --docs . pinned by a clone and build of v0.22.0, which resolves to 0eeabc20, the commit the host's own submodule pins, verified locally as the job runs it and reporting two deliberate staccato notes (README.md and docs/index.md) with exit 0, proven by appending a negative-parallelism sentence (exit 3). .host-lintignore names the two archived transcription trees with the reason. The naming half is deliberately not wired: it reports 86 findings over the component, every one a source comment holding an RFC section reference, a numbered UPnP clause, or a pre-adoption plan label, which plan/0011 records as separate work.
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#record"]
+    disposition = done
+    verify = the host's pin names the commit that carries the surfaces, the host's
+    inputs = the component's lane output, the artifact record, the tagged release
+    evidence = the host's pin is f0c65e39, the tagged 0.2.0 commit, with artifact 924281b2f6b544d6da6b17dddd312978560cdb467df58a96f15e9016bbe72db9; the host's reproducible-build lane rebuilt from that pin and reproduced it (run 35713210604, success), and this development host's own software --verify-build reports UNVERIFIABLE for want of a container runtime; the release phase was dispatched before the bump and computed 0.1.5 -> 0.2.0, which is the bump that shipped, and the release receipt records v0.2.0@924281b2... authorized by plan/0011; all nine tasks carry receipts; the results note is plan/0011-operator-surfaces/results/RESULTS-2026-09-22-operator-surfaces.md; release v0.2.0 is published and immutable and carries the binary, ds-lite-punch.8 and artifact-record.txt, all three agreeing on 924281b2... and fetchable without a token
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
