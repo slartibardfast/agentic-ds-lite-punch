@@ -5344,8 +5344,8 @@ decision slug, and the comments of every source file.</p>
 <p>Each sense of the old word takes the word that says what it is, anchored in the
 source of the behaviour.</p>
 <div class="table-wrapper"><table><thead><tr><th>Sense</th><th>Was</th><th>Is</th><th>Anchor</th></tr></thead><tbody>
-<tr><td>keeping a named device's mapping alive</td><td><code>--hold</code>, <code>HOLD</code>, the <code>hold</code> event, <code>hold.rs</code></td><td><code>--keepalive</code>, <code>KEEPALIVE</code>, the <code>keepalive</code> event, <code>keepalive.rs</code></td><td>RFC 8085 section 3.5, the packets that keep a binding open</td></tr>
-<tr><td>attempts to put a vanished mapping back</td><td><code>--max-rescues</code></td><td><code>--max-refresh-attempts</code></td><td>RFC 4787 section 4.1: a mapping's timer is refreshed by traffic</td></tr>
+<tr><td>keeping a named device's mapping alive</td><td><code>--hold</code>, <code>HOLD</code>, the <code>hold</code> event, <code>hold.rs</code></td><td><code>--keepalive</code>, <code>KEEPALIVE</code>, the <code>keepalive</code> event, <code>keepalive.rs</code></td><td>RFC 8085, on keepalives: the packets that keep a binding open</td></tr>
+<tr><td>attempts to put a vanished mapping back</td><td><code>--max-rescues</code></td><td><code>--max-refresh-attempts</code></td><td>RFC 4787, on mapping refresh: a timer is refreshed by traffic</td></tr>
 <tr><td>a tuple a slot owns</td><td><code>held</code>, <code>is_held</code></td><td><code>owned</code>, <code>is_owned</code></td><td>the code already said "own", and the I1 gate is <code>claim_allowed</code></td></tr>
 <tr><td>the TCP connection that maintains a mapping</td><td><code>HolderState</code>, <code>run_holder</code>, <code>holder</code></td><td><code>ConnectionState</code>, <code>run_connection</code>, <code>connection</code>, with <code>Live</code> and <code>Dead</code></td><td>a STUN-over-TCP connection's liveness</td></tr>
 <tr><td>a client's record in the facade</td><td><code>holder</code>, the one-holder rule</td><td><code>entry</code>, the one-mapping rule</td><td>the facade's own table of entries</td></tr>
