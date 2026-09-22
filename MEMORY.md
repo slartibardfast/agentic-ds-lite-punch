@@ -2881,3 +2881,41 @@ at musl. `.host-lintignore` names the two archived specification transcriptions.
 The naming half is deliberately not wired: it reports 86 findings over the
 component, every one a source comment holding an RFC section reference, a
 numbered UPnP clause, or a pre-adoption plan label.
+
+**The operator rejected the vocabulary, three times, and the words are now the
+RFC's.** First `--max-rescues` (a plural that hid what the number counts), then
+"hold" ("we ain't Lassy"), then "rides"/"lands" and the rest of the business
+jargon. `call/0035` records the mapping, and each sense took the word the
+behaviour comes from: the feature that keeps a named device's mapping alive is
+`--keepalive`/`KEEPALIVE`/the `keepalive` event/`src/keepalive.rs` (RFC 8085's
+word); attempts to put a vanished mapping back are `--max-refresh-attempts`
+(RFC 4787's verb); a tuple a slot owns is `owned`/`is_owned`, which the code's
+own comment already said; the TCP connection that maintains a mapping is
+`ConnectionState`/`run_connection`/`connection` with `Live` and `Dead`; and a
+client's record in the facade is an `entry`, with the spec-derived rule renamed
+from "one-holder" to "one-mapping". The component commit is `e8c47d8` (23 files,
+217 tests green), the surfaces regenerated, and `plan/0009` and `call/0026` were
+renamed to keepalive through `git mv` with every live reference moved with them
+(`4cf3d3b`).
+
+Three things deliberately did not move. The software's name keeps "Holder",
+because that is the derived name of `punch` the operator set. Ordinary English
+stays: a lock is held, a directory holds files, a client holds a mapping, a rule
+holds. And the records keep their words: `MEMORY.md`, the closed milestone
+bodies and the results files quote what was true and what was said at the time,
+so the old flag name survives there and in `plan/0009`'s own body.
+
+Two traps from this sweep are worth keeping. A phrase-level rule is sharper than
+a word-level one, and it still bites: `("the hold", "the keepalive")` matched
+inside "the holder" seven times in `tcpslot.rs` and coined "the keepaliveer",
+and `("is the caller's", "is left to the caller's")` overreached into a sentence
+about a 600 response. Both were caught by reading the diff and the compiler, not
+by the grep. And the naming audit reads "RFC 8085 section 3.5" as a positional
+tell, so the decision cites the RFC by its subject instead.
+
+**The release that carries the new flag is owed and not cut.** The published
+`v0.2.0` documents `--hold` and `--max-rescues` in its help text and manual page,
+so the words a stranger reads from the release are the rejected ones until a new
+tag ships. The rename is a flag removal and an addition, which the tool maps to a
+minor bump, and the phase reads the manifest version, so it would compute
+`0.2.0 -> 0.3.0`.
