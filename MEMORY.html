@@ -2805,6 +2805,40 @@ at musl. <code>.host-lintignore</code> names the two archived specification tran
 The naming half is deliberately not wired: it reports 86 findings over the
 component, every one a source comment holding an RFC section reference, a
 numbered UPnP clause, or a pre-adoption plan label.</p>
+<p><strong>The operator rejected the vocabulary, three times, and the words are now the
+RFC's.</strong> First <code>--max-rescues</code> (a plural that hid what the number counts), then
+"hold" ("we ain't Lassy"), then "rides"/"lands" and the rest of the business
+jargon. <code>call/0035</code> records the mapping, and each sense took the word the
+behaviour comes from: the feature that keeps a named device's mapping alive is
+<code>--keepalive</code>/<code>KEEPALIVE</code>/the <code>keepalive</code> event/<code>src/keepalive.rs</code> (RFC 8085's
+word); attempts to put a vanished mapping back are <code>--max-refresh-attempts</code>
+(RFC 4787's verb); a tuple a slot owns is <code>owned</code>/<code>is_owned</code>, which the code's
+own comment already said; the TCP connection that maintains a mapping is
+<code>ConnectionState</code>/<code>run_connection</code>/<code>connection</code> with <code>Live</code> and <code>Dead</code>; and a
+client's record in the facade is an <code>entry</code>, with the spec-derived rule renamed
+from "one-holder" to "one-mapping". The component commit is <code>e8c47d8</code> (23 files,
+217 tests green), the surfaces regenerated, and <code>plan/0009</code> and <code>call/0026</code> were
+renamed to keepalive through <code>git mv</code> with every live reference moved with them
+(<code>4cf3d3b</code>).</p>
+<p>Three things deliberately did not move. The software's name keeps "Holder",
+because that is the derived name of <code>punch</code> the operator set. Ordinary English
+stays: a lock is held, a directory holds files, a client holds a mapping, a rule
+holds. And the records keep their words: <code>MEMORY.md</code>, the closed milestone
+bodies and the results files quote what was true and what was said at the time,
+so the old flag name survives there and in <code>plan/0009</code>'s own body.</p>
+<p>Two traps from this sweep are worth keeping. A phrase-level rule is sharper than
+a word-level one, and it still bites: <code>("the hold", "the keepalive")</code> matched
+inside "the holder" seven times in <code>tcpslot.rs</code> and coined "the keepaliveer",
+and <code>("is the caller's", "is left to the caller's")</code> overreached into a sentence
+about a 600 response. Both were caught by reading the diff and the compiler, not
+by the grep. And the naming audit reads "RFC 8085 section 3.5" as a positional
+tell, so the decision cites the RFC by its subject instead.</p>
+<p><strong>The release that carries the new flag is owed and not cut.</strong> The published
+<code>v0.2.0</code> documents <code>--hold</code> and <code>--max-rescues</code> in its help text and manual page,
+so the words a stranger reads from the release are the rejected ones until a new
+tag ships. The rename is a flag removal and an addition, which the tool maps to a
+minor bump, and the phase reads the manifest version, so it would compute
+<code>0.2.0 -&gt; 0.3.0</code>.</p>
 
                     </main>
 
