@@ -28,7 +28,7 @@ because a documentation tool exists.
 ## The checks, and how each was shown to bite
 
 A check that has never failed is a check nobody has tested, so each one was
-broken before it landed.
+broken before it was committed.
 
 | Check | The break that was shown to fail it |
 |---|---|

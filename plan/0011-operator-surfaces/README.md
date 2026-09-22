@@ -40,7 +40,7 @@ gate.
 
 - verify: the generator rewrites its two outputs and leaves the working tree
   clean, and the root `Cargo.toml` and `Cargo.lock` are byte-identical to their
-  state before the crate landed
+  state before the crate was added
 - inputs: the parser's flag set in `src/main.rs` (`parse_args_from`), the flag
   names in `deploy/ds-lite-punch.init`, the musl pin in `.cargo/config.toml`
 
@@ -95,7 +95,7 @@ about the ruleset.
 
 - depends: #man
 
-- verify: `sh -n` accepts the installer, the page lands at
+- verify: `sh -n` accepts the installer, the page is placed at
   `/usr/share/man/man8/ds-lite-punch.8` with mode 644 and its contents intact,
   the release lane refuses an empty page and names it among the assets, and the
   rendering is checked on a workstation and in the lane, because the router
@@ -144,7 +144,7 @@ mapping the carrier has dropped).
 
 - depends: #operator-docs
 
-- verify: the component's Pages address answers 200, the landing page links each
+- verify: the component's Pages address answers 200, the home page links each
   operator page, and the repository's homepage field names the site
 - inputs: `docs/index.md`, the Pages setting on the component repository, the
   site lane added to the component's workflows
@@ -176,7 +176,7 @@ reuse the code.
   regenerate-and-diff step for the generated files, the prose audit and the
   `.host-lintignore` that names the archived transcriptions
 
-Each new check is proven by breaking the thing it guards before it lands. A
+Each new check is proven by breaking the thing it guards before it is committed. A
 check that has never failed is a check nobody has tested.
 
 ### Record the pin and the milestone {#record}
@@ -212,7 +212,7 @@ The stages are observable one at a time.
    workstation.
 2. **The pages, unlinked.** `docs/operators/` is written and reviewed on the
    filesystem while the site is still off.
-3. **The site.** Pages is enabled on the component repository, and the landing
+3. **The site.** Pages is enabled on the component repository, and the home
    page and the five pages are read through a browser.
 4. **The release.** A version bump carries the kit, and the assets are checked
    from an anonymous fetch.
@@ -249,4 +249,4 @@ already parks, and the site setting, which is one API call to turn off.
 The evidence for this milestone is the component's own files and the output of
 its lane. The host's record carries the pin and the artifact hash, and the
 release page carries the kit. Where a check produced a line worth keeping, it
-lands under `results/` in this room with the pin it was read against.
+is written under `results/` in this room with the pin it was read against.

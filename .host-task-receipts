@@ -395,3 +395,19 @@
     evidence = the host's pin is f0c65e39, the tagged 0.2.0 commit, with artifact 924281b2f6b544d6da6b17dddd312978560cdb467df58a96f15e9016bbe72db9; the host's reproducible-build lane rebuilt from that pin and reproduced it (run 35713210604, success), and this development host's own software --verify-build reports UNVERIFIABLE for want of a container runtime; the release phase was dispatched before the bump and computed 0.1.5 -> 0.2.0, which is the bump that shipped, and the release receipt records v0.2.0@924281b2... authorized by plan/0011; all nine tasks carry receipts; the results note is plan/0011-operator-surfaces/results/RESULTS-2026-09-22-operator-surfaces.md; release v0.2.0 is published and immutable and carries the binary, ds-lite-punch.8 and artifact-record.txt, all three agreeing on 924281b2... and fetchable without a token
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-22
+
+[receipt "plan/0011#packaging"]
+    disposition = done
+    verify = `sh -n` accepts the installer, the page is placed at
+    inputs = `deploy/install.sh`, `.github/workflows/release.yml`, the release
+    evidence = re-recorded after the plan's verify text took plain verbs (the page is placed at, rather than a phrase with land)
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
+
+[receipt "plan/0011#site"]
+    disposition = done
+    verify = the component's Pages address answers 200, the home page links each
+    inputs = `docs/index.md`, the Pages setting on the component repository, the
+    evidence = re-recorded after the plan's verify text says home page, and the site's own front page is docs/index.md served from docs
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-22
