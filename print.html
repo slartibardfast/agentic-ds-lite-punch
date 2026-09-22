@@ -3519,7 +3519,7 @@ gate.</p>
 <ul>
 <li>verify: the generator rewrites its two outputs and leaves the working tree
 clean, and the root <code>Cargo.toml</code> and <code>Cargo.lock</code> are byte-identical to their
-state before the crate landed</li>
+state before the crate was added</li>
 <li>inputs: the parser's flag set in <code>src/main.rs</code> (<code>parse_args_from</code>), the flag
 names in <code>deploy/ds-lite-punch.init</code>, the musl pin in <code>.cargo/config.toml</code></li>
 </ul>
@@ -3583,7 +3583,7 @@ about the ruleset.</p>
 <p>depends: #man</p>
 </li>
 <li>
-<p>verify: <code>sh -n</code> accepts the installer, the page lands at
+<p>verify: <code>sh -n</code> accepts the installer, the page is placed at
 <code>/usr/share/man/man8/ds-lite-punch.8</code> with mode 644 and its contents intact,
 the release lane refuses an empty page and names it among the assets, and the
 rendering is checked on a workstation and in the lane, because the router
@@ -3639,7 +3639,7 @@ mapping the carrier has dropped).</p>
 <p>depends: #operator-docs</p>
 </li>
 <li>
-<p>verify: the component's Pages address answers 200, the landing page links each
+<p>verify: the component's Pages address answers 200, the home page links each
 operator page, and the repository's homepage field names the site</p>
 </li>
 <li>
@@ -3682,7 +3682,7 @@ regenerate-and-diff step for the generated files, the prose audit and the
 <code>.host-lintignore</code> that names the archived transcriptions</p>
 </li>
 </ul>
-<p>Each new check is proven by breaking the thing it guards before it lands. A
+<p>Each new check is proven by breaking the thing it guards before it is committed. A
 check that has never failed is a check nobody has tested.</p>
 <h3 id="record"><a class="header" href="#record">Record the pin and the milestone</a></h3>
 <ul>
@@ -3718,7 +3718,7 @@ exist, and <code>--help</code>, <code>--version</code> and <code>man</code> are 
 workstation.</li>
 <li><strong>The pages, unlinked.</strong> <code>docs/operators/</code> is written and reviewed on the
 filesystem while the site is still off.</li>
-<li><strong>The site.</strong> Pages is enabled on the component repository, and the landing
+<li><strong>The site.</strong> Pages is enabled on the component repository, and the home
 page and the five pages are read through a browser.</li>
 <li><strong>The release.</strong> A version bump carries the kit, and the assets are checked
 from an anonymous fetch.</li>
@@ -3753,7 +3753,7 @@ this project builds.</li>
 <p>The evidence for this milestone is the component's own files and the output of
 its lane. The host's record carries the pin and the artifact hash, and the
 release page carries the kit. Where a check produced a line worth keeping, it
-lands under <code>results/</code> in this room with the pin it was read against.</p>
+is written under <code>results/</code> in this room with the pin it was read against.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="software-where"><a class="header" href="#software-where">Software: where</a></h1>
 <p>The action this project produces. Each component is a bare object store with worktrees, not committed into this repo; the recipe below is the reproducibility anchor. Materialize the worktrees locally with:</p>
 <pre><code>host-lifecycle software --materialize .
