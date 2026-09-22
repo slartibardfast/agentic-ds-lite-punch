@@ -2779,3 +2779,48 @@ by linking the built tool at `~/.local/bin/host-lifecycle`, which a shell here
 resolves, and the gate is green again; upstream is owed the report that the two
 recheck paths should agree. The component's own pins and the two defects are
 untouched by this: `software --check` reports every component at its pinned SHA.
+
+**The carrier watch stopped counting, and its alarm belonged to the instrument.**
+Reading the armed window on 2026-09-22 found the counter frozen at
+`packets 10 bytes 440` since 22:14:09 UTC and `{"event":"carrier-silent",
+"last_probe":1790028849,"waited":2700,"epoch":1790031549}` at 22:59:09 UTC. The
+helper kept sending every 900 s (its journal carries six sends after the freeze),
+and probes from a fresh source port sent by hand arrived and translated through:
+
+```host-lint:ignore
+170.9.238.141.41060 > 192.168.0.21.40000: UDP, length 16     # eth1, the WAN
+170.9.238.141.41070 > 192.168.21.12.40002: UDP, length 16    # br-lan, the client
+```
+
+So the carrier still forwards a stranger's traffic and the ingress translation
+still delivers. Nothing in the ruleset names `carrier_probe` or `@dslp_ports_udp`
+any more; only the counter object and the two sets survive, holding their old
+values. The cause is the rule's home: the counting rules are inserted into `inet
+fw4`, which fw4 rebuilds, and pbr provoked reloads (`Sending reload signal to pbr
+due to firewall action: includes`) at 22:20:37, 22:23:37, 22:38:38, 22:41:38,
+00:08:43 and 00:11:43 UTC. `ensure_carrier_probe()` runs once, at startup
+(`src/main.rs:975`), and the poll loop only reads the counter, so a wipe leaves a
+plausible reading and no way for the watch to tell that its own rule left. The
+milestone's central function survives this — the lease path delivered throughout —
+but every hour of the window after 22:14 UTC is void, and while armed the watch can
+raise only false alarms. Not fixed here: the fix needs the rule to live somewhere
+fw4 does not rebuild (the daemon's own `table ip dslp`, the principle the init
+script already states for the conntrack policy) or a re-converge on the poll, and
+then a fresh window.
+
+**The book is live, and the two upgrade reports are filed.** GitHub Pages is now
+enabled on this repository, serving the `gh-pages` branch:
+`https://slartibardfast.github.io/agentic-ds-lite-punch/` answers HTTP 200 with
+24 KB, first build `built` at `9968f50`. The two upstream reports went to
+`connollydavid/host`, because `connollydavid/host-template` has its issues
+disabled. `connollydavid/host#22`: two ledger verifies read `CLAUDE.md`
+(`UPGRADING.md:359` and `:387`) for text the `ACTIVE-corpus-and-agents-manual`
+entry moved into `AGENTS.md`, so `REFS-a-number-resolves` and `LEM-pronoun-system`
+can never be recorded and the two entries that depend on them are blocked with
+them; the four re-list on every `upgrade .`. `connollydavid/host#23`: the claim
+recheck runs an entry's verify raw. That corrects the earlier note here — it is
+four claims, not two, that HAZARD with the tool absent from PATH (`4a98d92`,
+`LEXICON-declaration-is-a-report`, `PIN-two-surfaces-two-claims`,
+`ACTIVE-corpus-and-agents-manual`), `software --check` exits 1, and the manifest's
+own `recheck` clause, calling the tool by the same bare name, stays green in that
+run.
