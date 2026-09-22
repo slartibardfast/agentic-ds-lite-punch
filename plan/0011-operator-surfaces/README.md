@@ -1,9 +1,10 @@
 # Milestone: the operator's surfaces
 
-**Status:** open, opened 2026-09-22. The component's `--help` is one line of
-flag names, and the repository has no page for its operators. This milestone
-gives an operator a manual page, a help text that explains itself, operator
-pages, and a site that serves them.
+**Status:** done, 2026-09-22. The component's `--help` was one line of flag
+names, and the repository had no page for its operators. Both are closed, and
+the release `v0.2.0` carries the kit: the binary, the manual page, and the line
+that records the hash. The record is
+`results/RESULTS-2026-09-22-operator-surfaces.md`.
 
 ## What this milestone is
 
