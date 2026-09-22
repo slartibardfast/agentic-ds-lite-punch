@@ -1,0 +1,470 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Milestone: the operator&#x27;s surfaces - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../../cast/operator.html"><strong aria-hidden="true">1.3.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../../plan-index.html"><strong aria-hidden="true">2.</strong> Plan</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-hold-and-signalling/index.html"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/index.html"><strong aria-hidden="true">2.7.</strong> Milestone: the carrier's filtering, proved and watched</a></li><li class="chapter-item expanded "><a href="../../plan/0011-operator-surfaces/index.html" class="active"><strong aria-hidden="true">2.8.</strong> Milestone: the operator's surfaces</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li><li class="chapter-item expanded "><a href="../../call/0026-tcp-hold-is-signalled-not-injected.html"><strong aria-hidden="true">4.15.</strong> The TCP half of the hold: what can be held, and what can only be said</a></li><li class="chapter-item expanded "><a href="../../call/0027-collisions-for-punched-ports.html"><strong aria-hidden="true">4.16.</strong> Collision rules for ports nobody allocated: the punch and the lease table</a></li><li class="chapter-item expanded "><a href="../../call/0028-a-shared-tuple-is-reachable-and-the-incumbent-keeps-it.html"><strong aria-hidden="true">4.17.</strong> A shared tuple is reachable, and the incumbent keeps it</a></li><li class="chapter-item expanded "><a href="../../call/0029-the-named-device-is-the-admission.html"><strong aria-hidden="true">4.18.</strong> The hold's admission is the named device, its liveness is the device and its peers, and a failed write is never fatal</a></li><li class="chapter-item expanded "><a href="../../call/0030-a-mapping-ends-with-its-device.html"><strong aria-hidden="true">4.19.</strong> A mapping asked for by a device ends when that device leaves, and never when it is quiet</a></li><li class="chapter-item expanded "><a href="../../call/0031-the-datapath-needs-no-listing.html"><strong aria-hidden="true">4.20.</strong> The datapath never needs a listing, and an intermittent nft crash is tolerated</a></li><li class="chapter-item expanded "><a href="../../call/0032-the-builder-of-record-is-the-lane.html"><strong aria-hidden="true">4.21.</strong> The builder of record is the CI lane, and a deployment takes its artifact</a></li><li class="chapter-item expanded "><a href="../../call/0033-the-filtering-is-watched-from-outside.html"><strong aria-hidden="true">4.22.</strong> The filtering is watched by a stranger's probe, and the daemon is told</a></li><li class="chapter-item expanded "><a href="../../call/0034-the-repositories-are-public-and-a-tag-is-the-release.html"><strong aria-hidden="true">4.23.</strong> The repositories are public, and a tag is the release its artifact rides</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../MIGRATION.html"><strong aria-hidden="true">6.1.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../../STRUCTURE.html"><strong aria-hidden="true">6.2.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../../UPGRADING.html"><strong aria-hidden="true">6.3.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="milestone-the-operators-surfaces"><a class="header" href="#milestone-the-operators-surfaces">Milestone: the operator's surfaces</a></h1>
+<p><strong>Status:</strong> open, opened 2026-09-22. The component's <code>--help</code> is one line of
+flag names, and the repository has no page for its operators. This milestone
+gives an operator a manual page, a help text that explains itself, operator
+pages, and a site that serves them.</p>
+<h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
+<p>An operator who takes the release artifact has the binary and nothing else. The
+daemon's real configuration surface is <code>/etc/ds-lite-punch.env</code>, and the
+repository explains it in comments inside that file. Three keys the init script
+honours, <code>SLOT_RANGE</code>, <code>MAX_SLOTS</code> and <code>MAX_MAPS_PER_CLIENT</code>, appear in no
+shipped file at all. Nine log events arrive in syslog with names no page
+explains, and the state directory holds four files whose meaning is in the
+source. An operator also needs a supported upgrade path and a way to ask the
+daemon what state it is in.</p>
+<p>That is the gap this milestone closes. The work is documentation and packaging
+around a program whose behaviour is settled: the help text, the manual page, the
+operator pages, the site, and the lanes that keep the four together.</p>
+<p>The register is the one the component's README already uses, ASD-STE100
+Simplified Technical English, and the reader is a stranger who runs some other
+ds-lite line. No page may assume this line's addresses.</p>
+<p>The personas are the ones this host carries. The operator needs a page that
+answers a question without a session, and the agent needs the pages held in step
+with the program by a check it can re-run.</p>
+<h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
+<p>Nine tasks. The first pins the CLI definition the rest of the milestone quotes,
+the middle six produce the surfaces, and the last two hold them and record them.
+Every task carries verify and inputs; the mechanical verifies re-run at the
+gate.</p>
+<h3 id="argdoc"><a class="header" href="#argdoc">Pin the CLI definition and generate the surface</a></h3>
+<ul>
+<li>verify: the generator rewrites its two outputs and leaves the working tree
+clean, and the root <code>Cargo.toml</code> and <code>Cargo.lock</code> are byte-identical to their
+state before the crate landed</li>
+<li>inputs: the parser's flag set in <code>src/main.rs</code> (<code>parse_args_from</code>), the flag
+names in <code>deploy/ds-lite-punch.init</code>, the musl pin in <code>.cargo/config.toml</code></li>
+</ul>
+<p>A dev-only crate at <code>tools/argdoc/</code> carries a clap definition of the command
+line, with <code>clap_mangen</code>. It is an authoring tool: it writes the help text and
+<code>deploy/man/ds-lite-punch.8</code>, and nothing in it is linked into the binary the
+router runs. The crate declares its own empty <code>[workspace]</code> table, so the
+shipping crate's dependency graph and lock file do not move and the recorded
+artifact hash cannot change for this reason alone. One trap is recorded because
+it costs an hour: <code>.cargo/config.toml</code> sends every cargo command in the tree to
+musl, so the generator names its target explicitly, which is
+<code>x86_64-unknown-linux-gnu</code>.</p>
+<h3 id="help"><a class="header" href="#help">Ship the authored help and the version flag</a></h3>
+<ul>
+<li>
+<p>depends: #argdoc</p>
+</li>
+<li>
+<p>verify: <code>ds-lite-punch --help</code> prints the generated text with a description
+for every flag, <code>ds-lite-punch --version</code> prints the crate version, an
+unknown flag prints <code>error:</code> with the same text and exits 2, and a test
+asserts that the flags the parser accepts and the flags the help names are one
+set</p>
+</li>
+<li>
+<p>inputs: the generated help text, <code>usage()</code> and the error path in
+<code>src/main.rs</code>, the test seam <code>parse_args_from</code></p>
+</li>
+</ul>
+<p>The binary prints the generated text through <code>include_str!</code>, so the help an
+operator reads and the manual page come from one definition. The diagnostic flag
+<code>--ct-probe</code> stays hidden on purpose. The coverage test is the seam that keeps
+the definition and the parser honest, because the definition is a second copy of
+the command line and a second copy drifts.</p>
+<h3 id="man"><a class="header" href="#man">Ship the manual page</a></h3>
+<ul>
+<li>
+<p>depends: #argdoc</p>
+</li>
+<li>
+<p>verify: <code>mandoc -T lint</code> and <code>groff -man -Tascii</code> report nothing on
+<code>deploy/man/ds-lite-punch.8</code>, the page names every flag the parser accepts,
+and the sections the generator appends survive a regeneration</p>
+</li>
+<li>
+<p>inputs: the <code>clap_mangen</code> output, the init script's flag mapping, the carrier
+numbers measured in plan/0009, the comments in <code>deploy/ds-lite-punch.env</code></p>
+</li>
+</ul>
+<p>Four sections cannot come from a clap definition and are appended by the
+generator so that regeneration keeps them. ENVIRONMENT carries every key of the
+env file and the three keys only the init script reads. FILES names the env
+file, the allowlist (call/0025), the DeviceProtection seed (call/0023) and the
+state directory. LOG EVENTS gives each event name with its fields. LIMITS
+carries the measured carrier behaviour and the one caveat an operator must know
+about the ruleset.</p>
+<h3 id="packaging"><a class="header" href="#packaging">Install and release the operator kit</a></h3>
+<ul>
+<li>
+<p>depends: #man</p>
+</li>
+<li>
+<p>verify: the installer places the page at
+<code>/usr/share/man/man8/ds-lite-punch.8</code> on the router, <code>man ds-lite-punch</code>
+renders it there, and the next tagged release lists the page among its assets</p>
+</li>
+<li>
+<p>inputs: <code>deploy/install.sh</code>, <code>.github/workflows/release.yml</code>, the release
+lane's existing two assets</p>
+</li>
+</ul>
+<p>The installer also prints the steps an operator takes after it: write the
+allowlist, seed the first DeviceProtection identity, restart, and read the
+mapping's tuple. The release attaches the page beside the binary and the
+recorded hash line, so the bytes a stranger fetches and the manual for those
+bytes travel together.</p>
+<h3 id="operator-docs"><a class="header" href="#operator-docs">Write the operator pages</a></h3>
+<ul>
+<li>
+<p>depends: #packaging</p>
+</li>
+<li>
+<p>verify: <code>docs/operators/</code> carries the five pages, every command and path in
+them was run against the router during the work, every link resolves, and the
+prose lane reports clean over them</p>
+</li>
+<li>
+<p>inputs: the generated help and manual page, <code>deploy/ds-lite-punch.init</code>,
+<code>deploy/ds-lite-punch.env</code>, the state directory <code>/run/ds-lite-punch</code>, the
+event names in <code>src/obs.rs</code> and <code>src/carrier.rs</code></p>
+</li>
+</ul>
+<p>The five pages are <code>install.md</code> (preconditions, the toolchain the bytes come
+from, the hash check against the host record, the installer, the first start,
+the DeviceProtection seed), <code>configure.md</code> (the env file key by key with units
+and defaults, the three keys the shipped file omits, the single-map form, the
+facade ports, the hold's packet budget), <code>operate.md</code> (the tuple file, the state
+files, the log events, the datapath table, and how to check a mapping from
+outside the line), <code>upgrade.md</code> (the release flow, the rollback, and the
+uninstall the init script's stop path already supports) and <code>troubleshoot.md</code>
+(the measured failure classes: a refused start under procd, a firewall reload
+that takes the daemon's rules with it, a silent watch that is the helper, and a
+mapping the carrier has dropped).</p>
+<h3 id="site"><a class="header" href="#site">Publish the component's site</a></h3>
+<ul>
+<li>
+<p>depends: #operator-docs</p>
+</li>
+<li>
+<p>verify: the component's Pages address answers 200, the landing page links each
+operator page, and the repository's homepage field names the site</p>
+</li>
+<li>
+<p>inputs: <code>docs/index.md</code>, the Pages setting on the component repository, the
+site lane added to the component's workflows</p>
+</li>
+</ul>
+<p>The site is the component's own Pages, served from <code>docs/</code>. The UPnP service
+transcriptions under <code>docs/upnp-dp1/</code> and <code>docs/upnp-wip2/</code> stay outside the
+operator path and are linked as reference material.</p>
+<h3 id="metadata"><a class="header" href="#metadata">License and describe the repository</a></h3>
+<ul>
+<li>
+<p>depends: #site</p>
+</li>
+<li>
+<p>verify: <code>gh repo view</code> reports the Unlicense, the topics, and the site as the
+homepage</p>
+</li>
+<li>
+<p>inputs: the host's <code>LICENSE</code> text, the repository settings</p>
+</li>
+</ul>
+<p>The component publishes no license file today. This task adds the Unlicense,
+which matches the host and the tools it references, so a reader has a grant to
+reuse the code.</p>
+<h3 id="lanes"><a class="header" href="#lanes">Hold the docs with lanes</a></h3>
+<ul>
+<li>
+<p>depends: #operator-docs</p>
+</li>
+<li>
+<p>verify: the component's lane fails on a deliberate break in the help text, in
+the manual page and in a page link, and passes once each break is reverted</p>
+</li>
+<li>
+<p>inputs: <code>.github/workflows/ci.yml</code>, the man render check, the link check, the
+regenerate-and-diff step for the generated files</p>
+</li>
+</ul>
+<p>Each new check is proven by breaking the thing it guards before it lands. A
+check that has never failed is a check nobody has tested.</p>
+<h3 id="record"><a class="header" href="#record">Record the pin and the milestone</a></h3>
+<ul>
+<li>
+<p>depends: #lanes, #metadata</p>
+</li>
+<li>
+<p>verify: the host's pin names the commit that carries the surfaces,
+<code>software --verify-build</code> reproduces the artifact, every task above carries a
+receipt, and the results note names the release that carries the kit</p>
+</li>
+<li>
+<p>inputs: the component's lane output, the artifact record, the tagged release</p>
+</li>
+</ul>
+<h2 id="verification"><a class="header" href="#verification">Verification</a></h2>
+<p>The milestone's mechanical checks are the repository's own sweep at every gate:
+<code>validate</code>, <code>prose</code>, <code>refs --check</code>, <code>tasks --check</code>, <code>book --check</code> and
+<code>software --check</code>. The checks this work adds live in the component's own lane,
+because the docs describe that program and move with it.</p>
+<p>Two of them are worth stating apart from the rest. The help text and the manual
+page are generated from one definition, and the lane re-runs the generator and
+fails on a difference, so neither can quietly leave the command line behind. The
+flag-coverage test compares the definition with the real parser, which is what
+keeps the second copy of the command line from drifting.</p>
+<h2 id="rollout"><a class="header" href="#rollout">Rollout</a></h2>
+<p>The stages are observable one at a time.</p>
+<ol>
+<li><strong>The surfaces, locally.</strong> The generator runs, the help text and the page
+exist, and <code>--help</code>, <code>--version</code> and <code>man</code> are read by hand on the
+workstation.</li>
+<li><strong>The pages, unlinked.</strong> <code>docs/operators/</code> is written and reviewed on the
+filesystem while the site is still off.</li>
+<li><strong>The site.</strong> Pages is enabled on the component repository, and the landing
+page and the five pages are read through a browser.</li>
+<li><strong>The release.</strong> A version bump carries the kit, and the assets are checked
+from an anonymous fetch.</li>
+<li><strong>The router.</strong> The installer places the page and prints the steps, and the
+release bytes are compared with the artifact hash before the service starts.</li>
+</ol>
+<p>The revert path is the previous release's binary, which the deploy procedure
+already parks, and the site setting, which is one API call to turn off.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>Whether an opkg package belongs in a later milestone, which turns the
+installer into a supported upgrade path on the router.</li>
+<li>Whether the daemon should answer a state question of its own, since an
+operator who wants to know whether the mapping is alive has only the tuple
+file and the log.</li>
+<li>Whether the prose and naming lanes the host runs should also run in the
+component's lane, and how the component pins them if they should.</li>
+<li>Whether the manual page should also be installed where a user command lookup
+finds it, since an operator may look for it in either place.</li>
+</ul>
+<h2 id="results-home"><a class="header" href="#results-home">Results home</a></h2>
+<p>The evidence for this milestone is the component's own files and the output of
+its lane. The host's record carries the pin and the artifact hash, and the
+release page carries the kit. Where a check produced a line worth keeping, it
+lands under <code>results/</code> in this room with the pin it was read against.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../plan/0010-the-filtering-proved-and-watched/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../where.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../plan/0010-the-filtering-proved-and-watched/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../where.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
