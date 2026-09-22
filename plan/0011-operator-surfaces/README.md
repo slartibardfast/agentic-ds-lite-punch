@@ -93,17 +93,27 @@ about the ruleset.
 
 - depends: #man
 
-- verify: the installer places the page at
-  `/usr/share/man/man8/ds-lite-punch.8` on the router, `man ds-lite-punch`
-  renders it there, and the next tagged release lists the page among its assets
+- verify: `sh -n` accepts the installer, the page lands at
+  `/usr/share/man/man8/ds-lite-punch.8` with mode 644 and its contents intact,
+  the release lane refuses an empty page and names it among the assets, and the
+  rendering is checked on a workstation and in the lane, because the router
+  carries no manual reader
 - inputs: `deploy/install.sh`, `.github/workflows/release.yml`, the release
-  lane's existing two assets
+  lane's existing two assets, the router's applet list
 
 The installer also prints the steps an operator takes after it: write the
 allowlist, seed the first DeviceProtection identity, restart, and read the
 mapping's tuple. The release attaches the page beside the binary and the
 recorded hash line, so the bytes a stranger fetches and the manual for those
 bytes travel together.
+
+Measured while doing this, and it changes what the page is for: the router
+carries no `man`, no `mandoc`, no `nroff` and no `/usr/share/man` directory at
+all, so the page is placed for a reader who pulls it off the box or takes it from
+the release. The reader the box itself has is `--help`, which prints the same
+generated text. Its place at that path is still worth keeping, because it is
+where an operator looks for it, and the operator pages say where the two readers
+are.
 
 ### Write the operator pages {#operator-docs}
 
