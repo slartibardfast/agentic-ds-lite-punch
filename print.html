@@ -3581,13 +3581,15 @@ about the ruleset.</p>
 <p>depends: #man</p>
 </li>
 <li>
-<p>verify: the installer places the page at
-<code>/usr/share/man/man8/ds-lite-punch.8</code> on the router, <code>man ds-lite-punch</code>
-renders it there, and the next tagged release lists the page among its assets</p>
+<p>verify: <code>sh -n</code> accepts the installer, the page lands at
+<code>/usr/share/man/man8/ds-lite-punch.8</code> with mode 644 and its contents intact,
+the release lane refuses an empty page and names it among the assets, and the
+rendering is checked on a workstation and in the lane, because the router
+carries no manual reader</p>
 </li>
 <li>
 <p>inputs: <code>deploy/install.sh</code>, <code>.github/workflows/release.yml</code>, the release
-lane's existing two assets</p>
+lane's existing two assets, the router's applet list</p>
 </li>
 </ul>
 <p>The installer also prints the steps an operator takes after it: write the
@@ -3595,6 +3597,13 @@ allowlist, seed the first DeviceProtection identity, restart, and read the
 mapping's tuple. The release attaches the page beside the binary and the
 recorded hash line, so the bytes a stranger fetches and the manual for those
 bytes travel together.</p>
+<p>Measured while doing this, and it changes what the page is for: the router
+carries no <code>man</code>, no <code>mandoc</code>, no <code>nroff</code> and no <code>/usr/share/man</code> directory at
+all, so the page is placed for a reader who pulls it off the box or takes it from
+the release. The reader the box itself has is <code>--help</code>, which prints the same
+generated text. Its place at that path is still worth keeping, because it is
+where an operator looks for it, and the operator pages say where the two readers
+are.</p>
 <h3 id="operator-docs"><a class="header" href="#operator-docs">Write the operator pages</a></h3>
 <ul>
 <li>
