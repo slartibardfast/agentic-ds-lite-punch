@@ -2716,6 +2716,43 @@ by linking the built tool at <code>~/.local/bin/host-lifecycle</code>, which a s
 resolves, and the gate is green again; upstream is owed the report that the two
 recheck paths should agree. The component's own pins and the two defects are
 untouched by this: <code>software --check</code> reports every component at its pinned SHA.</p>
+<p><strong>The carrier watch stopped counting, and its alarm belonged to the instrument.</strong>
+Reading the armed window on 2026-09-22 found the counter frozen at
+<code>packets 10 bytes 440</code> since 22:14:09 UTC and <code>{"event":"carrier-silent", "last_probe":1790028849,"waited":2700,"epoch":1790031549}</code> at 22:59:09 UTC. The
+helper kept sending every 900 s (its journal carries six sends after the freeze),
+and probes from a fresh source port sent by hand arrived and translated through:</p>
+<pre><code class="language-host-lint:ignore">170.9.238.141.41060 &gt; 192.168.0.21.40000: UDP, length 16     # eth1, the WAN
+170.9.238.141.41070 &gt; 192.168.21.12.40002: UDP, length 16    # br-lan, the client
+</code></pre>
+<p>So the carrier still forwards a stranger's traffic and the ingress translation
+still delivers. Nothing in the ruleset names <code>carrier_probe</code> or <code>@dslp_ports_udp</code>
+any more; only the counter object and the two sets survive, holding their old
+values. The cause is the rule's home: the counting rules are inserted into <code>inet fw4</code>, which fw4 rebuilds, and pbr provoked reloads (<code>Sending reload signal to pbr due to firewall action: includes</code>) at 22:20:37, 22:23:37, 22:38:38, 22:41:38,
+00:08:43 and 00:11:43 UTC. <code>ensure_carrier_probe()</code> runs once, at startup
+(<code>src/main.rs:975</code>), and the poll loop only reads the counter, so a wipe leaves a
+plausible reading and no way for the watch to tell that its own rule left. The
+milestone's central function survives this — the lease path delivered throughout —
+but every hour of the window after 22:14 UTC is void, and while armed the watch can
+raise only false alarms. Not fixed here: the fix needs the rule to live somewhere
+fw4 does not rebuild (the daemon's own <code>table ip dslp</code>, the principle the init
+script already states for the conntrack policy) or a re-converge on the poll, and
+then a fresh window.</p>
+<p><strong>The book is live, and the two upgrade reports are filed.</strong> GitHub Pages is now
+enabled on this repository, serving the <code>gh-pages</code> branch:
+<code>https://slartibardfast.github.io/agentic-ds-lite-punch/</code> answers HTTP 200 with
+24 KB, first build <code>built</code> at <code>9968f50</code>. The two upstream reports went to
+<code>connollydavid/host</code>, because <code>connollydavid/host-template</code> has its issues
+disabled. <code>connollydavid/host#22</code>: two ledger verifies read <code>CLAUDE.md</code>
+(<code>UPGRADING.md:359</code> and <code>:387</code>) for text the <code>ACTIVE-corpus-and-agents-manual</code>
+entry moved into <code>AGENTS.md</code>, so <code>REFS-a-number-resolves</code> and <code>LEM-pronoun-system</code>
+can never be recorded and the two entries that depend on them are blocked with
+them; the four re-list on every <code>upgrade .</code>. <code>connollydavid/host#23</code>: the claim
+recheck runs an entry's verify raw. That corrects the earlier note here — it is
+four claims, not two, that HAZARD with the tool absent from PATH (<code>4a98d92</code>,
+<code>LEXICON-declaration-is-a-report</code>, <code>PIN-two-surfaces-two-claims</code>,
+<code>ACTIVE-corpus-and-agents-manual</code>), <code>software --check</code> exits 1, and the manifest's
+own <code>recheck</code> clause, calling the tool by the same bare name, stays green in that
+run.</p>
 
                     </main>
 
