@@ -2824,3 +2824,60 @@ four claims, not two, that HAZARD with the tool absent from PATH (`4a98d92`,
 `ACTIVE-corpus-and-agents-manual`), `software --check` exits 1, and the manifest's
 own `recheck` clause, calling the tool by the same bare name, stays green in that
 run.
+
+**The operator's surfaces shipped, and v0.2.0 carries them.** plan/0011 is done,
+all nine tasks receipted, and the record is
+`plan/0011-operator-surfaces/results/RESULTS-2026-09-22-operator-surfaces.md`.
+What landed: a sectioned `--help` with `--version` and an exit-status section; a
+manual page in section 8 with ENVIRONMENT, FILES, LOG EVENTS, LIMITS and SEE
+ALSO sections the generator appends; five operator pages under `docs/operators/`;
+a site at `https://slartibardfast.github.io/ds-lite-punch/` serving `docs/` with
+all five pages answering 200; the Unlicense; eight repository topics; and a
+release whose three assets are the binary, the manual page and the recorded hash
+line. The help text and the manual page come from one clap definition in
+`tools/argdoc`, a crate with its own empty `[workspace]` table so the shipping
+crate's `Cargo.toml` and `Cargo.lock` never moved and the daemon links none of
+it; it prints the text through `include_str!`. The flag-coverage test reads the
+parser's own match arms out of the source above the test module, which is what
+catches a flag added to the parser without the help.
+
+**Three findings that change how the next release runs.** (1) The router carries
+no `man`, no `mandoc`, no `nroff` and no `/usr/share/man` at all, so the
+installed page is for a reader who pulls it off the box or takes it from the
+release, and the on-box reader is `--help`, which prints the same generated text.
+(2) A version bump now moves the artifact bytes, because `--version` compiles the
+crate version in. The release order that follows is: apply the bump, tag that
+commit, and pin the tagged commit with the hash its build produced. Pinning a
+commit and bumping after it leaves the record describing a different source, which
+is what the host's reproducible lane said once, in its own words:
+`DRIFT     ds-lite-punch rebuild is 0bdb6b926485 but recorded a452cf38c9c7 — NOT
+reproducible`. The next commit set the pin and the hash together and the lane
+reproduced `924281b2` from the pin. (3) The release phase is one dispatch per
+release: it computes the version from the manifest plus the change class and
+prints the outward steps, so a dispatch after a completed release proposes the
+next version and derives the digest of a bump that exists only in that run. The
+dispatch made after 0.2.0 shipped reported `0.2.0 -> 0.3.0` with a digest for a
+`0.3.0` source; that proposal was not applied, and the receipt was recorded by
+hand from the release's own evidence.
+
+**The release's hash was built three times and the three agree.** The component's
+own lane printed `924281b2f6b544d6da6b17dddd312978560cdb467df58a96f15e9016bbe72db9`
+for the tagged commit, the Release lane attached the same value in
+`artifact-record.txt`, and an anonymous fetch of the asset hashed to the same
+value. The release is immutable, and the phase's receipt records
+`v0.2.0@924281b2…` authorized by plan/0011.
+
+**The component's lane gained a docs job, and each check was broken first.** The
+generated artifacts are regenerated on the runner with the host target named
+against the crate tree's musl pin and then compared with `git diff --exit-code`
+(a drifted help text was staged to prove it bites); groff writes to stderr and
+still exits zero, so the render gate is a non-empty stderr file (an undefined
+macro proved it); `tools/link-check.sh` walks the authored docs and a renamed
+target proved it; and the prose audit runs the host's own `host-lint`, pinned by
+a clone and build of `v0.22.0` (which resolves to `0eeabc20`, the commit this
+host's submodule pins) from `/tmp`, because cargo reads its config from the
+working directory and the component's `.cargo/config.toml` would aim that build
+at musl. `.host-lintignore` names the two archived specification transcriptions.
+The naming half is deliberately not wired: it reports 86 findings over the
+component, every one a source comment holding an RFC section reference, a
+numbered UPnP clause, or a pre-adoption plan label.
