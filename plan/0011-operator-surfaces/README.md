@@ -183,9 +183,11 @@ check that has never failed is a check nobody has tested.
 
 - depends: #lanes, #metadata
 
-- verify: the host's pin names the commit that carries the surfaces,
-  `software --verify-build` reproduces the artifact, every task above carries a
-  receipt, and the results note names the release that carries the kit
+- verify: the host's pin names the commit that carries the surfaces, the host's
+  reproducible-build lane rebuilds from that pin and reproduces the artifact
+  (this development host has no container runtime, so its own `--verify-build`
+  reports UNVERIFIABLE), every task above carries a receipt, and the results
+  note names the release that carries the kit
 - inputs: the component's lane output, the artifact record, the tagged release
 
 ## Verification
