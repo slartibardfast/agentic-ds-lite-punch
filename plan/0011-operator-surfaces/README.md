@@ -75,9 +75,10 @@ the command line and a second copy drifts.
 
 - depends: #argdoc
 
-- verify: `mandoc -T lint` and `groff -man -Tascii` report nothing on
-  `deploy/man/ds-lite-punch.8`, the page names every flag the parser accepts,
-  and the sections the generator appends survive a regeneration
+- verify: `groff -man -ww -Tascii` reports nothing on
+  `deploy/man/ds-lite-punch.8` and `man --warnings` agrees, the page names every
+  flag the parser accepts, and the sections the generator appends survive a
+  regeneration
 - inputs: the `clap_mangen` output, the init script's flag mapping, the carrier
   numbers measured in plan/0009, the comments in `deploy/ds-lite-punch.env`
 
@@ -168,9 +169,11 @@ reuse the code.
 - depends: #operator-docs
 
 - verify: the component's lane fails on a deliberate break in the help text, in
-  the manual page and in a page link, and passes once each break is reverted
+  the manual page, in a page link and in a page's register, and passes once each
+  break is reverted
 - inputs: `.github/workflows/ci.yml`, the man render check, the link check, the
-  regenerate-and-diff step for the generated files
+  regenerate-and-diff step for the generated files, the prose audit and the
+  `.host-lintignore` that names the archived transcriptions
 
 Each new check is proven by breaking the thing it guards before it lands. A
 check that has never failed is a check nobody has tested.
@@ -224,9 +227,19 @@ already parks, and the site setting, which is one API call to turn off.
   operator who wants to know whether the mapping is alive has only the tuple
   file and the log.
 - Whether the prose and naming lanes the host runs should also run in the
-  component's lane, and how the component pins them if they should.
+  component's lane, and how the component pins them if they should. The prose
+  half runs there now, from a pinned checkout of host-lint. The naming half
+  reports 86 findings over the component (measured 2026-09-22), every one in a
+  source comment: an RFC section reference, a numbered clause of a UPnP service
+  template, or a label from the pre-adoption plan. Clearing those needs a
+  provenance-checked declaration pass of its own, which this milestone does not
+  attempt.
 - Whether the manual page should also be installed where a user command lookup
   finds it, since an operator may look for it in either place.
+- Whether the lane should lint the page with `mandoc` as well. The lane renders
+  with `groff`, which is the renderer installed on a workstation and the one
+  whose warning path was exercised here, and `mandoc` is not installed anywhere
+  this project builds.
 
 ## Results home
 
