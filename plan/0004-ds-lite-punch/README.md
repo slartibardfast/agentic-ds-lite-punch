@@ -439,8 +439,8 @@ soak runs end to end via that rig; no phone hotspot is needed.
   external prober is **carried past v2**, not delivered by it.
 - Whether the SNAT-to-bound-port trick needs the TPROXY fallback on this
   kernel. **Answered:** the TCP datapath needed no TPROXY. A listener and an
-  outbound mapping-holder cannot share one tuple under any plain-socket reuse
-  combination, so the holder originates from an ephemeral local port that the
+  outbound mapping's connection cannot share one tuple under any plain-socket reuse
+  combination, so that connection originates from an ephemeral local port that the
   relay's own `snat_map` folds to the slot's tuple (plan/0007's tcp-datapath
   task, `src/tcpslot.rs`); there is no TPROXY in the tree.
 - PS3-specific acceptance: **closed.** The console reached PSN NAT Type 2 and

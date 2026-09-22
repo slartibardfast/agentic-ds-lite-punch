@@ -132,7 +132,7 @@ The five pages are `install.md` (preconditions, the toolchain the bytes come
 from, the hash check against the host record, the installer, the first start,
 the DeviceProtection seed), `configure.md` (the env file key by key with units
 and defaults, the three keys the shipped file omits, the single-map form, the
-facade ports, the hold's packet budget), `operate.md` (the tuple file, the state
+facade ports, the keepalive's packet budget), `operate.md` (the tuple file, the state
 files, the log events, the datapath table, and how to check a mapping from
 outside the line), `upgrade.md` (the release flow, the rollback, and the
 uninstall the init script's stop path already supports) and `troubleshoot.md`

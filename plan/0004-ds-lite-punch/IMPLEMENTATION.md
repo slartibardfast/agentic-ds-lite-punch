@@ -129,7 +129,7 @@ runtime, no new heavy deps, parsers hand-rolled and tiny. No TLS.
 - **Honesty gradient per channel.** PCP reports the true tuple (in-spec).
   UPnP reports requested-port plus true-IP (request-channel lie, never
   load-bearing because the SNAT pin makes the client's observed tuple equal
-  the held tuple). Observation is silent (no client to inform). Never
+  the owned tuple). Observation is silent (no client to inform). Never
   synthesize port preservation anywhere.
 - **Restoration cheaper than construction.** Respawn = rebind + one STUN
   cycle; reboot = epoch reset + tmpfs wipe, aligned exactly with AFTR state
@@ -550,7 +550,7 @@ block G.
 > claim and removes it at exit.
 
 9. **G9 Kani.** Predicate truth table, budget arithmetic, precedence (never
-   captures a held tuple), exit state machine.
+   captures a owned tuple), exit state machine.
 10. **G10 README.** What observation does (mapping never dies during
     lobby/loading silences; promotion keeps inbound alive) and does not
     (grade unaffected, D stays D; peer-side NAT expiry is not ours; hairpin

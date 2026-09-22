@@ -35,7 +35,7 @@ work.
 | [plan/0006](plan/0006-ps3-requirements/README.md) | the console requirements; closed by reframing ([call/0014](call/0014-a2-acceptance-reframe.md)) |
 | [plan/0007](plan/0007-igd-facade/README.md) | the UPnP facade; closed 2026-09-15 |
 | [plan/0008](plan/0008-adaptive-igd-v1v2-facade/README.md) | the adaptive v1 and v2 facade with DeviceProtection; 31 probes pass on the box |
-| [plan/0009](plan/0009-mapping-hold-and-signalling/README.md) | the mapping hold and its signalling; done 2026-09-18 |
+| [plan/0009](plan/0009-mapping-keepalive-and-signalling/README.md) | the mapping keepalive and its signalling; done 2026-09-18 |
 
 The component:
 
@@ -50,9 +50,9 @@ The component:
 
 ## Future work
 
-1. **The lobby case.** A console in a lobby sends no traffic. The hold must
+1. **The lobby case.** A console in a lobby sends no traffic. The keepalive must
    survive that silence on a real console. The operator runs this test
-   ([plan/0009](plan/0009-mapping-hold-and-signalling/README.md)).
+   ([plan/0009](plan/0009-mapping-keepalive-and-signalling/README.md)).
 2. **The Kani suite on a larger host**
    ([call/0019](call/0019-facade-kani-deferred-to-larger-host.md)).
 3. **The R4 rule.** A late collision moves an allocation, and it never moves a

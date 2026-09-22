@@ -1,4 +1,4 @@
-# The repositories are public, and a tag is the release its artifact rides
+# The repositories are public, and a tag is the release
 
 - Status: accepted
 - Scope: how these two repositories are exposed, and how a release is cut: the

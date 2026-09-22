@@ -9,7 +9,7 @@ sort key; see `call/0000`). A milestone is a thin, persona-serving increment.
 - [0006 ps3 requirements](0006-ps3-requirements/README.md)
 - [0007 igd facade](0007-igd-facade/README.md)
 - [0008 adaptive igd v1v2 facade](0008-adaptive-igd-v1v2-facade/README.md)
-- [0009 mapping hold and signalling](0009-mapping-hold-and-signalling/README.md)
+- [0009 mapping keepalive and signalling](0009-mapping-keepalive-and-signalling/README.md)
 - [0010 the filtering proved and watched](0010-the-filtering-proved-and-watched/README.md)
 - [0011 operator surfaces](0011-operator-surfaces/README.md)
 

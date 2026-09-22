@@ -37,13 +37,13 @@ def stop_holder(holder):
     # terminate() kills the lxc-attach wrapper only; the in-container
     # python survives and leaks a held AFTR TCP mapping per point.
     subprocess.run(["lxc-attach", "-n", "dslp-sink", "--", "pkill", "-f",
-                    "sink-hold"], capture_output=True)
+                    "sink-keepalive"], capture_output=True)
 
 
 def point(run_dir, gap):
     holder = subprocess.Popen(
         ["lxc-attach", "-n", "dslp-sink", "--", "/usr/bin/python3",
-         "/opt/dslp-test/sink-hold.py"],
+         "/opt/dslp-test/sink-keepalive.py"],
         stdout=open(f"{run_dir}/hold.log", "w"),
         stderr=subprocess.STDOUT)
     # The holder prints the discovered tuple as its first flushed line.
