@@ -24,8 +24,8 @@ source of the behaviour.
 
 | Sense | Was | Is | Anchor |
 |---|---|---|---|
-| keeping a named device's mapping alive | `--hold`, `HOLD`, the `hold` event, `hold.rs` | `--keepalive`, `KEEPALIVE`, the `keepalive` event, `keepalive.rs` | RFC 8085 section 3.5, the packets that keep a binding open |
-| attempts to put a vanished mapping back | `--max-rescues` | `--max-refresh-attempts` | RFC 4787 section 4.1: a mapping's timer is refreshed by traffic |
+| keeping a named device's mapping alive | `--hold`, `HOLD`, the `hold` event, `hold.rs` | `--keepalive`, `KEEPALIVE`, the `keepalive` event, `keepalive.rs` | RFC 8085, on keepalives: the packets that keep a binding open |
+| attempts to put a vanished mapping back | `--max-rescues` | `--max-refresh-attempts` | RFC 4787, on mapping refresh: a timer is refreshed by traffic |
 | a tuple a slot owns | `held`, `is_held` | `owned`, `is_owned` | the code already said "own", and the I1 gate is `claim_allowed` |
 | the TCP connection that maintains a mapping | `HolderState`, `run_holder`, `holder` | `ConnectionState`, `run_connection`, `connection`, with `Live` and `Dead` | a STUN-over-TCP connection's liveness |
 | a client's record in the facade | `holder`, the one-holder rule | `entry`, the one-mapping rule | the facade's own table of entries |
