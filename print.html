@@ -3559,9 +3559,10 @@ the command line and a second copy drifts.</p>
 <p>depends: #argdoc</p>
 </li>
 <li>
-<p>verify: <code>mandoc -T lint</code> and <code>groff -man -Tascii</code> report nothing on
-<code>deploy/man/ds-lite-punch.8</code>, the page names every flag the parser accepts,
-and the sections the generator appends survive a regeneration</p>
+<p>verify: <code>groff -man -ww -Tascii</code> reports nothing on
+<code>deploy/man/ds-lite-punch.8</code> and <code>man --warnings</code> agrees, the page names every
+flag the parser accepts, and the sections the generator appends survive a
+regeneration</p>
 </li>
 <li>
 <p>inputs: the <code>clap_mangen</code> output, the init script's flag mapping, the carrier
@@ -3671,11 +3672,13 @@ reuse the code.</p>
 </li>
 <li>
 <p>verify: the component's lane fails on a deliberate break in the help text, in
-the manual page and in a page link, and passes once each break is reverted</p>
+the manual page, in a page link and in a page's register, and passes once each
+break is reverted</p>
 </li>
 <li>
 <p>inputs: <code>.github/workflows/ci.yml</code>, the man render check, the link check, the
-regenerate-and-diff step for the generated files</p>
+regenerate-and-diff step for the generated files, the prose audit and the
+<code>.host-lintignore</code> that names the archived transcriptions</p>
 </li>
 </ul>
 <p>Each new check is proven by breaking the thing it guards before it lands. A
@@ -3729,9 +3732,19 @@ installer into a supported upgrade path on the router.</li>
 operator who wants to know whether the mapping is alive has only the tuple
 file and the log.</li>
 <li>Whether the prose and naming lanes the host runs should also run in the
-component's lane, and how the component pins them if they should.</li>
+component's lane, and how the component pins them if they should. The prose
+half runs there now, from a pinned checkout of host-lint. The naming half
+reports 86 findings over the component (measured 2026-09-22), every one in a
+source comment: an RFC section reference, a numbered clause of a UPnP service
+template, or a label from the pre-adoption plan. Clearing those needs a
+provenance-checked declaration pass of its own, which this milestone does not
+attempt.</li>
 <li>Whether the manual page should also be installed where a user command lookup
 finds it, since an operator may look for it in either place.</li>
+<li>Whether the lane should lint the page with <code>mandoc</code> as well. The lane renders
+with <code>groff</code>, which is the renderer installed on a workstation and the one
+whose warning path was exercised here, and <code>mandoc</code> is not installed anywhere
+this project builds.</li>
 </ul>
 <h2 id="results-home-5"><a class="header" href="#results-home-5">Results home</a></h2>
 <p>The evidence for this milestone is the component's own files and the output of
@@ -3745,7 +3758,7 @@ lands under <code>results/</code> in this room with the pin it was read against.
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>4d4cfbdc2936829d38b100e835f0ca26bb83a5d3</code></li>
+<li>pin: <code>27e66576561e456aee1fc6a3b36e18d78def6fbd</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
