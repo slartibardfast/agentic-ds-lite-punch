@@ -2919,3 +2919,28 @@ so the words a stranger reads from the release are the rejected ones until a new
 tag ships. The rename is a flag removal and an addition, which the tool maps to a
 minor bump, and the phase reads the manifest version, so it would compute
 `0.2.0 -> 0.3.0`.
+
+**"This has been a productive session" — the operator's words, and the record of
+what it produced.** The sentiment lives here rather than in `call/`, because that
+room holds decisions about the software and a feeling is not one of them; the
+session's decision is `call/0036`, on the release order the embedded version
+forced. What the session produced, in the order it happened: plan/0011 opened and
+closed with nine receipted tasks, from a generated `--help` and a manual page to
+five operator pages and a live site; `v0.2.0` cut, published and immutable,
+carrying the binary, the page and the recorded hash; `v0.2.0`'s own defect found
+and fixed, which was the operator rejecting `--max-rescues`, then "hold", then
+"rides" and "lands"; `call/0035` recording the words; the milestone and decision
+slugs renamed onto them; and `call/0036` recording what the release taught.
+
+**The audit at the end of the session, and its one open item.** `validate`,
+`prose`, `reconcile`, `book --check`, `manifest --check`, `software
+--verify-setup` and `dream` all report clean, and the reference sweep resolves
+all 74 documents. `software --check` reports one item:
+`DRIFT software/ds-lite-punch/main at 425642dc4084 but pinned to f0c65e3938ac`.
+That is the release thread stated as a fact: the component moved past the tagged
+0.2.0 when the vocabulary landed, and the pin follows the next release. The other
+open threads, unchanged by this session: the four upgrade ledger entries blocked
+upstream (`connollydavid/host#22`), the component's naming lane with its 86
+source-comment findings, the carrier watch whose counter is dead and whose window
+is void (so plan/0010 wants its closure and its results file), and the router
+still running 0.1.5, where the deploy is the operator's step.
