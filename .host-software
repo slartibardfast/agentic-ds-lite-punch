@@ -8,25 +8,26 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = f0c65e3938ac1bd047e94c0f0875f466554f0e07
+	pin   = d5657da02c23bd173d244ed583aeb2a1b2769a57
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
-	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 924281b2f6b544d6da6b17dddd312978560cdb467df58a96f15e9016bbe72db9
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch af2e05e7a1c48c79e9a50180ab03fc39462ba18f53bfca198e2bab309daf3363
 # The toolchain is a digest-pinned container rather than a target triple:
 # `--verify-build` runs the recorded `build` inside it, so the image is what
 # reproduces the artifact and a movable tag would invalidate every hash
-# recorded under it. The hash above was produced inside that image twice for the
-# tagged commit, once by the component's own CI and once by the Release lane,
-# with the two runs agreeing byte for byte, and the release publishes the binary
-# it built, so a deployment takes those bytes rather than a local build's
-# (call/0032). A version bump moves those bytes from 0.2.0 on: `--version`
-# prints the crate version, so the string is compiled into the binary, and the
-# pin therefore names the commit that carries the bump, which is also the commit
-# the tag points at.
+# recorded under it. The hash above was produced inside that image for the
+# tagged commit, by the component's own lane and again by the Release lane, with
+# the runs agreeing byte for byte; an anonymous fetch of the release asset
+# hashes to the same value, and the release publishes that binary, so a
+# deployment takes those bytes rather than a local build's (call/0032). A
+# version bump moves those bytes from 0.2.0 on: `--version` prints the crate
+# version, so the string is compiled into the binary, and the pin therefore
+# names the commit that carries the bump, which is also the commit the tag
+# points at (call/0036).
 #
 # This development host has no container runtime, so its own target/ builds
-# with the ambient compiler and hashes differently (5d71f292...). That is a
-# property of the host, not a defect in the record: a local build is for
-# iteration, and the binary on the test router was installed from the lane's
-# artifact and checked against the hash above before it was started.
+# with the ambient compiler and hashes differently. That is a property of the
+# host, not a defect in the record: a local build is for iteration, and the
+# binary on the test router was installed from the lane's artifact and checked
+# against the hash above before it was started.
