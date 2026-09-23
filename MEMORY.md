@@ -2944,3 +2944,33 @@ upstream (`connollydavid/host#22`), the component's naming lane with its 86
 source-comment findings, the carrier watch whose counter is dead and whose window
 is void (so plan/0010 wants its closure and its results file), and the router
 still running 0.1.5, where the deploy is the operator's step.
+
+**The audit the operator asked for, and what it found.** The standard: no
+mannered prose, no business idiom. Scanned: the component's authored files (its
+README, the site page, the operator pages, `deploy/`, the source, the generator,
+the lane) and the host's live corpus (the README, `STRUCTURE.md`, the plan index,
+the milestone, the decisions of this session, the workflows). Fixed in the
+component: `cadence` went to `interval` in 22 places, the RFC word for the
+period; `surface` went to the plain words for what is exposed (the evented state
+variables, the action set, the service description, the error set) in about 30;
+and three verb and idiom uses went with them (`never surfaces`, `surfaces as a
+failed pass`, a lane comment). Fixed in the host: the workflow comments, the
+milestone's own prose, and three identities renamed onto content, which are
+`plan/0011-documentation`, its results file, and
+`call/0035-plain-language-for-the-program`. Kept, and named as kept: `aligned` in
+`ct.rs`, which is netlink attribute alignment, and call/0035's citation of the
+rejected words, which is how a decision records what it rejected.
+
+Disclosed rather than rewritten: the record layer holds 192 hits of the same
+list, in `MEMORY.md`, the closed milestone bodies, the results files and the
+earlier decisions. Those quote what was written and measured at the time, so
+rewording them would falsify the record. The tool submodules and the spine
+(`AGENTS.md`, re-applied by every upgrade) are out of scope.
+
+**v0.3.1 is the release the audit earned.** It carries the neutral manual header,
+in the fifth `.TH` field where a reader sees it, and the audit's word fixes. Its
+hash is `0a9ae280c8dc1d8fc01b6d1248b4401a40d2ae9853233e067ed2c9f7d5a53f23`, agreed
+three ways as call/0036 requires: the Release lane's `artifact-record.txt`, the
+component's own lane for the tagged commit, and an anonymous fetch of the asset.
+The pin names `3ae0abf` with that hash in one commit, and the release receipt
+records `v0.3.1@0a9ae280…` authorized by plan/0011.
