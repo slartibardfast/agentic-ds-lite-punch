@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The release&#x27;s bytes move with the version, so the pin names the tag - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../cast/operator.html"><strong aria-hidden="true">1.3.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../plan-index.html"><strong aria-hidden="true">2.</strong> Plan</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li class="chapter-item expanded "><a href="../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li class="chapter-item expanded "><a href="../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li class="chapter-item expanded "><a href="../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li class="chapter-item expanded "><a href="../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li class="chapter-item expanded "><a href="../plan/0009-mapping-keepalive-and-signalling/index.html"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li><li class="chapter-item expanded "><a href="../plan/0010-the-filtering-proved-and-watched/index.html"><strong aria-hidden="true">2.7.</strong> Milestone: the carrier's filtering, proved and watched</a></li><li class="chapter-item expanded "><a href="../plan/0011-operator-surfaces/index.html"><strong aria-hidden="true">2.8.</strong> Milestone: the operator's surfaces</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li><li class="chapter-item expanded "><a href="../call/0026-tcp-keepalive-is-signalled-not-injected.html"><strong aria-hidden="true">4.15.</strong> The TCP half of the hold: what can be held, and what can only be said</a></li><li class="chapter-item expanded "><a href="../call/0027-collisions-for-punched-ports.html"><strong aria-hidden="true">4.16.</strong> Collision rules for ports nobody allocated: the punch and the lease table</a></li><li class="chapter-item expanded "><a href="../call/0028-a-shared-tuple-is-reachable-and-the-incumbent-keeps-it.html"><strong aria-hidden="true">4.17.</strong> A shared tuple is reachable, and the incumbent keeps it</a></li><li class="chapter-item expanded "><a href="../call/0029-the-named-device-is-the-admission.html"><strong aria-hidden="true">4.18.</strong> The hold's admission is the named device, its liveness is the device and its peers, and a failed write is never fatal</a></li><li class="chapter-item expanded "><a href="../call/0030-a-mapping-ends-with-its-device.html"><strong aria-hidden="true">4.19.</strong> A mapping asked for by a device ends when that device leaves, and never when it is quiet</a></li><li class="chapter-item expanded "><a href="../call/0031-the-datapath-needs-no-listing.html"><strong aria-hidden="true">4.20.</strong> The datapath never needs a listing, and an intermittent nft crash is tolerated</a></li><li class="chapter-item expanded "><a href="../call/0032-the-builder-of-record-is-the-lane.html"><strong aria-hidden="true">4.21.</strong> The builder of record is the CI lane, and a deployment takes its artifact</a></li><li class="chapter-item expanded "><a href="../call/0033-the-filtering-is-watched-from-outside.html"><strong aria-hidden="true">4.22.</strong> The filtering is watched by a stranger's probe, and the daemon is told</a></li><li class="chapter-item expanded "><a href="../call/0034-the-repositories-are-public-and-a-tag-is-the-release.html"><strong aria-hidden="true">4.23.</strong> The repositories are public, and a tag is the release</a></li><li class="chapter-item expanded "><a href="../call/0035-plain-language-for-the-surfaces.html"><strong aria-hidden="true">4.24.</strong> Plain language for the surfaces: keepalive, owned, entry</a></li><li class="chapter-item expanded "><a href="../call/0036-the-pin-names-the-tag-the-bytes-come-from.html" class="active"><strong aria-hidden="true">4.25.</strong> The release's bytes move with the version, so the pin names the tag</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../MIGRATION.html"><strong aria-hidden="true">6.1.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../STRUCTURE.html"><strong aria-hidden="true">6.2.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../UPGRADING.html"><strong aria-hidden="true">6.3.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-releases-bytes-move-with-the-version-so-the-pin-names-the-tag"><a class="header" href="#the-releases-bytes-move-with-the-version-so-the-pin-names-the-tag">The release's bytes move with the version, so the pin names the tag</a></h1>
+<ul>
+<li>Status: accepted</li>
+<li>Scope: how a release is cut for this component: the order of the bump, the
+tag, the pin and the recorded hash, and what a digest re-derivation describes</li>
+<li>Date: 2026-09-23</li>
+</ul>
+<h2 id="context-and-problem-statement"><a class="header" href="#context-and-problem-statement">Context and Problem Statement</a></h2>
+<p>The operator surfaces shipped as <code>v0.2.0</code>, and that release exposed a change in
+this component's build. Up to <code>0.1.5</code> a version bump did not move the artifact,
+because nothing compiled the version in: the pinned commit and the tagged bump
+commit produced the same bytes, and one recorded hash covered both. <code>v0.2.0</code>
+added <code>--version</code>, which prints the crate version, so the string is compiled in
+and the bytes now move with every bump.</p>
+<p>The host's reproducible lane said so in its own words when the pin ran ahead of
+the recorded hash:</p>
+<pre><code class="language-host-lint:ignore">DRIFT    ds-lite-punch rebuild is 0bdb6b926485 but recorded a452cf38c9c7 — NOT reproducible
+</code></pre>
+<h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
+<p>A release runs in one order: apply the bump, commit it, tag that commit, and pin
+the tagged commit with the hash its build produced. The pin names the commit the
+tag names, because a record that names a different commit than the artifact's
+source describes bytes nobody ships.</p>
+<p>The hash comes from the lane that builds the tagged commit, and it is checked
+twice more before it is recorded: the component's own lane prints the hash for
+the same commit, and an anonymous fetch of the release asset is hashed after
+download. Three builds agreeing is stronger evidence than one re-derivation, and
+all three ran inside the toolchain the record pins. For <code>v0.2.0</code> all three
+produced <code>924281b2f6b544d6da6b17dddd312978560cdb467df58a96f15e9016bbe72db9</code>.</p>
+<p>The release phase is one dispatch per release. Its version comes from the
+manifest plus the change class, so a dispatch made after a release is complete
+proposes the next version and derives the digest of a bump that exists only in
+that run. A second dispatch made after <code>0.2.0</code> shipped reported
+<code>0.2.0 -&gt; 0.3.0</code> with a digest for a <code>0.3.0</code> source. That proposal was not
+applied, and the release receipt was recorded from the release's own evidence.</p>
+<h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
+<p>The pin lags the working tree between a release and the next bump, which
+<code>software --check</code> reports as DRIFT against the component's worktree. That
+report is the record saying a release is owed, and it clears when the pin and
+the hash are set in one commit.</p>
+<p>A release that removes a flag or adds one is a minor bump, and the tool maps
+either change class to one. Writing the pin and the artifact hash together is
+what keeps the lane from ever reading a pair that describes two sources.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../call/0035-plain-language-for-the-surfaces.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../AGENTS.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../call/0035-plain-language-for-the-surfaces.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../AGENTS.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
