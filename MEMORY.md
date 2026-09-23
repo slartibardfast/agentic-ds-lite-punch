@@ -2974,3 +2974,36 @@ three ways as call/0036 requires: the Release lane's `artifact-record.txt`, the
 component's own lane for the tagged commit, and an anonymous fetch of the asset.
 The pin names `3ae0abf` with that hash in one commit, and the release receipt
 records `v0.3.1@0a9ae280…` authorized by plan/0011.
+
+**The watch has its instrument back, in v0.3.2, and the proof on the box is
+owed.** The fix is the convergence the earlier finding asked for: the watch
+re-installs its counting rules on every poll and replaces any older variant that
+names the counter, `ensure_carrier_probe` now reports whether it changed
+anything, and the poll logs
+`{"event":"carrier-watch-reinstalled","counter":"carrier_probe","epoch":...}`
+when it did, because a repaired instrument is a fact the counter cannot show. The
+reading the convergence acts on is pure and tested (`carrier_probe_chain_state`,
+with the wipe as the case where the chain carries the object and no rule names
+it). v0.3.2 is `ac66c716`, artifact
+`ac2693ef59ae4b81102abbdbb23c69b49ba67ca4d2bc901f9170a9520021d009`, agreed three
+ways as call/0036 requires; the pin names that pair in one commit, and the
+release receipt is authorized by plan/0010.
+
+The on-box reproduction is owed and not performed: reload the router's firewall,
+watch the repair land within a poll, then send a marked probe from the vantage
+and watch the counter rise. The policy governing this session blocked the write
+to the router's own configuration and asked for the operator's approval, so the
+deploy is stopped at the door rather than performed. The router still runs 0.1.5
+with the rules missing, which is the state the fix addresses.
+`plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-23-the-watch-that-lost-its-own-rule.md`
+records the finding, the cause, the fix, and that debt; plan/0010 stays open
+until the proof lands.
+
+Two operator facts came out of this. The deploy needs the renamed key first:
+`/etc/ds-lite-punch.env` sets `HOLD=1`, and no release after 0.3.1 reads that
+key, so the keepalive would stop silently unless `KEEPALIVE=1` is set in the
+same edit. The upgrade page now carries that rename for an operator, since a
+release cannot carry a configuration file for one. And the carrier reassigned the
+mapping's external port while the window ran, from 59278 to 59348, which is the
+watch's own first named cause and worth knowing before reading any silence as the
+carrier's.
