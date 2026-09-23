@@ -26,7 +26,7 @@ jobs:
       # reconciled word-choice rules, under which this repository's own text is clean
       # with no LEXICON at all (call/0051). This is an equality claim and gates as
       # one, unlike a component's own CI pin, which declares a floor (call/0052).
-      # --root $HOME/.local so the binary lands where the gate step reads it
+      # --root $HOME/.local so the binary is installed where the gate step reads it
       # (default cargo root is the toolchain bin dir, which is not this path).
       - name: Install host-lifecycle (pinned)
         run: cargo install --locked --root "$HOME/.local" --git https://github.com/connollydavid/host-lifecycle --rev 1686a6edd071c2e4d6b4ca74141be605f56dc8b5 # host-lifecycle, bumped by the release cascade

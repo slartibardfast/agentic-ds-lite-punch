@@ -71,7 +71,7 @@ jobs:
           host-lifecycle release ds-lite-punch \
             --change-class "${{ inputs.change_class }}" \
             --authorized "${{ inputs.authorized }}"
-      # The phase stops at the door by design: it verifies the build, re-derives
+      # The phase stops before the outward steps by design: it verifies the build, re-derives
       # the artifact digest, and prints the outward steps it authorizes. It does
       # not perform them, and this lane cannot either: the tag belongs to the
       # component, whose repository the host's token has no write access to, and

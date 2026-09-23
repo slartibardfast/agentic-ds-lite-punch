@@ -1,4 +1,4 @@
-# The operator's surfaces, delivered
+# The documentation, delivered
 
 - Date: 2026-09-22
 - Milestone: plan/0011, all nine tasks receipted
@@ -8,9 +8,9 @@
 
 ## What shipped
 
-An operator now has five surfaces where there was one README.
+An operator now has five places to read where there was one README.
 
-| Surface | Where it lives | What holds it |
+| What | Where it lives | What holds it |
 |---|---|---|
 | the help text, with `--version` | the binary | a test that reads the parser's own arms from the source |
 | the manual page | the release asset `ds-lite-punch.8`, and `/usr/share/man/man8/` on the box | that test again, plus the appended sections |

@@ -7,15 +7,15 @@
 
 ## Context and Problem Statement
 
-The operator surfaces shipped as `v0.2.0`, and that release exposed a change in
+The documentation shipped as `v0.2.0`, and that release exposed a change in
 this component's build. Up to `0.1.5` a version bump did not move the artifact,
 because nothing compiled the version in: the pinned commit and the tagged bump
 commit produced the same bytes, and one recorded hash covered both. `v0.2.0`
 added `--version`, which prints the crate version, so the string is compiled in
 and the bytes now move with every bump.
 
-The host's reproducible lane said so in its own words when the pin ran ahead of
-the recorded hash:
+The host's reproducible lane reported it as a drift when the pin ran ahead of
+the recorded hash, in the line it printed:
 
 ```host-lint:ignore
 DRIFT    ds-lite-punch rebuild is 0bdb6b926485 but recorded a452cf38c9c7 — NOT reproducible

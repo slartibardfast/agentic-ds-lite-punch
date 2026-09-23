@@ -411,3 +411,11 @@
     evidence = re-recorded after the plan's verify text says home page, and the site's own front page is docs/index.md served from docs
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-22
+
+[receipt "plan/0011#record"]
+    disposition = done
+    verify = the host's pin names the commit that carries the release, the host's
+    inputs = the component's lane output, the artifact record, the tagged release
+    evidence = re-recorded after the audit took plain words: the milestone is plan/0011-documentation and the record is results/RESULTS-2026-09-22-documentation.md, both renamed with their references; the verify text now says the pin names the commit that carries the release, which is what it does for v0.3.0 at d5657da
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-23

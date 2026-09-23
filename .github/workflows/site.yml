@@ -9,7 +9,7 @@ permissions:
 
 # Two pushes in quick succession start two publishes, and the later push is
 # rejected ("fetch first") because the earlier run owns the branch: measured on
-# 2026-09-21, when three upgrade commits landed together. Serialise them, so the
+# 2026-09-21, when three upgrade commits were pushed together. Serialise them, so the
 # later run supersedes rather than races.
 concurrency:
   group: site-gh-pages

@@ -1,15 +1,15 @@
-# Milestone: the operator's surfaces
+# Milestone: the documentation
 
 **Status:** done, 2026-09-22. The component's `--help` was one line of flag
 names, and the repository had no page for its operators. Both are closed, and
 the release `v0.2.0` carries the kit: the binary, the manual page, and the line
 that records the hash. The record is
-`results/RESULTS-2026-09-22-operator-surfaces.md`.
+`results/RESULTS-2026-09-22-documentation.md`.
 
 ## What this milestone is
 
 An operator who takes the release artifact has the binary and nothing else. The
-daemon's real configuration surface is `/etc/ds-lite-punch.env`, and the
+daemon's real configuration is `/etc/ds-lite-punch.env`, and the
 repository explains it in comments inside that file. Three keys the init script
 honours, `SLOT_RANGE`, `MAX_SLOTS` and `MAX_MAPS_PER_CLIENT`, appear in no
 shipped file at all. Nine log events arrive in syslog with names no page
@@ -32,11 +32,11 @@ with the program by a check it can re-run.
 ## Build sequence
 
 Nine tasks. The first pins the CLI definition the rest of the milestone quotes,
-the middle six produce the surfaces, and the last two hold them and record them.
+the middle six produce the documentation, and the last two hold them and record them.
 Every task carries verify and inputs; the mechanical verifies re-run at the
 gate.
 
-### Pin the CLI definition and generate the surface {#argdoc}
+### Pin the CLI definition and generate the help and the page {#argdoc}
 
 - verify: the generator rewrites its two outputs and leaves the working tree
   clean, and the root `Cargo.toml` and `Cargo.lock` are byte-identical to their
@@ -183,7 +183,7 @@ check that has never failed is a check nobody has tested.
 
 - depends: #lanes, #metadata
 
-- verify: the host's pin names the commit that carries the surfaces, the host's
+- verify: the host's pin names the commit that carries the release, the host's
   reproducible-build lane rebuilds from that pin and reproduces the artifact
   (the lane holds the container runtime, and this development host reports
   UNVERIFIABLE from its own `--verify-build`), every task above carries a
@@ -207,7 +207,7 @@ keeps the second copy of the command line from drifting.
 
 The stages are observable one at a time.
 
-1. **The surfaces, locally.** The generator runs, the help text and the page
+1. **The help and the page, locally.** The generator runs, the help text and the page
    exist, and `--help`, `--version` and `man` are read by hand on the
    workstation.
 2. **The pages, unlinked.** `docs/operators/` is written and reviewed on the

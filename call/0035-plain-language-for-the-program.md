@@ -1,4 +1,4 @@
-# Plain language for the surfaces: keepalive, owned, entry
+# Plain language for the program: keepalive, owned, entry
 
 - Status: accepted
 - Scope: the words the software uses for its own parts, and for its flags, log
@@ -7,7 +7,7 @@
 
 ## Context and Problem Statement
 
-The operator rejected three words in the shipped surfaces, one after another:
+The operator rejected three words in what shipped, one after another:
 `--max-rescues`, whose plural hid what the number counts; `hold`, a coinage this
 project invented for a mapping it keeps alive; and the comment vocabulary
 `rides` and `lands`, which is business jargon. The standard they set is simple
@@ -36,7 +36,7 @@ because `--version` compiles the version in.
 
 ## Consequences
 
-The surfaces, the help text, the manual page and the operator pages speak one
+The help text, the manual page and the operator pages speak one
 language, and the source comments speak it too. The path renames reach
 `plan/0009-mapping-keepalive-and-signalling` and
 `call/0026-tcp-keepalive-is-signalled-not-injected`.
