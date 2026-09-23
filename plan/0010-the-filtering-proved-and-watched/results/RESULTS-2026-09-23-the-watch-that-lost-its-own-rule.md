@@ -1,85 +1,90 @@
 # The watch that lost its own rule
 
-- Date: 2026-09-23
-- Milestone: plan/0010, found while reading the armed window a day earlier
-- Component: ds-lite-punch, tag `v0.3.2` at `ac66c716`, artifact
-  `ac2693ef59ae4b81102abbdbb23c69b49ba67ca4d2bc901f9170a9520021d009`
+- Date: 2026-09-23, the finding made on 2026-09-22
+- Milestone: plan/0010
+- Component: ds-lite-punch. The fix is tag `v0.3.4` at `13a5fc0`, artifact
+  `6b2951b56894931d644883df27e22a5f2f80e33a74ac38683438eb4220730fdc`, deployed to
+  the router and exercised there
 - Ground truth: the `MEMORY.md` entries of these dates win where this file and a
   plan document disagree
 
 ## What happened
 
-The watch was armed for a day on 2026-09-21. Its counter froze at 22:14:09 UTC
-on the 22nd, and at 22:59:09 UTC it raised its alarm:
+The watch was armed for a day on 2026-09-21, and it raised its alarm on the
+22nd:
 
 ```host-lint:ignore
 {"event":"carrier-silent","last_probe":1790028849,"waited":2700,"epoch":1790031549}
 ```
 
-The helper had not stopped. Its journal carried six sends after the freeze, one
-every 900 seconds, and the tuple it named was the one the carrier held.
+The alarm belonged to the instrument. The counter stood at `packets 10`, frozen
+since 22:14:09 UTC, and nothing in the ruleset named `carrier_probe`: the counter
+object and the two accept sets had survived while every rule that referenced them
+had gone. The helper kept sending: its journal carries six sends after the freeze.
+Probes sent by hand from a fresh source port arrived at the WAN and
+translated through to the client. The carrier was forwarding.
 
-## The alarm belonged to the instrument
+The rules live in `inet fw4`, a table the router's firewall rebuilds. pbr
+provoked rebuilds while the window ran, each logged as `Sending reload signal to
+pbr due to firewall action: includes`, at 22:20:37, 22:23:37, 22:38:38, 22:41:38,
+00:08:43 and 00:11:43 UTC. `ensure_carrier_probe()` ran at startup only, and
+nothing re-converged it.
 
-The counter stood still:
+## The fix, and the three defects it carried
 
-```host-lint:ignore
-counter carrier_probe {
-        packets 10 bytes 440
-}
-```
+The intent was one change: the watch converges on every poll, and it says so when
+a rule had to be put back. The box took three more attempts to accept it, and
+each attempt found a defect in the fix itself.
 
-Nothing in the ruleset named the counter, and the two accept sets that sat beside
-it in the firewall's tables were absent as well. The counter object and the sets
-themselves had survived, which is what made the reading look unchanged.
+**The rule was not spelled the way nft stores it.** nft lists the rule as
+`counter name "carrier_probe"`, quotes included, and the install looked for the
+text without them. So the install's search text missed the rule it had stored. Each poll took the
+chain for one without the rule and inserted another copy: 39 copies in a few minutes,
+120 in the forward chain and 114 in the input chain by the time it was measured.
+Fixed in `v0.3.3`: the text is the text the listing carries, and every insert is
+read back out of the chain before it is believed. Every copy after the first is
+now deleted, which is what cleared the chains the storm had built.
 
-The carrier was still forwarding. Probes sent by hand from a fresh source port
-arrived at the WAN and translated through to the client, which is the whole path
-the watch exists to measure:
+**A no-op counted as a change.** `nft add counter` on a counter that already
+exists reports success and changes nothing, and the install counted that success
+as a repair. The result was a `carrier-watch-reinstalled` event every five
+seconds while no rule moved. Fixed in `v0.3.4`: the counter is created only when
+a read says it is absent, and only a real move is announced.
 
-```host-lint:ignore
-170.9.238.141.41060 > 192.168.0.21.40000: UDP, length 16     # eth1, the WAN
-170.9.238.141.41070 > 192.168.21.12.40002: UDP, length 16    # br-lan, the client
-```
+**An unreadable chain was a shrug.** `nft` segfaults intermittently on this box,
+41 crashes in its uptime, in `libnftables.so.1.1.0`, and a listing that came back
+empty was treated as "nothing to do". That is what hid the first two defects for
+as long as it did. Fixed in `v0.3.4`: a chain that cannot be read is an error the
+operator sees.
 
-## The cause
+## The proof on the box
 
-The counting rules are inserted into `inet fw4`, a table the router's firewall
-rebuilds. pbr provoked rebuilds while the window ran, each one logged as
-`Sending reload signal to pbr due to firewall action: includes`, at 22:20:37,
-22:23:37, 22:38:38, 22:41:38, 00:08:43 and 00:11:43 UTC. A rebuild takes the
-rules the daemon inserted and leaves the counter object in place.
+`v0.3.4` is deployed to the router, at the release's own bytes (the binary's md5
+agrees with the asset), and the router runs it now.
 
-`ensure_carrier_probe()` ran at startup only, and nothing re-converged it. The watch read a plausible number for two and a half hours and then reported
-a silence that was its own.
+| What was done | What the box showed |
+|---|---|
+| the service started | one rule in the forward chain, one in the input chain |
+| `fw4 reload` | one `carrier-watch-reinstalled` within a poll, and one rule back in each chain |
+| three marked datagrams from the vantage | the counter rose by exactly three, with `carrier-probe` events for the rises |
 
-## The fix, in v0.3.2
+The chain held one rule, the rebuild drew one repair event, and the probes were
+counted. The carrier had also moved the mapping's external port twice while this ran,
+sitting at 59278 at first and at 59348 later, which is the watch's own first named cause and the reason a
+helper must be re-pointed before it is believed.
 
-The watch converges on every poll. It installs its rules when a chain does not
-carry them, and replaces any older variant that names the counter, so a rule lost
-to a rebuild is back before the next interval closes. The reading the convergence
-acts on is pure and tested, `carrier_probe_chain_state`, with the wipe as the
-case where the chain carries the object and no rule names it.
+## Two notes from the deploy
 
-A repair is reported, because the counter cannot show it:
+The counter's absolute value is not a probe count. During the diagnosis a
+hand-written rule counted every TCP packet to the slot port, so the value carries
+that traffic; only a rise matters, and the daemon reports the rises.
 
-```host-lint:ignore
-{"event":"carrier-watch-reinstalled","counter":"carrier_probe","epoch":...}
-```
-
-That event is in the manual page's LOG EVENTS and in the operator pages, so an
-alarm raised before a repair can be read as the instrument's rather than the
-carrier's.
-
-## The proof that is owed
-
-The on-box reproduction: reload the router's firewall, watch the daemon put its
-rules back within one poll, then send a marked probe from the vantage and watch
-the counter rise. It is owed because the deploy writes the router's own
-configuration, which this session's policy holds for the operator's approval. The
-router still runs 0.1.5 with the rules missing, which is exactly the state the
-fix addresses, so the reproduction is one deploy away, and this record is the
-undertaking rather than a claim that it ran.
+The deploy cannot replace the binary while the daemon runs: writing that file is
+refused with `Text file busy`. The upgrade page now stops the service first,
+which is where that instruction belongs. `/etc/ds-lite-punch.env` also had to be
+edited before the restart, because the release that renamed `HOLD` to `KEEPALIVE`
+reads a key the router's file did not set, and the upgrade page carries that
+rename for an operator.
 
 ## What the window did prove
 

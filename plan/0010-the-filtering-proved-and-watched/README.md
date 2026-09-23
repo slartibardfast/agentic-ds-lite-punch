@@ -1,13 +1,12 @@
 # Milestone: the carrier's filtering, proved and watched
 
-**Status:** open, reopened 2026-09-21 to add `#watch-forward-path`: arming the
-watch for its authorized day found that the milestone's own ingress translation
-had moved the probe out of the chain the counting rule lived in, so the counter
-stayed at zero while the marked datagram arrived. The fix rides the component's
-lane, and the window's record is
-`RESULTS-2026-09-21-the-probe-the-translation-hid.md`. Everything below is done
-and was verified before that.
-Records under `results/`:
+**Status:** closed 2026-09-23. The watch counts, it puts its own rules back after
+a firewall rebuild, and it names the moment it did: a rebuild was followed by one
+repair event within a poll and one rule in each chain, and three marked datagrams
+raised the counter by three. Getting there found the instrument's own rule lost
+to a firewall rebuild, then three defects in the repair. The record is
+`RESULTS-2026-09-23-the-watch-that-lost-its-own-rule.md`. Record under
+`results/`:
 `RESULTS-2026-09-20-stranger-probe.md`,
 `RESULTS-2026-09-20-alarm-proof.md`,
 `RESULTS-2026-09-20-inbound-translation.md` and
