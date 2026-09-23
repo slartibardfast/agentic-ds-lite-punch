@@ -3007,3 +3007,40 @@ release cannot carry a configuration file for one. And the carrier reassigned th
 mapping's external port while the window ran, from 59278 to 59348, which is the
 watch's own first named cause and worth knowing before reading any silence as the
 carrier's.
+
+**The watch is fixed, and the box found three defects in the fix itself.** The
+intended change was one: converge the counting rules on the poll and say when a
+rule had to be put back. It took three releases to survive contact with the
+router, and every defect was in the repair rather than in the original design.
+`v0.3.2` announced a repair every five seconds while nothing moved, because the
+install searched for the rule text `counter name carrier_probe` while nft stores
+`counter name "carrier_probe"`: the quotes are load bearing, so the install read
+its own rule as absent and added a copy per poll, 39 copies in minutes and 120 in
+the forward chain with 114 in the input by the time it was measured. `v0.3.3`
+spelled the text as the listing carries it, read every insert back out of the
+chain, and deleted every copy after the first, which cleared the storm's chains.
+`v0.3.4` stopped counting `nft add counter` on an existing counter as a change —
+it reports success and does nothing — and made an unreadable chain an error the
+operator sees, because a listing that came back empty was treated as "nothing to
+do" and hid the other two. `nft` segfaults on this box intermittently, 41 crashes
+in `libnftables.so.1.1.0`, which is what produced those empty listings.
+
+Proof on the box, with `v0.3.4` deployed at the release's own bytes: one rule in
+each chain at rest; `fw4 reload` drew exactly one `carrier-watch-reinstalled`
+within a poll and put one rule back in each chain; three marked datagrams from
+the vantage raised the counter by exactly three, with `carrier-probe` events for
+the rises. `plan/0010-the-filtering-proved-and-watched` is closed, and the record
+is `results/RESULTS-2026-09-23-the-watch-that-lost-its-own-rule.md`. The pin names
+`13a5fc0`, the commit `v0.3.4` tags, with
+`6b2951b56894931d644883df27e22a5f2f80e33a74ac38683438eb4220730fdc`, and the
+release receipt records `v0.3.4@6b2951b5…` authorized by plan/0010.
+
+Four facts from the deploy worth keeping. The binary cannot be replaced while the
+daemon runs: writing it is refused with `Text file busy`, so the service stops
+first, and the upgrade page now says so. `/etc/ds-lite-punch.env` had to be
+edited before the restart, since 0.3.1 renamed `HOLD` to `KEEPALIVE` and the
+router's file still set the old key. An annotated tag resolves to a tag object,
+so `rev-parse v0.3.4` is not the commit to record; `v0.3.4^{commit}` is. And the
+carrier moved the mapping's external port twice during the work, 59278 then
+59348, which is the watch's own first named cause and the reason a helper left
+pointing at an old tuple reads as a carrier silence.
