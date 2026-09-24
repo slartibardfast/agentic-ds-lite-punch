@@ -9701,6 +9701,40 @@ so <code>rev-parse v0.3.4</code> is not the commit to record; <code>v0.3.4^{comm
 carrier moved the mapping's external port twice during the work, 59278 then
 59348, which is the watch's own first named cause and the reason a helper left
 pointing at an old tuple reads as a carrier silence.</p>
+<h2 id="2026-09-24--the-artifact-proof-what-a-comment-line-moves-and-the-release-it-owed"><a class="header" href="#2026-09-24--the-artifact-proof-what-a-comment-line-moves-and-the-release-it-owed">2026-09-24 — the artifact proof, what a comment line moves, and the release it owed</a></h2>
+<p>The comment collapse was proved before the release, and the proof found the
+opposite of what the pass assumed. Builds of <code>ea90ab5</code> and <code>648e45f</code>, a pair
+whose diff is comments only, checked line by line, hashed differently. Two
+controls settled it: rebuilding <code>ea90ab5</code> unchanged reproduced <code>6c2d88f3…</code> byte
+for byte, and rebuilding it with all 3359 full-line comments blanked in place
+reproduced that same hash. Comment text never reaches the binary; the lines a
+comment occupies do, because Rust embeds <code>file:line:column</code> in the location of
+every panicking call site and deleting a comment shifts every line below it. A
+comments-only pass therefore still owes its release, and the proof that a pass
+moved no code is to blank its comments rather than delete them. <code>.host-software</code>
+now records this beside the version-bump consequence.</p>
+<p><code>v0.3.5</code> is released from <code>c7c4a33</code>, the commit the tag names, with
+<code>912f54aec733d35558af6ebcd409b697dc7833233df4361469ced677c4cccba1</code> read three
+ways and agreeing: the Release lane's <code>artifact-record.txt</code>, the component lane's
+<code>release-build</code> job on the same commit, and a plain <code>curl</code> of the attached
+binary. The pin carries the tagged commit and that hash in one commit, and the
+release receipt is <code>v0.3.5@912f54ae…</code> authorized by plan/0004. It carries the
+DeviceProtection sanitising fix, the corrected state directory, the collapsed
+comments and the two CI gates.</p>
+<p>Then the gate ran, and the remap phase re-opened on five undispositioned tells:
+two lines in <code>call/0037</code> that quote the shapes the rule names, and three in the
+harvest record (a kernel version, a section reference, and a line carrying
+<code>epoch</code>). Both documents landed today, after the last remap receipt. Two
+front-foot facts came out of it, both measured: this host has no commit hook at
+all (<code>.git/hooks/pre-commit</code> absent, <code>core.hooksPath</code> unset, the component's bare
+store carries none either), and <code>host-lint</code> is not on PATH, so the naming lane
+runs only when <code>software --check</code> is invoked by hand. <code>host-lifecycle software --verify-setup</code> prints "setup complete: every artifact the recipe requires of this
+host is present" while that recheck is red, because the recipe never requires a
+host commit gate there: the gate <code>bootstrap</code> documents copying into the host is
+not an artifact <code>--verify-setup</code> requires, so installation and verification
+disagree and the green line is hollow. The five await the operator's choice of a
+sanction entry (<code>.host-remap</code> or <code>LEXICON</code>, which leaves both records unrewritten)
+or a reword of the live decision.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
