@@ -747,3 +747,75 @@ its comment now says the round trip holds for the seven actions it names and tha
 the table holds 28, which was counted rather than assumed. Widening the loop to
 the whole table stays open as a follow-up, because it is a proof change and this
 pass is the comment collapse. The correction is in `ea90ab5`.
+
+## The five modules the first pass missed
+
+Five modules kept comment runs the first pass did not reach: `keepalive.rs`,
+`mapping.rs`, `presence.rs`, `carrier.rs` and `forward.rs`. The facts those runs
+stated with no other home are here. The line numbers are from the component
+worktree at `56294a5`, the tree the collapse read.
+
+### keepalive.rs, the allowlist's policy and its chain
+
+- The two policy objects carry the project prefix because nft object names are
+  global to the table, and `ip dslp` is shared with the rest of the datapath
+  (keepalive.rs:38).
+- The selection chain hooks at prerouting priority -150, the mangle hook after
+  conntrack, and that hook is what attaches the policy at all: the same
+  statement at a pre-conntrack priority left the entry at the default 60 s on
+  this build (keepalive.rs:42, 108).
+- The install is guarded by a read of the table listing, because re-adding an
+  existing `ct timeout` object is an error under `nft -f` and the whole batch
+  would then apply nothing (keepalive.rs:121, 135).
+- Teardown deletes the chain first and the two policy objects after it
+  (keepalive.rs:123).
+- The install re-enters the table block that the named map and the CDC mirror
+  already occupy, and it never flushes or deletes, so the rest of the datapath
+  stays (keepalive.rs:239).
+
+**Carried elsewhere:** the 5m and 2h4m policy bodies with the RFC 4787 floor and
+the RFC 5382 established figure, the `protocol` keyword an object takes against
+the selection's `meta l4proto`, the inline address list, the empty allowlist
+leaving every flow at the router's own timeouts, and the address as the key with
+`ether saddr` unavailable are in MEMORY, call/0025, call/0026 and the results
+files of plan/0009.
+
+### mapping.rs, the tuple health machine
+
+- The rotation proofs take a symbolic threshold of 1 through 8, and the unwind
+  bounds are 10, 20 and 6 (mapping.rs:144, 165, 183).
+- `mark_suspect` moves at most one step, stays in range and resets the silence
+  count, and a single server makes it a no-op (mapping.rs:70).
+
+**Carried elsewhere:** the three states with their meanings, the 3-cycle
+threshold of about 6 s, the majority vote marking a server suspect, and the
+`Instant` that keeps `note_response` out of the proofs are in plan/0004's README
+and IMPLEMENTATION.md.
+
+### presence.rs, the presence rule
+
+The rule this module implements is stated in call/0030 in full: the neighbour
+table as the instrument, the ICMP echo as a trigger alone, `FAILED` and
+`INCOMPLETE` as absence, a probe that cannot run answering present, the
+two-miss threshold, and a static mapping that presence never releases. No fact
+in these comments is recorded here.
+
+### carrier.rs, the watch over the counter
+
+- The first poll adopts the counter's reading as the baseline, so a counter left
+  by an earlier run is not reported as an arrival (carrier.rs:42, 97).
+
+**Carried elsewhere:** the mark's eight bytes with its `@th,64,64` match, the
+three-interval window, the alarm firing once with a probe clearing it, and the
+from-start form are in call/0033, in the helper the component ships under
+`deploy/`, and in the results files of plan/0010.
+
+### forward.rs, the source-preserving forward
+
+- `IP_TRANSPARENT` is 19, the Linux value for the option that lets the bind take
+  a foreign source address (forward.rs:11).
+- `to_sockaddr_in` writes the port and the address in network byte order, which
+  is the order the kernel reads a `sockaddr_in` in (forward.rs:63, 65).
+
+**Carried elsewhere:** the per-datagram `IP_TRANSPARENT` forward with the peer's
+source address preserved is in plan/0004's IMPLEMENTATION.md and README.
