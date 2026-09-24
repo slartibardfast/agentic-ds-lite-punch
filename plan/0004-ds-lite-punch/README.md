@@ -453,3 +453,10 @@ soak runs end to end via that rig; no phone hotspot is needed.
   AFTR. Source-port preservation is not needed by this workload class. The
   measurement, the packets, and the one thing it does not establish are in
   [RESULTS-2026-09-17-switch-nat-type.md](RESULTS-2026-09-17-switch-nat-type.md).
+
+- **What the source comments used to say**, before they were collapsed to one
+  line each under [call/0037](../../call/0037-comments-are-one-line-and-technical.md),
+  is in
+  [RESULTS-2026-09-23-comment-harvest.md](RESULTS-2026-09-23-comment-harvest.md).
+  It is not a design document. It holds the facts that lived only in a comment,
+  and a note of what the brief and the records already carried.
