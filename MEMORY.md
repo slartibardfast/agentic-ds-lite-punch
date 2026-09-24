@@ -3044,3 +3044,42 @@ so `rev-parse v0.3.4` is not the commit to record; `v0.3.4^{commit}` is. And the
 carrier moved the mapping's external port twice during the work, 59278 then
 59348, which is the watch's own first named cause and the reason a helper left
 pointing at an old tuple reads as a carrier silence.
+
+## 2026-09-24 — the artifact proof, what a comment line moves, and the release it owed
+
+The comment collapse was proved before the release, and the proof found the
+opposite of what the pass assumed. Builds of `ea90ab5` and `648e45f`, a pair
+whose diff is comments only, checked line by line, hashed differently. Two
+controls settled it: rebuilding `ea90ab5` unchanged reproduced `6c2d88f3…` byte
+for byte, and rebuilding it with all 3359 full-line comments blanked in place
+reproduced that same hash. Comment text never reaches the binary; the lines a
+comment occupies do, because Rust embeds `file:line:column` in the location of
+every panicking call site and deleting a comment shifts every line below it. A
+comments-only pass therefore still owes its release, and the proof that a pass
+moved no code is to blank its comments rather than delete them. `.host-software`
+now records this beside the version-bump consequence.
+
+`v0.3.5` is released from `c7c4a33`, the commit the tag names, with
+`912f54aec733d35558af6ebcd409b697dc7833233df4361469ced677c4cccba1` read three
+ways and agreeing: the Release lane's `artifact-record.txt`, the component lane's
+`release-build` job on the same commit, and a plain `curl` of the attached
+binary. The pin carries the tagged commit and that hash in one commit, and the
+release receipt is `v0.3.5@912f54ae…` authorized by plan/0004. It carries the
+DeviceProtection sanitising fix, the corrected state directory, the collapsed
+comments and the two CI gates.
+
+Then the gate ran, and the remap phase re-opened on five undispositioned tells:
+two lines in `call/0037` that quote the shapes the rule names, and three in the
+harvest record (a kernel version, a section reference, and a line carrying
+`epoch`). Both documents landed today, after the last remap receipt. Two
+front-foot facts came out of it, both measured: this host has no commit hook at
+all (`.git/hooks/pre-commit` absent, `core.hooksPath` unset, the component's bare
+store carries none either), and `host-lint` is not on PATH, so the naming lane
+runs only when `software --check` is invoked by hand. `host-lifecycle software
+--verify-setup` prints "setup complete: every artifact the recipe requires of this
+host is present" while that recheck is red, because the recipe never requires a
+host commit gate there: the gate `bootstrap` documents copying into the host is
+not an artifact `--verify-setup` requires, so installation and verification
+disagree and the green line is hollow. The five await the operator's choice of a
+sanction entry (`.host-remap` or `LEXICON`, which leaves both records unrewritten)
+or a reword of the live decision.
