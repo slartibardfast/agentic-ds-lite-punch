@@ -8,11 +8,11 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = 13a5fc0645a675fa0a96381705656601d3f0fcec
+	pin   = c7c4a33d76f5ef38ca232cf94a115f23232cc62b
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
-	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 6b2951b56894931d644883df27e22a5f2f80e33a74ac38683438eb4220730fdc
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 912f54aec733d35558af6ebcd409b697dc7833233df4361469ced677c4cccba1
 # The toolchain is a digest-pinned container rather than a target triple:
 # `--verify-build` runs the recorded `build` inside it, so the image is what
 # reproduces the artifact and a movable tag would invalidate every hash
@@ -24,7 +24,11 @@
 # version bump moves those bytes from 0.2.0 on: `--version` prints the crate
 # version, so the string is compiled into the binary, and the pin therefore
 # names the commit that carries the bump, which is also the commit the tag
-# points at (call/0036).
+# points at (call/0036). A comment line moves those bytes as well: Rust embeds
+# the source position of every panicking call site, so the lines a comment
+# occupies reach the binary and a comments-only pass still owes its release.
+# To prove a pass moved no code, blank its comments in place rather than delete
+# them, which rebuilds the pre-pass hash exactly.
 #
 # This development host has no container runtime, so its own target/ builds
 # with the ambient compiler and hashes differently. That is a property of the
