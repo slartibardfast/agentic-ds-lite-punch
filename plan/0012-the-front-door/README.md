@@ -55,6 +55,15 @@ distinguishes the source. The console acceptance in
 task measures it deliberately and characterises the filtering, because a front
 door rests on the answer.
 
+The first run is recorded in
+[the results](results/RESULTS-2026-09-26-stranger-arrival.md), and its answer
+narrows the premise: a held port admits the peers the line talks to and refuses a
+stranger, which is what the console's own NAT Type 2 verdict means. The second
+half of this task is therefore the pinhole test: the slot's own socket sends a
+datagram toward the front's address, and the front then reaches the held port.
+Only that socket can create the carrier's state, because the mapping belongs to
+the inner tuple.
+
 ### Hold a TCP slot for the front {#hold-tcp-slot}
 
 - depends: #stranger-arrival
