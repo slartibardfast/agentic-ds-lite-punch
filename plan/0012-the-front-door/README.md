@@ -1,0 +1,134 @@
+# Milestone: the front door
+
+**Status:** in progress, opened 2026-09-26. The architecture is settled in
+[call/0038](../call/0038-the-front-door-is-a-held-port.md), and what the control
+channel costs the binary is settled in
+[call/0039](../call/0039-the-control-channel-carries-a-tls-client.md).
+
+## What this milestone is
+
+A service on this line is reached today by something that terminates a connection
+outside the line and re-originates it inside: an HTTP or database proxy on a
+public host, or a tunnel that carries every port. The port this daemon already
+holds changes the question. A carrier mapping is a real external address and port
+while it lives, the daemon keeps it alive and republishes it when the carrier
+moves it, and a granted TCP slot already accepts an outside arrival and splices
+it onto the br-lan target. What was missing was everything outside the line: a
+public endpoint, a route that turns a name into the held port, and a decision
+about who may use it.
+
+This milestone builds that outside end. One front serves the ports held here and
+the daemon tells it where they are, which leaves an address that can move and a
+name that routes, with no tunnel in the data path.
+
+The measurement comes first on purpose. A front door is worth nothing if the
+carrier refuses a stranger's arrival at the mapping, and that property is
+currently implied rather than measured.
+
+The reader is a person who runs a small service behind a carrier NAT and wants a
+name on it rather than a proxy in front of it. Whether that reader is a new
+persona or the operator this host already carries is settled before the recipe is
+written, because the recipe page is written for that person.
+
+What this milestone does not do, and the recipe repeats: it does not make the
+carrier's port stable or reservable, and it does not give the LAN service the
+client's own address on the TCP path.
+
+## Build sequence
+
+Eight tasks. The first measures the property everything else rests on, the next
+two put a port and a route in place, three more make the control channel real,
+and the last two write the recipe and record the milestone. Every task carries a
+verify, and the mechanical ones re-run at the gate.
+
+### Measure a stranger's arrival {#stranger-arrival}
+
+- verify: attested operator
+
+From the vantage, send a datagram and a connection attempt to a held tuple from a
+source that is not the keepalive peer: an address the STUN servers do not use,
+and no prior outbound traffic from the line toward it. Read the box while it
+happens, with the daemon's counter and log, and record what arrived, what the
+forwarded packet looked like at eth1, and whether the carrier's filtering
+distinguishes the source. The console acceptance in
+[plan/0006](../0006-ps3-requirements/README.md) already implies this property; the
+task measures it deliberately and characterises the filtering, because a front
+door rests on the answer.
+
+### Hold a TCP slot for the front {#hold-tcp-slot}
+
+- depends: #stranger-arrival
+- verify: attested operator
+
+The keepalive arm already holds a UDP port. The front needs a TCP slot, and the
+first external handshake through it recorded. Two routes, and this task's record
+names the one taken: request the slot once from a LAN client over the existing
+PCP or UPnP facade, which persists it in `leases.tsv` and restores it at start,
+or let `--static-map` carry a protocol, which is a parser change with a test
+first and a regenerated help text and manual page.
+
+### Route two classes of name at the front {#front-config}
+
+- depends: #hold-tcp-slot
+- verify: attested operator
+
+The front's configuration, with both classes in one file: a name whose service
+does its own TLS is passed through by `ssl_preread`, and a name that needs
+central protection terminates at the front and demands the client certificate.
+The check is `nginx -t` on the front, plus a handshake from a client holding a
+certificate and from one that does not, since an admission rule nobody exercises
+is a rule nobody has read.
+
+### Carry the routing table to the front {#control-channel}
+
+- depends: #hold-tcp-slot
+- verify: cargo test --release --locked
+- inputs: the control channel module under `src/`, `Cargo.toml`, `Cargo.lock`
+
+The daemon opens HTTPS to the front's endpoint and pushes the table whole: each
+held slot, its carrier tuple, the name the front routes, and whether the class is
+pass-through or terminated. It authenticates with its own client certificate. A
+failed push is followed by the whole table again rather than a delta, so a
+reconnect repairs whatever was missed. Unit tests cover the request body and the
+retry.
+
+### Renew the lease and let it expire {#lease}
+
+- depends: #control-channel
+- verify: cargo test --release --locked
+
+Each entry the daemon pushes carries a duration it refreshes, so a line that
+stops renewing stops being routed. Tests cover the renewal, the expiry, and the
+drop of a stale entry.
+
+### Pin the dependency bundle {#deps-bundle}
+
+- depends: #control-channel
+- verify: host-lifecycle software --verify-build .
+- inputs: `.host-software`, `Cargo.lock`
+
+The TLS client is the first dependency this crate has taken beyond `tokio` and
+`libc`, and [call/0039](../call/0039-the-control-channel-carries-a-tls-client.md)
+settles what that owes: a hash-pinned bundle recorded in `.host-software`, so the
+artifact is reproduced from pinned inputs with the network off.
+
+### Write the front-door recipe {#recipe}
+
+- depends: #stranger-arrival, #front-config
+- verify: sh tools/link-check.sh
+
+An operator page for the person this milestone serves: the front's configuration
+in full, the tuple the daemon publishes and how the front learns it, the two
+classes of name, the counterpart on the UDP path for QUIC, and the two
+asymmetries, where QUIC keeps the client's own address and HTTPS does not. David
+Álvarez Rosa's "Self-Hosting Behind CGNAT" is cited as the inspiration for the
+front-door use case.
+
+### Record the milestone {#record}
+
+- depends: #recipe, #deps-bundle, #lease
+- verify: host-lifecycle software --check .
+
+The results document: the measurement's transcript and what the carrier's
+filtering turned out to be, the handshake through the held port, the front's
+configuration as it ran, and the size the binary grew to.
