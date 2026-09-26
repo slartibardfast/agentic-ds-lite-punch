@@ -81,12 +81,15 @@ first and a regenerated help text and manual page.
 - depends: #hold-tcp-slot
 - verify: attested operator
 
-The front's configuration, with both classes in one file: a name whose service
-does its own TLS is passed through by `ssl_preread`, and a name that needs
-central protection terminates at the front and demands the client certificate.
-The check is `nginx -t` on the front, plus a handshake from a client holding a
-certificate and from one that does not, since an admission rule nobody exercises
-is a rule nobody has read.
+The front's configuration, with both classes in one file, is written and proven:
+`deploy/front-door/nginx.conf` carries the split, and
+`deploy/front-door/test-local.sh` renders it, mints a throwaway authority, and
+asserts that a pass-through name reaches the service's own certificate, that a
+protected name is refused without a client certificate, and that the same name is
+served with one. The script runs in the component's own lane, where nginx can be
+installed. This task's verify stays an attestation because a clone of the host
+carries no nginx, and a mechanical clause an environment cannot meet is not
+evidence.
 
 ### Carry the routing table to the front {#control-channel}
 
