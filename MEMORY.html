@@ -2985,6 +2985,17 @@ not an artifact <code>--verify-setup</code> requires, so installation and verifi
 disagree and the green line is hollow. The five await the operator's choice of a
 sanction entry (<code>.host-remap</code> or <code>LEXICON</code>, which leaves both records unrewritten)
 or a reword of the live decision.</p>
+<p>The reflection produced a report upstream, <code>connollydavid/host#24</code>, written from
+the bench's own seat rather than the lead's, because each harm in this pass landed
+where a worker stands: a <code>git add -A</code> that swept three workers' files into one
+commit, a <code>#[cfg(kani)]</code> module that no lane compiles (measured:
+<code>RUSTFLAGS='--cfg kani' cargo check</code> dies on the unresolved <code>kani</code> crate in 135
+errors, and no <code>kani:</code> obligation is declared, so the code is invisible to the
+gate as well as to <code>cargo test</code>), a comment-only diff that moves the shipped
+bytes, a module inventory typed by hand and truncated, and the naming sweep with
+no automatic trigger in this host while <code>--verify-setup</code> reads the same tree as
+complete. A report is not a settlement: the five tells still await the operator's
+choice of sanction or reword.</p>
 
                     </main>
 
