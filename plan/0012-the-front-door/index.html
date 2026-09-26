@@ -1,0 +1,344 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Milestone: the front door - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../../cast/operator.html"><strong aria-hidden="true">1.3.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../../plan-index.html"><strong aria-hidden="true">2.</strong> Plan</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/index.html"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/index.html"><strong aria-hidden="true">2.7.</strong> Milestone: the carrier's filtering, proved and watched</a></li><li class="chapter-item expanded "><a href="../../plan/0011-documentation/index.html"><strong aria-hidden="true">2.8.</strong> Milestone: the documentation</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/index.html" class="active"><strong aria-hidden="true">2.9.</strong> Milestone: the front door</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li><li class="chapter-item expanded "><a href="../../call/0026-tcp-keepalive-is-signalled-not-injected.html"><strong aria-hidden="true">4.15.</strong> The TCP half of the hold: what can be held, and what can only be said</a></li><li class="chapter-item expanded "><a href="../../call/0027-collisions-for-punched-ports.html"><strong aria-hidden="true">4.16.</strong> Collision rules for ports nobody allocated: the punch and the lease table</a></li><li class="chapter-item expanded "><a href="../../call/0028-a-shared-tuple-is-reachable-and-the-incumbent-keeps-it.html"><strong aria-hidden="true">4.17.</strong> A shared tuple is reachable, and the incumbent keeps it</a></li><li class="chapter-item expanded "><a href="../../call/0029-the-named-device-is-the-admission.html"><strong aria-hidden="true">4.18.</strong> The hold's admission is the named device, its liveness is the device and its peers, and a failed write is never fatal</a></li><li class="chapter-item expanded "><a href="../../call/0030-a-mapping-ends-with-its-device.html"><strong aria-hidden="true">4.19.</strong> A mapping asked for by a device ends when that device leaves, and never when it is quiet</a></li><li class="chapter-item expanded "><a href="../../call/0031-the-datapath-needs-no-listing.html"><strong aria-hidden="true">4.20.</strong> The datapath never needs a listing, and an intermittent nft crash is tolerated</a></li><li class="chapter-item expanded "><a href="../../call/0032-the-builder-of-record-is-the-lane.html"><strong aria-hidden="true">4.21.</strong> The builder of record is the CI lane, and a deployment takes its artifact</a></li><li class="chapter-item expanded "><a href="../../call/0033-the-filtering-is-watched-from-outside.html"><strong aria-hidden="true">4.22.</strong> The filtering is watched by a stranger's probe, and the daemon is told</a></li><li class="chapter-item expanded "><a href="../../call/0034-the-repositories-are-public-and-a-tag-is-the-release.html"><strong aria-hidden="true">4.23.</strong> The repositories are public, and a tag is the release</a></li><li class="chapter-item expanded "><a href="../../call/0035-plain-language-for-the-program.html"><strong aria-hidden="true">4.24.</strong> Plain language for the program: keepalive, owned, entry</a></li><li class="chapter-item expanded "><a href="../../call/0036-the-pin-names-the-tag-the-bytes-come-from.html"><strong aria-hidden="true">4.25.</strong> The release's bytes move with the version, so the pin names the tag</a></li><li class="chapter-item expanded "><a href="../../call/0037-comments-are-one-line-and-technical.html"><strong aria-hidden="true">4.26.</strong> Comments are one line, and technical</a></li><li class="chapter-item expanded "><a href="../../call/0038-the-front-door-is-a-held-port.html"><strong aria-hidden="true">4.27.</strong> A port is served from outside the line by a front the daemon tells</a></li><li class="chapter-item expanded "><a href="../../call/0039-the-control-channel-carries-a-tls-client.html"><strong aria-hidden="true">4.28.</strong> The control channel carries a TLS client, and the build carries a bundle</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../MIGRATION.html"><strong aria-hidden="true">6.1.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../../STRUCTURE.html"><strong aria-hidden="true">6.2.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../../UPGRADING.html"><strong aria-hidden="true">6.3.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="milestone-the-front-door"><a class="header" href="#milestone-the-front-door">Milestone: the front door</a></h1>
+<p><strong>Status:</strong> in progress, opened 2026-09-26. The architecture is settled in
+<a href="../call/0038-the-front-door-is-a-held-port.html">call/0038</a>, and what the control
+channel costs the binary is settled in
+<a href="../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>.</p>
+<h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
+<p>A service on this line is reached today by something that terminates a connection
+outside the line and re-originates it inside: an HTTP or database proxy on a
+public host, or a tunnel that carries every port. The port this daemon already
+holds changes the question. A carrier mapping is a real external address and port
+while it lives, the daemon keeps it alive and republishes it when the carrier
+moves it, and a granted TCP slot already accepts an outside arrival and splices
+it onto the br-lan target. What was missing was everything outside the line: a
+public endpoint, a route that turns a name into the held port, and a decision
+about who may use it.</p>
+<p>This milestone builds that outside end. One front serves the ports held here and
+the daemon tells it where they are, which leaves an address that can move and a
+name that routes, with no tunnel in the data path.</p>
+<p>The measurement comes first on purpose. A front door is worth nothing if the
+carrier refuses a stranger's arrival at the mapping, and that property is
+currently implied rather than measured.</p>
+<p>The reader is a person who runs a small service behind a carrier NAT and wants a
+name on it rather than a proxy in front of it. Whether that reader is a new
+persona or the operator this host already carries is settled before the recipe is
+written, because the recipe page is written for that person.</p>
+<p>What this milestone does not do, and the recipe repeats: it does not make the
+carrier's port stable or reservable, and it does not give the LAN service the
+client's own address on the TCP path.</p>
+<h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
+<p>Eight tasks. The first measures the property everything else rests on, the next
+two put a port and a route in place, three more make the control channel real,
+and the last two write the recipe and record the milestone. Every task carries a
+verify, and the mechanical ones re-run at the gate.</p>
+<h3 id="stranger-arrival"><a class="header" href="#stranger-arrival">Measure a stranger's arrival</a></h3>
+<ul>
+<li>verify: attested operator</li>
+</ul>
+<p>From the vantage, send a datagram and a connection attempt to a held tuple from a
+source that is not the keepalive peer: an address the STUN servers do not use,
+and no prior outbound traffic from the line toward it. Read the box while it
+happens, with the daemon's counter and log, and record what arrived, what the
+forwarded packet looked like at eth1, and whether the carrier's filtering
+distinguishes the source. The console acceptance in
+<a href="../0006-ps3-requirements/README.html">plan/0006</a> already implies this property; the
+task measures it deliberately and characterises the filtering, because a front
+door rests on the answer.</p>
+<h3 id="hold-tcp-slot"><a class="header" href="#hold-tcp-slot">Hold a TCP slot for the front</a></h3>
+<ul>
+<li>depends: #stranger-arrival</li>
+<li>verify: attested operator</li>
+</ul>
+<p>The keepalive arm already holds a UDP port. The front needs a TCP slot, and the
+first external handshake through it recorded. Two routes, and this task's record
+names the one taken: request the slot once from a LAN client over the existing
+PCP or UPnP facade, which persists it in <code>leases.tsv</code> and restores it at start,
+or let <code>--static-map</code> carry a protocol, which is a parser change with a test
+first and a regenerated help text and manual page.</p>
+<h3 id="front-config"><a class="header" href="#front-config">Route two classes of name at the front</a></h3>
+<ul>
+<li>depends: #hold-tcp-slot</li>
+<li>verify: attested operator</li>
+</ul>
+<p>The front's configuration, with both classes in one file: a name whose service
+does its own TLS is passed through by <code>ssl_preread</code>, and a name that needs
+central protection terminates at the front and demands the client certificate.
+The check is <code>nginx -t</code> on the front, plus a handshake from a client holding a
+certificate and from one that does not, since an admission rule nobody exercises
+is a rule nobody has read.</p>
+<h3 id="control-channel"><a class="header" href="#control-channel">Carry the routing table to the front</a></h3>
+<ul>
+<li>depends: #hold-tcp-slot</li>
+<li>verify: cargo test --release --locked</li>
+<li>inputs: the control channel module under <code>src/</code>, <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
+</ul>
+<p>The daemon opens HTTPS to the front's endpoint and pushes the table whole: each
+held slot, its carrier tuple, the name the front routes, and whether the class is
+pass-through or terminated. It authenticates with its own client certificate. A
+failed push is followed by the whole table again rather than a delta, so a
+reconnect repairs whatever was missed. Unit tests cover the request body and the
+retry.</p>
+<h3 id="lease"><a class="header" href="#lease">Renew the lease and let it expire</a></h3>
+<ul>
+<li>depends: #control-channel</li>
+<li>verify: cargo test --release --locked</li>
+</ul>
+<p>Each entry the daemon pushes carries a duration it refreshes, so a line that
+stops renewing stops being routed. Tests cover the renewal, the expiry, and the
+drop of a stale entry.</p>
+<h3 id="deps-bundle"><a class="header" href="#deps-bundle">Pin the dependency bundle</a></h3>
+<ul>
+<li>depends: #control-channel</li>
+<li>verify: host-lifecycle software --verify-build .</li>
+<li>inputs: <code>.host-software</code>, <code>Cargo.lock</code></li>
+</ul>
+<p>The TLS client is the first dependency this crate has taken beyond <code>tokio</code> and
+<code>libc</code>, and <a href="../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>
+settles what that owes: a hash-pinned bundle recorded in <code>.host-software</code>, so the
+artifact is reproduced from pinned inputs with the network off.</p>
+<h3 id="recipe"><a class="header" href="#recipe">Write the front-door recipe</a></h3>
+<ul>
+<li>depends: #stranger-arrival, #front-config</li>
+<li>verify: sh tools/link-check.sh</li>
+</ul>
+<p>An operator page for the person this milestone serves: the front's configuration
+in full, the tuple the daemon publishes and how the front learns it, the two
+classes of name, the counterpart on the UDP path for QUIC, and the two
+asymmetries, where QUIC keeps the client's own address and HTTPS does not. David
+Álvarez Rosa's "Self-Hosting Behind CGNAT" is cited as the inspiration for the
+front-door use case.</p>
+<h3 id="record"><a class="header" href="#record">Record the milestone</a></h3>
+<ul>
+<li>depends: #recipe, #deps-bundle, #lease</li>
+<li>verify: host-lifecycle software --check .</li>
+</ul>
+<p>The results document: the measurement's transcript and what the carrier's
+filtering turned out to be, the handshake through the held port, the front's
+configuration as it ran, and the size the binary grew to.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../plan/0011-documentation/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../where.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../plan/0011-documentation/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../where.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
