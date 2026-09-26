@@ -3083,3 +3083,15 @@ not an artifact `--verify-setup` requires, so installation and verification
 disagree and the green line is hollow. The five await the operator's choice of a
 sanction entry (`.host-remap` or `LEXICON`, which leaves both records unrewritten)
 or a reword of the live decision.
+
+The reflection produced a report upstream, `connollydavid/host#24`, written from
+the bench's own seat rather than the lead's, because each harm in this pass landed
+where a worker stands: a `git add -A` that swept three workers' files into one
+commit, a `#[cfg(kani)]` module that no lane compiles (measured:
+`RUSTFLAGS='--cfg kani' cargo check` dies on the unresolved `kani` crate in 135
+errors, and no `kani:` obligation is declared, so the code is invisible to the
+gate as well as to `cargo test`), a comment-only diff that moves the shipped
+bytes, a module inventory typed by hand and truncated, and the naming sweep with
+no automatic trigger in this host while `--verify-setup` reads the same tree as
+complete. A report is not a settlement: the five tells still await the operator's
+choice of sanction or reword.
