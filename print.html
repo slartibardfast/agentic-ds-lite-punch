@@ -3877,7 +3877,7 @@ does, since a clone of the host carries no nginx.</p>
 <h3 id="hold-tcp-slot"><a class="header" href="#hold-tcp-slot">Hold a TCP slot for the front</a></h3>
 <ul>
 <li>depends: #stranger-arrival</li>
-<li>verify: attested operator</li>
+<li>verify: attested call/0041</li>
 </ul>
 <p>The keepalive arm already holds a UDP port. The front needs a TCP slot, and the
 first external handshake through it recorded. Two routes, and this task's record
@@ -3952,7 +3952,7 @@ image and not from whichever compiler is nearest.</p>
 <h3 id="recipe"><a class="header" href="#recipe">Write the front-door recipe</a></h3>
 <ul>
 <li>depends: #stranger-arrival, #front-config</li>
-<li>verify: sh tools/link-check.sh</li>
+<li>verify: attested call/0041</li>
 </ul>
 <p>An operator page for the person this milestone serves: the front's configuration
 in full, the tuple the daemon publishes and how the front learns it, the two
