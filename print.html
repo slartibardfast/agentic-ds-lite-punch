@@ -3909,8 +3909,11 @@ retry.</p>
 <li>verify: cargo test --release --locked</li>
 </ul>
 <p>Each entry the daemon pushes carries a duration it refreshes, so a line that
-stops renewing stops being routed. Tests cover the renewal, the expiry, and the
-drop of a stale entry.</p>
+stops renewing stops being routed. The front enforces the withdrawal on its own
+today, while the control channel is unbuilt: the listener drops an entry whose
+pokes have stopped, reloads, and the harness proves the entry leaves with the
+pokes that kept it. Tests cover the renewal, the expiry, and the drop of a stale
+entry.</p>
 <h3 id="deps-bundle"><a class="header" href="#deps-bundle">Pin the dependency bundle</a></h3>
 <ul>
 <li>depends: #control-channel</li>
