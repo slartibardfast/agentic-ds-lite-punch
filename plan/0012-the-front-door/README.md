@@ -36,13 +36,28 @@ client's own address on the TCP path.
 
 ## Build sequence
 
-Eight tasks. The first measures the property everything else rests on, the next
-two put a port and a route in place, three more make the control channel real,
-and the last two write the recipe and record the milestone. Every task carries a
-verify, and the mechanical ones re-run at the gate.
+Ten tasks. The first gives the line a peer to speak to, the second measures what
+the carrier then admits, the next two put a port and a route in place, three more
+make the control channel real with its certificate programme beside it, and the
+last two write the recipe and record the milestone. Every task carries a verify,
+and the mechanical ones re-run at the gate.
+
+### Send from the slot, so a peer is admitted {#poke-the-front}
+
+- verify: cargo test --release --locked
+- inputs: the poke's helper in `src/keepalive.rs`, the keepalive loop and the flag parser in `src/main.rs`, `deploy/ds-lite-punch.init`
+
+The slot's own socket sends one datagram per interval to a nominated address.
+Only that socket holds the carrier's mapping state, so only it can create the
+state that admits a reply from the far end. The measurement above proved the
+carrier refuses a source the line has not spoken to; this task makes the front a
+source it has. The interval rides the existing keepalive loop, well inside the
+mapping's life. Tests assert that the datagram leaves from the slot's socket, on
+the interval, and that a slot with no nominated address sends nothing.
 
 ### Measure a stranger's arrival {#stranger-arrival}
 
+- depends: #poke-the-front
 - verify: attested operator
 
 From the vantage, send a datagram and a connection attempt to a held tuple from a
@@ -62,7 +77,10 @@ stranger, which is what the console's own NAT Type 2 verdict means. The second
 half of this task is therefore the pinhole test: the slot's own socket sends a
 datagram toward the front's address, and the front then reaches the held port.
 Only that socket can create the carrier's state, because the mapping belongs to
-the inner tuple.
+the inner tuple. The same run settles the shape of the restriction: whether the
+carrier remembers an address alone or an address and a port. That answer decides
+which source port the front may reach from, and it is load-bearing now, because
+the poke's destination port is the thing the carrier will remember.
 
 ### Hold a TCP slot for the front {#hold-tcp-slot}
 
@@ -78,7 +96,6 @@ first and a regenerated help text and manual page.
 
 ### Route two classes of name at the front {#front-config}
 
-- depends: #hold-tcp-slot
 - verify: attested operator
 
 The front's configuration, with both classes in one file, is written and proven:
@@ -91,9 +108,23 @@ installed. This task's verify stays an attestation because a clone of the host
 carries no nginx, and a mechanical clause an environment cannot meet is not
 evidence.
 
+### Mint the identities a client carries {#client-certificates}
+
+- depends: #front-config
+- verify: cargo test --release --locked
+- inputs: the certificate module under `src/`, the DeviceProtection store and roles in `src/dp.rs`
+
+A client's admission is carried by its certificate, minted after a
+DeviceProtection-authenticated login, so the front verifies a chain instead of
+asking the line about every connection. The authority lives on the line, issuance
+is gated by a login the existing store already authenticates, and a certificate
+is short-lived, which makes exclusion a decision not to renew rather than a
+revocation path to maintain. Tests cover issuance, and the exchange an identity
+holding no role cannot complete.
+
 ### Carry the routing table to the front {#control-channel}
 
-- depends: #hold-tcp-slot
+- depends: #hold-tcp-slot, #client-certificates
 - verify: cargo test --release --locked
 - inputs: the control channel module under `src/`, `Cargo.toml`, `Cargo.lock`
 
