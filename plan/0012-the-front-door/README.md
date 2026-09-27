@@ -34,6 +34,28 @@ What this milestone does not do, and the recipe repeats: it does not make the
 carrier's port stable or reservable, and it does not give the LAN service the
 client's own address on the TCP path.
 
+## What the measurements changed
+
+Four results moved this milestone's shape, and each one is recorded in the
+results directory beside this file.
+
+- A held port admits the peers the line has spoken to. A front reaches one only
+  after the line speaks first, and the daemon pokes for that reason, with the front
+  taking the poke's own source as the tuple.
+- A TCP slot learns its tuple only from a server that answers STUN over TCP. The
+  default list now carries one, which is the piece it lacked, and a granted TCP
+  mapping answers with its tuple where it used to answer NETWORK_FAILURE.
+- The UDP forward keeps the peer's own address and port, and the TCP splice
+  presents the router's. A front door over QUIC therefore behaves differently from
+  one over TLS, and the recipe says so.
+- A service host's replies need the line the mapping is on. That path takes a rule
+  of its own today, or the daemon-side rewrite when it lands.
+
+The front's own halves are built and proven in the component's lane: the split by
+name, the listener that learns the tuple, and the lease that withdraws an entry
+whose pokes have stopped. The tasks below that carry them stay attestations,
+because a clone of the host runs no nginx.
+
 ## Build sequence
 
 Ten tasks. The first gives the line a peer to speak to, the second measures what
