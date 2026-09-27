@@ -17,7 +17,12 @@ before the code, and the parts that stated a fact the code depends on sat in the
 same paragraph as the parts that recorded how the fact was learned, so neither
 could be found quickly. And the citations were tell-shaped: the naming audit
 reported 86 findings over the component, every one a line citing a clause number
-(`section 8.2`, `26.19`, `6.12`) or a brief item code (`I1`, `R5`, `B4`).
+or a brief item code. Those are the shapes it reported:
+
+```host-lint:ignore
+a clause number: (`section 8.2`, `26.19`, `6.12`)
+a brief item code: (`I1`, `R5`, `B4`)
+```
 
 ## Decision
 
@@ -33,8 +38,12 @@ in the component's lane fails on one.
   the brief's item codes do not. The brief keeps the design, `call/` keeps the
   decisions, the results files keep the measurements, and the harvest record of
   this date keeps what lived only in a comment.
-- A specification is named (`RFC 6887`), and its clause numbers are not
-  (`section 8.2`). A brief item code resolves to the rule it names.
+- A specification is named (`RFC 6887`), and its clause numbers are not. A brief
+  item code resolves to the rule it names.
+
+  ```host-lint:ignore
+  a clause number: `section 8.2`
+  ```
 - A module header and an item's doc comment are each one line. rustdoc is not an
   audience for this component, which is a binary.
 - Commented-out code is deleted. The tree held none when this was decided.
