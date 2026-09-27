@@ -403,6 +403,14 @@ digest in <code>.host-software</code>, and re-derives the artifact hash with the
 The host's reproducible lane already performs the re-derivation half on every push,
 and <a href="../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a> settled
 that obligation.</p>
+<p>The tool exists and the claim behind it is measured. <code>tools/bundle-deps.sh</code> vendors
+the dependencies into a tarball of 16 MB and prints its digest, this run's being
+<code>dc033b6310f523c90253e62eae2fee72cfaebf108308964ab21a686592d8f72b</code>. Extracting that
+tarball into the crate root, appending the config it carries, and building with a
+fresh cargo home and <code>--offline</code> produced the artifact in 4m17s with exit 0, so the
+crate is reproduced from pinned inputs with no network. The release still owes the
+publish, the <code>.host-software</code> line, and the artifact re-derivation in the recorded
+image.</p>
 <h3 id="recipe"><a class="header" href="#recipe">Write the front-door recipe</a></h3>
 <ul>
 <li>depends: #stranger-arrival, #front-config</li>
