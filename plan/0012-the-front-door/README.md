@@ -212,14 +212,14 @@ configuration, and expires its own lease.
 ### Renew the lease and let it expire {#lease}
 
 - depends: #control-channel
-- verify: cargo test --release --locked
+- verify: attested call/0041
 
 Each entry the daemon pushes carries a duration it refreshes, so a line that
-stops renewing stops being routed. The front enforces the withdrawal on its own
-today, while the control channel is unbuilt: the listener drops an entry whose
-pokes have stopped, reloads, and the harness proves the entry leaves with the
-pokes that kept it. Tests cover the renewal, the expiry, and the drop of a stale
-entry.
+stops renewing stops being routed. The front holds that property on its own
+today: the listener drops an entry whose pokes have stopped, reloads, and the
+harness proves the entry leaves with the pokes that kept it. The duration the
+daemon would push rides the control channel when that channel has a reader, which
+[call/0042](../call/0042-the-poke-delivers-the-tuple.md) records.
 
 ### Pin the dependency bundle {#deps-bundle}
 
@@ -243,6 +243,13 @@ built it in the pinned image on the commit that added it. The artifact measured
 1,065,696 bytes against 1,061,600 before, because the linker leaves a crate out
 until something calls it, so the size the release record carries is the one the
 client produces rather than the one the manifest declares.
+
+The bundle itself is the release phase's to produce. The recorded toolchain image
+builds the artifact, and the same run vendors the dependency layer, records its
+digest in `.host-software`, and re-derives the artifact hash with the network off.
+The host's reproducible lane already performs the re-derivation half on every push,
+and [call/0039](../call/0039-the-control-channel-carries-a-tls-client.md) settled
+that obligation.
 
 ### Write the front-door recipe {#recipe}
 
