@@ -476,3 +476,9 @@
     evidence = call/0041: the component lane runs the suite, where a handshake against a server the anchor signed completes and a server another authority signed is refused, and a key belonging to no certificate is refused
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#control-channel"]
+    disposition = skip
+    reason = call/0042
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
