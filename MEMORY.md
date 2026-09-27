@@ -3135,3 +3135,32 @@ carried the status past the check: `cargo test … | tail` returns the pipe's st
 and a `;` before the commit ignores it entirely. The repair is to read the exit
 code into a variable and guard the commit on it, which is what the later commits
 do.
+
+## 2026-09-27 — the front's halves exist, and one of them cannot be harnessed
+
+The front door's front side is built in the component and proven in its lane.
+`deploy/front-door/nginx.conf` reads a generated include on both legs, keyed on
+the name for TCP and on the listening port for UDP, so a name follows the carrier's
+assignment with no operator in the loop. `deploy/front-door/poke-listener.py`
+listens on the port the daemon pokes, takes the poke's own source as the line's
+tuple, writes the include, reloads, and withdraws an entry once its pokes stop,
+which is the lease the design asks for and which the front can hold today without
+the control channel. `deploy/front-door/test-local.sh` renders the shipped file,
+mints a one-day authority, and asserts the split, the learned tuple, and the
+withdrawal; the component's lane runs it, so the proof is not machine-local.
+
+One constraint cost real design time and is worth not rediscovering. The poke's
+source is the address the front forwards to, because the carrier's mapping is what
+carries traffic on to the LAN service. A harness standing in for the line on one
+machine must therefore poke from the very port it serves. One UDP socket does that
+naturally, and that is why the UDP leg's dynamic routing is proven in the harness.
+A TCP port serves as a listening socket or as a connection's source, never both, so
+the TCP leg's learning belongs to the deployment, where the daemon's own listener
+sits at the mapping's port. The harness stands in for that leg's line and proves
+the routing half, which is the half it can hold.
+
+The certificate thread has its decision (`call/0040`): the authority lives on the
+line, the certificate carries what its identity may reach, lifetimes are short so
+exclusion is a decision not to renew, and the daemon holds an identity of its own
+for the control channel. What remains for the milestone is the control channel
+itself and the dependency bundle it obliges.
