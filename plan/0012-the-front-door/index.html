@@ -201,6 +201,26 @@ written, because the recipe page is written for that person.</p>
 <p>What this milestone does not do, and the recipe repeats: it does not make the
 carrier's port stable or reservable, and it does not give the LAN service the
 client's own address on the TCP path.</p>
+<h2 id="what-the-measurements-changed"><a class="header" href="#what-the-measurements-changed">What the measurements changed</a></h2>
+<p>Four results moved this milestone's shape, and each one is recorded in the
+results directory beside this file.</p>
+<ul>
+<li>A held port admits the peers the line has spoken to. A front reaches one only
+after the line speaks first, and the daemon pokes for that reason, with the front
+taking the poke's own source as the tuple.</li>
+<li>A TCP slot learns its tuple only from a server that answers STUN over TCP. The
+default list now carries one, which is the piece it lacked, and a granted TCP
+mapping answers with its tuple where it used to answer NETWORK_FAILURE.</li>
+<li>The UDP forward keeps the peer's own address and port, and the TCP splice
+presents the router's. A front door over QUIC therefore behaves differently from
+one over TLS, and the recipe says so.</li>
+<li>A service host's replies need the line the mapping is on. That path takes a rule
+of its own today, or the daemon-side rewrite when it lands.</li>
+</ul>
+<p>The front's own halves are built and proven in the component's lane: the split by
+name, the listener that learns the tuple, and the lease that withdraws an entry
+whose pokes have stopped. The tasks below that carry them stay attestations,
+because a clone of the host runs no nginx.</p>
 <h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
 <p>Ten tasks. The first gives the line a peer to speak to, the second measures what
 the carrier then admits, the next two put a port and a route in place, three more
