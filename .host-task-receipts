@@ -434,3 +434,17 @@
     evidence = RESULTS-2026-09-27-the-pinhole.md: the poke admits the peer, the reply arrived on eth1, and it was forwarded with the peer's address intact
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#front-config"]
+    disposition = done
+    verify = attested call/0041
+    evidence = the component lane runs deploy/front-door/test-local.sh on every push, and the split by name is asserted there (call/0041)
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
+
+[receipt "plan/0012#front-learns-the-tuple"]
+    disposition = done
+    verify = attested call/0041
+    evidence = the same lane asserts the front takes the poke's own source as the tuple, and that the UDP forward follows it (call/0041)
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
