@@ -199,6 +199,16 @@ failed push is followed by the whole table again rather than a delta, so a
 reconnect repairs whatever was missed. Unit tests cover the request body and the
 retry.
 
+The transport is built and its wiring waits for a payload. `src/front.rs` renders
+the table, opens the TLS connection with the daemon's identity and the operator's
+anchor, and sends the whole table again when a push fails. Four tests cover the
+rendering, the endpoint, a push that reaches a server the anchor signed, and a
+retry whose second attempt carries the identical table. What has no caller is the
+push itself, because
+[call/0042](../call/0042-the-poke-delivers-the-tuple.md) found that the front
+already learns the tuple from the poke, keeps its names in the operator's
+configuration, and expires its own lease.
+
 ### Renew the lease and let it expire {#lease}
 
 - depends: #control-channel
