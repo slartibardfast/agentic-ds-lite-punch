@@ -174,16 +174,20 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="milestone-the-front-door"><a class="header" href="#milestone-the-front-door">Milestone: the front door</a></h1>
-<p><strong>Status:</strong> in progress, opened 2026-09-26. The architecture is settled in
+<p><strong>Status:</strong> every task carries a receipt, three of them recorded deferrals;
+<a href="results/RESULTS-2026-09-27-the-front-door.html">the milestone's record</a> gathers what
+the measurements found and where each proof lives. The architecture is settled in
 <a href="../call/0038-the-front-door-is-a-held-port.html">call/0038</a>, what the control
 channel costs the binary in
 <a href="../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>, how a
 client becomes an identity in
-<a href="../call/0040-admission-is-a-certificate-minted-on-the-line.html">call/0040</a>, and
-where the front's proofs live in
-<a href="../call/0041-the-fronts-proofs-are-the-components-lane.html">call/0041</a>. Six tasks
-carry a done receipt and one is a recorded deferral, which the tasks below name,
-and the frontier is the daemon's own identity.</p>
+<a href="../call/0040-admission-is-a-certificate-minted-on-the-line.html">call/0040</a>, where
+the front's proofs live in
+<a href="../call/0041-the-fronts-proofs-are-the-components-lane.html">call/0041</a>, and what
+the poke delivers in
+<a href="../call/0042-the-poke-delivers-the-tuple.html">call/0042</a>. <code>#record</code> holds the last
+receipt, and it waits on the host gate's one red item: the remap debt in the two
+records named above, which is the operator's vocabulary to dispose of.</p>
 <h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
 <p>A service on this line is reached today by something that terminates a connection
 outside the line and re-originates it inside: an HTTP or database proxy on a
