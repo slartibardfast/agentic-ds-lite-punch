@@ -59,7 +59,7 @@ not, which the recipe has to say beside it.
 ## Method lessons
 
 A capture started with `-w` and still running has not flushed, so its file reads
-as zero bytes while its buffer holds the packets. This nearly hid the result: the
+as zero bytes and its buffer holds the packets. This nearly hid the result: the
 first reading of a live capture reported an empty file for a run that had
 recorded everything. Kill the capture before reading it, or start it with `-U`.
 
