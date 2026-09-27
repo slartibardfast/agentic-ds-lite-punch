@@ -145,23 +145,35 @@ installed. This task's verify stays an attestation because a clone of the host
 carries no nginx, and a mechanical clause an environment cannot meet is not
 evidence.
 
-### Mint the identities a client carries {#client-certificates}
+### Put an authority on the line {#the-ca-on-the-line}
 
 - depends: #front-config
-- verify: cargo test --release --locked
-- inputs: the certificate module under `src/`, the DeviceProtection store and roles in `src/dp.rs`
+- verify: attested call/0041
 
-A client's admission is carried by its certificate, minted after a
-DeviceProtection-authenticated login, so the front verifies a chain instead of
-asking the line about every connection. The properties are
-[call/0040](../call/0040-admission-is-a-certificate-minted-on-the-line.md)'s: the
-authority on the line, the permission carried in the certificate, short lifetimes,
-and the daemon as a client of the same programme. Tests cover issuance, and the
-exchange an identity holding no role cannot complete.
+The operator's half of
+[call/0040](../call/0040-admission-is-a-certificate-minted-on-the-line.md): a tool
+under `deploy/front-door/` holds the authority and mints a client certificate for
+an identity whose password the DeviceProtection store accepts. The certificate
+carries what that identity may reach. The component's lane runs its test beside the
+harness, where a wrong password is refused, an identity without the required role
+is refused, and a minted certificate carries the identity and the permission.
+
+### Give the daemon its own identity {#the-daemons-identity}
+
+- depends: #the-ca-on-the-line
+- verify: cargo test --release --locked
+- inputs: the certificate module under `src/`, `Cargo.toml`, `Cargo.lock`
+
+The daemon's half, settled by
+[call/0039](../call/0039-the-control-channel-carries-a-tls-client.md): it loads a
+client certificate and its key from files the environment names, and it trusts the
+front's certificate through an anchor the operator places, with the public roots as
+the fallback. This is the crate's first dependency beyond `tokio` and `libc`, and
+it is what `#deps-bundle` pins.
 
 ### Carry the routing table to the front {#control-channel}
 
-- depends: #hold-tcp-slot, #client-certificates
+- depends: #hold-tcp-slot, #the-daemons-identity
 - verify: cargo test --release --locked
 - inputs: the control channel module under `src/`, `Cargo.toml`, `Cargo.lock`
 
