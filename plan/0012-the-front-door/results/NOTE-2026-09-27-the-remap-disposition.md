@@ -75,3 +75,32 @@ the eight are disposed, `#record`'s verify re-runs the gate and finds the same r
 so the milestone's last receipt cannot be written. Nothing else in the repository is
 waiting on it: a sweep of all seven milestones this turn found `#record` as the only
 task without a receipt.
+
+## How it closed
+
+**Later the same day.** The lane's own validation answers the question this note
+left open, and it forecloses the declaration for most of the five:
+`validate_lexicon_entry` rejects any declared phrase that carries a position noun as
+a word, which puts `section` and `epoch` beyond the lexicon's reach, and it rejects
+a phrase that is itself a flag. Four of the five were therefore beyond a
+declaration, and boxing is the escape the doctrine names for a frozen record
+flagged by a later grammar bump.
+
+The five, boxed where they stand:
+
+- `call/0037`'s two lines, each showing a shape the rule forbids (the second inside
+  its bullet).
+- The harvest record's file list beside the fixed path.
+- The harvest record's kernel version, the one the conntrack code documents.
+- The brief's clause name for the role set an action requires.
+
+A box hides its own lines and leaves the rest of the file linted, which was
+measured on a scratch document: an unboxed tell beside a boxed one still reported.
+With the five boxed, `host-lifecycle remap --check .` reports 0 undispositioned
+tells and the gate's remap phase rechecks green.
+
+The gate's one remaining item is the component's pin. The worktree sits at the
+front-door work; the record pins the tagged previous release. That line moves with
+the release, whose canonical hash comes from the recorded toolchain image, which the
+lane runs and this host cannot (`call/0032`). `#record` is therefore a recorded
+deferral to the release, and it draws its done when the pin names the tagged bytes.

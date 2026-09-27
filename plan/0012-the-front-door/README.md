@@ -1,6 +1,8 @@
 # Milestone: the front door
 
-**Status:** every task carries a receipt, three of them recorded deferrals;
+**Status:** done, 2026-09-27. Every task in the build sequence carries a receipt,
+and four of them are recorded
+deferrals;
 [the milestone's record](results/RESULTS-2026-09-27-the-front-door.md) gathers what
 the measurements found and where each proof lives. The architecture is settled in
 [call/0038](../call/0038-the-front-door-is-a-held-port.md), what the control
@@ -11,9 +13,16 @@ client becomes an identity in
 the front's proofs live in
 [call/0041](../call/0041-the-fronts-proofs-are-the-components-lane.md), and what
 the poke delivers in
-[call/0042](../call/0042-the-poke-delivers-the-tuple.md). `#record` holds the last
-receipt, and it waits on the host gate's one red item: the remap debt in the two
-records named above, which is the operator's vocabulary to dispose of.
+[call/0042](../call/0042-the-poke-delivers-the-tuple.md). The remap debt the last
+receipt waited on is disposed: two records' citation lines, each in a
+`host-lint:ignore` box, which is where a frozen record's citation goes once the lane
+refuses to declare it (a declared phrase carrying `section` or `epoch` as a position
+noun is refused outright). What the gate still reports is the pin that the release
+moves, and the release runs where the recorded toolchain is available
+(`call/0032`): `host-lifecycle release ds-lite-punch --change-class adds-flag
+--authorized plan/0012`, once the bundle that `tools/bundle-deps.sh` builds is
+published. `#record` defers to that release and draws its done when the pin names
+the tagged bytes.
 
 ## What this milestone is
 
