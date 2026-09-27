@@ -264,6 +264,14 @@ crate is reproduced from pinned inputs with no network. The release still owes t
 publish, the `.host-software` line, and the artifact re-derivation in the recorded
 image.
 
+The path in that config is the part worth knowing. `cargo vendor` prints an
+absolute directory, which is where the generator's own scratch lived and which the
+generator then removes, so the first tarball carried a path into a deleted
+directory and could be used nowhere. The tool rewrites it to a relative `vendor`,
+and the bundle extracts into the crate root. The first offline attempt failed for
+the other half of the same mistake, an extraction outside the crate root, and the
+second, with the bundle in place, exited 0.
+
 ### Write the front-door recipe {#recipe}
 
 - depends: #stranger-arrival, #front-config
