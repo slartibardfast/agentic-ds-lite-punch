@@ -427,3 +427,10 @@
     evidence = cargo test --release --locked: 222 passed, 0 failed; the send and the silence are asserted as a pair
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#stranger-arrival"]
+    disposition = done
+    verify = attested operator
+    evidence = RESULTS-2026-09-27-the-pinhole.md: the poke admits the peer, the reply arrived on eth1, and it was forwarded with the peer's address intact
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
