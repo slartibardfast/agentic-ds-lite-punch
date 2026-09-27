@@ -272,6 +272,14 @@ and the bundle extracts into the crate root. The first offline attempt failed fo
 the other half of the same mistake, an extraction outside the crate root, and the
 second, with the bundle in place, exited 0.
 
+Two comparisons settle what the bundle does to the artifact. The registry build at
+the crate's own path and at the staged path produced the same hash, `015cbbe3…`, so
+the registry build is independent of the directory it runs in. The vendored build
+at that staged path produced `e88a8040…`, a different hash at the same size of
+1,069,792 bytes, so the dependency source is what moves the bytes and the bundle is
+not byte-neutral. The release that adopts it re-pins, and that movement is
+attributable to the bundle rather than to any change in the crate.
+
 ### Write the front-door recipe {#recipe}
 
 - depends: #stranger-arrival, #front-config
