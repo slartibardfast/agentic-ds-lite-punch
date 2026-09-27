@@ -3948,6 +3948,15 @@ pass-through or terminated. It authenticates with its own client certificate. A
 failed push is followed by the whole table again rather than a delta, so a
 reconnect repairs whatever was missed. Unit tests cover the request body and the
 retry.</p>
+<p>The transport is built and its wiring waits for a payload. <code>src/front.rs</code> renders
+the table, opens the TLS connection with the daemon's identity and the operator's
+anchor, and sends the whole table again when a push fails. Four tests cover the
+rendering, the endpoint, a push that reaches a server the anchor signed, and a
+retry whose second attempt carries the identical table. What has no caller is the
+push itself, because
+<a href="plan/0012-the-front-door/../call/0042-the-poke-delivers-the-tuple.html">call/0042</a> found that the front
+already learns the tuple from the poke, keeps its names in the operator's
+configuration, and expires its own lease.</p>
 <h3 id="lease"><a class="header" href="#lease">Renew the lease and let it expire</a></h3>
 <ul>
 <li>depends: #control-channel</li>
