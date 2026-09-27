@@ -3798,12 +3798,26 @@ written, because the recipe page is written for that person.</p>
 carrier's port stable or reservable, and it does not give the LAN service the
 client's own address on the TCP path.</p>
 <h2 id="build-sequence-6"><a class="header" href="#build-sequence-6">Build sequence</a></h2>
-<p>Eight tasks. The first measures the property everything else rests on, the next
-two put a port and a route in place, three more make the control channel real,
-and the last two write the recipe and record the milestone. Every task carries a
-verify, and the mechanical ones re-run at the gate.</p>
+<p>Ten tasks. The first gives the line a peer to speak to, the second measures what
+the carrier then admits, the next two put a port and a route in place, three more
+make the control channel real with its certificate programme beside it, and the
+last two write the recipe and record the milestone. Every task carries a verify,
+and the mechanical ones re-run at the gate.</p>
+<h3 id="poke-the-front"><a class="header" href="#poke-the-front">Send from the slot, so a peer is admitted</a></h3>
+<ul>
+<li>verify: cargo test --release --locked</li>
+<li>inputs: the poke's helper in <code>src/keepalive.rs</code>, the keepalive loop and the flag parser in <code>src/main.rs</code>, <code>deploy/ds-lite-punch.init</code></li>
+</ul>
+<p>The slot's own socket sends one datagram per interval to a nominated address.
+Only that socket holds the carrier's mapping state, so only it can create the
+state that admits a reply from the far end. The measurement above proved the
+carrier refuses a source the line has not spoken to; this task makes the front a
+source it has. The interval rides the existing keepalive loop, well inside the
+mapping's life. Tests assert that the datagram leaves from the slot's socket, on
+the interval, and that a slot with no nominated address sends nothing.</p>
 <h3 id="stranger-arrival"><a class="header" href="#stranger-arrival">Measure a stranger's arrival</a></h3>
 <ul>
+<li>depends: #poke-the-front</li>
 <li>verify: attested operator</li>
 </ul>
 <p>From the vantage, send a datagram and a connection attempt to a held tuple from a
@@ -3822,7 +3836,10 @@ stranger, which is what the console's own NAT Type 2 verdict means. The second
 half of this task is therefore the pinhole test: the slot's own socket sends a
 datagram toward the front's address, and the front then reaches the held port.
 Only that socket can create the carrier's state, because the mapping belongs to
-the inner tuple.</p>
+the inner tuple. The same run settles the shape of the restriction: whether the
+carrier remembers an address alone or an address and a port. That answer decides
+which source port the front may reach from, and it is load-bearing now, because
+the poke's destination port is the thing the carrier will remember.</p>
 <h3 id="hold-tcp-slot"><a class="header" href="#hold-tcp-slot">Hold a TCP slot for the front</a></h3>
 <ul>
 <li>depends: #stranger-arrival</li>
@@ -3836,7 +3853,6 @@ or let <code>--static-map</code> carry a protocol, which is a parser change with
 first and a regenerated help text and manual page.</p>
 <h3 id="front-config"><a class="header" href="#front-config">Route two classes of name at the front</a></h3>
 <ul>
-<li>depends: #hold-tcp-slot</li>
 <li>verify: attested operator</li>
 </ul>
 <p>The front's configuration, with both classes in one file, is written and proven:
@@ -3848,9 +3864,22 @@ served with one. The script runs in the component's own lane, where nginx can be
 installed. This task's verify stays an attestation because a clone of the host
 carries no nginx, and a mechanical clause an environment cannot meet is not
 evidence.</p>
+<h3 id="client-certificates"><a class="header" href="#client-certificates">Mint the identities a client carries</a></h3>
+<ul>
+<li>depends: #front-config</li>
+<li>verify: cargo test --release --locked</li>
+<li>inputs: the certificate module under <code>src/</code>, the DeviceProtection store and roles in <code>src/dp.rs</code></li>
+</ul>
+<p>A client's admission is carried by its certificate, minted after a
+DeviceProtection-authenticated login, so the front verifies a chain instead of
+asking the line about every connection. The authority lives on the line, issuance
+is gated by a login the existing store already authenticates, and a certificate
+is short-lived, which makes exclusion a decision not to renew rather than a
+revocation path to maintain. Tests cover issuance, and the exchange an identity
+holding no role cannot complete.</p>
 <h3 id="control-channel"><a class="header" href="#control-channel">Carry the routing table to the front</a></h3>
 <ul>
-<li>depends: #hold-tcp-slot</li>
+<li>depends: #hold-tcp-slot, #client-certificates</li>
 <li>verify: cargo test --release --locked</li>
 <li>inputs: the control channel module under <code>src/</code>, <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
 </ul>
