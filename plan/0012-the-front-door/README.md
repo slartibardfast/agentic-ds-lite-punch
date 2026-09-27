@@ -193,7 +193,12 @@ entry.
 The TLS client is the first dependency this crate has taken beyond `tokio` and
 `libc`, and [call/0039](../call/0039-the-control-channel-carries-a-tls-client.md)
 settles what that owes: a hash-pinned bundle recorded in `.host-software`, so the
-artifact is reproduced from pinned inputs with the network off.
+artifact is reproduced from pinned inputs with the network off. The crate pins the
+musl target in `.cargo/config.toml`, so the dependency builds for musl wherever the
+suite runs. This machine carries `x86_64-linux-musl-gcc`, which a TLS crate with a C
+core needs, and the machine that cuts the release carries the pinned image; both are
+worth naming in the release record, since the recorded hash comes from the pinned
+image and not from whichever compiler is nearest.
 
 ### Write the front-door recipe {#recipe}
 
