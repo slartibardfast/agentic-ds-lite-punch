@@ -45,7 +45,7 @@ and the mechanical ones re-run at the gate.
 ### Send from the slot, so a peer is admitted {#poke-the-front}
 
 - verify: cargo test --release --locked
-- inputs: the poke's helper in `src/keepalive.rs`, the keepalive loop and the flag parser in `src/main.rs`, `deploy/ds-lite-punch.init`
+- inputs: the send in `src/main.rs`, the state field in `src/mapping.rs`, the flag's definition in `tools/argdoc/src/main.rs`, `deploy/ds-lite-punch.init`
 
 The slot's own socket sends one datagram per interval to a nominated address.
 Only that socket holds the carrier's mapping state, so only it can create the
