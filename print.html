@@ -3770,7 +3770,9 @@ its lane. The host's record carries the pin and the artifact hash, and the
 release page carries the kit. Where a check produced a line worth keeping, it
 is written under <code>results/</code> in this room with the pin it was read against.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-the-front-door"><a class="header" href="#milestone-the-front-door">Milestone: the front door</a></h1>
-<p><strong>Status:</strong> every task carries a receipt, three of them recorded deferrals;
+<p><strong>Status:</strong> done, 2026-09-27. Every task in the build sequence carries a receipt,
+and four of them are recorded
+deferrals;
 <a href="plan/0012-the-front-door/results/RESULTS-2026-09-27-the-front-door.html">the milestone's record</a> gathers what
 the measurements found and where each proof lives. The architecture is settled in
 <a href="plan/0012-the-front-door/../call/0038-the-front-door-is-a-held-port.html">call/0038</a>, what the control
@@ -3781,9 +3783,15 @@ client becomes an identity in
 the front's proofs live in
 <a href="plan/0012-the-front-door/../call/0041-the-fronts-proofs-are-the-components-lane.html">call/0041</a>, and what
 the poke delivers in
-<a href="plan/0012-the-front-door/../call/0042-the-poke-delivers-the-tuple.html">call/0042</a>. <code>#record</code> holds the last
-receipt, and it waits on the host gate's one red item: the remap debt in the two
-records named above, which is the operator's vocabulary to dispose of.</p>
+<a href="plan/0012-the-front-door/../call/0042-the-poke-delivers-the-tuple.html">call/0042</a>. The remap debt the last
+receipt waited on is disposed: two records' citation lines, each in a
+<code>host-lint:ignore</code> box, which is where a frozen record's citation goes once the lane
+refuses to declare it (a declared phrase carrying <code>section</code> or <code>epoch</code> as a position
+noun is refused outright). What the gate still reports is the pin that the release
+moves, and the release runs where the recorded toolchain is available
+(<code>call/0032</code>): <code>host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012</code>, once the bundle that <code>tools/bundle-deps.sh</code> builds is
+published. <code>#record</code> defers to that release and draws its done when the pin names
+the tagged bytes.</p>
 <h2 id="what-this-milestone-is-6"><a class="header" href="#what-this-milestone-is-6">What this milestone is</a></h2>
 <p>A service on this line is reached today by something that terminates a connection
 outside the line and re-originates it inside: an HTTP or database proxy on a
@@ -5716,25 +5724,40 @@ before the code, and the parts that stated a fact the code depends on sat in the
 same paragraph as the parts that recorded how the fact was learned, so neither
 could be found quickly. And the citations were tell-shaped: the naming audit
 reported 86 findings over the component, every one a line citing a clause number
-(<code>section 8.2</code>, <code>26.19</code>, <code>6.12</code>) or a brief item code (<code>I1</code>, <code>R5</code>, <code>B4</code>).</p>
+or a brief item code. Those are the shapes it reported:</p>
+<pre><code class="language-host-lint:ignore">a clause number: (`section 8.2`, `26.19`, `6.12`)
+a brief item code: (`I1`, `R5`, `B4`)
+</code></pre>
 <h2 id="decision-26"><a class="header" href="#decision-26">Decision</a></h2>
 <p>A comment run is one line, and it states one technical fact about the code beside
 it. A run of two or more comment lines is a defect, and <code>tools/comment-lint.py</code>
 in the component's lane fails on one.</p>
 <ul>
-<li>A fact the code depends on is what survives: an invariant, a protocol
+<li>
+<p>A fact the code depends on is what survives: an invariant, a protocol
 requirement, a platform quirk, the meaning of a constant. A measured number
 belongs in a line when the code's behaviour turns on it, with no date and no
-story.</li>
-<li>Provenance, dates, measurement narratives, design rationale and citations of
+story.</p>
+</li>
+<li>
+<p>Provenance, dates, measurement narratives, design rationale and citations of
 the brief's item codes do not. The brief keeps the design, <code>call/</code> keeps the
 decisions, the results files keep the measurements, and the harvest record of
-this date keeps what lived only in a comment.</li>
-<li>A specification is named (<code>RFC 6887</code>), and its clause numbers are not
-(<code>section 8.2</code>). A brief item code resolves to the rule it names.</li>
-<li>A module header and an item's doc comment are each one line. rustdoc is not an
-audience for this component, which is a binary.</li>
-<li>Commented-out code is deleted. The tree held none when this was decided.</li>
+this date keeps what lived only in a comment.</p>
+</li>
+<li>
+<p>A specification is named (<code>RFC 6887</code>), and its clause numbers are not. A brief
+item code resolves to the rule it names.</p>
+<pre><code class="language-host-lint:ignore">a clause number: `section 8.2`
+</code></pre>
+</li>
+<li>
+<p>A module header and an item's doc comment are each one line. rustdoc is not an
+audience for this component, which is a binary.</p>
+</li>
+<li>
+<p>Commented-out code is deleted. The tree held none when this was decided.</p>
+</li>
 </ul>
 <h2 id="consequences-26"><a class="header" href="#consequences-26">Consequences</a></h2>
 <p>The collapse removed about 2,950 comment lines across the component and the 86
@@ -10344,6 +10367,27 @@ so a generated config has to be rewritten against where the bundle will be unpac
 The companion lesson lives in the component's docs: a certificate without
 extensions is X.509 version one and a TLS stack refuses it, which
 <code>docs/operators/troubleshoot.md</code> now covers as a failure an operator can meet.</p>
+<h2 id="2026-09-27--the-tell-the-lexicon-cannot-declare-and-the-pin-the-milestone-cannot-move"><a class="header" href="#2026-09-27--the-tell-the-lexicon-cannot-declare-and-the-pin-the-milestone-cannot-move">2026-09-27 — the tell the lexicon cannot declare, and the pin the milestone cannot move</a></h2>
+<p>The remap phase's recheck went red on five warn-tier tells after the grammar bump:
+three clause citations of the form <code>section N</code>, one <code>epoch N</code> adjacency in a
+sentence about a state directory, and one kernel version <code>6.12</code>. The finding:
+host-lint's LEXICON <strong>cannot</strong> sanction any of the five. <code>validate_lexicon_entry</code>
+refuses a declared phrase that carries a position noun (<code>section</code>, <code>epoch</code>) as a
+word, because masking it would blank that token out of a real tell, and it refuses
+a phrase that is itself a flag. Declaration was therefore closed for four of the
+five, and the disposition for a frozen record is the <code>host-lint:ignore</code> box.</p>
+<p>The anti-laundering property was measured rather than assumed: a scratch markdown
+file carrying an unboxed <code>pass 3</code> beside a boxed <code>section 9.9</code> reported the unboxed
+one alone. A box hides its own lines, and the rest of the file stays linted.</p>
+<p>With the five boxed, the remap phase rechecks green and every task in the
+repository carries a receipt. What the host gate still reports is the component's
+<strong>pin</strong>: the worktree sits at the front-door work, and the record pins the tagged
+previous release. The pin needs the release, the release needs the canonical hash,
+and the canonical hash needs the recorded toolchain image, which this development
+host has no container runtime to run (<code>call/0032</code>). <code>host-lifecycle release</code> refuses
+here by design rather than hand a re-pin to an ambient build, so <code>plan/0012#record</code>
+is recorded as a deferral to the release. The release is the operator's step:
+publish the bundle, then bump, tag, build in the lane, and pin the tagged bytes.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>

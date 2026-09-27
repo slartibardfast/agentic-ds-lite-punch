@@ -3075,6 +3075,27 @@ so a generated config has to be rewritten against where the bundle will be unpac
 The companion lesson lives in the component's docs: a certificate without
 extensions is X.509 version one and a TLS stack refuses it, which
 <code>docs/operators/troubleshoot.md</code> now covers as a failure an operator can meet.</p>
+<h2 id="2026-09-27--the-tell-the-lexicon-cannot-declare-and-the-pin-the-milestone-cannot-move"><a class="header" href="#2026-09-27--the-tell-the-lexicon-cannot-declare-and-the-pin-the-milestone-cannot-move">2026-09-27 — the tell the lexicon cannot declare, and the pin the milestone cannot move</a></h2>
+<p>The remap phase's recheck went red on five warn-tier tells after the grammar bump:
+three clause citations of the form <code>section N</code>, one <code>epoch N</code> adjacency in a
+sentence about a state directory, and one kernel version <code>6.12</code>. The finding:
+host-lint's LEXICON <strong>cannot</strong> sanction any of the five. <code>validate_lexicon_entry</code>
+refuses a declared phrase that carries a position noun (<code>section</code>, <code>epoch</code>) as a
+word, because masking it would blank that token out of a real tell, and it refuses
+a phrase that is itself a flag. Declaration was therefore closed for four of the
+five, and the disposition for a frozen record is the <code>host-lint:ignore</code> box.</p>
+<p>The anti-laundering property was measured rather than assumed: a scratch markdown
+file carrying an unboxed <code>pass 3</code> beside a boxed <code>section 9.9</code> reported the unboxed
+one alone. A box hides its own lines, and the rest of the file stays linted.</p>
+<p>With the five boxed, the remap phase rechecks green and every task in the
+repository carries a receipt. What the host gate still reports is the component's
+<strong>pin</strong>: the worktree sits at the front-door work, and the record pins the tagged
+previous release. The pin needs the release, the release needs the canonical hash,
+and the canonical hash needs the recorded toolchain image, which this development
+host has no container runtime to run (<code>call/0032</code>). <code>host-lifecycle release</code> refuses
+here by design rather than hand a re-pin to an ambient build, so <code>plan/0012#record</code>
+is recorded as a deferral to the release. The release is the operator's step:
+publish the bundle, then bump, tag, build in the lane, and pin the tagged bytes.</p>
 
                     </main>
 
