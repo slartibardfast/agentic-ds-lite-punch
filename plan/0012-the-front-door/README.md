@@ -1,9 +1,15 @@
 # Milestone: the front door
 
 **Status:** in progress, opened 2026-09-26. The architecture is settled in
-[call/0038](../call/0038-the-front-door-is-a-held-port.md), and what the control
-channel costs the binary is settled in
-[call/0039](../call/0039-the-control-channel-carries-a-tls-client.md).
+[call/0038](../call/0038-the-front-door-is-a-held-port.md), what the control
+channel costs the binary in
+[call/0039](../call/0039-the-control-channel-carries-a-tls-client.md), how a
+client becomes an identity in
+[call/0040](../call/0040-admission-is-a-certificate-minted-on-the-line.md), and
+where the front's proofs live in
+[call/0041](../call/0041-the-fronts-proofs-are-the-components-lane.md). Six tasks
+carry a done receipt and one is a recorded deferral, which the tasks below name,
+and the frontier is the daemon's own identity.
 
 ## What this milestone is
 
@@ -58,11 +64,11 @@ because a clone of the host runs no nginx.
 
 ## Build sequence
 
-Ten tasks. The first gives the line a peer to speak to, the second measures what
-the carrier then admits, the next two put a port and a route in place, three more
-make the control channel real with its certificate programme beside it, and the
-last two write the recipe and record the milestone. Every task carries a verify,
-and the mechanical ones re-run at the gate.
+Eleven tasks. The first gives the line a peer to speak to, the second measures what
+the carrier then admits, the next two put a port and a route in place, and the rest
+build the front's half, the authority that admits a client, the control channel
+with the bundle it obliges, and the recipe that ends it. Every task carries a
+verify, and the mechanical ones re-run at the gate.
 
 ### Send from the slot, so a peer is admitted {#poke-the-front}
 
