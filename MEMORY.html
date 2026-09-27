@@ -3056,6 +3056,25 @@ line, the certificate carries what its identity may reach, lifetimes are short s
 exclusion is a decision not to renew, and the daemon holds an identity of its own
 for the control channel. What remains for the milestone is the control channel
 itself and the dependency bundle it obliges.</p>
+<h2 id="2026-09-27--the-bundle-and-the-two-techniques-that-settled-it"><a class="header" href="#2026-09-27--the-bundle-and-the-two-techniques-that-settled-it">2026-09-27 — the bundle, and the two techniques that settled it</a></h2>
+<p>The dependency bundle is built by <code>tools/bundle-deps.sh</code> and its claim is measured
+rather than described. Two techniques are worth reusing on any future lane that has
+to prove hermeticity or determinism.</p>
+<p>Hermeticity is proven with a <strong>fresh cargo home</strong>: extract the bundle into the crate
+root, append the config it carries, and build with <code>CARGO_HOME</code> pointing at an empty
+directory and <code>--offline</code>. That leaves the vendored sources as the only place a
+crate can come from, and it built the artifact in 4m17s with exit 0.</p>
+<p>Determinism is a question of <strong>one variable at a time</strong>, and the path is one of
+them. A registry build produced the same hash in two different directories, so the
+directory is not a variable at all. A vendored build at that same path produced a
+different hash at identical size, so the dependency source is one. The bundle is
+therefore not byte-neutral, and a release adopting it re-pins.</p>
+<p>The general lesson the bundle taught: a tool that prints a path prints <strong>its own</strong>.
+<code>cargo vendor</code> names the directory it just made, which its own cleanup then removes,
+so a generated config has to be rewritten against where the bundle will be unpacked.
+The companion lesson lives in the component's docs: a certificate without
+extensions is X.509 version one and a TLS stack refuses it, which
+<code>docs/operators/troubleshoot.md</code> now covers as a failure an operator can meet.</p>
 
                     </main>
 
