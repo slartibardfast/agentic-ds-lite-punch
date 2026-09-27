@@ -475,10 +475,11 @@ digest the offline build was measured against.</li>
 <p>The run, in the order the tool performs it:</p>
 <pre><code class="language-sh">host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
 </code></pre>
-<p>It runs the verify sweep, bumps the version the change class implies, stages the
-bundle, builds inside the recorded image, and prints the canonical hash beside the
-outward steps (commit and push, tag and push, re-pin, receipt). <code>#record</code> draws its
-done once the pin names the pushed commit:</p>
+<p>It runs the verify sweep, bumps the version the change class implies (the tool
+computes <code>0.3.5</code> to <code>0.4.0</code> for <code>adds-flag</code>), stages the bundle, builds inside the
+recorded image, and prints the canonical hash beside the outward steps (commit and
+push, tag and push, re-pin, receipt). <code>#record</code> draws its done once the pin names
+the pushed commit:</p>
 <pre><code class="language-sh">host-lifecycle tasks --record plan/0012#record --disposition done --evidence &lt;tag&gt;@&lt;hash&gt; .
 </code></pre>
 
