@@ -64,7 +64,7 @@ because a clone of the host runs no nginx.
 
 ## Build sequence
 
-Eleven tasks. The first gives the line a peer to speak to, the second measures what
+Twelve tasks. The first gives the line a peer to speak to, the second measures what
 the carrier then admits, the next two put a port and a route in place, and the rest
 build the front's half, the authority that admits a client, the control channel
 with the bundle it obliges, and the recipe that ends it. Every task carries a
