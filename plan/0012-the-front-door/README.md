@@ -131,11 +131,11 @@ evidence.
 
 A client's admission is carried by its certificate, minted after a
 DeviceProtection-authenticated login, so the front verifies a chain instead of
-asking the line about every connection. The authority lives on the line, issuance
-is gated by a login the existing store already authenticates, and a certificate
-is short-lived, so excluding an identity is a decision not to renew it and no
-revocation list has to be published. Tests cover issuance, and the exchange an
-identity holding no role cannot complete.
+asking the line about every connection. The properties are
+[call/0040](../call/0040-admission-is-a-certificate-minted-on-the-line.md)'s: the
+authority on the line, the permission carried in the certificate, short lifetimes,
+and the daemon as a client of the same programme. Tests cover issuance, and the
+exchange an identity holding no role cannot complete.
 
 ### Carry the routing table to the front {#control-channel}
 
