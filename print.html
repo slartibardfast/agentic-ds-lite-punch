@@ -3898,22 +3898,33 @@ served with one. The script runs in the component's own lane, where nginx can be
 installed. This task's verify stays an attestation because a clone of the host
 carries no nginx, and a mechanical clause an environment cannot meet is not
 evidence.</p>
-<h3 id="client-certificates"><a class="header" href="#client-certificates">Mint the identities a client carries</a></h3>
+<h3 id="the-ca-on-the-line"><a class="header" href="#the-ca-on-the-line">Put an authority on the line</a></h3>
 <ul>
 <li>depends: #front-config</li>
-<li>verify: cargo test --release --locked</li>
-<li>inputs: the certificate module under <code>src/</code>, the DeviceProtection store and roles in <code>src/dp.rs</code></li>
+<li>verify: attested call/0041</li>
 </ul>
-<p>A client's admission is carried by its certificate, minted after a
-DeviceProtection-authenticated login, so the front verifies a chain instead of
-asking the line about every connection. The properties are
-<a href="plan/0012-the-front-door/../call/0040-admission-is-a-certificate-minted-on-the-line.html">call/0040</a>'s: the
-authority on the line, the permission carried in the certificate, short lifetimes,
-and the daemon as a client of the same programme. Tests cover issuance, and the
-exchange an identity holding no role cannot complete.</p>
+<p>The operator's half of
+<a href="plan/0012-the-front-door/../call/0040-admission-is-a-certificate-minted-on-the-line.html">call/0040</a>: a tool
+under <code>deploy/front-door/</code> holds the authority and mints a client certificate for
+an identity whose password the DeviceProtection store accepts. The certificate
+carries what that identity may reach. The component's lane runs its test beside the
+harness, where a wrong password is refused, an identity without the required role
+is refused, and a minted certificate carries the identity and the permission.</p>
+<h3 id="the-daemons-identity"><a class="header" href="#the-daemons-identity">Give the daemon its own identity</a></h3>
+<ul>
+<li>depends: #the-ca-on-the-line</li>
+<li>verify: cargo test --release --locked</li>
+<li>inputs: the certificate module under <code>src/</code>, <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
+</ul>
+<p>The daemon's half, settled by
+<a href="plan/0012-the-front-door/../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>: it loads a
+client certificate and its key from files the environment names, and it trusts the
+front's certificate through an anchor the operator places, with the public roots as
+the fallback. This is the crate's first dependency beyond <code>tokio</code> and <code>libc</code>, and
+it is what <code>#deps-bundle</code> pins.</p>
 <h3 id="control-channel"><a class="header" href="#control-channel">Carry the routing table to the front</a></h3>
 <ul>
-<li>depends: #hold-tcp-slot, #client-certificates</li>
+<li>depends: #hold-tcp-slot, #the-daemons-identity</li>
 <li>verify: cargo test --release --locked</li>
 <li>inputs: the control channel module under <code>src/</code>, <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
 </ul>
