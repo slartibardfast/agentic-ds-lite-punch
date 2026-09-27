@@ -122,7 +122,7 @@ does, since a clone of the host carries no nginx.
 ### Hold a TCP slot for the front {#hold-tcp-slot}
 
 - depends: #stranger-arrival
-- verify: attested operator
+- verify: attested call/0041
 
 The keepalive arm already holds a UDP port. The front needs a TCP slot, and the
 first external handshake through it recorded. Two routes, and this task's record
@@ -203,7 +203,7 @@ image and not from whichever compiler is nearest.
 ### Write the front-door recipe {#recipe}
 
 - depends: #stranger-arrival, #front-config
-- verify: sh tools/link-check.sh
+- verify: attested call/0041
 
 An operator page for the person this milestone serves: the front's configuration
 in full, the tuple the daemon publishes and how the front learns it, the two
