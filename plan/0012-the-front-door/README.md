@@ -337,10 +337,11 @@ The run, in the order the tool performs it:
 host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
 ```
 
-It runs the verify sweep, bumps the version the change class implies, stages the
-bundle, builds inside the recorded image, and prints the canonical hash beside the
-outward steps (commit and push, tag and push, re-pin, receipt). `#record` draws its
-done once the pin names the pushed commit:
+It runs the verify sweep, bumps the version the change class implies (the tool
+computes `0.3.5` to `0.4.0` for `adds-flag`), stages the bundle, builds inside the
+recorded image, and prints the canonical hash beside the outward steps (commit and
+push, tag and push, re-pin, receipt). `#record` draws its done once the pin names
+the pushed commit:
 
 ```sh
 host-lifecycle tasks --record plan/0012#record --disposition done --evidence <tag>@<hash> .
