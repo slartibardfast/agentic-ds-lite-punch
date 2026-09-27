@@ -225,6 +225,13 @@ core needs, and the machine that cuts the release carries the pinned image; both
 worth naming in the release record, since the recorded hash comes from the pinned
 image and not from whichever compiler is nearest.
 
+The dependency has arrived and both builds carry it. This machine builds the musl
+target in 1m38s with `x86_64-linux-musl-gcc` present, and the component's lane
+built it in the pinned image on the commit that added it. The artifact measured
+1,065,696 bytes against 1,061,600 before, because the linker leaves a crate out
+until something calls it, so the size the release record carries is the one the
+client produces rather than the one the manifest declares.
+
 ### Write the front-door recipe {#recipe}
 
 - depends: #stranger-arrival, #front-config
