@@ -411,6 +411,13 @@ fresh cargo home and <code>--offline</code> produced the artifact in 4m17s with 
 crate is reproduced from pinned inputs with no network. The release still owes the
 publish, the <code>.host-software</code> line, and the artifact re-derivation in the recorded
 image.</p>
+<p>The path in that config is the part worth knowing. <code>cargo vendor</code> prints an
+absolute directory, which is where the generator's own scratch lived and which the
+generator then removes, so the first tarball carried a path into a deleted
+directory and could be used nowhere. The tool rewrites it to a relative <code>vendor</code>,
+and the bundle extracts into the crate root. The first offline attempt failed for
+the other half of the same mistake, an extraction outside the crate root, and the
+second, with the bundle in place, exited 0.</p>
 <h3 id="recipe"><a class="header" href="#recipe">Write the front-door recipe</a></h3>
 <ul>
 <li>depends: #stranger-arrival, #front-config</li>
