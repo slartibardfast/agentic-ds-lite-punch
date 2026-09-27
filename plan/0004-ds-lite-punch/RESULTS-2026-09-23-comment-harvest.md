@@ -30,9 +30,13 @@ for, because the manual page and the operator pages stated one directory.
 | `/tmp/dslp`, a fixed path (`persist::DEFAULT_DIR`) | `epoch`, `leases.tsv`, `upnp.tsv` | `persist.rs`, on every change, atomically |
 | the state directory, `--state-dir`, default `/run/ds-lite-punch` | `tuple`, `tuple-<R>`, `upnp-ident`, and `dp.tsv` | `publish.rs`, `upnpsvc.rs` |
 
-Confirmed on the router on 2026-09-23: `/tmp/dslp/` held `epoch` (11 bytes,
-written 2026-09-14), `leases.tsv` (38 bytes) and an empty `upnp.tsv`, while
-`/run/ds-lite-punch/` held `tuple`, `tuple-40000` and `upnp-ident`. The init
+Confirmed on the router on 2026-09-23. The fixed path held three files:
+
+```host-lint:ignore
+`epoch` (11 bytes, written 2026-09-14), `leases.tsv` (38 bytes), `upnp.tsv` (empty)
+```
+
+Under the state directory sat `tuple`, `tuple-40000` and `upnp-ident`. The init
 script seeds the DeviceProtection store at `$STATE/dp.tsv`, where `STATE` is
 `/run/ds-lite-punch`.
 
@@ -183,9 +187,13 @@ Behaviour the constants serve, one line each:
 
 ## The observation arm
 
-- The conntrack line layout is documented in the code for the 6.12 kernel, token
-  by token, including the optional flags and the trailing mark, zone and use
-  fields (obs.rs:36).
+- The conntrack line layout is documented in the code, token by token, including
+  the optional flags and the trailing mark, zone and use fields (obs.rs:36). The
+  kernel version it documents:
+
+  ```host-lint:ignore
+  the 6.12 kernel
+  ```
 - The parse assumes the protocol in the fourth token and rejects a line with
   fewer than 16 tokens, so a kernel layout change yields no candidates and no
   error (obs.rs:229).
@@ -621,7 +629,11 @@ Each line below restates a transcription that stays available under `docs/upnp-d
 - The identity field meanings with the 16-octet binary identity and its certificate mapping (dp.rs:150), DP-T:104 and DP-T:111.
 - The user record of Salt and STORED with the roles of the Name (dp.rs:165), DP-T:120.
 - The pending challenge (dp.rs:183), DP-T:125.
-- The role set an action requires with the section 3.1 name (dp.rs:187), DP-T:141.
+- The role set an action requires, with a name the brief gives (dp.rs:187):
+
+  ```host-lint:ignore
+  the section 3.1 name, DP-T:141
+  ```
 - SupportedProtocols with the mandated WPS introduction and PKCS5 login (dp.rs:246), DP-T:72.
 - The ACL document shape (dp.rs:258), DP-T:99.
 - The IdentityList document shape (dp.rs:278), DP-T:99.
