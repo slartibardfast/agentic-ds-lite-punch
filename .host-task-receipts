@@ -482,3 +482,16 @@
     reason = call/0042
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#lease"]
+    disposition = done
+    verify = attested call/0041
+    evidence = call/0041: the component lane proves the withdrawal, an entry leaving the include once its pokes have stopped
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
+
+[receipt "plan/0012#deps-bundle"]
+    disposition = skip
+    reason = call/0039
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
