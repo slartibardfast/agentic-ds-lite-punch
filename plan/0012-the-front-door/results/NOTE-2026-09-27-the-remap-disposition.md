@@ -10,7 +10,11 @@ than a rereading.
 
 ## What the remap phase reports
 
-Five tell-shaped tokens, in two records:
+Eight tell-shaped tokens, in three records. The count stood at five before this
+milestone's own record arrived, and the three it added are the three lines below
+that carry `epoch`, which is the token this lane reads as a tell wherever it
+appears. That resolves the line in the harvest whose flagged token puzzled L: the
+word `epoch` is the tell, not the state directory named beside it.
 
 ```host-lint:ignore
 call/0037-comments-are-one-line-and-technical.md:20: warning: (`section 8.2`, `26.19`, `6.12`) or a brief item code (`I1`, `R5`, `B4`). (section)
@@ -59,11 +63,15 @@ quotes shapes as its subject, that is the honest form.
 
 ## What each choice costs, and what waits
 
-Both leave the milestone's status line, its record, and every task receipt as they
-stand. Neither is L's to make: the methodology puts the vocabulary with the
-operator, and the same holds for the URL that a `DP-T` declaration needs.
+Boxing a frozen record's citation is the methodology's default, so it needs nobody's
+permission and L can do it. Declaring a token is the operator's, because the
+vocabulary is theirs and a `DP-T` declaration needs a URL for the brief it answers
+to. The two are not the same decision wearing two hats: boxing an irreducible
+citation is an edit to a record, and declaring a token tells the lane that a
+legitimate phrase looks like a tell.
 
-Until one is chosen, `#record`'s verify re-runs the gate and finds the same red, so
-the milestone's last receipt cannot be written. Nothing else in the repository is
+Neither touches the milestone's status line, its record, or any task receipt. Until
+the eight are disposed, `#record`'s verify re-runs the gate and finds the same red,
+so the milestone's last receipt cannot be written. Nothing else in the repository is
 waiting on it: a sweep of all seven milestones this turn found `#record` as the only
 task without a receipt.

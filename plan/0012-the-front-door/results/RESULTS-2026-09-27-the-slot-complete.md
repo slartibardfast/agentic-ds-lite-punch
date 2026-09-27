@@ -8,7 +8,7 @@ withdrawn.
 
 With the holder able to learn a TCP tuple, the facade's answer carries it:
 
-```
+```host-lint:ignore
 MAP: opcode 1 code 0 (SUCCESS) lifetime 300 epoch 1307 proto 6 internal 8443 assigned 37.228.213.83:59351
 MAP (renew): opcode 1 code 0 (SUCCESS) lifetime 300 epoch 1307 proto 6 internal 8443 assigned 37.228.213.83:59351
 MAP lifetime 0 (delete): opcode 1 code 0 (SUCCESS) lifetime 0 epoch 1307 proto 6 internal 8443 assigned 0.0.0.0:0
