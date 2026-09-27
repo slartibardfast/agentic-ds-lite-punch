@@ -468,3 +468,11 @@
     evidence = call/0041: the component lane asserts the mint gate — a wrong password refused, an identity without the required role refused, and the minted subject carrying the identity and the permission
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#the-daemons-identity"]
+    disposition = done
+    verify = attested call/0041
+    inputs = the certificate module under `src/`, `Cargo.toml`, `Cargo.lock`
+    evidence = call/0041: the component lane runs the suite, where a handshake against a server the anchor signed completes and a server another authority signed is refused, and a key belonging to no certificate is refused
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
