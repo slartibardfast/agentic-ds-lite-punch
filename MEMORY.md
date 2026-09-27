@@ -3095,3 +3095,43 @@ bytes, a module inventory typed by hand and truncated, and the naming sweep with
 no automatic trigger in this host while `--verify-setup` reads the same tree as
 complete. A report is not a settlement: the five tells still await the operator's
 choice of sanction or reword.
+
+## 2026-09-27 — the poke admits a peer, and a TCP slot needed a server that speaks TCP
+
+The front door's admission mechanism is measured on the line and it works. The
+daemon pokes a nominated peer from the slot's own socket every keepalive interval
+and the poke leaves as `192.168.0.21.40000 > 170.9.238.141.41001`, captured on
+`eth1`. The vantage listened on that port, learned the tuple the pokes arrive
+from — `37.228.213.83:59348`, the same tuple the daemon republishes from STUN, so
+the published file is right for a poked peer and the carrier gives one external
+port per slot, not one per destination. It answered, and each reply arrived at
+the inner tuple and was forwarded to the target with the peer's own address and
+port intact. Recorded in `plan/0012-the-front-door/results/RESULTS-2026-09-27-the-pinhole.md`
+with `#stranger-arrival` receipted done, and the task's second half is that a
+stranger who has not been poked is refused, which the previous day's record holds.
+
+The TCP slot took longer and taught one fact worth keeping. A TCP slot learns its
+tuple by dialling a STUN server **over TCP**, and neither server in the default
+list answers over TCP: both connect and then time out. The tuple therefore stayed
+unknown, the facade answered `NETWORK_FAILURE, lifetime 30`, and no per-slot file
+was written. `stun.nextcloud.com:443` does answer, with a 68-byte binding success,
+and with it in the list a TCP slot published `tuple-40003 = 37.228.213.83:59355`
+with a bound listener and a fold pin. The default now carries it in the code, in
+the argdoc definition the help and the manual come from, in the example env and in
+the operator table, pinned by a test. The external SYN is still refused, from the
+carrier, because the holder's only peer is the STUN server; the TCP poke — a dial
+toward a nominated destination over the folded tuple — is owed, and the front is
+the destination that can also report the tuple it sees.
+
+Two operational lessons. The router's init script travels with the binary: the
+first deploy passed no `--poke` because `/etc/init.d/ds-lite-punch` was still the
+previous release's. And a `-w` capture that is still running has not flushed, so
+its file reads as zero bytes and a real result looks like silence; kill the
+capture before reading it, or start it with `-U`. An absent file is a different
+thing, and means the capture never ran.
+
+Three commits landed red in this stretch (`975009d` among them) because the shell
+carried the status past the check: `cargo test … | tail` returns the pipe's status,
+and a `;` before the commit ignores it entirely. The repair is to read the exit
+code into a variable and guard the commit on it, which is what the later commits
+do.
