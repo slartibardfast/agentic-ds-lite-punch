@@ -177,6 +177,13 @@ front's certificate through an anchor the operator places, with the public roots
 the fallback. This is the crate's first dependency beyond `tokio` and `libc`, and
 it is what `#deps-bundle` pins.
 
+The flags and the loading have landed. `--client-identity cert.pem:key.pem` and
+`--front-anchor ca.pem` are read at startup, a file that cannot be read stops the
+daemon and the refusal names the flag, and four tests cover the loader with two
+more covering those refusals. The identity reaches the wire with the control
+channel, which is where a TLS stack and the public roots arrive, so this task stays
+open until that lands rather than claiming a trust it does not yet perform.
+
 ### Carry the routing table to the front {#control-channel}
 
 - depends: #hold-tcp-slot, #the-daemons-identity
