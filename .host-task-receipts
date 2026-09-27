@@ -461,3 +461,10 @@
     reason = call/0041
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#the-ca-on-the-line"]
+    disposition = done
+    verify = attested call/0041
+    evidence = call/0041: the component lane asserts the mint gate — a wrong password refused, an identity without the required role refused, and the minted subject carrying the identity and the permission
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
