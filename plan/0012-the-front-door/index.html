@@ -175,9 +175,15 @@
                     <main>
                         <h1 id="milestone-the-front-door"><a class="header" href="#milestone-the-front-door">Milestone: the front door</a></h1>
 <p><strong>Status:</strong> in progress, opened 2026-09-26. The architecture is settled in
-<a href="../call/0038-the-front-door-is-a-held-port.html">call/0038</a>, and what the control
-channel costs the binary is settled in
-<a href="../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>.</p>
+<a href="../call/0038-the-front-door-is-a-held-port.html">call/0038</a>, what the control
+channel costs the binary in
+<a href="../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>, how a
+client becomes an identity in
+<a href="../call/0040-admission-is-a-certificate-minted-on-the-line.html">call/0040</a>, and
+where the front's proofs live in
+<a href="../call/0041-the-fronts-proofs-are-the-components-lane.html">call/0041</a>. Six tasks
+carry a done receipt and one is a recorded deferral, which the tasks below name,
+and the frontier is the daemon's own identity.</p>
 <h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
 <p>A service on this line is reached today by something that terminates a connection
 outside the line and re-originates it inside: an HTTP or database proxy on a
@@ -222,11 +228,11 @@ name, the listener that learns the tuple, and the lease that withdraws an entry
 whose pokes have stopped. The tasks below that carry them stay attestations,
 because a clone of the host runs no nginx.</p>
 <h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
-<p>Ten tasks. The first gives the line a peer to speak to, the second measures what
-the carrier then admits, the next two put a port and a route in place, three more
-make the control channel real with its certificate programme beside it, and the
-last two write the recipe and record the milestone. Every task carries a verify,
-and the mechanical ones re-run at the gate.</p>
+<p>Eleven tasks. The first gives the line a peer to speak to, the second measures what
+the carrier then admits, the next two put a port and a route in place, and the rest
+build the front's half, the authority that admits a client, the control channel
+with the bundle it obliges, and the recipe that ends it. Every task carries a
+verify, and the mechanical ones re-run at the gate.</p>
 <h3 id="poke-the-front"><a class="header" href="#poke-the-front">Send from the slot, so a peer is admitted</a></h3>
 <ul>
 <li>verify: cargo test --release --locked</li>
