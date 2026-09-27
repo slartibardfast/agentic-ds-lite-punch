@@ -3943,7 +3943,12 @@ entry.</p>
 <p>The TLS client is the first dependency this crate has taken beyond <code>tokio</code> and
 <code>libc</code>, and <a href="plan/0012-the-front-door/../call/0039-the-control-channel-carries-a-tls-client.html">call/0039</a>
 settles what that owes: a hash-pinned bundle recorded in <code>.host-software</code>, so the
-artifact is reproduced from pinned inputs with the network off.</p>
+artifact is reproduced from pinned inputs with the network off. The crate pins the
+musl target in <code>.cargo/config.toml</code>, so the dependency builds for musl wherever the
+suite runs. This machine carries <code>x86_64-linux-musl-gcc</code>, which a TLS crate with a C
+core needs, and the machine that cuts the release carries the pinned image; both are
+worth naming in the release record, since the recorded hash comes from the pinned
+image and not from whichever compiler is nearest.</p>
 <h3 id="recipe"><a class="header" href="#recipe">Write the front-door recipe</a></h3>
 <ul>
 <li>depends: #stranger-arrival, #front-config</li>
