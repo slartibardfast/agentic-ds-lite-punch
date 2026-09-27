@@ -4048,6 +4048,35 @@ front-door use case.</p>
 <p>The results document: the measurement's transcript and what the carrier's
 filtering turned out to be, the handshake through the held port, the front's
 configuration as it ran, and the size the binary grew to.</p>
+<h2 id="what-the-release-still-needs"><a class="header" href="#what-the-release-still-needs">What the release still needs</a></h2>
+<p>The milestone's substance is closed and committed. The one item the host gate
+reports is the component's pin, and the release is what moves it. Three facts shape
+the run, and each one is checkable here.</p>
+<ul>
+<li>This host has no container runtime: <code>which docker podman</code> answers nothing.
+<code>host-lifecycle release</code> refuses without one by design, because the canonical hash
+belongs to the recorded image, so the release runs where that image can.</li>
+<li>The bundle that records the build's hermeticity has no published home yet, and the
+release builds with the network off. The bundle is therefore published first, and
+its URL recorded as <code>deps-bundle</code> in <code>.host-software</code>. The release job attaches the
+binary, the manual page and the artifact line to the tag's release
+(<code>.github/workflows/release.yml</code>) and attaches no bundle, and this repository's
+releases are immutable once published, so the bundle needs a home of its own or a
+step added to that job. Which of the two is a decision this milestone leaves open.</li>
+<li>The bytes exist and are verified. <code>tools/bundle-deps.sh</code> built them, and
+<code>target/deps-vendor.tar.gz</code> in the component worktree hashes to
+<code>dc033b6310f523c90253e62eae2fee72cfaebf108308964ab21a686592d8f72b</code>, which is the
+digest the offline build was measured against.</li>
+</ul>
+<p>The run, in the order the tool performs it:</p>
+<pre><code class="language-sh">host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
+</code></pre>
+<p>It runs the verify sweep, bumps the version the change class implies, stages the
+bundle, builds inside the recorded image, and prints the canonical hash beside the
+outward steps (commit and push, tag and push, re-pin, receipt). <code>#record</code> draws its
+done once the pin names the pushed commit:</p>
+<pre><code class="language-sh">host-lifecycle tasks --record plan/0012#record --disposition done --evidence &lt;tag&gt;@&lt;hash&gt; .
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="software-where"><a class="header" href="#software-where">Software: where</a></h1>
 <p>The action this project produces. Each component is a bare object store with worktrees, not committed into this repo; the recipe below is the reproducibility anchor. Materialize the worktrees locally with:</p>
 <pre><code>host-lifecycle software --materialize .
