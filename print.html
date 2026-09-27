@@ -10151,6 +10151,31 @@ carried the status past the check: <code>cargo test … | tail</code> returns th
 and a <code>;</code> before the commit ignores it entirely. The repair is to read the exit
 code into a variable and guard the commit on it, which is what the later commits
 do.</p>
+<h2 id="2026-09-27--the-fronts-halves-exist-and-one-of-them-cannot-be-harnessed"><a class="header" href="#2026-09-27--the-fronts-halves-exist-and-one-of-them-cannot-be-harnessed">2026-09-27 — the front's halves exist, and one of them cannot be harnessed</a></h2>
+<p>The front door's front side is built in the component and proven in its lane.
+<code>deploy/front-door/nginx.conf</code> reads a generated include on both legs, keyed on
+the name for TCP and on the listening port for UDP, so a name follows the carrier's
+assignment with no operator in the loop. <code>deploy/front-door/poke-listener.py</code>
+listens on the port the daemon pokes, takes the poke's own source as the line's
+tuple, writes the include, reloads, and withdraws an entry once its pokes stop,
+which is the lease the design asks for and which the front can hold today without
+the control channel. <code>deploy/front-door/test-local.sh</code> renders the shipped file,
+mints a one-day authority, and asserts the split, the learned tuple, and the
+withdrawal; the component's lane runs it, so the proof is not machine-local.</p>
+<p>One constraint cost real design time and is worth not rediscovering. The poke's
+source is the address the front forwards to, because the carrier's mapping is what
+carries traffic on to the LAN service. A harness standing in for the line on one
+machine must therefore poke from the very port it serves. One UDP socket does that
+naturally, and that is why the UDP leg's dynamic routing is proven in the harness.
+A TCP port serves as a listening socket or as a connection's source, never both, so
+the TCP leg's learning belongs to the deployment, where the daemon's own listener
+sits at the mapping's port. The harness stands in for that leg's line and proves
+the routing half, which is the half it can hold.</p>
+<p>The certificate thread has its decision (<code>call/0040</code>): the authority lives on the
+line, the certificate carries what its identity may reach, lifetimes are short so
+exclusion is a decision not to renew, and the daemon holds an identity of its own
+for the control channel. What remains for the milestone is the control channel
+itself and the dependency bundle it obliges.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
