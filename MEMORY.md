@@ -3188,3 +3188,28 @@ so a generated config has to be rewritten against where the bundle will be unpac
 The companion lesson lives in the component's docs: a certificate without
 extensions is X.509 version one and a TLS stack refuses it, which
 `docs/operators/troubleshoot.md` now covers as a failure an operator can meet.
+
+## 2026-09-27 — the tell the lexicon cannot declare, and the pin the milestone cannot move
+
+The remap phase's recheck went red on five warn-tier tells after the grammar bump:
+three clause citations of the form `section N`, one `epoch N` adjacency in a
+sentence about a state directory, and one kernel version `6.12`. The finding:
+host-lint's LEXICON **cannot** sanction any of the five. `validate_lexicon_entry`
+refuses a declared phrase that carries a position noun (`section`, `epoch`) as a
+word, because masking it would blank that token out of a real tell, and it refuses
+a phrase that is itself a flag. Declaration was therefore closed for four of the
+five, and the disposition for a frozen record is the `host-lint:ignore` box.
+
+The anti-laundering property was measured rather than assumed: a scratch markdown
+file carrying an unboxed `pass 3` beside a boxed `section 9.9` reported the unboxed
+one alone. A box hides its own lines, and the rest of the file stays linted.
+
+With the five boxed, the remap phase rechecks green and every task in the
+repository carries a receipt. What the host gate still reports is the component's
+**pin**: the worktree sits at the front-door work, and the record pins the tagged
+previous release. The pin needs the release, the release needs the canonical hash,
+and the canonical hash needs the recorded toolchain image, which this development
+host has no container runtime to run (`call/0032`). `host-lifecycle release` refuses
+here by design rather than hand a re-pin to an ambient build, so `plan/0012#record`
+is recorded as a deferral to the release. The release is the operator's step:
+publish the bundle, then bump, tag, build in the lane, and pin the tagged bytes.
