@@ -82,6 +82,21 @@ carrier remembers an address alone or an address and a port. That answer decides
 which source port the front may reach from, and it is load-bearing now, because
 the poke's destination port is the thing the carrier will remember.
 
+### Learn the line's tuple at the front {#front-learns-the-tuple}
+
+- depends: #poke-the-front
+- verify: attested operator
+
+The front completes the exchange the poke opens.
+`deploy/front-door/poke-listener.py` listens on the port the daemon pokes and
+writes the table the front routes to, one line for each protocol. The line's tuple
+for a protocol is the source of the poke the front receives, and the front is the
+only party that sees it: the carrier admits a peer the line has spoken to. The
+component's harness proves the behaviour beside the split, where a poke-shaped
+datagram and a poke-shaped connection each leave that protocol's tuple in the
+table. This task stays an attestation for the reason the front's configuration
+does, since a clone of the host carries no nginx.
+
 ### Hold a TCP slot for the front {#hold-tcp-slot}
 
 - depends: #stranger-arrival
