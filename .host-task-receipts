@@ -448,3 +448,16 @@
     evidence = the same lane asserts the front takes the poke's own source as the tuple, and that the UDP forward follows it (call/0041)
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#recipe"]
+    disposition = done
+    verify = attested call/0041
+    evidence = call/0041: docs/operators/front-door.md exists and the component lane runs its link check and the prose audit on every push
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
+
+[receipt "plan/0012#hold-tcp-slot"]
+    disposition = skip
+    reason = call/0041
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-27
