@@ -107,7 +107,7 @@ the poke's destination port is the thing the carrier will remember.
 ### Learn the line's tuple at the front {#front-learns-the-tuple}
 
 - depends: #poke-the-front
-- verify: attested operator
+- verify: attested call/0041
 
 The front completes the exchange the poke opens.
 `deploy/front-door/poke-listener.py` listens on the port the daemon pokes and
@@ -133,7 +133,7 @@ first and a regenerated help text and manual page.
 
 ### Route two classes of name at the front {#front-config}
 
-- verify: attested operator
+- verify: attested call/0041
 
 The front's configuration, with both classes in one file, is written and proven:
 `deploy/front-door/nginx.conf` carries the split, and
