@@ -1,15 +1,19 @@
 # Milestone: the front door
 
-**Status:** in progress, opened 2026-09-26. The architecture is settled in
+**Status:** every task carries a receipt, three of them recorded deferrals;
+[the milestone's record](results/RESULTS-2026-09-27-the-front-door.md) gathers what
+the measurements found and where each proof lives. The architecture is settled in
 [call/0038](../call/0038-the-front-door-is-a-held-port.md), what the control
 channel costs the binary in
 [call/0039](../call/0039-the-control-channel-carries-a-tls-client.md), how a
 client becomes an identity in
-[call/0040](../call/0040-admission-is-a-certificate-minted-on-the-line.md), and
-where the front's proofs live in
-[call/0041](../call/0041-the-fronts-proofs-are-the-components-lane.md). Six tasks
-carry a done receipt and one is a recorded deferral, which the tasks below name,
-and the frontier is the daemon's own identity.
+[call/0040](../call/0040-admission-is-a-certificate-minted-on-the-line.md), where
+the front's proofs live in
+[call/0041](../call/0041-the-fronts-proofs-are-the-components-lane.md), and what
+the poke delivers in
+[call/0042](../call/0042-the-poke-delivers-the-tuple.md). `#record` holds the last
+receipt, and it waits on the host gate's one red item: the remap debt in the two
+records named above, which is the operator's vocabulary to dispose of.
 
 ## What this milestone is
 
