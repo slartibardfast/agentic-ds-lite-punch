@@ -309,3 +309,39 @@ front-door use case.
 The results document: the measurement's transcript and what the carrier's
 filtering turned out to be, the handshake through the held port, the front's
 configuration as it ran, and the size the binary grew to.
+
+## What the release still needs
+
+The milestone's substance is closed and committed. The one item the host gate
+reports is the component's pin, and the release is what moves it. Three facts shape
+the run, and each one is checkable here.
+
+- This host has no container runtime: `which docker podman` answers nothing.
+  `host-lifecycle release` refuses without one by design, because the canonical hash
+  belongs to the recorded image, so the release runs where that image can.
+- The bundle that records the build's hermeticity has no published home yet, and the
+  release builds with the network off. The bundle is therefore published first, and
+  its URL recorded as `deps-bundle` in `.host-software`. The release job attaches the
+  binary, the manual page and the artifact line to the tag's release
+  (`.github/workflows/release.yml`) and attaches no bundle, and this repository's
+  releases are immutable once published, so the bundle needs a home of its own or a
+  step added to that job. Which of the two is a decision this milestone leaves open.
+- The bytes exist and are verified. `tools/bundle-deps.sh` built them, and
+  `target/deps-vendor.tar.gz` in the component worktree hashes to
+  `dc033b6310f523c90253e62eae2fee72cfaebf108308964ab21a686592d8f72b`, which is the
+  digest the offline build was measured against.
+
+The run, in the order the tool performs it:
+
+```sh
+host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
+```
+
+It runs the verify sweep, bumps the version the change class implies, stages the
+bundle, builds inside the recorded image, and prints the canonical hash beside the
+outward steps (commit and push, tag and push, re-pin, receipt). `#record` draws its
+done once the pin names the pushed commit:
+
+```sh
+host-lifecycle tasks --record plan/0012#record --disposition done --evidence <tag>@<hash> .
+```
