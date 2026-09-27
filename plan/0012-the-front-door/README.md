@@ -255,6 +255,15 @@ The host's reproducible lane already performs the re-derivation half on every pu
 and [call/0039](../call/0039-the-control-channel-carries-a-tls-client.md) settled
 that obligation.
 
+The tool exists and the claim behind it is measured. `tools/bundle-deps.sh` vendors
+the dependencies into a tarball of 16 MB and prints its digest, this run's being
+`dc033b6310f523c90253e62eae2fee72cfaebf108308964ab21a686592d8f72b`. Extracting that
+tarball into the crate root, appending the config it carries, and building with a
+fresh cargo home and `--offline` produced the artifact in 4m17s with exit 0, so the
+crate is reproduced from pinned inputs with no network. The release still owes the
+publish, the `.host-software` line, and the artifact re-derivation in the recorded
+image.
+
 ### Write the front-door recipe {#recipe}
 
 - depends: #stranger-arrival, #front-config
