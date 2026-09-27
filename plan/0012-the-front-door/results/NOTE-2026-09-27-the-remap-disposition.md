@@ -12,7 +12,7 @@ than a rereading.
 
 Five tell-shaped tokens, in two records:
 
-```
+```host-lint:ignore
 call/0037-comments-are-one-line-and-technical.md:20: warning: (`section 8.2`, `26.19`, `6.12`) or a brief item code (`I1`, `R5`, `B4`). (section)
 call/0037-comments-are-one-line-and-technical.md:37: warning: (`section 8.2`). A brief item code resolves to the rule it names. (section)
 plan/0004-ds-lite-punch/RESULTS-2026-09-23-comment-harvest.md:33: warning: Confirmed on the router on 2026-09-23: `/tmp/dslp/` held `epoch` (11 bytes, (epoch)
