@@ -118,9 +118,9 @@ A client's admission is carried by its certificate, minted after a
 DeviceProtection-authenticated login, so the front verifies a chain instead of
 asking the line about every connection. The authority lives on the line, issuance
 is gated by a login the existing store already authenticates, and a certificate
-is short-lived, which makes exclusion a decision not to renew rather than a
-revocation path to maintain. Tests cover issuance, and the exchange an identity
-holding no role cannot complete.
+is short-lived, so excluding an identity is a decision not to renew it and no
+revocation list has to be published. Tests cover issuance, and the exchange an
+identity holding no role cannot complete.
 
 ### Carry the routing table to the front {#control-channel}
 
