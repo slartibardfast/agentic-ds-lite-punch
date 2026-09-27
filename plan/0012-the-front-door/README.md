@@ -167,7 +167,7 @@ is refused, and a minted certificate carries the identity and the permission.
 ### Give the daemon its own identity {#the-daemons-identity}
 
 - depends: #the-ca-on-the-line
-- verify: cargo test --release --locked
+- verify: attested call/0041
 - inputs: the certificate module under `src/`, `Cargo.toml`, `Cargo.lock`
 
 The daemon's half, settled by
@@ -177,12 +177,14 @@ front's certificate through an anchor the operator places, with the public roots
 the fallback. This is the crate's first dependency beyond `tokio` and `libc`, and
 it is what `#deps-bundle` pins.
 
-The flags and the loading have landed. `--client-identity cert.pem:key.pem` and
-`--front-anchor ca.pem` are read at startup, a file that cannot be read stops the
-daemon and the refusal names the flag, and four tests cover the loader with two
-more covering those refusals. The identity reaches the wire with the control
-channel, which is where a TLS stack and the public roots arrive, so this task stays
-open until that lands rather than claiming a trust it does not yet perform.
+The flags, the loading and the trust have landed. `--client-identity cert.pem:key.pem`
+and `--front-anchor ca.pem` are read at startup, a file that cannot be read stops
+the daemon and the refusal names the flag. The client names its TLS provider
+explicitly, carries the pair, and accepts the anchor: a handshake against a server
+the anchor signed completes, and a server another authority signed is refused. A
+test over a key that belongs to no certificate proves rustls checks the pairing, so
+a wrong identity stops at the configuration rather than at the first push. The
+control channel is what puts the configuration to work.
 
 ### Carry the routing table to the front {#control-channel}
 
