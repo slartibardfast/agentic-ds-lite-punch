@@ -1,7 +1,7 @@
 # Milestone: the front door
 
-**Status:** done, 2026-09-27. Every task in the build sequence carries a receipt,
-and four of them are recorded
+**Status:** done, 2026-09-27; released 2026-09-28 at `v0.4.1`. Every task in the build
+sequence carries a receipt, and two of them are recorded
 deferrals;
 [the milestone's record](results/RESULTS-2026-09-27-the-front-door.md) gathers what
 the measurements found and where each proof lives. The architecture is settled in
@@ -19,9 +19,8 @@ receipt waited on is disposed: two records' citation lines, each in a
 refuses to declare it (a declared phrase carrying `section` or `epoch` as a position
 noun is refused outright). What the gate still reports is the pin that the release
 moves, and the release runs where the recorded toolchain is available
-(`call/0032`): the bundle's own release is published, the release ran on 2026-09-28 at
-`0.4.0`, and the tag's lane turned up two defects that the section below records.
-`#record` defers to a release whose lanes agree.
+(`call/0032`): the bundle's own release is published, the release ran on 2026-09-28 and
+ended at `0.4.1`, and the section below carries what it turned up and how that closed.
 
 ## What this milestone is
 
@@ -378,8 +377,12 @@ carries the measurement: three builds of one commit, the two causes, and the fix
 the component's three artifact lanes. The published manual page is stale as well, for the
 same release's reason.
 
-A replacement release from the corrected lanes is the coherent step, and it is the
-operator's to authorize: the v0.4.0 release is immutable and its bytes are not the ones
-the record anchors. The pin stays on the v0.4.0 commit until that lands, and the gate
-reports the later commit on `main` as drift. `#record` draws its done from a release whose
-lanes agree.
+The replacement release ran the same day at `0.4.1`, from the corrected lanes, with the
+generated page regenerated inside its release commit. Its published asset hashes
+`609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e`, which is the value
+`.host-software` records, and `artifact-record.txt` in the release carries that line. The
+pin names the tagged commit, the gate is green, and `#record` is done. The two defects are
+filed upstream as [host-lifecycle#30](https://github.com/connollydavid/host-lifecycle/issues/30)
+and [#31](https://github.com/connollydavid/host-lifecycle/issues/31). The v0.4.0 release
+keeps its published bytes, because this repository's releases are immutable, and the
+section above states what they are.

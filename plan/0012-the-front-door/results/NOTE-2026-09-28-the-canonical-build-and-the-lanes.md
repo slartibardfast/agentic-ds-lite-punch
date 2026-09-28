@@ -78,3 +78,8 @@ artifact-producing lanes, and the gate holds each of them to the recorded recipe
 The v0.4.0 release is immutable and its bytes are not the canonical ones, so the coherent
 step is a replacement release from the corrected lanes. The pin names the v0.4.0 commit
 until that lands, and the gate reports the later commit on `main` as drift.
+
+**Closed the same day.** The replacement release ran at `0.4.1` from the corrected lanes,
+and its published asset hashes `609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e`,
+which is the value `.host-software` records. The milestone README carries the pin and the
+gate's state.
