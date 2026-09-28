@@ -8,20 +8,23 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = c7c4a33d76f5ef38ca232cf94a115f23232cc62b
+	pin   = 06a6291b2d00e635cba77ccd0ecf7bfe488b8145
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
-	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 912f54aec733d35558af6ebcd409b697dc7833233df4361469ced677c4cccba1
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 59552c68ac29e8c5ff184358d5e215ccdc30bf2f8b4954353d48470cdf1d2fd5
 	deps-bundle = https://github.com/slartibardfast/ds-lite-punch/releases/download/deps-vendor-v1/deps-vendor.tar.gz 7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730
 # The toolchain is a digest-pinned container rather than a target triple:
 # `--verify-build` runs the recorded `build` inside it, so the image is what
 # reproduces the artifact and a movable tag would invalidate every hash
 # recorded under it. The hash above was produced inside that image for the
-# tagged commit, by the component's own lane and again by the Release lane, with
-# the runs agreeing byte for byte; an anonymous fetch of the release asset
-# hashes to the same value, and the release publishes that binary, so a
-# deployment takes those bytes rather than a local build's (call/0032). The
+# tagged commit by the host's own release, which stages the bundle below and
+# builds with the network off. The component's artifact lanes build that same
+# recipe, so a release asset hashes to the value above and a deployment takes
+# those bytes rather than a local build's (call/0032). The lanes had built from
+# the registry instead, which hashes differently, and the v0.4.0 release
+# published such a build; they were corrected in the component on 2026-09-28
+# (plan/0012's results). The
 # bundle that `deps-bundle` names is the vendored dependency layer the offline
 # build stages, and its bytes are not reproducible: the digest anchors the
 # published asset, so a rebuild of the bundle will not match it. A
@@ -34,8 +37,10 @@
 # To prove a pass moved no code, blank its comments in place rather than delete
 # them, which rebuilds the pre-pass hash exactly.
 #
-# This development host has no container runtime, so its own target/ builds
-# with the ambient compiler and hashes differently. That is a property of the
-# host, not a defect in the record: a local build is for iteration, and the
-# binary on the test router was installed from the lane's artifact and checked
-# against the hash above before it was started.
+# A container runtime arrived on this host on 2026-09-28 (`podman`), so the
+# release that pinned the hash above ran here, in the recorded image, with the
+# bundle staged and the network off. The host's own target/ still builds with
+# the ambient compiler and hashes differently, which is a property of that
+# build and not a defect in the record: a local build is for iteration, and the
+# binary on the test router is the lane's artifact of the release before this
+# one, checked against that release's hash before it was started.
