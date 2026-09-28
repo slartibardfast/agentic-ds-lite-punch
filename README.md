@@ -26,40 +26,47 @@ work.
 | Why | `call/` | decisions in MADR form |
 | How | `AGENTS.md` + `tools/` | the manual and the verification lanes |
 
-## State at 2026-09-19
+## State
+
+[plan/PLAN.md](plan/PLAN.md) is the index, and each milestone's own README carries
+its state; this table is the one-line view.
 
 | Milestone | State |
 |---|---|
-| [plan/0004](plan/0004-ds-lite-punch/README.md) | v1 core built, deployed and verified; multi-instance built; the UPnP control plane delivered by [plan/0007](plan/0007-igd-facade/README.md) and [plan/0008](plan/0008-adaptive-igd-v1v2-facade/README.md) |
+| [plan/0004](plan/0004-ds-lite-punch/README.md) | the v1 core, deployed and verified; multi-instance built; the UPnP control plane delivered by [plan/0007](plan/0007-igd-facade/README.md) and [plan/0008](plan/0008-adaptive-igd-v1v2-facade/README.md) |
 | [plan/0005](plan/0005-test-rig/README.md) | the acceptance rig |
 | [plan/0006](plan/0006-ps3-requirements/README.md) | the console requirements; closed by reframing ([call/0014](call/0014-a2-acceptance-reframe.md)) |
 | [plan/0007](plan/0007-igd-facade/README.md) | the UPnP facade; closed 2026-09-15 |
 | [plan/0008](plan/0008-adaptive-igd-v1v2-facade/README.md) | the adaptive v1 and v2 facade with DeviceProtection; 31 probes pass on the box |
 | [plan/0009](plan/0009-mapping-keepalive-and-signalling/README.md) | the mapping keepalive and its signalling; done 2026-09-18 |
+| [plan/0010](plan/0010-the-filtering-proved-and-watched/README.md) | the carrier's filtering proved and watched; closed 2026-09-23 |
+| [plan/0011](plan/0011-documentation/README.md) | the operator pages, the generated help and the manual page; done 2026-09-22 |
+| [plan/0012](plan/0012-the-front-door/README.md) | the front door; done 2026-09-27, with its release still to run |
 
 The component:
 
-- The record in [`.host-software`](.host-software) names the pin, the toolchain
-  and the artifact hash. The artifact hash today is
-  `ab0f9bd517ef075885fd5b6e6a91b9fcc7e64ad9805e7d6450f2bd3eefd11a45`.
-- The component lane runs the test suite and the release build inside the
-  pinned toolchain image, and it publishes the binary from the run.
+- The record in [`.host-software`](.host-software) names the pin, the toolchain and
+  the artifact hash, and the pin currently names the released `v0.3.5`. What moves it
+  onto the front door's work, and what that run needs, is in
+  [plan/0012](plan/0012-the-front-door/README.md), *What the release still needs*.
+- The component lane runs the test suite and the release build inside the pinned
+  toolchain image, publishes the binary from the run, and proves the vendored
+  dependency bundle builds with the network off.
 - The test router runs the bytes from that lane.
-- The three host lanes pass: Reproducible build, Prose and Site.
-- The adopted template revision is `41ba4e10`, recorded in [`.host`](.host).
+- The repository's sweep is the gate: `host-lifecycle software --check .` over the
+  rooms (validate, the naming and prose audits, the reference sweep, reconcile, the
+  phase receipts and the task graph), with `book --check` for the site.
+- The adopted template revision is in [`.host`](.host).
 
 ## Future work
 
-1. **The lobby case.** A console in a lobby sends no traffic. The keepalive must
-   survive that silence on a real console. The operator runs this test
-   ([plan/0009](plan/0009-mapping-keepalive-and-signalling/README.md)).
+1. **The lobby case.** The hold survives a quiet console
+   ([call/0030](call/0030-a-mapping-ends-with-its-device.md)), and the run that
+   confirms it on a real console is the operator's;
+   [plan/0010](plan/0010-the-filtering-proved-and-watched/README.md) names what its
+   own run leaves out.
 2. **The Kani suite on a larger host**
    ([call/0019](call/0019-facade-kani-deferred-to-larger-host.md)).
-3. **The R4 rule.** A late collision moves an allocation, and it never moves a
-   punch. Decide if the rule must follow the protocol of the entry
-   ([call/0027](call/0027-collisions-for-punched-ports.md)).
-4. **EIF loss.** Detect a change in the filtering behaviour of the carrier
-   ([plan/0004](plan/0004-ds-lite-punch/README.md)).
 
 ## Working here
 
