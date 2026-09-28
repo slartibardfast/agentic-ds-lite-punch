@@ -10514,6 +10514,20 @@ text out of the template.</p>
 <p>What is not in force here is therefore only the local escalation of a warning over
 the copy. The spine's own prose and naming are held clean where the spine is
 authored, by the template's CI.</p>
+<h2 id="2026-09-28--the-fixture-directory-was-shared-and-parallel-tests-raced-on-it"><a class="header" href="#2026-09-28--the-fixture-directory-was-shared-and-parallel-tests-raced-on-it">2026-09-28 — the fixture directory was shared, and parallel tests raced on it</a></h2>
+<p><code>cargo test</code> on the component went red once and green twice on the same code, with
+<code>the_push_reaches_a_server_the_anchor_signed</code> failing on <code>invalid peer certificate: BadSignature</code>. The cause is not cryptographic. <code>identity::tests::fixtures</code> and
+<code>front::tests::fixtures</code> each keyed one scratch directory on the process id, and the
+tests that use them run in parallel, so one test rewrote the authority's key and
+certificate while another verified a chain the previous authority had signed.
+Reproduced locally with <code>--test-threads=16</code>: one run in three failed, twice with both
+front tests at once.</p>
+<p>The fix is one build per process: each <code>fixtures</code> now wraps its builder in a
+<code>OnceLock</code>, and five consecutive parallel runs are green. The suite got faster as
+well, because one fixture set replaces two to four.</p>
+<p>The lesson: a scratch path keyed on the process id is shared by every test in that
+process, and the harness runs tests in parallel by default. Key on the test, or build
+the fixture once.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
