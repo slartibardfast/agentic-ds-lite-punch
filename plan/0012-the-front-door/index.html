@@ -498,6 +498,11 @@ must carry a committed <code>deps-bundle.lock</code> whose first two fields are 
 and sha, and <code>host-lifecycle software --check .</code> reports the owed lock beside its
 remedy, <code>host-lifecycle software --lock ds-lite-punch .</code>. The component carries no
 such lock today, which is the onboarding case the check notes rather than faults.</p>
+<p>The bundle's bytes are not reproducible, which decides what gets published. Two runs
+of the producer on this machine, one after the other, produced different digests, so
+publish the tarball whose digest is recorded here and keep it: a rebuild will not
+match. The digest anchors the download; the crate sources that download unpacks are
+what the offline build reproduces from.</p>
 
                     </main>
 

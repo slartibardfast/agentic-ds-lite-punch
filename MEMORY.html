@@ -3120,6 +3120,21 @@ property will not notice a name mismatch.</p>
 <p>A second, smaller lesson: cargo reads <code>.cargo/config.toml</code> from the working
 directory and its parents, never from the manifest named by <code>--manifest-path</code>, so a
 staged tree has to be entered for its config to apply.</p>
+<h2 id="2026-09-28--the-bundles-bytes-are-not-reproducible-so-the-published-one-is-the-measured-one"><a class="header" href="#2026-09-28--the-bundles-bytes-are-not-reproducible-so-the-published-one-is-the-measured-one">2026-09-28 — the bundle's bytes are not reproducible, so the published one is the measured one</a></h2>
+<p>Two runs of <code>tools/bundle-deps.sh</code> on this machine, back to back, produced different
+digests (<code>7341bc06…</code> and <code>12421a6d…</code>). The tarball is not byte-reproducible, because
+the archive carries the vendored tree's own mtimes and its directory order, so the
+byte sequence differs run to run even though the crate sources inside are the same.</p>
+<p>What that means in practice: the recorded <code>deps-bundle</code> sha anchors a <em>download</em>, so
+the tarball published has to be the tarball whose digest is recorded, and it has to
+be kept. A rebuild will not match it, and <code>--verify-build</code>'s sha check compares the
+staged download against the recorded value, so a mismatch refuses the build with the
+two digests named.</p>
+<p>What it does not mean: the artifact is unaffected. The offline build reads the crate
+sources the tarball unpacks, and those are the locked set whichever run packaged
+them, which is why the component's lane can vendor afresh on every run and still
+prove the build. The bundle is an input to a reproducible build rather than an
+artifact that has to reproduce itself.</p>
 
                     </main>
 
