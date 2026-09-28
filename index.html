@@ -197,39 +197,45 @@ work.</p>
 <tr><td>How</td><td><code>AGENTS.md</code> + <code>tools/</code></td><td>the manual and the verification lanes</td></tr>
 </tbody></table>
 </div>
-<h2 id="state-at-2026-09-19"><a class="header" href="#state-at-2026-09-19">State at 2026-09-19</a></h2>
+<h2 id="state"><a class="header" href="#state">State</a></h2>
+<p><a href="plan/PLAN.html">plan/PLAN.md</a> is the index, and each milestone's own README carries
+its state; this table is the one-line view.</p>
 <div class="table-wrapper"><table><thead><tr><th>Milestone</th><th>State</th></tr></thead><tbody>
-<tr><td><a href="plan/0004-ds-lite-punch/README.html">plan/0004</a></td><td>v1 core built, deployed and verified; multi-instance built; the UPnP control plane delivered by <a href="plan/0007-igd-facade/README.html">plan/0007</a> and <a href="plan/0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a></td></tr>
+<tr><td><a href="plan/0004-ds-lite-punch/README.html">plan/0004</a></td><td>the v1 core, deployed and verified; multi-instance built; the UPnP control plane delivered by <a href="plan/0007-igd-facade/README.html">plan/0007</a> and <a href="plan/0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a></td></tr>
 <tr><td><a href="plan/0005-test-rig/README.html">plan/0005</a></td><td>the acceptance rig</td></tr>
 <tr><td><a href="plan/0006-ps3-requirements/README.html">plan/0006</a></td><td>the console requirements; closed by reframing (<a href="call/0014-a2-acceptance-reframe.html">call/0014</a>)</td></tr>
 <tr><td><a href="plan/0007-igd-facade/README.html">plan/0007</a></td><td>the UPnP facade; closed 2026-09-15</td></tr>
 <tr><td><a href="plan/0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a></td><td>the adaptive v1 and v2 facade with DeviceProtection; 31 probes pass on the box</td></tr>
 <tr><td><a href="plan/0009-mapping-keepalive-and-signalling/README.html">plan/0009</a></td><td>the mapping keepalive and its signalling; done 2026-09-18</td></tr>
+<tr><td><a href="plan/0010-the-filtering-proved-and-watched/README.html">plan/0010</a></td><td>the carrier's filtering proved and watched; closed 2026-09-23</td></tr>
+<tr><td><a href="plan/0011-documentation/README.html">plan/0011</a></td><td>the operator pages, the generated help and the manual page; done 2026-09-22</td></tr>
+<tr><td><a href="plan/0012-the-front-door/README.html">plan/0012</a></td><td>the front door; done 2026-09-27, with its release still to run</td></tr>
 </tbody></table>
 </div>
 <p>The component:</p>
 <ul>
-<li>The record in <a href=".host-software"><code>.host-software</code></a> names the pin, the toolchain
-and the artifact hash. The artifact hash today is
-<code>ab0f9bd517ef075885fd5b6e6a91b9fcc7e64ad9805e7d6450f2bd3eefd11a45</code>.</li>
-<li>The component lane runs the test suite and the release build inside the
-pinned toolchain image, and it publishes the binary from the run.</li>
+<li>The record in <a href=".host-software"><code>.host-software</code></a> names the pin, the toolchain and
+the artifact hash, and the pin currently names the released <code>v0.3.5</code>. What moves it
+onto the front door's work, and what that run needs, is in
+<a href="plan/0012-the-front-door/README.html">plan/0012</a>, <em>What the release still needs</em>.</li>
+<li>The component lane runs the test suite and the release build inside the pinned
+toolchain image, publishes the binary from the run, and proves the vendored
+dependency bundle builds with the network off.</li>
 <li>The test router runs the bytes from that lane.</li>
-<li>The three host lanes pass: Reproducible build, Prose and Site.</li>
-<li>The adopted template revision is <code>41ba4e10</code>, recorded in <a href=".host"><code>.host</code></a>.</li>
+<li>The repository's sweep is the gate: <code>host-lifecycle software --check .</code> over the
+rooms (validate, the naming and prose audits, the reference sweep, reconcile, the
+phase receipts and the task graph), with <code>book --check</code> for the site.</li>
+<li>The adopted template revision is in <a href=".host"><code>.host</code></a>.</li>
 </ul>
 <h2 id="future-work"><a class="header" href="#future-work">Future work</a></h2>
 <ol>
-<li><strong>The lobby case.</strong> A console in a lobby sends no traffic. The keepalive must
-survive that silence on a real console. The operator runs this test
-(<a href="plan/0009-mapping-keepalive-and-signalling/README.html">plan/0009</a>).</li>
+<li><strong>The lobby case.</strong> The hold survives a quiet console
+(<a href="call/0030-a-mapping-ends-with-its-device.html">call/0030</a>), and the run that
+confirms it on a real console is the operator's;
+<a href="plan/0010-the-filtering-proved-and-watched/README.html">plan/0010</a> names what its
+own run leaves out.</li>
 <li><strong>The Kani suite on a larger host</strong>
 (<a href="call/0019-facade-kani-deferred-to-larger-host.html">call/0019</a>).</li>
-<li><strong>The R4 rule.</strong> A late collision moves an allocation, and it never moves a
-punch. Decide if the rule must follow the protocol of the entry
-(<a href="call/0027-collisions-for-punched-ports.html">call/0027</a>).</li>
-<li><strong>EIF loss.</strong> Detect a change in the filtering behaviour of the carrier
-(<a href="plan/0004-ds-lite-punch/README.html">plan/0004</a>).</li>
 </ol>
 <h2 id="working-here"><a class="header" href="#working-here">Working here</a></h2>
 <ol>
