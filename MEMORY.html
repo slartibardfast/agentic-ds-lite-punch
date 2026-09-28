@@ -3096,6 +3096,30 @@ host has no container runtime to run (<code>call/0032</code>). <code>host-lifecy
 here by design rather than hand a re-pin to an ambient build, so <code>plan/0012#record</code>
 is recorded as a deferral to the release. The release is the operator's step:
 publish the bundle, then bump, tag, build in the lane, and pin the tagged bytes.</p>
+<h2 id="2026-09-28--the-bundles-snippet-name-was-not-the-hosts-and-the-lane-now-holds-the-contract"><a class="header" href="#2026-09-28--the-bundles-snippet-name-was-not-the-hosts-and-the-lane-now-holds-the-contract">2026-09-28 — the bundle's snippet name was not the host's, and the lane now holds the contract</a></h2>
+<p>The dependency bundle's producer named its source-replacement snippet <code>config.toml</code>,
+and the host's release stages a bundle by reading <code>vendor-config.toml</code>
+(<code>host-lifecycle</code>'s <code>stage_deps_bundle</code>, v0.53.0 on, with no fallback). The tarball
+the previous session built and measured could therefore not have been staged at all:
+published and recorded, it would have failed the release at its staging step with
+"deps-bundle has no vendor-config.toml". No lane exercised that path, which is why
+it survived: the earlier offline proof extracted the tarball by hand and appended
+the snippet itself, so the name never mattered to it.</p>
+<p>The producer carries the host's name now, and the component's lane holds the
+contract: a <code>bundle</code> job vendors the crate in the pinned image, asserts the
+tarball's root carries <code>vendor/</code> and <code>vendor-config.toml</code>, extracts it, and builds
+the artifact with <code>--network none</code>, an empty <code>CARGO_HOME</code> and <code>--offline</code> in the
+same image. The rebuilt bundle hashes to
+<code>7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730</code>, and it resolves
+offline here too (<code>cargo check --release --locked --offline</code> against an empty
+<code>CARGO_HOME</code>, exit 0).</p>
+<p>The lesson worth keeping: a producer's contract with a tool is not readable from the
+tool's prose. Read the tool's code for the name, the path and the fallback, and
+assert it in the lane that produces the artifact; a hand-run proof of the same
+property will not notice a name mismatch.</p>
+<p>A second, smaller lesson: cargo reads <code>.cargo/config.toml</code> from the working
+directory and its parents, never from the manifest named by <code>--manifest-path</code>, so a
+staged tree has to be entered for its config to apply.</p>
 
                     </main>
 
