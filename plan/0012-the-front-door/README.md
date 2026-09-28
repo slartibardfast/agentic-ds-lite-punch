@@ -365,3 +365,9 @@ must carry a committed `deps-bundle.lock` whose first two fields are the recorde
 and sha, and `host-lifecycle software --check .` reports the owed lock beside its
 remedy, `host-lifecycle software --lock ds-lite-punch .`. The component carries no
 such lock today, which is the onboarding case the check notes rather than faults.
+
+The bundle's bytes are not reproducible, which decides what gets published. Two runs
+of the producer on this machine, one after the other, produced different digests, so
+publish the tarball whose digest is recorded here and keep it: a rebuild will not
+match. The digest anchors the download; the crate sources that download unpacks are
+what the offline build reproduces from.
