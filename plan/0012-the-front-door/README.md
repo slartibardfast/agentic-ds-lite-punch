@@ -19,10 +19,9 @@ receipt waited on is disposed: two records' citation lines, each in a
 refuses to declare it (a declared phrase carrying `section` or `epoch` as a position
 noun is refused outright). What the gate still reports is the pin that the release
 moves, and the release runs where the recorded toolchain is available
-(`call/0032`): the bundle's own release is published, the lock the `deps-bundle`
-line obliges ships as the fix-only release ahead of the front door's, and the
-section below carries both commands and the order they run in. `#record` defers to
-that release and draws its done when the pin names the tagged bytes.
+(`call/0032`): the bundle's own release is published, the release ran on 2026-09-28 at
+`0.4.0`, and the tag's lane turned up two defects that the section below records.
+`#record` defers to a release whose lanes agree.
 
 ## What this milestone is
 
@@ -346,37 +345,41 @@ to the tarball the producer left in the worktree. `.host-software` records it as
 `deps-bundle` line, at that URL with that digest, so the contract the release stages
 is the published asset and its digest is what anchors the download.
 
-The lock is release-grade, which puts a release ahead of the front door's.
+The account above expected the lock to ship as its own fix-only release. That release
+happens only when the verb has to write the lock file:
 `host-lifecycle software --lock ds-lite-punch --authorized plan/0012 .` stages
-`deps-bundle.lock` and then drives a release of its own, because a committed lock
-advances the producer: the tool computes `0.3.5` to `0.3.6` for it, and the commit it
-would make carries the staged lock. The front door's release follows, since
-`adds-flag` on `0.3.6` is `0.4.0`. The staged lock waits in the component worktree
-for the run that commits it.
+`deps-bundle.lock` and bumps the version. The earlier run left that file in the
+worktree, so the verb reports the lock as already there. The lock therefore rides the
+release commit, and the milestone's release is a single run.
 
-Both runs need the recorded image, and this host has no container runtime:
-`which docker podman` answers nothing, and `host-lifecycle release` refuses without
-one by design, because the canonical hash belongs to that image rather than to
-whichever compiler is nearest. An install of `podman` on this host is what unblocks
-them. The two commands, in the order the tool performs them, run where `docker` or
-`podman` answers:
+`podman` was installed on this host on 2026-09-28, and the run followed:
 
 ```sh
-host-lifecycle software --lock ds-lite-punch --authorized plan/0012 .
 host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
 ```
 
-Each one runs the verify sweep, bumps the version its change class implies, stages the
-bundle, builds inside the recorded image, and prints the canonical hash beside its
-outward steps (commit and push, tag and push, re-pin, receipt). `#record` draws its
-done once the pin names the pushed commit:
+It ran the verify sweep, bumped `0.3.5` to `0.4.0`, staged the published bundle, built
+in the recorded image with the network off, and printed
+`59552c68ac29e8c5ff184358d5e215ccdc30bf2f8b4954353d48470cdf1d2fd5`. The commit and the
+tag `v0.4.0` are pushed, `.host-software` names that commit as the pin and that hash as
+the artifact, and the phase carries its receipt.
 
-```sh
-host-lifecycle tasks --record plan/0012#record --disposition done --evidence <tag>@<hash> .
-```
+The bundle's bytes are not reproducible, which decided what got published. Two runs of
+the producer on this machine, one after the other, produced different digests, so the
+tarball whose digest is recorded here is the one published, and a rebuild will not
+match it. The digest anchors the download; the crate sources that download unpacks are
+what the offline build reproduces from.
 
-The bundle's bytes are not reproducible, which decided what got published. Two runs
-of the producer on this machine, one after the other, produced different digests, so
-the tarball whose digest is recorded here is the one published, and a rebuild will
-not match it. The digest anchors the download; the crate sources that download
-unpacks are what the offline build reproduces from.
+## What the release turned up
+
+The tag's own lane failed on this release, and the asset it published is not the binary
+the record anchors. [The note](results/NOTE-2026-09-28-the-canonical-build-and-the-lanes.md)
+carries the measurement: three builds of one commit, the two causes, and the fix now in
+the component's three artifact lanes. The published manual page is stale as well, for the
+same release's reason.
+
+A replacement release from the corrected lanes is the coherent step, and it is the
+operator's to authorize: the v0.4.0 release is immutable and its bytes are not the ones
+the record anchors. The pin stays on the v0.4.0 commit until that lands, and the gate
+reports the later commit on `main` as drift. `#record` draws its done from a release whose
+lanes agree.
