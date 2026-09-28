@@ -273,6 +273,14 @@ crate is reproduced from pinned inputs with no network. The release still owes t
 publish, the `.host-software` line, and the artifact re-derivation in the recorded
 image.
 
+That digest is superseded, and that tarball is not the one to publish. The run named
+its config snippet `config.toml`, and the host's release stages a bundle by reading
+`vendor-config.toml`, so the tarball of that run could not have been staged at all.
+The producer carries the name the host reads now, the component's lane asserts it
+and rebuilds with the network off, and this milestone's release section carries the
+current digest. The 16 MB, the offline build and the path rewrite measured above all
+stand.
+
 The path in that config is the part worth knowing. `cargo vendor` prints an
 absolute directory, which is where the generator's own scratch lived and which the
 generator then removes, so the first tarball carried a path into a deleted
@@ -326,10 +334,15 @@ the run, and each one is checkable here.
   (`.github/workflows/release.yml`) and attaches no bundle, and this repository's
   releases are immutable once published, so the bundle needs a home of its own or a
   step added to that job. Which of the two is a decision this milestone leaves open.
-- The bytes exist and are verified. `tools/bundle-deps.sh` built them, and
-  `target/deps-vendor.tar.gz` in the component worktree hashes to
-  `dc033b6310f523c90253e62eae2fee72cfaebf108308964ab21a686592d8f72b`, which is the
-  digest the offline build was measured against.
+- The bytes exist and are verified at the contract the release stages. The producer
+  tars its source-replacement snippet as `vendor-config.toml`, the name
+  `host-lifecycle`'s `stage_deps_bundle` reads, and the component's lane asserts that
+  name and then builds the artifact in the pinned image with the network off. The
+  rebuilt bundle sits at `target/deps-vendor.tar.gz` in the component worktree,
+  hashing to
+  `7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730`, and it
+  resolves offline here against an empty `CARGO_HOME` (`cargo check --release
+  --locked --offline`, exit 0).
 
 The run, in the order the tool performs it:
 
