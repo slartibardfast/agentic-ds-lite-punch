@@ -3167,6 +3167,27 @@ well, because one fixture set replaces two to four.</p>
 <p>The lesson: a scratch path keyed on the process id is shared by every test in that
 process, and the harness runs tests in parallel by default. Key on the test, or build
 the fixture once.</p>
+<h2 id="2026-09-28--the-published-bundle-and-the-lock-that-is-release-grade"><a class="header" href="#2026-09-28--the-published-bundle-and-the-lock-that-is-release-grade">2026-09-28 — the published bundle, and the lock that is release-grade</a></h2>
+<p>The dependency bundle has a home: GitHub release tag <code>deps-vendor-v1</code>, asset
+<code>deps-vendor.tar.gz</code>. Its download is verified rather than assumed — a <code>curl -fsSL</code>
+of the asset URL returned 16,319,220 bytes hashing to
+<code>7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730</code>, byte-identical
+(<code>cmp</code>) to the tarball the producer left in the component worktree. <code>.host-software</code>
+now carries the <code>deps-bundle</code> line with that URL and digest. The tag does not begin
+with <code>v</code>, and the component's <code>release.yml</code> triggers on <code>tags: ["v*"]</code>, so publishing
+the bundle fires no release job.</p>
+<p>The lock is the part worth remembering. <code>host-lifecycle software --lock ds-lite-punch</code>
+refuses without <code>--authorized</code>: <code>--lock</code> drives a release, because a committed lock
+advances the producer, so the lock ships as a fix-only release. The tool staged
+<code>deps-bundle.lock</code> in the component worktree, computed <code>0.3.5</code> to <code>0.3.6</code>, and
+blocked on the missing container runtime before writing anything beyond the staged
+lock. So this milestone's release is two releases rather than one: the lock's at
+<code>0.3.6</code>, then the front door's at <code>0.4.0</code>, which is what <code>adds-flag</code> computes on
+<code>0.3.6</code>. The plan section had the lock after the release; it is corrected to the
+order the tool performs.</p>
+<p>What remains is a runtime. This host has none of <code>docker</code>, <code>podman</code>, <code>buildah</code>,
+<code>nerdctl</code> or <code>ctr</code>, and <code>sudo</code> wants a password, so the operator installs <code>podman</code>
+and the two commands run where the recorded image can.</p>
 
                     </main>
 
