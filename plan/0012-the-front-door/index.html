@@ -482,6 +482,11 @@ push, tag and push, re-pin, receipt). <code>#record</code> draws its done once t
 the pushed commit:</p>
 <pre><code class="language-sh">host-lifecycle tasks --record plan/0012#record --disposition done --evidence &lt;tag&gt;@&lt;hash&gt; .
 </code></pre>
+<p>One graduation stays owed once the <code>deps-bundle</code> line is recorded: the component
+must carry a committed <code>deps-bundle.lock</code> whose first two fields are the recorded URL
+and sha, and <code>host-lifecycle software --check .</code> reports the owed lock beside its
+remedy, <code>host-lifecycle software --lock ds-lite-punch .</code>. The component carries no
+such lock today, which is the onboarding case the check notes rather than faults.</p>
 
                     </main>
 
