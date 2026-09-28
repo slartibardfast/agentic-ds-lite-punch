@@ -3795,9 +3795,10 @@ receipt waited on is disposed: two records' citation lines, each in a
 refuses to declare it (a declared phrase carrying <code>section</code> or <code>epoch</code> as a position
 noun is refused outright). What the gate still reports is the pin that the release
 moves, and the release runs where the recorded toolchain is available
-(<code>call/0032</code>): <code>host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012</code>, once the bundle that <code>tools/bundle-deps.sh</code> builds is
-published. <code>#record</code> defers to that release and draws its done when the pin names
-the tagged bytes.</p>
+(<code>call/0032</code>): the bundle's own release is published, the lock the <code>deps-bundle</code>
+line obliges ships as the fix-only release ahead of the front door's, and the
+section below carries both commands and the order they run in. <code>#record</code> defers to
+that release and draws its done when the pin names the tagged bytes.</p>
 <h2 id="what-this-milestone-is-6"><a class="header" href="#what-this-milestone-is-6">What this milestone is</a></h2>
 <p>A service on this line is reached today by something that terminates a connection
 outside the line and re-originates it inside: an HTTP or database proxy on a
@@ -4063,60 +4064,53 @@ filtering turned out to be, the handshake through the held port, the front's
 configuration as it ran, and the size the binary grew to.</p>
 <h2 id="what-the-release-still-needs"><a class="header" href="#what-the-release-still-needs">What the release still needs</a></h2>
 <p>The milestone's substance is closed and committed. The one item the host gate
-reports is the component's pin, and the release is what moves it. Three facts shape
-the run, and each one is checkable here.</p>
-<ul>
-<li>This host has no container runtime: <code>which docker podman</code> answers nothing.
-<code>host-lifecycle release</code> refuses without one by design, because the canonical hash
-belongs to the recorded image, so the release runs where that image can.</li>
-<li>The bundle that records the build's hermeticity has no published home yet, and the
-release builds with the network off. The bundle is therefore published first, and
-its URL recorded as <code>deps-bundle</code> in <code>.host-software</code>. The release job attaches the
-binary, the manual page and the artifact line to the tag's release
-(<code>.github/workflows/release.yml</code>) and attaches no bundle, and this repository's
-releases are immutable once published, so the bundle needs a home of its own or a
-step added to that job. Which of the two is a decision this milestone leaves open.</li>
-<li>The bytes exist and are verified at the contract the release stages. The producer
-tars its source-replacement snippet as <code>vendor-config.toml</code>, the name
-<code>host-lifecycle</code>'s <code>stage_deps_bundle</code> reads, and the component's lane asserts that
-name and then builds the artifact in the pinned image with the network off. The
-rebuilt bundle sits at <code>target/deps-vendor.tar.gz</code> in the component worktree,
-hashing to
-<code>7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730</code>, and it
-resolves offline here against an empty <code>CARGO_HOME</code> (<code>cargo check --release --locked --offline</code>, exit 0).</li>
-</ul>
-<p>If the bundle takes a release of its own, these commands give it one, run in the
-component worktree (<code>&lt;tag&gt;</code> is yours to pick, and the asset's URL follows it):</p>
+reports is the component's pin, and the release is what moves it. What is done, and
+what the run still waits on, are both checkable here.</p>
+<p>The bundle is published, and its download is verified. It took a release of its own,
+because this repository's releases are immutable once published and the release job
+attaches the binary, the manual page and the artifact line rather than a bundle
+(<code>.github/workflows/release.yml</code>). The commands that gave it one, run in the
+component worktree, were:</p>
 <pre><code class="language-sh">sha256sum target/deps-vendor.tar.gz
-gh release create &lt;tag&gt; --draft --title "ds-lite-punch dependency bundle" --notes "The vendored dependency layer the release build stages: the pinned image builds with the network off against these sources." --repo slartibardfast/ds-lite-punch
-gh release upload &lt;tag&gt; target/deps-vendor.tar.gz --repo slartibardfast/ds-lite-punch
-gh release edit &lt;tag&gt; --draft=false --repo slartibardfast/ds-lite-punch
+gh release create deps-vendor-v1 --draft --title "ds-lite-punch dependency bundle" --notes "The vendored dependency layer the release build stages: the pinned image builds with the network off against these sources." --repo slartibardfast/ds-lite-punch
+gh release upload deps-vendor-v1 target/deps-vendor.tar.gz --repo slartibardfast/ds-lite-punch
+gh release edit deps-vendor-v1 --draft=false --repo slartibardfast/ds-lite-punch
 </code></pre>
-<p>The published asset sits at
-<code>https://github.com/slartibardfast/ds-lite-punch/releases/download/&lt;tag&gt;/deps-vendor.tar.gz</code>,
-which is the URL the <code>deps-bundle</code> line carries, and the release fetches it with
-<code>curl -fsSL</code>, so a redirecting asset URL is what it is built for. The first command
-prints the digest the <code>deps-bundle</code> line records.</p>
-<p>The run, in the order the tool performs it:</p>
-<pre><code class="language-sh">host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
+<p>The tag does not begin with <code>v</code>, so the <code>v*</code> release job does not fire on it. The
+asset sits at
+<code>https://github.com/slartibardfast/ds-lite-punch/releases/download/deps-vendor-v1/deps-vendor.tar.gz</code>,
+and fetching that URL with <code>curl -fsSL</code> returns 16,319,220 bytes hashing to
+<code>7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730</code>, byte-identical
+to the tarball the producer left in the worktree. <code>.host-software</code> records it as the
+<code>deps-bundle</code> line, at that URL with that digest, so the contract the release stages
+is the published asset and its digest is what anchors the download.</p>
+<p>The lock is release-grade, which puts a release ahead of the front door's.
+<code>host-lifecycle software --lock ds-lite-punch --authorized plan/0012 .</code> stages
+<code>deps-bundle.lock</code> and then drives a release of its own, because a committed lock
+advances the producer: the tool computes <code>0.3.5</code> to <code>0.3.6</code> for it, and the commit it
+would make carries the staged lock. The front door's release follows, since
+<code>adds-flag</code> on <code>0.3.6</code> is <code>0.4.0</code>. The staged lock waits in the component worktree
+for the run that commits it.</p>
+<p>Both runs need the recorded image, and this host has no container runtime:
+<code>which docker podman</code> answers nothing, and <code>host-lifecycle release</code> refuses without
+one by design, because the canonical hash belongs to that image rather than to
+whichever compiler is nearest. An install of <code>podman</code> on this host is what unblocks
+them. The two commands, in the order the tool performs them, run where <code>docker</code> or
+<code>podman</code> answers:</p>
+<pre><code class="language-sh">host-lifecycle software --lock ds-lite-punch --authorized plan/0012 .
+host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
 </code></pre>
-<p>It runs the verify sweep, bumps the version the change class implies (the tool
-computes <code>0.3.5</code> to <code>0.4.0</code> for <code>adds-flag</code>), stages the bundle, builds inside the
-recorded image, and prints the canonical hash beside the outward steps (commit and
-push, tag and push, re-pin, receipt). <code>#record</code> draws its done once the pin names
-the pushed commit:</p>
+<p>Each one runs the verify sweep, bumps the version its change class implies, stages the
+bundle, builds inside the recorded image, and prints the canonical hash beside its
+outward steps (commit and push, tag and push, re-pin, receipt). <code>#record</code> draws its
+done once the pin names the pushed commit:</p>
 <pre><code class="language-sh">host-lifecycle tasks --record plan/0012#record --disposition done --evidence &lt;tag&gt;@&lt;hash&gt; .
 </code></pre>
-<p>One graduation stays owed once the <code>deps-bundle</code> line is recorded: the component
-must carry a committed <code>deps-bundle.lock</code> whose first two fields are the recorded URL
-and sha, and <code>host-lifecycle software --check .</code> reports the owed lock beside its
-remedy, <code>host-lifecycle software --lock ds-lite-punch .</code>. The component carries no
-such lock today, which is the onboarding case the check notes rather than faults.</p>
-<p>The bundle's bytes are not reproducible, which decides what gets published. Two runs
+<p>The bundle's bytes are not reproducible, which decided what got published. Two runs
 of the producer on this machine, one after the other, produced different digests, so
-publish the tarball whose digest is recorded here and keep it: a rebuild will not
-match. The digest anchors the download; the crate sources that download unpacks are
-what the offline build reproduces from.</p>
+the tarball whose digest is recorded here is the one published, and a rebuild will
+not match it. The digest anchors the download; the crate sources that download
+unpacks are what the offline build reproduces from.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="software-where"><a class="header" href="#software-where">Software: where</a></h1>
 <p>The action this project produces. Each component is a bare object store with worktrees, not committed into this repo; the recipe below is the reproducibility anchor. Materialize the worktrees locally with:</p>
 <pre><code>host-lifecycle software --materialize .
