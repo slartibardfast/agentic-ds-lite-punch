@@ -508,3 +508,18 @@
     reason = call/0032
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-27
+
+[receipt "plan/0012#record"]
+    disposition = done
+    verify = host-lifecycle software --check .
+    evidence = v0.4.1@609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-28
+
+[receipt "plan/0012#deps-bundle"]
+    disposition = done
+    verify = host-lifecycle software --verify-build .
+    inputs = `.host-software`, `Cargo.lock`
+    evidence = software --verify-build: 609a12f296d6 reproduced from the pin in ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e917
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-09-28
