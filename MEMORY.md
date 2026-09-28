@@ -3283,3 +3283,22 @@ text out of the template.
 What is not in force here is therefore only the local escalation of a warning over
 the copy. The spine's own prose and naming are held clean where the spine is
 authored, by the template's CI.
+
+## 2026-09-28 — the fixture directory was shared, and parallel tests raced on it
+
+`cargo test` on the component went red once and green twice on the same code, with
+`the_push_reaches_a_server_the_anchor_signed` failing on `invalid peer certificate:
+BadSignature`. The cause is not cryptographic. `identity::tests::fixtures` and
+`front::tests::fixtures` each keyed one scratch directory on the process id, and the
+tests that use them run in parallel, so one test rewrote the authority's key and
+certificate while another verified a chain the previous authority had signed.
+Reproduced locally with `--test-threads=16`: one run in three failed, twice with both
+front tests at once.
+
+The fix is one build per process: each `fixtures` now wraps its builder in a
+`OnceLock`, and five consecutive parallel runs are green. The suite got faster as
+well, because one fixture set replaces two to four.
+
+The lesson: a scratch path keyed on the process id is shared by every test in that
+process, and the harness runs tests in parallel by default. Key on the test, or build
+the fixture once.
