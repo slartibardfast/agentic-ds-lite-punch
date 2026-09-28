@@ -3371,3 +3371,27 @@ Two gaps stay open. The gate cannot see a lane's bytes: the v0.4.0 asset does no
 the recorded value and every check runs green. And the pin names a commit whose published
 asset is that other build, so the coherent step is a replacement release from the corrected
 lanes, which is the operator's call.
+
+## 2026-09-28 — the replacement release, and the asset that matches the anchor
+
+`host-lifecycle release ds-lite-punch --change-class neither --authorized plan/0012 .`
+bumped `0.4.0` to `0.4.1`, built in the image, and printed the canonical hash
+`609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e`. The commit is
+`1ccfe98` and the tag `v0.4.1` is pushed. The generated page was regenerated for `0.4.1`
+inside that commit, since the release verb has no place for it and the tag's docs lane
+would otherwise fail again; that gap is filed as
+[host-lifecycle#31](https://github.com/connollydavid/host-lifecycle/issues/31), and the
+lane divergence that made v0.4.0 different is
+[host-lifecycle#30](https://github.com/connollydavid/host-lifecycle/issues/30).
+
+The tag's lane then published a binary hashing `609a12f2…`, which is the value
+`.host-software` records, and `artifact-record.txt` in the release carries the same line.
+The manual page asset reads `ds-lite-punch 0.4.1`. This is the first release asset in this
+project whose bytes match the anchor, which is what call/0032 claims of it and what the
+registry-building lanes could not deliver once a bundle was recorded.
+
+Both open gaps closed with it. The gate reports all components at their pinned SHA and no
+hazards, and `plan/0012#record` is done. `plan/0012#deps-bundle` is done as well: its
+deferral was discharged with a fresh `software --verify-build` at the new pin, which
+reproduced `609a12f2…` in the image. The milestone's two remaining deferrals are the
+control-channel pair that call/0041 and call/0042 record.
