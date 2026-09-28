@@ -174,8 +174,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="milestone-the-front-door"><a class="header" href="#milestone-the-front-door">Milestone: the front door</a></h1>
-<p><strong>Status:</strong> done, 2026-09-27. Every task in the build sequence carries a receipt,
-and four of them are recorded
+<p><strong>Status:</strong> done, 2026-09-27; released 2026-09-28 at <code>v0.4.1</code>. Every task in the build
+sequence carries a receipt, and two of them are recorded
 deferrals;
 <a href="results/RESULTS-2026-09-27-the-front-door.html">the milestone's record</a> gathers what
 the measurements found and where each proof lives. The architecture is settled in
@@ -193,9 +193,8 @@ receipt waited on is disposed: two records' citation lines, each in a
 refuses to declare it (a declared phrase carrying <code>section</code> or <code>epoch</code> as a position
 noun is refused outright). What the gate still reports is the pin that the release
 moves, and the release runs where the recorded toolchain is available
-(<code>call/0032</code>): the bundle's own release is published, the release ran on 2026-09-28 at
-<code>0.4.0</code>, and the tag's lane turned up two defects that the section below records.
-<code>#record</code> defers to a release whose lanes agree.</p>
+(<code>call/0032</code>): the bundle's own release is published, the release ran on 2026-09-28 and
+ended at <code>0.4.1</code>, and the section below carries what it turned up and how that closed.</p>
 <h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
 <p>A service on this line is reached today by something that terminates a connection
 outside the line and re-originates it inside: an HTTP or database proxy on a
@@ -506,11 +505,15 @@ the record anchors. <a href="results/NOTE-2026-09-28-the-canonical-build-and-the
 carries the measurement: three builds of one commit, the two causes, and the fix now in
 the component's three artifact lanes. The published manual page is stale as well, for the
 same release's reason.</p>
-<p>A replacement release from the corrected lanes is the coherent step, and it is the
-operator's to authorize: the v0.4.0 release is immutable and its bytes are not the ones
-the record anchors. The pin stays on the v0.4.0 commit until that lands, and the gate
-reports the later commit on <code>main</code> as drift. <code>#record</code> draws its done from a release whose
-lanes agree.</p>
+<p>The replacement release ran the same day at <code>0.4.1</code>, from the corrected lanes, with the
+generated page regenerated inside its release commit. Its published asset hashes
+<code>609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e</code>, which is the value
+<code>.host-software</code> records, and <code>artifact-record.txt</code> in the release carries that line. The
+pin names the tagged commit, the gate is green, and <code>#record</code> is done. The two defects are
+filed upstream as <a href="https://github.com/connollydavid/host-lifecycle/issues/30">host-lifecycle#30</a>
+and <a href="https://github.com/connollydavid/host-lifecycle/issues/31">#31</a>. The v0.4.0 release
+keeps its published bytes, because this repository's releases are immutable, and the
+section above states what they are.</p>
 
                     </main>
 

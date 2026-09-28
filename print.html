@@ -3776,8 +3776,8 @@ its lane. The host's record carries the pin and the artifact hash, and the
 release page carries the kit. Where a check produced a line worth keeping, it
 is written under <code>results/</code> in this room with the pin it was read against.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-the-front-door"><a class="header" href="#milestone-the-front-door">Milestone: the front door</a></h1>
-<p><strong>Status:</strong> done, 2026-09-27. Every task in the build sequence carries a receipt,
-and four of them are recorded
+<p><strong>Status:</strong> done, 2026-09-27; released 2026-09-28 at <code>v0.4.1</code>. Every task in the build
+sequence carries a receipt, and two of them are recorded
 deferrals;
 <a href="plan/0012-the-front-door/results/RESULTS-2026-09-27-the-front-door.html">the milestone's record</a> gathers what
 the measurements found and where each proof lives. The architecture is settled in
@@ -3795,9 +3795,8 @@ receipt waited on is disposed: two records' citation lines, each in a
 refuses to declare it (a declared phrase carrying <code>section</code> or <code>epoch</code> as a position
 noun is refused outright). What the gate still reports is the pin that the release
 moves, and the release runs where the recorded toolchain is available
-(<code>call/0032</code>): the bundle's own release is published, the release ran on 2026-09-28 at
-<code>0.4.0</code>, and the tag's lane turned up two defects that the section below records.
-<code>#record</code> defers to a release whose lanes agree.</p>
+(<code>call/0032</code>): the bundle's own release is published, the release ran on 2026-09-28 and
+ended at <code>0.4.1</code>, and the section below carries what it turned up and how that closed.</p>
 <h2 id="what-this-milestone-is-6"><a class="header" href="#what-this-milestone-is-6">What this milestone is</a></h2>
 <p>A service on this line is reached today by something that terminates a connection
 outside the line and re-originates it inside: an HTTP or database proxy on a
@@ -4108,11 +4107,15 @@ the record anchors. <a href="plan/0012-the-front-door/results/NOTE-2026-09-28-th
 carries the measurement: three builds of one commit, the two causes, and the fix now in
 the component's three artifact lanes. The published manual page is stale as well, for the
 same release's reason.</p>
-<p>A replacement release from the corrected lanes is the coherent step, and it is the
-operator's to authorize: the v0.4.0 release is immutable and its bytes are not the ones
-the record anchors. The pin stays on the v0.4.0 commit until that lands, and the gate
-reports the later commit on <code>main</code> as drift. <code>#record</code> draws its done from a release whose
-lanes agree.</p>
+<p>The replacement release ran the same day at <code>0.4.1</code>, from the corrected lanes, with the
+generated page regenerated inside its release commit. Its published asset hashes
+<code>609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e</code>, which is the value
+<code>.host-software</code> records, and <code>artifact-record.txt</code> in the release carries that line. The
+pin names the tagged commit, the gate is green, and <code>#record</code> is done. The two defects are
+filed upstream as <a href="https://github.com/connollydavid/host-lifecycle/issues/30">host-lifecycle#30</a>
+and <a href="https://github.com/connollydavid/host-lifecycle/issues/31">#31</a>. The v0.4.0 release
+keeps its published bytes, because this repository's releases are immutable, and the
+section above states what they are.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="software-where"><a class="header" href="#software-where">Software: where</a></h1>
 <p>The action this project produces. Each component is a bare object store with worktrees, not committed into this repo; the recipe below is the reproducibility anchor. Materialize the worktrees locally with:</p>
 <pre><code>host-lifecycle software --materialize .
@@ -4120,7 +4123,7 @@ lanes agree.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>06a6291b2d00e635cba77ccd0ecf7bfe488b8145</code></li>
+<li>pin: <code>1ccfe983fb8e74babe1675fe7357f34252d67b4c</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -10629,6 +10632,26 @@ version generates. That is regenerated, and the gap belongs to the release proce
 the recorded value and every check runs green. And the pin names a commit whose published
 asset is that other build, so the coherent step is a replacement release from the corrected
 lanes, which is the operator's call.</p>
+<h2 id="2026-09-28--the-replacement-release-and-the-asset-that-matches-the-anchor"><a class="header" href="#2026-09-28--the-replacement-release-and-the-asset-that-matches-the-anchor">2026-09-28 — the replacement release, and the asset that matches the anchor</a></h2>
+<p><code>host-lifecycle release ds-lite-punch --change-class neither --authorized plan/0012 .</code>
+bumped <code>0.4.0</code> to <code>0.4.1</code>, built in the image, and printed the canonical hash
+<code>609a12f296d604a3772e2643c21c41e39c530b7207691d5c084ecd0d267e710e</code>. The commit is
+<code>1ccfe98</code> and the tag <code>v0.4.1</code> is pushed. The generated page was regenerated for <code>0.4.1</code>
+inside that commit, since the release verb has no place for it and the tag's docs lane
+would otherwise fail again; that gap is filed as
+<a href="https://github.com/connollydavid/host-lifecycle/issues/31">host-lifecycle#31</a>, and the
+lane divergence that made v0.4.0 different is
+<a href="https://github.com/connollydavid/host-lifecycle/issues/30">host-lifecycle#30</a>.</p>
+<p>The tag's lane then published a binary hashing <code>609a12f2…</code>, which is the value
+<code>.host-software</code> records, and <code>artifact-record.txt</code> in the release carries the same line.
+The manual page asset reads <code>ds-lite-punch 0.4.1</code>. This is the first release asset in this
+project whose bytes match the anchor, which is what call/0032 claims of it and what the
+registry-building lanes could not deliver once a bundle was recorded.</p>
+<p>Both open gaps closed with it. The gate reports all components at their pinned SHA and no
+hazards, and <code>plan/0012#record</code> is done. <code>plan/0012#deps-bundle</code> is done as well: its
+deferral was discharged with a fresh <code>software --verify-build</code> at the new pin, which
+reproduced <code>609a12f2…</code> in the image. The milestone's two remaining deferrals are the
+control-channel pair that call/0041 and call/0042 record.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
