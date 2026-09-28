@@ -3213,3 +3213,32 @@ host has no container runtime to run (`call/0032`). `host-lifecycle release` ref
 here by design rather than hand a re-pin to an ambient build, so `plan/0012#record`
 is recorded as a deferral to the release. The release is the operator's step:
 publish the bundle, then bump, tag, build in the lane, and pin the tagged bytes.
+
+## 2026-09-28 — the bundle's snippet name was not the host's, and the lane now holds the contract
+
+The dependency bundle's producer named its source-replacement snippet `config.toml`,
+and the host's release stages a bundle by reading `vendor-config.toml`
+(`host-lifecycle`'s `stage_deps_bundle`, v0.53.0 on, with no fallback). The tarball
+the previous session built and measured could therefore not have been staged at all:
+published and recorded, it would have failed the release at its staging step with
+"deps-bundle has no vendor-config.toml". No lane exercised that path, which is why
+it survived: the earlier offline proof extracted the tarball by hand and appended
+the snippet itself, so the name never mattered to it.
+
+The producer carries the host's name now, and the component's lane holds the
+contract: a `bundle` job vendors the crate in the pinned image, asserts the
+tarball's root carries `vendor/` and `vendor-config.toml`, extracts it, and builds
+the artifact with `--network none`, an empty `CARGO_HOME` and `--offline` in the
+same image. The rebuilt bundle hashes to
+`7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730`, and it resolves
+offline here too (`cargo check --release --locked --offline` against an empty
+`CARGO_HOME`, exit 0).
+
+The lesson worth keeping: a producer's contract with a tool is not readable from the
+tool's prose. Read the tool's code for the name, the path and the fallback, and
+assert it in the lane that produces the artifact; a hand-run proof of the same
+property will not notice a name mismatch.
+
+A second, smaller lesson: cargo reads `.cargo/config.toml` from the working
+directory and its parents, never from the manifest named by `--manifest-path`, so a
+staged tree has to be entered for its config to apply.
