@@ -3261,3 +3261,25 @@ sources the tarball unpacks, and those are the locked set whichever run packaged
 them, which is why the component's lane can vendor afresh on every run and still
 prove the build. The bundle is an input to a reproducible build rather than an
 artifact that has to reproduce itself.
+
+## 2026-09-28 — the always-loaded corpus is not declared here, and why that is the state
+
+The `ACTIVE-corpus-and-agents-manual` entry in `UPGRADING.md` (applied 2026-09-21)
+asks an adopter to add `active-corpus = .host-corpus` to its `.host` stamp and list
+the always-loaded files, after which the prose verb holds those files to the strict
+tier, where a warning is a flag. This host has declared no corpus, and the entry's
+own text allows that: until a project declares one, the prose verb behaves as it did
+at v0.51.0, which is the behaviour this repository has had all along.
+
+Two facts argue for leaving it there. A declared file must not also be named in the
+ignore list, and this host's `.host-lintignore` names `AGENTS.md`, because the manual
+is the template's verbatim copy, re-applied by every upgrade, so it is excluded
+rather than reworded. The other obvious member, `STRUCTURE.md`, is spine text for
+the same reason: declaring it would put inherited text under the strict tier, where a
+warn blocks and the text cannot be reworded locally without fighting the ledger. That
+is the conflict `AGENTS.md` names when it keeps a `LEXICON` entry covering inherited
+text out of the template.
+
+What is not in force here is therefore only the local escalation of a warning over
+the copy. The spine's own prose and naming are held clean where the spine is
+authored, by the template's CI.
