@@ -3327,3 +3327,47 @@ order the tool performs.
 What remains is a runtime. This host has none of `docker`, `podman`, `buildah`,
 `nerdctl` or `ctr`, and `sudo` wants a password, so the operator installs `podman`
 and the two commands run where the recorded image can.
+
+## 2026-09-28 — the release ran, and its lanes published other bytes
+
+`podman` arrived, and the release ran:
+`host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .`
+bumped `0.3.5` to `0.4.0`, staged the published bundle, built in the recorded image
+with the network off, and printed
+`59552c68ac29e8c5ff184358d5e215ccdc30bf2f8b4954353d48470cdf1d2fd5`. The commit,
+`06a6291`, and the tag `v0.4.0` are pushed, `.host-software` names them, and the
+release phase carries its receipt. `software --lock` had nothing to do — the lock the
+first run staged was in the worktree — so the lock rode the release commit and the
+milestone's release was a single run, not the two an earlier entry predicted.
+
+The tag's lane then failed, and its published asset was not that binary. Three lanes
+built three different things from one commit:
+
+- the canonical build, in the image with the bundle staged, `CARGO_HOME` left alone:
+  `59552c68…`, 1,061,552 bytes;
+- the tag's Release lane, from the registry: `b7c3d042…`, the same size;
+- any run with `-e CARGO_HOME=/tmp/cargo-home`, which is what the CI bundle job did:
+  `1efc39c4…`, 16 bytes larger.
+
+Two causes, each isolated. A dependency's source path reaches the binary, because Rust
+embeds the position of a panicking call site, so vendored and registry builds cannot
+match. And the image's own `/root/.cargo/config.toml` names the linker
+(`[target.x86_64-unknown-linux-musl] linker = "x86_64-unknown-linux-musl-gcc"`), so an
+overridden `CARGO_HOME` loses that config and links differently.
+
+The fix is `call/0043`: every lane that publishes the asset or prints the recorded hash
+stages the bundle the committed lock names and runs the recorded command in the image
+with the network off, `CARGO_HOME` untouched; the completeness lane keeps its empty home
+and copies the image's cargo config into it. Verified four ways: the host's release, two
+local replications, and the corrected CI lane, which printed
+`artifact = … 59552c68ac29e8c5ff184358d5e215ccdc30bf2f8b4954353d48470cdf1d2fd5`, the
+hash the record carries. `software --verify-build` reproduces it from the pin as well.
+
+The same release left `deploy/man/ds-lite-punch.8` reading `ds-lite-punch 0.3.5`, because
+the bump changes the crate version and the release commit did not regenerate the page the
+version generates. That is regenerated, and the gap belongs to the release procedure.
+
+Two gaps stay open. The gate cannot see a lane's bytes: the v0.4.0 asset does not hash to
+the recorded value and every check runs green. And the pin names a commit whose published
+asset is that other build, so the coherent step is a replacement release from the corrected
+lanes, which is the operator's call.
