@@ -13,6 +13,7 @@
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
 	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 912f54aec733d35558af6ebcd409b697dc7833233df4361469ced677c4cccba1
+	deps-bundle = https://github.com/slartibardfast/ds-lite-punch/releases/download/deps-vendor-v1/deps-vendor.tar.gz 7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730
 # The toolchain is a digest-pinned container rather than a target triple:
 # `--verify-build` runs the recorded `build` inside it, so the image is what
 # reproduces the artifact and a movable tag would invalidate every hash
@@ -20,7 +21,10 @@
 # tagged commit, by the component's own lane and again by the Release lane, with
 # the runs agreeing byte for byte; an anonymous fetch of the release asset
 # hashes to the same value, and the release publishes that binary, so a
-# deployment takes those bytes rather than a local build's (call/0032). A
+# deployment takes those bytes rather than a local build's (call/0032). The
+# bundle that `deps-bundle` names is the vendored dependency layer the offline
+# build stages, and its bytes are not reproducible: the digest anchors the
+# published asset, so a rebuild of the bundle will not match it. A
 # version bump moves those bytes from 0.2.0 on: `--version` prints the crate
 # version, so the string is compiled into the binary, and the pin therefore
 # names the commit that carries the bump, which is also the commit the tag
