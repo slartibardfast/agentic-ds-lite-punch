@@ -3302,3 +3302,28 @@ well, because one fixture set replaces two to four.
 The lesson: a scratch path keyed on the process id is shared by every test in that
 process, and the harness runs tests in parallel by default. Key on the test, or build
 the fixture once.
+
+## 2026-09-28 — the published bundle, and the lock that is release-grade
+
+The dependency bundle has a home: GitHub release tag `deps-vendor-v1`, asset
+`deps-vendor.tar.gz`. Its download is verified rather than assumed — a `curl -fsSL`
+of the asset URL returned 16,319,220 bytes hashing to
+`7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730`, byte-identical
+(`cmp`) to the tarball the producer left in the component worktree. `.host-software`
+now carries the `deps-bundle` line with that URL and digest. The tag does not begin
+with `v`, and the component's `release.yml` triggers on `tags: ["v*"]`, so publishing
+the bundle fires no release job.
+
+The lock is the part worth remembering. `host-lifecycle software --lock ds-lite-punch`
+refuses without `--authorized`: `--lock` drives a release, because a committed lock
+advances the producer, so the lock ships as a fix-only release. The tool staged
+`deps-bundle.lock` in the component worktree, computed `0.3.5` to `0.3.6`, and
+blocked on the missing container runtime before writing anything beyond the staged
+lock. So this milestone's release is two releases rather than one: the lock's at
+`0.3.6`, then the front door's at `0.4.0`, which is what `adds-flag` computes on
+`0.3.6`. The plan section had the lock after the release; it is corrected to the
+order the tool performs.
+
+What remains is a runtime. This host has none of `docker`, `podman`, `buildah`,
+`nerdctl` or `ctr`, and `sudo` wants a password, so the operator installs `podman`
+and the two commands run where the recorded image can.
