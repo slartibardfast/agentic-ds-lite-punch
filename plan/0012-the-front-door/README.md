@@ -19,10 +19,10 @@ receipt waited on is disposed: two records' citation lines, each in a
 refuses to declare it (a declared phrase carrying `section` or `epoch` as a position
 noun is refused outright). What the gate still reports is the pin that the release
 moves, and the release runs where the recorded toolchain is available
-(`call/0032`): `host-lifecycle release ds-lite-punch --change-class adds-flag
---authorized plan/0012`, once the bundle that `tools/bundle-deps.sh` builds is
-published. `#record` defers to that release and draws its done when the pin names
-the tagged bytes.
+(`call/0032`): the bundle's own release is published, the lock the `deps-bundle`
+line obliges ships as the fix-only release ahead of the front door's, and the
+section below carries both commands and the order they run in. `#record` defers to
+that release and draws its done when the pin names the tagged bytes.
 
 ## What this milestone is
 
@@ -321,69 +321,62 @@ configuration as it ran, and the size the binary grew to.
 ## What the release still needs
 
 The milestone's substance is closed and committed. The one item the host gate
-reports is the component's pin, and the release is what moves it. Three facts shape
-the run, and each one is checkable here.
+reports is the component's pin, and the release is what moves it. What is done, and
+what the run still waits on, are both checkable here.
 
-- This host has no container runtime: `which docker podman` answers nothing.
-  `host-lifecycle release` refuses without one by design, because the canonical hash
-  belongs to the recorded image, so the release runs where that image can.
-- The bundle that records the build's hermeticity has no published home yet, and the
-  release builds with the network off. The bundle is therefore published first, and
-  its URL recorded as `deps-bundle` in `.host-software`. The release job attaches the
-  binary, the manual page and the artifact line to the tag's release
-  (`.github/workflows/release.yml`) and attaches no bundle, and this repository's
-  releases are immutable once published, so the bundle needs a home of its own or a
-  step added to that job. Which of the two is a decision this milestone leaves open.
-- The bytes exist and are verified at the contract the release stages. The producer
-  tars its source-replacement snippet as `vendor-config.toml`, the name
-  `host-lifecycle`'s `stage_deps_bundle` reads, and the component's lane asserts that
-  name and then builds the artifact in the pinned image with the network off. The
-  rebuilt bundle sits at `target/deps-vendor.tar.gz` in the component worktree,
-  hashing to
-  `7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730`, and it
-  resolves offline here against an empty `CARGO_HOME` (`cargo check --release
-  --locked --offline`, exit 0).
-
-If the bundle takes a release of its own, these commands give it one, run in the
-component worktree (`<tag>` is yours to pick, and the asset's URL follows it):
+The bundle is published, and its download is verified. It took a release of its own,
+because this repository's releases are immutable once published and the release job
+attaches the binary, the manual page and the artifact line rather than a bundle
+(`.github/workflows/release.yml`). The commands that gave it one, run in the
+component worktree, were:
 
 ```sh
 sha256sum target/deps-vendor.tar.gz
-gh release create <tag> --draft --title "ds-lite-punch dependency bundle" --notes "The vendored dependency layer the release build stages: the pinned image builds with the network off against these sources." --repo slartibardfast/ds-lite-punch
-gh release upload <tag> target/deps-vendor.tar.gz --repo slartibardfast/ds-lite-punch
-gh release edit <tag> --draft=false --repo slartibardfast/ds-lite-punch
+gh release create deps-vendor-v1 --draft --title "ds-lite-punch dependency bundle" --notes "The vendored dependency layer the release build stages: the pinned image builds with the network off against these sources." --repo slartibardfast/ds-lite-punch
+gh release upload deps-vendor-v1 target/deps-vendor.tar.gz --repo slartibardfast/ds-lite-punch
+gh release edit deps-vendor-v1 --draft=false --repo slartibardfast/ds-lite-punch
 ```
 
-The published asset sits at
-`https://github.com/slartibardfast/ds-lite-punch/releases/download/<tag>/deps-vendor.tar.gz`,
-which is the URL the `deps-bundle` line carries, and the release fetches it with
-`curl -fsSL`, so a redirecting asset URL is what it is built for. The first command
-prints the digest the `deps-bundle` line records.
+The tag does not begin with `v`, so the `v*` release job does not fire on it. The
+asset sits at
+`https://github.com/slartibardfast/ds-lite-punch/releases/download/deps-vendor-v1/deps-vendor.tar.gz`,
+and fetching that URL with `curl -fsSL` returns 16,319,220 bytes hashing to
+`7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730`, byte-identical
+to the tarball the producer left in the worktree. `.host-software` records it as the
+`deps-bundle` line, at that URL with that digest, so the contract the release stages
+is the published asset and its digest is what anchors the download.
 
-The run, in the order the tool performs it:
+The lock is release-grade, which puts a release ahead of the front door's.
+`host-lifecycle software --lock ds-lite-punch --authorized plan/0012 .` stages
+`deps-bundle.lock` and then drives a release of its own, because a committed lock
+advances the producer: the tool computes `0.3.5` to `0.3.6` for it, and the commit it
+would make carries the staged lock. The front door's release follows, since
+`adds-flag` on `0.3.6` is `0.4.0`. The staged lock waits in the component worktree
+for the run that commits it.
+
+Both runs need the recorded image, and this host has no container runtime:
+`which docker podman` answers nothing, and `host-lifecycle release` refuses without
+one by design, because the canonical hash belongs to that image rather than to
+whichever compiler is nearest. An install of `podman` on this host is what unblocks
+them. The two commands, in the order the tool performs them, run where `docker` or
+`podman` answers:
 
 ```sh
+host-lifecycle software --lock ds-lite-punch --authorized plan/0012 .
 host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
 ```
 
-It runs the verify sweep, bumps the version the change class implies (the tool
-computes `0.3.5` to `0.4.0` for `adds-flag`), stages the bundle, builds inside the
-recorded image, and prints the canonical hash beside the outward steps (commit and
-push, tag and push, re-pin, receipt). `#record` draws its done once the pin names
-the pushed commit:
+Each one runs the verify sweep, bumps the version its change class implies, stages the
+bundle, builds inside the recorded image, and prints the canonical hash beside its
+outward steps (commit and push, tag and push, re-pin, receipt). `#record` draws its
+done once the pin names the pushed commit:
 
 ```sh
 host-lifecycle tasks --record plan/0012#record --disposition done --evidence <tag>@<hash> .
 ```
 
-One graduation stays owed once the `deps-bundle` line is recorded: the component
-must carry a committed `deps-bundle.lock` whose first two fields are the recorded URL
-and sha, and `host-lifecycle software --check .` reports the owed lock beside its
-remedy, `host-lifecycle software --lock ds-lite-punch .`. The component carries no
-such lock today, which is the onboarding case the check notes rather than faults.
-
-The bundle's bytes are not reproducible, which decides what gets published. Two runs
+The bundle's bytes are not reproducible, which decided what got published. Two runs
 of the producer on this machine, one after the other, produced different digests, so
-publish the tarball whose digest is recorded here and keep it: a rebuild will not
-match. The digest anchors the download; the crate sources that download unpacks are
-what the offline build reproduces from.
+the tarball whose digest is recorded here is the one published, and a rebuild will
+not match it. The digest anchors the download; the crate sources that download
+unpacks are what the offline build reproduces from.
