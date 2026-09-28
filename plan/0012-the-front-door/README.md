@@ -346,3 +346,9 @@ the pushed commit:
 ```sh
 host-lifecycle tasks --record plan/0012#record --disposition done --evidence <tag>@<hash> .
 ```
+
+One graduation stays owed once the `deps-bundle` line is recorded: the component
+must carry a committed `deps-bundle.lock` whose first two fields are the recorded URL
+and sha, and `host-lifecycle software --check .` reports the owed lock beside its
+remedy, `host-lifecycle software --lock ds-lite-punch .`. The component carries no
+such lock today, which is the onboarding case the check notes rather than faults.
