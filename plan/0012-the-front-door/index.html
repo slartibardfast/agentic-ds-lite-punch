@@ -483,6 +483,18 @@ hashing to
 <code>7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730</code>, and it
 resolves offline here against an empty <code>CARGO_HOME</code> (<code>cargo check --release --locked --offline</code>, exit 0).</li>
 </ul>
+<p>If the bundle takes a release of its own, these commands give it one, run in the
+component worktree (<code>&lt;tag&gt;</code> is yours to pick, and the asset's URL follows it):</p>
+<pre><code class="language-sh">sha256sum target/deps-vendor.tar.gz
+gh release create &lt;tag&gt; --draft --title "ds-lite-punch dependency bundle" --notes "The vendored dependency layer the release build stages: the pinned image builds with the network off against these sources." --repo slartibardfast/ds-lite-punch
+gh release upload &lt;tag&gt; target/deps-vendor.tar.gz --repo slartibardfast/ds-lite-punch
+gh release edit &lt;tag&gt; --draft=false --repo slartibardfast/ds-lite-punch
+</code></pre>
+<p>The published asset sits at
+<code>https://github.com/slartibardfast/ds-lite-punch/releases/download/&lt;tag&gt;/deps-vendor.tar.gz</code>,
+which is the URL the <code>deps-bundle</code> line carries, and the release fetches it with
+<code>curl -fsSL</code>, so a redirecting asset URL is what it is built for. The first command
+prints the digest the <code>deps-bundle</code> line records.</p>
 <p>The run, in the order the tool performs it:</p>
 <pre><code class="language-sh">host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .
 </code></pre>
