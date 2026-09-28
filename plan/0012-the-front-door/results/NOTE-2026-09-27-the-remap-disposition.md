@@ -11,10 +11,10 @@ than a rereading.
 ## What the remap phase reports
 
 Eight tell-shaped tokens, in three records. The count stood at five before this
-milestone's own record arrived, and the three it added are the three lines below
-that carry `epoch`, which is the token this lane reads as a tell wherever it
-appears. That resolves the line in the harvest whose flagged token puzzled L: the
-word `epoch` is the tell, not the state directory named beside it.
+milestone's own record arrived, and the three it added are that record's transcript
+lines, each carrying `epoch`, which is the token this lane reads as a tell wherever
+it appears. That resolves the line in the harvest whose flagged token puzzled L:
+the word `epoch` is the tell, not the state directory named beside it.
 
 ```host-lint:ignore
 call/0037-comments-are-one-line-and-technical.md:20: warning: (`section 8.2`, `26.19`, `6.12`) or a brief item code (`I1`, `R5`, `B4`). (section)
