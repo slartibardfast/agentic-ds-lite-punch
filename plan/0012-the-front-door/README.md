@@ -141,12 +141,23 @@ does, since a clone of the host carries no nginx.
 - depends: #stranger-arrival
 - verify: attested call/0041
 
-The keepalive arm already holds a UDP port. The front needs a TCP slot, and the
-first external handshake through it recorded. Two routes, and this task's record
-names the one taken: request the slot once from a LAN client over the existing
-PCP or UPnP facade, which persists it in `leases.tsv` and restores it at start,
-or let `--static-map` carry a protocol, which is a parser change with a test
-first and a regenerated help text and manual page.
+The keepalive arm holds a UDP port, and the front needs a TCP slot with the first
+external handshake through it recorded. The slot is held and its tuple is known: a
+LAN client asked the facade for a TCP mapping, which `leases.tsv` persists and a
+restart restores, and a STUN server that answers over TCP supplied the tuple
+([the slot](results/RESULTS-2026-09-27-the-tcp-slot.md)). The poke admits the peer:
+the vantage sent a SYN that arrived at the inner tuple from the exact port the line
+had poked ([the SYN](results/RESULTS-2026-09-27-the-tcp-syn.md)).
+
+What stopped the handshake was the reply's line. A forwarded arrival is answered by
+the client, whose traffic carries no rule for the mapping's line, so the peer
+discarded a reset from another address
+([the return path](results/RESULTS-2026-09-27-the-return-path.md)). [call/0044](../call/0044-a-granted-tcp-slot-is-served-by-the-daemons-own-connection.md)
+settles it: a granted TCP slot installs no translation, and the daemon's own
+listener serves it from its bind address, which the line already routes.
+
+The handshake from the vantage through that path is the measurement this task still
+owes, and it is a deployment's.
 
 ### Route two classes of name at the front {#front-config}
 
