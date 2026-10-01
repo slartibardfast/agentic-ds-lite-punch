@@ -3395,3 +3395,28 @@ hazards, and `plan/0012#record` is done. `plan/0012#deps-bundle` is done as well
 deferral was discharged with a fresh `software --verify-build` at the new pin, which
 reproduced `609a12f2…` in the image. The milestone's two remaining deferrals are the
 control-channel pair that call/0041 and call/0042 record.
+
+## 2026-10-01 — a granted TCP slot is served by the daemon, not by a translation
+
+The TCP deferral's remaining fault was the reply's line: a forwarded arrival is answered
+by the client, whose traffic carries no rule for the mapping's line, and the peer discards
+a reset arriving from another address. `call/0044` settles the route. A granted TCP slot
+installs no translation, so the arrival reaches the daemon's own listener, which already
+exists for every TCP grant and splices to the client; the connection to the client then
+originates from the daemon's bind address, which the line's policy rule already selects.
+The operator's egress rule is no longer needed for the front door, and a client on a TCP
+slot does not see the peer's address, which the operator page already said of a splice.
+
+The change is small because the listener was already there. `nft::grant_script` splits by
+protocol (the port is admitted either way, and UDP alone adds the translation),
+`revoke_statements` follows it, and two tests pin both. Commits `dc4b0a0` and `f3002f4` on
+the component.
+
+That second commit is a lesson about pushing before checking: the first push carried
+three-line doc comments, and the lane's comment lint refused the run (call/0037 asks for
+one line per comment run). `python3 tools/comment-lint.py` answers in a second locally, and
+L had not run it.
+
+What `#hold-tcp-slot` still owes is the external handshake through that path, which is a
+deployment's measurement: a fresh TCP mapping from a LAN client, then a connection from
+the vantage to the slot's tuple.
