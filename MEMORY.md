@@ -3445,3 +3445,29 @@ Two rig facts worth keeping. The containers cannot reach the hub network `192.16
 at all, so a LAN-side test of the splice has to run from the box itself. And the poke for
 a *holder* slot fires every sixty seconds, not every keepalive interval, which is why the
 first wait of twenty seconds saw only the UDP slot's pokes.
+
+## 2026-10-02 — the control channel has a caller, and its payload is the front's reading
+
+`call/0042` left the daemon's TLS client idle for want of a payload. `call/0045` makes the
+payload the front's own view of the line: the daemon pushes the table it routes with on a
+minute's interval, and the answer carries the tuple the front sees, one line per protocol,
+which the daemon records as a `front-view` event. The channel is off unless
+`--front-endpoint` and `--front-name` are set with the identity and the anchor, and the
+daemon refuses a set that is incomplete.
+
+The front answers from the table it already keeps. `poke-listener.py` gained an HTTP
+listener that reports `udp` and `tcp` lines, nginx routes `/table` to it behind the same
+client certificate the protected names demand, and the harness asserts the answer. The
+daemon's half is unit-tested: `push` reads the whole response, `reported` parses it, and
+the four new tests pin both. The lane is green at `677bda8`, with the harness's new
+assertion visible in its log.
+
+Worth knowing: wiring the caller changed the binary's shape. Until now `front.rs`'s
+functions had no caller, so the linker left the TLS stack out of the artifact; the
+release's size and hash move with this change, which the plan predicted when it wrote that
+the client is what `#deps-bundle` pins.
+
+Two settings were unreachable from the environment until now: the init script passed
+`--client-identity` and knew nothing of `--front-anchor`, so a deployment could not have
+completed the set. Both, and the endpoint and name, are wired now, and the operator page's
+key table carries them.
