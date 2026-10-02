@@ -418,4 +418,7 @@ The next release absorbed both deferrals' work. `v0.5.0` carries the granted TCP
 own path, the control channel's caller and its payload, the four flags a front deployment
 needs, and the page regenerated for its version. Its published asset hashes
 `b21eaad34b4e0ee1dfbea1dc718f1877b0fc6988413ad491c8c31995fe9ff4c2`, which is the value
-`.host-software` records, and the gate is green over that pin.
+`.host-software` records, and the gate is green over that pin. The front itself was then
+deployed on the rig and the channel runs there for real; the run records what it proved
+and the wall its pokes met
+([the deployment](results/NOTE-2026-10-02-the-front-deployed-on-the-rig.md)).
