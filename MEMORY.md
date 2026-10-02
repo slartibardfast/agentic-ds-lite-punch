@@ -3471,3 +3471,25 @@ Two settings were unreachable from the environment until now: the init script pa
 `--client-identity` and knew nothing of `--front-anchor`, so a deployment could not have
 completed the set. Both, and the endpoint and name, are wired now, and the operator page's
 key table carries them.
+
+## 2026-10-02 — v0.5.0, and the release that reads its own record
+
+`host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .`
+computed `0.4.1` to `0.5.0`, built in the pinned image on this host, and printed
+`b21eaad34b4e0ee1dfbea1dc718f1877b0fc6988413ad491c8c31995fe9ff4c2`. Commit `4d62946`
+and tag `v0.5.0` are pushed, `.host-software` names the commit and the hash, the release
+phase carries its receipt, `#record` is done at that evidence, and the gate reports every
+component at its pinned SHA with no hazards.
+
+The tag's lane published a binary hashing `b21eaad3…`, the value the record carries, and
+`artifact-record.txt` in the release says the same. The page is regenerated for `0.5.0`
+inside the release commit, because the verb has no step for it and the tag's docs lane
+would fail again otherwise, which [host-lifecycle#31](https://github.com/connollydavid/host-lifecycle/issues/31)
+records.
+
+Two things this release taught. Its verify sweep blocked the first attempt: a paragraph in
+the new `call/0045` tripped negative parallelism, and the prose audit reads *tracked*
+documents, so a decision that has just been written reads clean until it is committed. And
+the artifact's size and hash moved with the channel, because giving `front.rs` a caller is
+what pulls the TLS stack into the link. The `deps-bundle` digest did not move: the
+dependency layer is the same one the previous release staged.
