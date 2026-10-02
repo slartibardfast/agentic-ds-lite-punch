@@ -523,3 +523,11 @@
     evidence = software --verify-build: 609a12f296d6 reproduced from the pin in ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e917
     tool = host-lifecycle@0.54.2
     recorded = 2026-09-28
+
+[receipt "plan/0012#control-channel"]
+    disposition = done
+    verify = cargo test --release --locked
+    inputs = the control channel module under `src/`, `Cargo.toml`, `Cargo.lock`
+    evidence = the suite is green at 677bda8 (241 tests), and the lane's harness asserts the front's answer carries the tuple
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-02

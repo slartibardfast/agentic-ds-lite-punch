@@ -225,15 +225,27 @@ failed push is followed by the whole table again rather than a delta, so a
 reconnect repairs whatever was missed. Unit tests cover the request body and the
 retry.
 
-The transport is built and its wiring waits for a payload. `src/front.rs` renders
-the table, opens the TLS connection with the daemon's identity and the operator's
-anchor, and sends the whole table again when a push fails. Four tests cover the
-rendering, the endpoint, a push that reaches a server the anchor signed, and a
-retry whose second attempt carries the identical table. What has no caller is the
-push itself, because
-[call/0042](../call/0042-the-poke-delivers-the-tuple.md) found that the front
-already learns the tuple from the poke, keeps its names in the operator's
-configuration, and expires its own lease.
+The transport is built and the channel now has a caller and a reader. `src/front.rs`
+renders the table, opens the TLS connection with the daemon's identity and the
+anchor, and sends the whole table again when a push fails. Six tests cover the
+rendering, the endpoint, a push that reaches a server the anchor signed, a retry
+whose second attempt carries the identical table, and the front's report read out
+of the answer.
+
+[call/0042](../call/0042-the-poke-delivers-the-tuple.md) left the push idle because
+the front already learns the tuple from the poke, keeps its names in the operator's
+configuration, and expires its own lease. What a poke cannot carry is the front's own
+reading of the line, and [call/0045](../call/0045-the-control-channel-carries-the-tuple-the-front-sees.md)
+makes that the payload: the daemon pushes the table on a minute's interval, and the
+answer carries the tuple the front sees, one line per protocol, which the daemon
+records. The channel is off unless `--front-endpoint` and `--front-name` are set with
+the identity and the anchor.
+
+The front's half is measured in the lane: `poke-listener.py` answers the push with its
+own table, nginx routes the push's path to it behind the same client certificate the
+protected names demand, and the harness asserts the answer carries the tuple the pokes
+taught it. The daemon's half is unit-tested, and the push against a deployed front is
+the operator's, like the rest of the front door.
 
 ### Renew the lease and let it expire {#lease}
 
