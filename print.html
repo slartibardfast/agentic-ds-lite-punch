@@ -3915,11 +3915,11 @@ discarded a reset from another address
 (<a href="plan/0012-the-front-door/results/RESULTS-2026-09-27-the-return-path.html">the return path</a>). <a href="plan/0012-the-front-door/../call/0044-a-granted-tcp-slot-is-served-by-the-daemons-own-connection.html">call/0044</a>
 settles it: a granted TCP slot installs no translation, and the daemon's own
 listener serves it from its bind address, which the line already routes.</p>
-<p>The handshake through that path was attempted on 2026-10-02. The half inside the box is
-measured: the granted slot installs no translation, and a connection to its port is
-spliced to the client by the daemon's own listener. The half outside stops at the
-vantage, whose provider forwards one TCP port and rewrites its outbound source ports, so
-the peer cannot present the tuple the carrier admits
+<p>The handshake through that path was attempted on 2026-10-02. Inside the box the
+measurement holds: a connection to the slot's port is served by the daemon's own
+listener, which splices it to the client, and the TCP translation map is empty. Outside
+the box it stops at the vantage, where the provider forwards one TCP port and rewrites
+outbound source ports, and the peer cannot present the tuple the carrier admits
 (<a href="plan/0012-the-front-door/results/NOTE-2026-10-02-the-granted-tcp-slot-at-the-lan.html">the run</a>).</p>
 <h3 id="front-config"><a class="header" href="#front-config">Route two classes of name at the front</a></h3>
 <ul>
