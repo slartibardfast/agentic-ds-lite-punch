@@ -22,7 +22,7 @@ The channel has a caller and a reader, which is what call/0042 was waiting for.
 
 The front's report is a second source for a tuple the daemon learns from STUN, and it is the source the front's own routing uses. Where the two disagree, the front's reading is the one that decides whether an arrival reaches the held port, so a disagreement is a fact worth having on the record.
 
-The daemon records what the front sees and does not yet publish it: the vote and the tuple files are unchanged, and feeding the report into a slot with no tuple of its own is left to the work that needs it.
+The daemon records what the front sees. The vote and the tuple files keep their shape, and feeding the report into a slot with no tuple of its own is left to the work that needs it.
 
 ## What this does not claim
 
