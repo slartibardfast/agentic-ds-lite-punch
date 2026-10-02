@@ -1,8 +1,8 @@
 # Milestone: the front door
 
-**Status:** done, 2026-09-27; released 2026-09-28 at `v0.4.1`. Every task in the build
-sequence carries a receipt, and two of them are recorded
-deferrals;
+**Status:** done, 2026-09-27; released 2026-10-02 at `v0.5.0`. Every task in the build
+sequence carries a receipt, and one of them is a recorded
+deferral;
 [the milestone's record](results/RESULTS-2026-09-27-the-front-door.md) gathers what
 the measurements found and where each proof lives. The architecture is settled in
 [call/0038](../call/0038-the-front-door-is-a-held-port.md), what the control
@@ -413,3 +413,9 @@ filed upstream as [host-lifecycle#30](https://github.com/connollydavid/host-life
 and [#31](https://github.com/connollydavid/host-lifecycle/issues/31). The v0.4.0 release
 keeps its published bytes, because this repository's releases are immutable, and the
 section above states what they are.
+
+The next release absorbed both deferrals' work. `v0.5.0` carries the granted TCP slot's
+own path, the control channel's caller and its payload, the four flags a front deployment
+needs, and the page regenerated for its version. Its published asset hashes
+`b21eaad34b4e0ee1dfbea1dc718f1877b0fc6988413ad491c8c31995fe9ff4c2`, which is the value
+`.host-software` records, and the gate is green over that pin.
