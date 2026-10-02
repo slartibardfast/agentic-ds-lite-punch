@@ -3420,3 +3420,28 @@ L had not run it.
 What `#hold-tcp-slot` still owes is the external handshake through that path, which is a
 deployment's measurement: a fresh TCP mapping from a LAN client, then a connection from
 the vantage to the slot's tuple.
+
+## 2026-10-02 — the granted TCP slot is measured at the LAN, and the vantage is the wall
+
+The measurement ran on the rig. The lane's artifact for `f3002f4` (`59ed3af1…`) went to
+the box with its init script, and `call/0044`'s change was measured where it can be: the
+TCP translation map carries no element while the UDP one still carries its grant, and a
+connection to the slot's port reached the daemon's own listener and was spliced to the
+granted client, whose own page came back through it.
+
+The poke works when the peer's port answers. With the poke pointed at a reachable port
+the line's dial completed, sshd answered it with its banner, and the vantage logged the
+connection from the slot's own tuple. The fold gives the poke the slot's port, measured
+on eth1.
+
+The external handshake never reached the line. This vantage's provider forwards one TCP
+port and rewrites the vantage's outbound source ports, so opening the host's firewall for
+41001 changed nothing, and a `POSTROUTING` SNAT that set the test's source port to the
+poked port was applied and still refused. The carrier admits a peer by the tuple it spoke
+to, and this vantage cannot present one. `#hold-tcp-slot` keeps its deployment half, and
+it wants a vantage whose poke port is forwarded one to one.
+
+Two rig facts worth keeping. The containers cannot reach the hub network `192.168.0.0/24`
+at all, so a LAN-side test of the splice has to run from the box itself. And the poke for
+a *holder* slot fires every sixty seconds, not every keepalive interval, which is why the
+first wait of twenty seconds saw only the UDP slot's pokes.
