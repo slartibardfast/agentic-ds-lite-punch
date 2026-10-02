@@ -15,9 +15,8 @@ restarted. The running command line was read from `/proc/<pid>/cmdline` and carr
 
 The datapath shows the change and nothing else does:
 
-- `nft list map ip dslp dslp_dnat_tcp` carries no element, while `dslp_dnat_udp` still
-  carries its grant (`{ 40000 : 192.168.21.12 . 40002 }`) and `dslp_in_tcp` carries the
-  slot (`{ 40001 }`).
+- `nft list map ip dslp dslp_dnat_tcp` is empty. The UDP map keeps its grant
+  (`{ 40000 : 192.168.21.12 . 40002 }`), and `dslp_in_tcp` keeps the slot (`{ 40001 }`).
 - A connection to the slot's port reached the daemon's own listener and was spliced to
   the client the grant names: the box's `curl http://192.168.0.21:40001/` returned that
   client's own page, an HTTP server in the probe container at `192.168.21.11:8099`.

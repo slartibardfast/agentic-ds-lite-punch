@@ -156,11 +156,11 @@ discarded a reset from another address
 settles it: a granted TCP slot installs no translation, and the daemon's own
 listener serves it from its bind address, which the line already routes.
 
-The handshake through that path was attempted on 2026-10-02. The half inside the box is
-measured: the granted slot installs no translation, and a connection to its port is
-spliced to the client by the daemon's own listener. The half outside stops at the
-vantage, whose provider forwards one TCP port and rewrites its outbound source ports, so
-the peer cannot present the tuple the carrier admits
+The handshake through that path was attempted on 2026-10-02. Inside the box the
+measurement holds: a connection to the slot's port is served by the daemon's own
+listener, which splices it to the client, and the TCP translation map is empty. Outside
+the box it stops at the vantage, where the provider forwards one TCP port and rewrites
+outbound source ports, and the peer cannot present the tuple the carrier admits
 ([the run](results/NOTE-2026-10-02-the-granted-tcp-slot-at-the-lan.md)).
 
 ### Route two classes of name at the front {#front-config}
