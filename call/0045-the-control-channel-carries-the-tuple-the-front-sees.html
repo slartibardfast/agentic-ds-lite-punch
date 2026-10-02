@@ -188,7 +188,7 @@
 <h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
 <p>The channel has a caller and a reader, which is what call/0042 was waiting for.</p>
 <p>The front's report is a second source for a tuple the daemon learns from STUN, and it is the source the front's own routing uses. Where the two disagree, the front's reading is the one that decides whether an arrival reaches the held port, so a disagreement is a fact worth having on the record.</p>
-<p>The daemon records what the front sees. The vote and the tuple files keep their shape, and feeding the report into a slot with no tuple of its own is left to the work that needs it.</p>
+<p>The daemon records what the front sees. The vote and the tuple files keep their shape, and using the report as a slot's own tuple belongs to the work that needs it.</p>
 <h2 id="what-this-does-not-claim"><a class="header" href="#what-this-does-not-claim">What this does not claim</a></h2>
 <p>It does not claim the report reaches the daemon when the front is unreachable: a failed push is a warning, and the channel repairs itself on the next interval.</p>
 
