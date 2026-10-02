@@ -3915,8 +3915,12 @@ discarded a reset from another address
 (<a href="plan/0012-the-front-door/results/RESULTS-2026-09-27-the-return-path.html">the return path</a>). <a href="plan/0012-the-front-door/../call/0044-a-granted-tcp-slot-is-served-by-the-daemons-own-connection.html">call/0044</a>
 settles it: a granted TCP slot installs no translation, and the daemon's own
 listener serves it from its bind address, which the line already routes.</p>
-<p>The handshake from the vantage through that path is the measurement this task still
-owes, and it is a deployment's.</p>
+<p>The handshake through that path was attempted on 2026-10-02. The half inside the box is
+measured: the granted slot installs no translation, and a connection to its port is
+spliced to the client by the daemon's own listener. The half outside stops at the
+vantage, whose provider forwards one TCP port and rewrites its outbound source ports, so
+the peer cannot present the tuple the carrier admits
+(<a href="plan/0012-the-front-door/results/NOTE-2026-10-02-the-granted-tcp-slot-at-the-lan.html">the run</a>).</p>
 <h3 id="front-config"><a class="header" href="#front-config">Route two classes of name at the front</a></h3>
 <ul>
 <li>verify: attested call/0041</li>
@@ -10699,6 +10703,26 @@ L had not run it.</p>
 <p>What <code>#hold-tcp-slot</code> still owes is the external handshake through that path, which is a
 deployment's measurement: a fresh TCP mapping from a LAN client, then a connection from
 the vantage to the slot's tuple.</p>
+<h2 id="2026-10-02--the-granted-tcp-slot-is-measured-at-the-lan-and-the-vantage-is-the-wall"><a class="header" href="#2026-10-02--the-granted-tcp-slot-is-measured-at-the-lan-and-the-vantage-is-the-wall">2026-10-02 — the granted TCP slot is measured at the LAN, and the vantage is the wall</a></h2>
+<p>The measurement ran on the rig. The lane's artifact for <code>f3002f4</code> (<code>59ed3af1…</code>) went to
+the box with its init script, and <code>call/0044</code>'s change was measured where it can be: the
+TCP translation map carries no element while the UDP one still carries its grant, and a
+connection to the slot's port reached the daemon's own listener and was spliced to the
+granted client, whose own page came back through it.</p>
+<p>The poke works when the peer's port answers. With the poke pointed at a reachable port
+the line's dial completed, sshd answered it with its banner, and the vantage logged the
+connection from the slot's own tuple. The fold gives the poke the slot's port, measured
+on eth1.</p>
+<p>The external handshake never reached the line. This vantage's provider forwards one TCP
+port and rewrites the vantage's outbound source ports, so opening the host's firewall for
+41001 changed nothing, and a <code>POSTROUTING</code> SNAT that set the test's source port to the
+poked port was applied and still refused. The carrier admits a peer by the tuple it spoke
+to, and this vantage cannot present one. <code>#hold-tcp-slot</code> keeps its deployment half, and
+it wants a vantage whose poke port is forwarded one to one.</p>
+<p>Two rig facts worth keeping. The containers cannot reach the hub network <code>192.168.0.0/24</code>
+at all, so a LAN-side test of the splice has to run from the box itself. And the poke for
+a <em>holder</em> slot fires every sixty seconds, not every keepalive interval, which is why the
+first wait of twenty seconds saw only the UDP slot's pokes.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
