@@ -531,3 +531,10 @@
     evidence = the suite is green at 677bda8 (241 tests), and the lane's harness asserts the front's answer carries the tuple
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-02
+
+[receipt "plan/0012#record"]
+    disposition = done
+    verify = host-lifecycle software --check .
+    evidence = v0.5.0@b21eaad34b4e0ee1dfbea1dc718f1877b0fc6988413ad491c8c31995fe9ff4c2, and the published asset hashes it
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-02
