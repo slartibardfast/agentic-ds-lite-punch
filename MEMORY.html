@@ -3325,6 +3325,31 @@ documents, so a decision that has just been written reads clean until it is comm
 the artifact's size and hash moved with the channel, because giving <code>front.rs</code> a caller is
 what pulls the TLS stack into the link. The <code>deps-bundle</code> digest did not move: the
 dependency layer is the same one the previous release staged.</p>
+<h2 id="2026-10-02--the-front-runs-on-the-rig-and-its-pokes-stop-at-the-provider"><a class="header" href="#2026-10-02--the-front-runs-on-the-rig-and-its-pokes-stop-at-the-provider">2026-10-02 — the front runs on the rig, and its pokes stop at the provider</a></h2>
+<p>The front is deployed on the external vantage: nginx from the shipped configuration with
+its own root, its own pid and the stream/http split, and the poke listener beside it,
+both under systemd; the UDP leg sits on 41002 and the protected name terminates on 8446.
+The authority is minted on the line as <code>call/0040</code> requires, and the front holds only its
+own certificate and the anchor. The box runs the released bytes <code>b21eaad3…</code> with the four
+channel settings, and it pushes to the vantage over the wireguard tunnel it already has
+(<code>192.168.224.1:8443</code>).</p>
+<p>The channel runs for real. The front's logs show the push answered with <code>200</code> every
+minute, from <code>192.168.224.21</code> through the stream listener on 8443 into the local https
+block on 8446: the daemon authenticated with its own certificate, and the front verified
+it against the anchor before answering. The protected class is proved from the box as
+well: with the daemon's certificate the name answers <code>200</code> from the front's upstream, and
+without it the request gets no response at all.</p>
+<p>The front has learned no tuple. The pokes leave the line every two seconds, measured on
+<code>eth1</code> as <code>192.168.0.21.40000 &gt; 170.9.238.141.41001 UDP, length 9</code>, and a fourteen-second
+capture on the vantage's own interface holds zero packets while a listener on the free
+port sees nothing. The provider's NAT in front of the vantage drops them upstream of the
+host, which is the same wall the TCP poke met: a host-level rule cannot reach a port the
+provider does not forward. The daemon reports nothing rather than a stale tuple, which is
+what the report is for.</p>
+<p>Two ways forward, and they are the operator's: a vantage whose inbound <code>41001</code> is
+delivered, or letting the front learn the table from the push it already receives, whose
+body is that table, while the poke keeps its other office of admitting the peer at the
+carrier.</p>
 
                     </main>
 
