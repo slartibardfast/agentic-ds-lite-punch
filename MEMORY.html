@@ -3307,6 +3307,24 @@ the client is what <code>#deps-bundle</code> pins.</p>
 <code>--client-identity</code> and knew nothing of <code>--front-anchor</code>, so a deployment could not have
 completed the set. Both, and the endpoint and name, are wired now, and the operator page's
 key table carries them.</p>
+<h2 id="2026-10-02--v050-and-the-release-that-reads-its-own-record"><a class="header" href="#2026-10-02--v050-and-the-release-that-reads-its-own-record">2026-10-02 — v0.5.0, and the release that reads its own record</a></h2>
+<p><code>host-lifecycle release ds-lite-punch --change-class adds-flag --authorized plan/0012 .</code>
+computed <code>0.4.1</code> to <code>0.5.0</code>, built in the pinned image on this host, and printed
+<code>b21eaad34b4e0ee1dfbea1dc718f1877b0fc6988413ad491c8c31995fe9ff4c2</code>. Commit <code>4d62946</code>
+and tag <code>v0.5.0</code> are pushed, <code>.host-software</code> names the commit and the hash, the release
+phase carries its receipt, <code>#record</code> is done at that evidence, and the gate reports every
+component at its pinned SHA with no hazards.</p>
+<p>The tag's lane published a binary hashing <code>b21eaad3…</code>, the value the record carries, and
+<code>artifact-record.txt</code> in the release says the same. The page is regenerated for <code>0.5.0</code>
+inside the release commit, because the verb has no step for it and the tag's docs lane
+would fail again otherwise, which <a href="https://github.com/connollydavid/host-lifecycle/issues/31">host-lifecycle#31</a>
+records.</p>
+<p>Two things this release taught. Its verify sweep blocked the first attempt: a paragraph in
+the new <code>call/0045</code> tripped negative parallelism, and the prose audit reads <em>tracked</em>
+documents, so a decision that has just been written reads clean until it is committed. And
+the artifact's size and hash moved with the channel, because giving <code>front.rs</code> a caller is
+what pulls the TLS stack into the link. The <code>deps-bundle</code> digest did not move: the
+dependency layer is the same one the previous release staged.</p>
 
                     </main>
 
