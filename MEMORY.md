@@ -3493,3 +3493,33 @@ documents, so a decision that has just been written reads clean until it is comm
 the artifact's size and hash moved with the channel, because giving `front.rs` a caller is
 what pulls the TLS stack into the link. The `deps-bundle` digest did not move: the
 dependency layer is the same one the previous release staged.
+
+## 2026-10-02 — the front runs on the rig, and its pokes stop at the provider
+
+The front is deployed on the external vantage: nginx from the shipped configuration with
+its own root, its own pid and the stream/http split, and the poke listener beside it,
+both under systemd; the UDP leg sits on 41002 and the protected name terminates on 8446.
+The authority is minted on the line as `call/0040` requires, and the front holds only its
+own certificate and the anchor. The box runs the released bytes `b21eaad3…` with the four
+channel settings, and it pushes to the vantage over the wireguard tunnel it already has
+(`192.168.224.1:8443`).
+
+The channel runs for real. The front's logs show the push answered with `200` every
+minute, from `192.168.224.21` through the stream listener on 8443 into the local https
+block on 8446: the daemon authenticated with its own certificate, and the front verified
+it against the anchor before answering. The protected class is proved from the box as
+well: with the daemon's certificate the name answers `200` from the front's upstream, and
+without it the request gets no response at all.
+
+The front has learned no tuple. The pokes leave the line every two seconds, measured on
+`eth1` as `192.168.0.21.40000 > 170.9.238.141.41001 UDP, length 9`, and a fourteen-second
+capture on the vantage's own interface holds zero packets while a listener on the free
+port sees nothing. The provider's NAT in front of the vantage drops them upstream of the
+host, which is the same wall the TCP poke met: a host-level rule cannot reach a port the
+provider does not forward. The daemon reports nothing rather than a stale tuple, which is
+what the report is for.
+
+Two ways forward, and they are the operator's: a vantage whose inbound `41001` is
+delivered, or letting the front learn the table from the push it already receives, whose
+body is that table, while the poke keeps its other office of admitting the peer at the
+carrier.
