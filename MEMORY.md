@@ -3564,3 +3564,24 @@ gate is green. The page was regenerated for `0.5.1` inside the commit, the proce
 The front's script needs no release to reach the vantage, so the two views have been live
 there since before this tag; what the tag carries is the view's name in the daemon's
 `front-view` event, and the pinned artifact every deployment now takes.
+
+## 2026-10-03 — the vantage's path, and which ports the edge delivers
+
+The external vantage's inbound path carries exactly what the edge allows: TCP 22 and UDP 1194. The
+box reaches the front through a `udpspeeder` chain into wireguard, which is why the control channel
+works there:
+
+```
+/usr/bin/udpspeeder -c --fec 8:1 ... -l 127.0.0.2:1194 -r 170.9.238.141:1194
+/etc/config/network: option endpoint_host '127.0.0.2'
+```
+
+The instance's own INPUT chain tells the story in counters: `udp dport 1194` 34,620,216 packets,
+`tcp dport 22` 194,908, `iifname wg0` 31,767, and the two 8443 accepts L added sitting at zero, with
+1,239 rejected below them. So the machine firewall is innocent and the edge is the filter: it
+delivers 22 and 1194 and not 8443 or 41001. The VNIC reports no NSG and no public IP of its own, so
+the rule belongs on the subnet's security list, as ingress from 0.0.0.0/0, one rule for TCP 8443 and
+another for UDP 8443, with 41001 in both protocols when the poke's authority matters.
+
+Nothing depends on that gap but the front's public names and the poke's authority measured from
+outside: the two views carry the front over the tunnel either way.
