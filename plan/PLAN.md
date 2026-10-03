@@ -13,5 +13,6 @@ sort key; see `call/0000`). A milestone is a thin, persona-serving increment.
 - [0010 the filtering proved and watched](0010-the-filtering-proved-and-watched/README.md)
 - [0011 documentation](0011-documentation/README.md)
 - [0012 the front door](0012-the-front-door/README.md)
+- [0013 the front's two views](0013-the-fronts-two-views/README.md)
 
 The next milestone number is allocated by `host-lifecycle next plan/`.
