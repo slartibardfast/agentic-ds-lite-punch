@@ -3585,3 +3585,16 @@ another for UDP 8443, with 41001 in both protocols when the poke's authority mat
 
 Nothing depends on that gap but the front's public names and the poke's authority measured from
 outside: the two views carry the front over the tunnel either way.
+
+## 2026-10-03 — corrected: the address is the instance's, and the list to check is the subnet's
+
+The earlier entry said the VNIC "reports no public IP of its own". That reading was wrong: the
+instance metadata's VNIC keys carry no publicIp field at all, and the instance's own egress address
+is 170.9.238.141, so the address is its own. The send is now proven from both ends as well. This
+machine's socket sat in SYN-SENT toward 170.9.238.141:8443, and the line put seven SYNs on the wire
+from 84.203.115.61:36616 with no answer of any kind, while the instance's NIC capture held zero
+packets and its INPUT counters for 8443 stayed at zero against 34.6 million for UDP 1194.
+
+The instance sits on subnet 10.0.0.0/24 in us-chicago-1 (VNIC ocid1.vnic.oc1.us-chicago-1.abxxeljs…).
+The security list that governs is the one attached to that subnet, so a list edited elsewhere, the
+VCN's default or another subnet's, changes nothing.
