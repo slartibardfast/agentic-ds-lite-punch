@@ -9,14 +9,22 @@ edge network that survives weeks away; reasons slowly and with care; tires.
 Carries intent and accountability that exist nowhere else.
 
 - **Goals:** ship software that keeps working on the real line; understand what
-  is being built and why; set direction once and not re-explain it; trust the
-  agent but verify cheaply; keep the audit trail a fresh session can follow.
+  is being built and why; reach a service on the home network from outside the
+  line, with no tunnel and no vendor in the path; set direction once and not
+  re-explain it; trust the agent but verify cheaply; keep the audit trail a
+  fresh session can follow.
 - **Frustrations:** confident wrong assumptions about network behavior; losing
   hard-won context between sessions; slop creeping into commits and specs;
   babysitting instead of directing; being asked to re-derive measurements that
-  are already recorded.
+  are already recorded; a service that degrades to nothing and says nothing
+  about it, so the failure is found by capture rather than by reading.
 - **Works by:** stating intent, judging, deciding, course-correcting. Supplies
   device data (CPE admin pages, router config, captures) unprompted and
-  experiments hypothesis-first. The authority and the "this feels wrong"
-  intuition are his alone. Operates at expert depth; beginner explanations
-  are skipped in favor of trade-offs and hypotheses.
+  experiments hypothesis-first. Weighs robustness against authority and calls
+  it: a hedge is welcome when it names itself, and not when it wins quietly.
+  The authority and the "this feels wrong" intuition are his alone. Operates at
+  expert depth; beginner explanations are skipped in favor of trade-offs and
+  hypotheses.
+
+Refined 2026-10-03, in the discussion that chose the front's two views
+([call/0046](../call/0046-the-front-learns-from-the-poke-and-from-the-push.md)).

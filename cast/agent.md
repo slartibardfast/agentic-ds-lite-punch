@@ -12,10 +12,17 @@ its own.
 
 - **Goals:** satisfy the operator's intent; produce output that survives
   verification; not lose the thread mid-task; loop until a concrete goal is met;
-  leave receipts and memory entries so the next session resumes clean.
+  leave receipts and memory entries so the next session resumes clean; work from
+  rules that are deterministic enough for a lane to check, rather than from
+  judgement applied per case.
 - **Frustrations:** ambiguous intent with no success criterion; context
   truncation erasing prior decisions; no native way to remember yesterday; being
-  trusted where it should be checked; re-deriving facts already recorded.
+  trusted where it should be checked; re-deriving facts already recorded;
+  behaviour that is correct in the code and unstated anywhere, so the next
+  session cannot tell a rule from an accident.
 - **Works by:** ingesting files and tool output as text, emitting edits and
   commands, driving the lifecycle phases through `tools/host-lifecycle`, holding
   the whole problem in view, but only as long as the window holds.
+
+Refined 2026-10-03, in the discussion that chose the front's two views
+([call/0046](../call/0046-the-front-learns-from-the-poke-and-from-the-push.md)).
