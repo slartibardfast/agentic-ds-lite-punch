@@ -3598,3 +3598,24 @@ packets and its INPUT counters for 8443 stayed at zero against 34.6 million for 
 The instance sits on subnet 10.0.0.0/24 in us-chicago-1 (VNIC ocid1.vnic.oc1.us-chicago-1.abxxeljs…).
 The security list that governs is the one attached to that subnet, so a list edited elsewhere, the
 VCN's default or another subnet's, changes nothing.
+
+## 2026-10-03 — the front is public, and a leg has to leave from the poked tuple
+
+The source port range was the last gate. The OCI ingress rules carried 8443 as a *source* port range,
+so only packets whose source port was 8443 could pass, which is why seven SYNs from
+84.203.115.61:36616 vanished while 22 and 1194, whose source ranges are empty, kept working. With it
+fixed the front is public: `openssl s_client -connect 170.9.238.141:8443 -servername front.rig`
+returns the rig's own certificate from anywhere, and from the line the protected name with the
+daemon's certificate answers `HTTP/1.1 200 OK` while the same request without it gets no response.
+
+The finding that follows is the one to carry forward. A leg the front forwards must leave from the
+port the line poked, because the carrier admits a peer by the exact tuple the mapping spoke to: the
+TCP measurement of 2026-09-27 and the pinhole run both show the port mattering. nginx's stream proxy
+opens an ephemeral source port for its upstream, so a pass-through leg through nginx cannot be
+admitted at the carrier however the poke is aimed. The front's relays therefore belong with the poke
+listener, on the poked ports: it already owns the public UDP socket, and forwarding from that same
+socket gives the source port the carrier expects. A TCP pass-through leg needs the same treatment,
+splicing from the poked port rather than from an ephemeral one.
+
+This is a design question rather than a fault in what stands. The protected class works because its
+upstream sits on the front itself, and the two views carry the front's routing over the tunnel.
