@@ -54,8 +54,8 @@ it, which is the split the harness asserts precisely in the lane.
 
 ## The wall outside it
 
-The front has learned no tuple, and its answer is a single newline. The pokes leave the
-line faithfully:
+The front's table is empty. Its answer carries a single newline, because it has learned
+no tuple. The pokes leave the line faithfully:
 
 ```
 20:58:12.180977 IP 192.168.0.21.40000 > 170.9.238.141.41001: UDP, length 9
