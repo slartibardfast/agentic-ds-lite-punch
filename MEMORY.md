@@ -3523,3 +3523,31 @@ Two ways forward, and they are the operator's: a vantage whose inbound `41001` i
 delivered, or letting the front learn the table from the push it already receives, whose
 body is that table, while the poke keeps its other office of admitting the peer at the
 carrier.
+
+## 2026-10-03 — the two views, decided with the cast and running on the rig
+
+The deployment separated a poke's two offices, and `call/0046` settled the answer after a
+discussion with the cast. The poke's own source is authoritative for its protocol while
+its lease holds it, and the table the daemon's push carries fills a protocol the poke has
+not reached, with every line naming the view that supplied it. The operator's lean and
+mine agreed on the superset, and the discussion added its conditions: a fallback that wins
+quietly is the confident wrong assumption the operator's frustrations name, and a front
+that routes nothing has to say so. The cast files carry the refinement of 2026-10-03.
+
+Built: `poke-listener.py` picks a view per protocol, marks it in the include (`; # poke`,
+`; # push`) and in the answer (`udp <tuple> <view>`, and `none none` for neither), and
+reads the push's body rather than discarding it. The daemon parses the view into its
+`front-view` event. The harness asserts the fallback, the poke's precedence, and the lease
+that leaves a push's table still routing. The lane caught one thing the harness had to
+learn: its lease assertion wanted an empty include, and the two-view rule keeps the push's
+entries, so the assertion now expects exactly that.
+
+On the rig it is live. The front routes `41002 37.228.213.83:59348; # push` and the daemon
+logs that tuple with `tcp none` every minute, which is the fallback named and the protocol
+with no view reported as such. `plan/0013-the-fronts-two-views` carries the work, and
+`#release-it` is its ready frontier.
+
+The oracle firewall still stops at the edge: 8443 is opened at the provider and the SYN
+never reaches the instance's NIC, so the filter is OCI-side on this VNIC or an appliance in
+front of it. The instance's own iptables allows 8443 tcp and udp now, unpersisted until the
+path opens, and the working port shows the real client address, so nothing NATs in front.
