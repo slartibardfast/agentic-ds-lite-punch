@@ -3373,6 +3373,16 @@ with no view reported as such. <code>plan/0013-the-fronts-two-views</code> carri
 never reaches the instance's NIC, so the filter is OCI-side on this VNIC or an appliance in
 front of it. The instance's own iptables allows 8443 tcp and udp now, unpersisted until the
 path opens, and the working port shows the real client address, so nothing NATs in front.</p>
+<h2 id="2026-10-03--v051-the-two-views-shipped"><a class="header" href="#2026-10-03--v051-the-two-views-shipped">2026-10-03 — v0.5.1, the two views shipped</a></h2>
+<p><code>host-lifecycle release ds-lite-punch --change-class neither --authorized plan/0013 .</code>
+computed <code>0.5.0</code> to <code>0.5.1</code>, built in the pinned image here, and printed
+<code>0d9e96c2de83fd39850bb04ad2364cb1b10260da5e6f1c3938e0457e2cdcf948</code>. Commit <code>50f737d</code> and
+tag <code>v0.5.1</code> are pushed, <code>.host-software</code> names both, both receipts are recorded, and the
+gate is green. The page was regenerated for <code>0.5.1</code> inside the commit, the procedure gap
+<a href="https://github.com/connollydavid/host-lifecycle/issues/31">host-lifecycle#31</a> still names.</p>
+<p>The front's script needs no release to reach the vantage, so the two views have been live
+there since before this tag; what the tag carries is the view's name in the daemon's
+<code>front-view</code> event, and the pinned artifact every deployment now takes.</p>
 
                     </main>
 

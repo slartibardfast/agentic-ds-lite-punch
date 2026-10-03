@@ -4161,7 +4161,7 @@ deployed on the rig and the channel runs there for real; the run records what it
 and the wall its pokes met
 (<a href="plan/0012-the-front-door/results/NOTE-2026-10-02-the-front-deployed-on-the-rig.html">the deployment</a>).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-fronts-two-views"><a class="header" href="#the-fronts-two-views">The front's two views</a></h1>
-<p><strong>Status:</strong> in progress, 2026-10-03.</p>
+<p><strong>Status:</strong> done, 2026-10-03; released at <code>v0.5.1</code>.</p>
 <h2 id="what-this-milestone-is-7"><a class="header" href="#what-this-milestone-is-7">What this milestone is</a></h2>
 <p><a href="plan/0013-the-fronts-two-views/../0012-the-front-door/README.html">plan/0012</a> released the front door, and deploying it on
 2026-10-02 showed that a poke has two offices. The carrier admits a peer the line has
@@ -4195,7 +4195,9 @@ protocol neither view has reached.</p>
 <li>verify: host-lifecycle software --check .</li>
 </ul>
 <p>The daemon's reader carries the view's name now, so a release moves the pinned artifact and
-the tag carries the two views together.</p>
+the tag carries the two views together. It ran at <code>v0.5.1</code>, whose published asset hashes
+<code>0d9e96c2de83fd39850bb04ad2364cb1b10260da5e6f1c3938e0457e2cdcf948</code>, the value
+<code>.host-software</code> records, and the gate is green over that pin.</p>
 <p>What the release does not carry is the poke's first view measured from outside. This
 vantage's provider delivers TCP 22 alone, so that view is proved in the lane and by the
 listener's own pick, and its measurement on the line waits on a host whose inbound poke
@@ -4207,7 +4209,7 @@ port is delivered.</p>
 <h2 id="ds-lite-punch"><a class="header" href="#ds-lite-punch">ds-lite-punch</a></h2>
 <ul>
 <li>url: https://github.com/slartibardfast/ds-lite-punch.git</li>
-<li>pin: <code>4d62946356fbba21feb4c78c85c2f4732e46313b</code></li>
+<li>pin: <code>50f737dd37a94a43ebf5bf5a449ea4c9ee49edec</code></li>
 <li>worktrees: none (single canonical line)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-markdown-decision-records-madr"><a class="header" href="#use-markdown-decision-records-madr">Use Markdown decision records (MADR)</a></h1>
@@ -10948,6 +10950,16 @@ with no view reported as such. <code>plan/0013-the-fronts-two-views</code> carri
 never reaches the instance's NIC, so the filter is OCI-side on this VNIC or an appliance in
 front of it. The instance's own iptables allows 8443 tcp and udp now, unpersisted until the
 path opens, and the working port shows the real client address, so nothing NATs in front.</p>
+<h2 id="2026-10-03--v051-the-two-views-shipped"><a class="header" href="#2026-10-03--v051-the-two-views-shipped">2026-10-03 — v0.5.1, the two views shipped</a></h2>
+<p><code>host-lifecycle release ds-lite-punch --change-class neither --authorized plan/0013 .</code>
+computed <code>0.5.0</code> to <code>0.5.1</code>, built in the pinned image here, and printed
+<code>0d9e96c2de83fd39850bb04ad2364cb1b10260da5e6f1c3938e0457e2cdcf948</code>. Commit <code>50f737d</code> and
+tag <code>v0.5.1</code> are pushed, <code>.host-software</code> names both, both receipts are recorded, and the
+gate is green. The page was regenerated for <code>0.5.1</code> inside the commit, the procedure gap
+<a href="https://github.com/connollydavid/host-lifecycle/issues/31">host-lifecycle#31</a> still names.</p>
+<p>The front's script needs no release to reach the vantage, so the two views have been live
+there since before this tag; what the tag carries is the view's name in the daemon's
+<code>front-view</code> event, and the pinned artifact every deployment now takes.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
