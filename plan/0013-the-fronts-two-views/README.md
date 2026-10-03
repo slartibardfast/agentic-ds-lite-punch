@@ -1,6 +1,6 @@
 # The front's two views
 
-**Status:** in progress, 2026-10-03.
+**Status:** done, 2026-10-03; released at `v0.5.1`.
 
 ## What this milestone is
 
@@ -42,7 +42,9 @@ protocol neither view has reached.
 - verify: host-lifecycle software --check .
 
 The daemon's reader carries the view's name now, so a release moves the pinned artifact and
-the tag carries the two views together.
+the tag carries the two views together. It ran at `v0.5.1`, whose published asset hashes
+`0d9e96c2de83fd39850bb04ad2364cb1b10260da5e6f1c3938e0457e2cdcf948`, the value
+`.host-software` records, and the gate is green over that pin.
 
 What the release does not carry is the poke's first view measured from outside. This
 vantage's provider delivers TCP 22 alone, so that view is proved in the lane and by the

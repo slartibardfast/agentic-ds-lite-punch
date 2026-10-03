@@ -8,11 +8,11 @@
 # waiver (call/0012) is retired by call/0016.
 [software "ds-lite-punch"]
 	url   = https://github.com/slartibardfast/ds-lite-punch.git
-	pin   = 4d62946356fbba21feb4c78c85c2f4732e46313b
+	pin   = 50f737dd37a94a43ebf5bf5a449ea4c9ee49edec
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
-	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch b21eaad34b4e0ee1dfbea1dc718f1877b0fc6988413ad491c8c31995fe9ff4c2
+	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch 0d9e96c2de83fd39850bb04ad2364cb1b10260da5e6f1c3938e0457e2cdcf948
 	deps-bundle = https://github.com/slartibardfast/ds-lite-punch/releases/download/deps-vendor-v1/deps-vendor.tar.gz 7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730
 # The toolchain is a digest-pinned container rather than a target triple:
 # `--verify-build` runs the recorded `build` inside it, so the image is what

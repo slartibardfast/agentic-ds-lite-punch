@@ -3551,3 +3551,16 @@ The oracle firewall still stops at the edge: 8443 is opened at the provider and 
 never reaches the instance's NIC, so the filter is OCI-side on this VNIC or an appliance in
 front of it. The instance's own iptables allows 8443 tcp and udp now, unpersisted until the
 path opens, and the working port shows the real client address, so nothing NATs in front.
+
+## 2026-10-03 — v0.5.1, the two views shipped
+
+`host-lifecycle release ds-lite-punch --change-class neither --authorized plan/0013 .`
+computed `0.5.0` to `0.5.1`, built in the pinned image here, and printed
+`0d9e96c2de83fd39850bb04ad2364cb1b10260da5e6f1c3938e0457e2cdcf948`. Commit `50f737d` and
+tag `v0.5.1` are pushed, `.host-software` names both, both receipts are recorded, and the
+gate is green. The page was regenerated for `0.5.1` inside the commit, the procedure gap
+[host-lifecycle#31](https://github.com/connollydavid/host-lifecycle/issues/31) still names.
+
+The front's script needs no release to reach the vantage, so the two views have been live
+there since before this tag; what the tag carries is the view's name in the daemon's
+`front-view` event, and the pinned artifact every deployment now takes.
