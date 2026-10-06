@@ -4285,26 +4285,26 @@ identity. The directory also gains an ignore entry for <code>__pycache__</code>.
 <p>The operator page is rewritten for the real shape: one public port with the poke arriving on it, the
 QUIC note, the edge rules with their <strong>source port range left empty</strong>, and how those rules are made
 to survive a reboot. The lane runs the repository's own renderer, so CI tests the shipped shape.</p>
-<h3 id="the-fold"><a class="header" href="#the-fold">Fold the service's replies</a></h3>
+<h3 id="the-relay"><a class="header" href="#the-relay">Relay the service's answers</a></h3>
 <ul>
 <li>depends: #the-datagram-leg</li>
 <li>verify: cd software/ds-lite-punch/main &amp;&amp; cargo test --release --locked</li>
 </ul>
-<p>The reply path is the gap the run found, and <a href="plan/0014-the-fronts-legs/../../call/0047-a-front-door-slot-folds-its-services-replies.html">call/0047</a>
-settles it: a slot the operator points a front at folds its service's replies into the slot, so the
-answer leaves as the mapping's tuple and the carrier carries it. The service still sees the peer's own
-address, which is the property the consoles rely on. The fold is the pin the datapath already carries,
-so the change is an element in a set, its revoke, and the test over the rendered script.</p>
+<p>The reply path is the gap the run found, and <a href="plan/0014-the-fronts-legs/../../call/0048-a-slot-that-pokes-a-front-answers-as-the-peer.html">call/0048</a>
+settles it: a slot that pokes a front relays symmetrically, answering its service as the peer and
+carrying the service's answers out of the slot's own socket, where the mapping lives. The pin the
+superseded decision asked for cannot match a service's own flow, and the transparent forward stays for
+every slot without a poke, which keeps the consoles' property intact.</p>
+<p>It is built and measured: the round trip closes, with the client's datagram reaching the service and
+the service's answer returning to the client, every hop in the capture of 2026-10-06.</p>
 <h3 id="the-first-byte"><a class="header" href="#the-first-byte">Prove the first byte</a></h3>
 <ul>
-<li>depends: #the-fold</li>
+<li>depends: #the-relay</li>
 <li>verify: attested operator</li>
 </ul>
-<p>The arrival half is already measured: a datagram from outside reached a service behind the line, and
-the service answered its message, which the capture of 2026-10-06 records. This task now closes the
-rest of it on the rig, with captures on both ends: the client that sent that datagram gets the
-service's answer back, once with a datagram and once with a TCP client, which also closes the TCP
-leg's external handshake and the poke's authority at the front.</p>
+<p>The datagram half is closed: a client's datagram reached a service behind the line and the service's
+answer came back to that client. What this task still asks for is the TCP client, and the TCP leg's
+external handshake with it, which belongs to <code>#the-tcp-leg</code>.</p>
 <h3 id="the-release"><a class="header" href="#the-release">Release it</a></h3>
 <ul>
 <li>depends: #the-first-byte</li>
@@ -11182,6 +11182,24 @@ line, and the service answered the message it was given, 31 bytes of it in the c
 not the mapping's tuple, so the carrier will not carry it and the front's relay would not accept it.
 The daemon's relay preserves the peer's address when it forwards an arrival, which is the property the
 consoles depend on, and folding a front-door slot's replies into the slot is the next fix.</p>
+<h2 id="2026-10-06--the-front-door-carries-a-datagram-both-ways"><a class="header" href="#2026-10-06--the-front-door-carries-a-datagram-both-ways">2026-10-06 — the front door carries a datagram both ways</a></h2>
+<p>The round trip closed. A datagram this machine sent to the front's public port reached a service behind
+the line, the service answered its own message, and the answer came back to the client, every hop in
+the capture: the relay handing the datagram to the service, the service answering the daemon, the
+answer leaving the slot's own socket as <code>192.168.0.21.40000 &gt; 170.9.238.141.8443</code>, and the front
+relaying it home.</p>
+<p><code>call/0048</code> replaced <code>call/0047</code> to get there. The pin cannot match a service's own flow, so a slot
+that pokes a front relays symmetrically: it answers its service as the peer, from a socket of its own,
+and carries the answer out of the slot's socket where the mapping lives. The transparent forward stays
+for every slot without a poke, which is what keeps the consoles' property intact.</p>
+<p>The chase that led there matters as much as the fix. L's first reading of the datapath was wrong twice
+in one breath (a capture greped for the external port, and a target that never answers), and the
+correction is what made the real shape visible. Then the probes: the rule sat in the chain at two
+priorities, the chain was traversed (302 packets), and the counter matching the service's key stayed at
+zero, which retired the pin for this job with evidence rather than an opinion.</p>
+<p>Also worth keeping: <code>flow_obs</code> is fine (a daemon command omits its table and the engine falls back to
+/proc), a flow's NAT decision is cached when the flow is created, and the relay's poke acknowledgement
+keeps a service's flow warm forever, which is why the service's port had to move for a clean test.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
