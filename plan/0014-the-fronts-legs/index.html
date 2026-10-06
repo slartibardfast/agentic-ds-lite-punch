@@ -205,9 +205,8 @@ known state: one slot per protocol, its tuple read immediately before the attemp
 so a mapping that moves mid-test is visible rather than fatal. The first pass is recorded in
 <a href="results/NOTE-2026-10-06-the-admission-rules-so-far.html">the note</a>, and it already settles one rule: a
 poke answered with a refusal does not admit the peer, in either protocol, from either port.</p>
-<h3 id="the-legs"><a class="header" href="#the-legs">Build the legs</a></h3>
+<h3 id="the-datagram-leg"><a class="header" href="#the-datagram-leg">Build the datagram leg</a></h3>
 <ul>
-<li>depends: #admission-rules</li>
 <li>verify: cd software/ds-lite-punch/main &amp;&amp; bash -n deploy/front-door/test-local.sh &amp;&amp; python3 -m py_compile deploy/front-door/poke-listener.py</li>
 </ul>
 <p><code>deploy/front-door/poke-listener.py</code> grows into the front's relay. It owns the public UDP socket
@@ -235,9 +234,19 @@ folding that reply into the slot is the daemon's next fix
 measured with it: an absorbed poke admits the peer, and the peer's source port does not have to match
 the poke's destination, so several clients can share the front while the relay's own one-socket habit
 is what limits it today.</p>
+<h3 id="the-tcp-leg"><a class="header" href="#the-tcp-leg">Build the TCP leg</a></h3>
+<ul>
+<li>depends: #the-datagram-leg</li>
+<li>verify: cd software/ds-lite-punch/main &amp;&amp; cargo test --release --locked</li>
+</ul>
+<p>The TCP half of the front's traffic. The admission measurements unblocked it: the carrier admits a
+peer by address, so a relay dialling the learned TCP tuple is not tied to the poked port, and the poke's
+dial already reaches an acceptor, since an SNI-less connection is routed to the relay's place. What it
+needs is a relay on the local port nginx routes those connections to, dialling the learned tuple and
+splicing the two.</p>
 <h3 id="the-installer"><a class="header" href="#the-installer">Put the deployment in the repository</a></h3>
 <ul>
-<li>depends: #the-legs</li>
+<li>depends: #the-datagram-leg</li>
 <li>verify: cd software/ds-lite-punch/main &amp;&amp; bash -n deploy/front-door/install.sh</li>
 </ul>
 <p><code>deploy/front-door/</code> gains <code>install.sh</code>, which renders the configuration from its tokens, writes both
@@ -249,7 +258,7 @@ QUIC note, the edge rules with their <strong>source port range left empty</stron
 to survive a reboot. The lane runs the repository's own renderer, so CI tests the shipped shape.</p>
 <h3 id="the-fold"><a class="header" href="#the-fold">Fold the service's replies</a></h3>
 <ul>
-<li>depends: #the-legs</li>
+<li>depends: #the-datagram-leg</li>
 <li>verify: cd software/ds-lite-punch/main &amp;&amp; cargo test --release --locked</li>
 </ul>
 <p>The reply path is the gap the run found, and <a href="../../call/0047-a-front-door-slot-folds-its-services-replies.html">call/0047</a>
