@@ -97,27 +97,28 @@ The operator page is rewritten for the real shape: one public port with the poke
 QUIC note, the edge rules with their **source port range left empty**, and how those rules are made
 to survive a reboot. The lane runs the repository's own renderer, so CI tests the shipped shape.
 
-### Fold the service's replies {#the-fold}
+### Relay the service's answers {#the-relay}
 
 - depends: #the-datagram-leg
 - verify: cd software/ds-lite-punch/main && cargo test --release --locked
 
-The reply path is the gap the run found, and [call/0047](../../call/0047-a-front-door-slot-folds-its-services-replies.md)
-settles it: a slot the operator points a front at folds its service's replies into the slot, so the
-answer leaves as the mapping's tuple and the carrier carries it. The service still sees the peer's own
-address, which is the property the consoles rely on. The fold is the pin the datapath already carries,
-so the change is an element in a set, its revoke, and the test over the rendered script.
+The reply path is the gap the run found, and [call/0048](../../call/0048-a-slot-that-pokes-a-front-answers-as-the-peer.md)
+settles it: a slot that pokes a front relays symmetrically, answering its service as the peer and
+carrying the service's answers out of the slot's own socket, where the mapping lives. The pin the
+superseded decision asked for cannot match a service's own flow, and the transparent forward stays for
+every slot without a poke, which keeps the consoles' property intact.
+
+It is built and measured: the round trip closes, with the client's datagram reaching the service and
+the service's answer returning to the client, every hop in the capture of 2026-10-06.
 
 ### Prove the first byte {#the-first-byte}
 
-- depends: #the-fold
+- depends: #the-relay
 - verify: attested operator
 
-The arrival half is already measured: a datagram from outside reached a service behind the line, and
-the service answered its message, which the capture of 2026-10-06 records. This task now closes the
-rest of it on the rig, with captures on both ends: the client that sent that datagram gets the
-service's answer back, once with a datagram and once with a TCP client, which also closes the TCP
-leg's external handshake and the poke's authority at the front.
+The datagram half is closed: a client's datagram reached a service behind the line and the service's
+answer came back to that client. What this task still asks for is the TCP client, and the TCP leg's
+external handshake with it, which belongs to `#the-tcp-leg`.
 
 ### Release it {#the-release}
 

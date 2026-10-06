@@ -3656,3 +3656,26 @@ What is actually missing is the answer's way home. The service's reply leaves fr
 not the mapping's tuple, so the carrier will not carry it and the front's relay would not accept it.
 The daemon's relay preserves the peer's address when it forwards an arrival, which is the property the
 consoles depend on, and folding a front-door slot's replies into the slot is the next fix.
+
+## 2026-10-06 — the front door carries a datagram both ways
+
+The round trip closed. A datagram this machine sent to the front's public port reached a service behind
+the line, the service answered its own message, and the answer came back to the client, every hop in
+the capture: the relay handing the datagram to the service, the service answering the daemon, the
+answer leaving the slot's own socket as `192.168.0.21.40000 > 170.9.238.141.8443`, and the front
+relaying it home.
+
+`call/0048` replaced `call/0047` to get there. The pin cannot match a service's own flow, so a slot
+that pokes a front relays symmetrically: it answers its service as the peer, from a socket of its own,
+and carries the answer out of the slot's socket where the mapping lives. The transparent forward stays
+for every slot without a poke, which is what keeps the consoles' property intact.
+
+The chase that led there matters as much as the fix. L's first reading of the datapath was wrong twice
+in one breath (a capture greped for the external port, and a target that never answers), and the
+correction is what made the real shape visible. Then the probes: the rule sat in the chain at two
+priorities, the chain was traversed (302 packets), and the counter matching the service's key stayed at
+zero, which retired the pin for this job with evidence rather than an opinion.
+
+Also worth keeping: `flow_obs` is fine (a daemon command omits its table and the engine falls back to
+/proc), a flow's NAT decision is cached when the flow is created, and the relay's poke acknowledgement
+keeps a service's flow warm forever, which is why the service's port had to move for a clean test.

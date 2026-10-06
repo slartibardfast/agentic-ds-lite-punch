@@ -559,3 +559,17 @@
     evidence = the installer, the renderer and the mint script are in deploy/front-door/, the lane renders through the shipped renderer, and CI is green at 0ae94d6
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-06
+
+[receipt "plan/0014#the-datagram-leg"]
+    disposition = done
+    verify = cd software/ds-lite-punch/main && bash -n deploy/front-door/test-local.sh && python3 -m py_compile deploy/front-door/poke-listener.py
+    evidence = built and measured: the lane reports the datagram leaving for the learned tuple from the socket the poke landed on, and the rig carried a client's datagram to a service behind the line
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-06
+
+[receipt "plan/0014#the-relay"]
+    disposition = done
+    verify = cd software/ds-lite-punch/main && cargo test --release --locked
+    evidence = built and measured: the round trip closes, the client's datagram reaching the service and the service's answer returning, every hop captured on 2026-10-06
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-06
