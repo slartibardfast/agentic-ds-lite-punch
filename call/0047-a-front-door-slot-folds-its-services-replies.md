@@ -1,6 +1,7 @@
 # A front-door slot folds its service's replies
 
-- Status: accepted
+- Status: superseded by [call/0048](0048-a-slot-that-pokes-a-front-answers-as-the-peer.md), whose
+  datapath measurement shows the pin cannot match a service's own flow
 - Scope: the return path of the datagram a front door's slot forwards to its service
 - Date: 2026-10-06
 
