@@ -13,8 +13,7 @@ teaches it:
 journal: udp poke from 37.228.213.83:59348        (every two seconds)
 ```
 
-An outside client's datagram, sent from this machine to the front's public port, drew this capture at
-the front:
+A datagram this machine sent at the front's public port drew this capture at the front:
 
 ```
 13:23:25.304645 IP 84.203.115.61.58649 > 10.0.0.52.8443: UDP, length 18   the client's datagram at the front

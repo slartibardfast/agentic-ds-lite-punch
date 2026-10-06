@@ -31,8 +31,8 @@ The carrier's admission does not ask for the arrival's source port to match the 
 the arrival from `8445`, which was never poked, crossed as well. Address alone is the test, so one
 front's socket can carry several clients.
 
-And the whole chain works. A datagram sent from this machine to the front's public port reached a
-service behind the line and drew an answer:
+And the whole chain works. A datagram addressed to the front's public port reached a service behind
+the line and drew an answer:
 
 ```
 14:26:57.516271 eth1  Out IP 192.168.0.21.40000 > 170.9.238.141.8443: UDP, length 9       the line's poke
