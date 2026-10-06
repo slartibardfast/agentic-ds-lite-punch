@@ -4256,6 +4256,12 @@ socket owns the public UDP port, absorbs the pokes, and sends a client's datagra
 proved locally with a fake slot that also plays the line, and in the lane, whose harness reports
 <code>the front follows the poke: the datagram left for the learned tuple from the socket the poke landed on</code>. nginx's UDP server and its port-keyed map are gone, and <code>--udp-only</code> leaves the port's TCP half
 to nginx. One flow at a time holds the socket, which the operator page has to say out loud.</p>
+<p>It is also measured on the rig, where the leg works at the front and the carrier still refuses its
+datagrams: the pokes land and teach it, a client's datagram leaves from the poked port, and nothing
+reaches the line. <a href="plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-datagram-leg-at-the-front.html">The run</a> reads that as
+this vantage's provider rewriting the source port of what it sends, which is the mirror of the
+ingress rule the operator repaired, and it leaves <code>#the-first-byte</code> waiting on a vantage whose
+outbound ports survive, or on the provider.</p>
 <h3 id="the-installer"><a class="header" href="#the-installer">Put the deployment in the repository</a></h3>
 <ul>
 <li>depends: #the-legs</li>
@@ -11090,6 +11096,19 @@ socket gives the source port the carrier expects. A TCP pass-through leg needs t
 splicing from the poked port rather than from an ephemeral one.</p>
 <p>This is a design question rather than a fault in what stands. The protected class works because its
 upstream sits on the front itself, and the two views carry the front's routing over the tunnel.</p>
+<h2 id="2026-10-06--the-datagram-leg-works-at-the-front-and-the-vantages-own-provider-stops-it"><a class="header" href="#2026-10-06--the-datagram-leg-works-at-the-front-and-the-vantages-own-provider-stops-it">2026-10-06 — the datagram leg works at the front, and the vantage's own provider stops it</a></h2>
+<p>The relay is deployed on the front and the poke reaches it now that the edge forwards 8443: the front's
+table reads <code>8443 37.228.213.83:59348; # poke</code>, the pokes arrive every two seconds, and a client's
+datagram from outside leaves for the learned tuple <strong>from the poked port</strong>. The capture at the front
+shows all three lines. Nothing reaches the line: zero packets at the slot, zero at the target, zero
+ICMP.</p>
+<p>So the two rules the earlier passes could not separate are both out. An absorbed poke admits no more
+than a refused one, and the onward datagram's source port matches the poke's destination port. What
+remains is the vantage's own provider NAT rewriting the source port of what the vantage sends, which
+is the mirror of the ingress rule the operator repaired. A front whose outbound source ports survive
+its provider is what the carrier's rule wants, and this one is not it.</p>
+<p>The daemon keeps <code>POKE=170.9.238.141:8443</code>, the leg's own socket, since the poke view it feeds is
+real and the report carries it.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
