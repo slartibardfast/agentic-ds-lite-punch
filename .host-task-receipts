@@ -552,3 +552,10 @@
     evidence = v0.5.1@0d9e96c2de83 in ghcr.io/rust-cross/rust-musl-cross, and the gate is green over the pin
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-03
+
+[receipt "plan/0014#the-installer"]
+    disposition = done
+    verify = cd software/ds-lite-punch/main && bash -n deploy/front-door/install.sh
+    evidence = the installer, the renderer and the mint script are in deploy/front-door/, the lane renders through the shipped renderer, and CI is green at 0ae94d6
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-06
