@@ -4256,12 +4256,14 @@ socket owns the public UDP port, absorbs the pokes, and sends a client's datagra
 proved locally with a fake slot that also plays the line, and in the lane, whose harness reports
 <code>the front follows the poke: the datagram left for the learned tuple from the socket the poke landed on</code>. nginx's UDP server and its port-keyed map are gone, and <code>--udp-only</code> leaves the port's TCP half
 to nginx. One flow at a time holds the socket, which the operator page has to say out loud.</p>
-<p>It is also measured on the rig, where the leg works at the front and the carrier still refuses its
-datagrams: the pokes land and teach it, a client's datagram leaves from the poked port, and nothing
-reaches the line. <a href="plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-datagram-leg-at-the-front.html">The run</a> reads that as
-this vantage's provider rewriting the source port of what it sends, which is the mirror of the
-ingress rule the operator repaired, and it leaves <code>#the-first-byte</code> waiting on a vantage whose
-outbound ports survive, or on the provider.</p>
+<p>It is also measured on the rig, and it carries traffic: a datagram sent from outside reached a service
+behind the line, and the service answered the message it was given. What is missing is the answer's
+way home, since the service's reply leaves from its own address rather than the mapping's tuple, and
+folding that reply into the slot is the daemon's next fix
+(<a href="plan/0014-the-fronts-legs/results/NOTE-2026-10-06-corrected-the-datagram-leg-carries-traffic.html">the run</a>). The admission is
+measured with it: an absorbed poke admits the peer, and the peer's source port does not have to match
+the poke's destination, so several clients can share the front while the relay's own one-socket habit
+is what limits it today.</p>
 <h3 id="the-installer"><a class="header" href="#the-installer">Put the deployment in the repository</a></h3>
 <ul>
 <li>depends: #the-legs</li>
@@ -11109,6 +11111,22 @@ is the mirror of the ingress rule the operator repaired. A front whose outbound 
 its provider is what the carrier's rule wants, and this one is not it.</p>
 <p>The daemon keeps <code>POKE=170.9.238.141:8443</code>, the leg's own socket, since the poke view it feeds is
 real and the report carries it.</p>
+<h2 id="2026-10-06--corrected-the-datagram-leg-carries-traffic-and-the-reply-path-is-what-is-missing"><a class="header" href="#2026-10-06--corrected-the-datagram-leg-carries-traffic-and-the-reply-path-is-what-is-missing">2026-10-06 — corrected: the datagram leg carries traffic, and the reply path is what is missing</a></h2>
+<p>The earlier entry said the vantage's provider stops the front's datagrams. That was wrong, and how it
+was wrong matters, because it is the mistake the operator persona names. The capture was grepped for
+the slot's external port, and the carrier un-NATs an arrival before it reaches the wire, so the packet
+carries the slot's inner port and the count read zero while the traffic was there: both arrivals are
+in that file. The other silence had its own cause, since the target is a sink: it absorbs, never
+answers, and a client waiting for a reply timed out on a path that had worked.</p>
+<p>What is measured now. The front's own replies arrive at the line from 170.9.238.141:8443, one for each
+poke, so the provider preserves the poked port. An arrival from a port that was never poked crosses
+too, so the carrier's admission tests the address alone, and several clients can therefore share one
+front. And the chain carries traffic: a datagram sent from this machine reached a service behind the
+line, and the service answered the message it was given, 31 bytes of it in the capture.</p>
+<p>What is actually missing is the answer's way home. The service's reply leaves from its own address and
+not the mapping's tuple, so the carrier will not carry it and the front's relay would not accept it.
+The daemon's relay preserves the peer's address when it forwards an arrival, which is the property the
+consoles depend on, and folding a front-door slot's replies into the slot is the next fix.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
