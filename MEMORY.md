@@ -3636,3 +3636,23 @@ its provider is what the carrier's rule wants, and this one is not it.
 
 The daemon keeps `POKE=170.9.238.141:8443`, the leg's own socket, since the poke view it feeds is
 real and the report carries it.
+
+## 2026-10-06 — corrected: the datagram leg carries traffic, and the reply path is what is missing
+
+The earlier entry said the vantage's provider stops the front's datagrams. That was wrong, and how it
+was wrong matters, because it is the mistake the operator persona names. The capture was grepped for
+the slot's external port, and the carrier un-NATs an arrival before it reaches the wire, so the packet
+carries the slot's inner port and the count read zero while the traffic was there: both arrivals are
+in that file. The other silence had its own cause, since the target is a sink: it absorbs, never
+answers, and a client waiting for a reply timed out on a path that had worked.
+
+What is measured now. The front's own replies arrive at the line from 170.9.238.141:8443, one for each
+poke, so the provider preserves the poked port. An arrival from a port that was never poked crosses
+too, so the carrier's admission tests the address alone, and several clients can therefore share one
+front. And the chain carries traffic: a datagram sent from this machine reached a service behind the
+line, and the service answered the message it was given, 31 bytes of it in the capture.
+
+What is actually missing is the answer's way home. The service's reply leaves from its own address and
+not the mapping's tuple, so the carrier will not carry it and the front's relay would not accept it.
+The daemon's relay preserves the peer's address when it forwards an arrival, which is the property the
+consoles depend on, and folding a front-door slot's replies into the slot is the next fix.

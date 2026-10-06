@@ -49,3 +49,9 @@ or the provider's own configuration.
 
 The daemon keeps `POKE=170.9.238.141:8443`, because that is where the leg's socket is and the poke
 view it feeds is real. The captures are stopped on both ends.
+
+**Corrected 2026-10-06.** The verdict above is wrong. The greps looked for the slot's external port,
+and the carrier un-NATs an arrival before it reaches the wire, so the traffic was present and
+uncounted; the second test's target absorbs without answering, so its client timed out on a path that
+had worked. [The correction](NOTE-2026-10-06-corrected-the-datagram-leg-carries-traffic.md) carries
+what is measured now.
