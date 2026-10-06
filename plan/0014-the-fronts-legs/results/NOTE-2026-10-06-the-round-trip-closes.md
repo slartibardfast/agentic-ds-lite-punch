@@ -4,8 +4,8 @@ Date: 2026-10-06. Task: `plan/0014#the-relay` and the datagram half of `#the-fir
 
 ## What was measured
 
-A datagram sent from this machine to the front's public port reached a service behind the line, the
-service answered its own message, and the answer returned to the client:
+A datagram addressed to the front's public port reached a service behind the line, the service
+answered its own message, and the answer returned to the client:
 
 ```
 sent b'the front door, end to end'
