@@ -57,6 +57,13 @@ local https block and everything else reaching the relay, and the include-driven
 retire. The daemon needs no code change, since the poke's destination is configuration. The include
 becomes the front's status file, and the report and the two views keep their shape.
 
+The datagram half is built and measured, and the TCP half waits on the rule that is still open. The
+socket owns the public UDP port, absorbs the pokes, and sends a client's datagram onward from itself:
+proved locally with a fake slot that also plays the line, and in the lane, whose harness reports
+`the front follows the poke: the datagram left for the learned tuple from the socket the poke landed
+on`. nginx's UDP server and its port-keyed map are gone, and `--udp-only` leaves the port's TCP half
+to nginx. One flow at a time holds the socket, which the operator page has to say out loud.
+
 ### Put the deployment in the repository {#the-installer}
 
 - depends: #the-legs
