@@ -200,7 +200,11 @@ different port first, then from the matching one.</li>
 <li>Is the admission per address alone, with the port unconstrained?</li>
 </ul>
 <p>The rule table lands in <code>results/</code>, and it decides the relay's socket policy, the TCP side's port
-topology, and whether a held port serves one flow per protocol or many.</p>
+topology, and whether a held port serves one flow per protocol or many. Each attempt wants a rig in a
+known state: one slot per protocol, its tuple read immediately before the attempt and again after it,
+so a mapping that moves mid-test is visible rather than fatal. The first pass is recorded in
+<a href="results/NOTE-2026-10-06-the-admission-rules-so-far.html">the note</a>, and it already settles one rule: a
+poke answered with a refusal does not admit the peer, in either protocol, from either port.</p>
 <h3 id="the-legs"><a class="header" href="#the-legs">Build the legs</a></h3>
 <ul>
 <li>depends: #admission-rules</li>
