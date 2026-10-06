@@ -12,7 +12,8 @@ mapping spoke to, and nginx opens an ephemeral source port for every upstream. Q
 the UDP leg is the modern front door, and it has to own its socket rather than borrow nginx's.
 
 This milestone makes the front's legs live on the poked socket, puts the front's deployment into the
-repository as artifacts, and proves one real byte from outside to a service behind the line.
+repository as artifacts, and carries the first real byte of outside traffic to a service behind the
+line.
 
 ## Build sequence
 
@@ -43,8 +44,8 @@ socket, which is the source port the carrier expects, and the poke still teaches
 sockets to the slot follow the measurements; where the port has to match, the single-flow limit is
 stated in the operator page rather than hidden.
 
-The TCP leg is one relay serving nginx's pass-through names through a local upstream, answering the
-poke's dial as the empty-SNI case and dialing the learned TCP tuple with the source policy the
+The TCP leg is one relay. It serves nginx's pass-through names through a local upstream, answers the
+poke's dial as the empty-SNI case, and dials the learned TCP tuple with the source policy the
 measurements dictate.
 
 `deploy/front-door/nginx.conf` simplifies: the name split stays, with the protected name reaching the
