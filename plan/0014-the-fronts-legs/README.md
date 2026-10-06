@@ -37,9 +37,8 @@ so a mapping that moves mid-test is visible rather than fatal. The first pass is
 [the note](results/NOTE-2026-10-06-the-admission-rules-so-far.md), and it already settles one rule: a
 poke answered with a refusal does not admit the peer, in either protocol, from either port.
 
-### Build the legs {#the-legs}
+### Build the datagram leg {#the-datagram-leg}
 
-- depends: #admission-rules
 - verify: cd software/ds-lite-punch/main && bash -n deploy/front-door/test-local.sh && python3 -m py_compile deploy/front-door/poke-listener.py
 
 `deploy/front-door/poke-listener.py` grows into the front's relay. It owns the public UDP socket
@@ -73,9 +72,20 @@ measured with it: an absorbed poke admits the peer, and the peer's source port d
 the poke's destination, so several clients can share the front while the relay's own one-socket habit
 is what limits it today.
 
+### Build the TCP leg {#the-tcp-leg}
+
+- depends: #the-datagram-leg
+- verify: cd software/ds-lite-punch/main && cargo test --release --locked
+
+The TCP half of the front's traffic. The admission measurements unblocked it: the carrier admits a
+peer by address, so a relay dialling the learned TCP tuple is not tied to the poked port, and the poke's
+dial already reaches an acceptor, since an SNI-less connection is routed to the relay's place. What it
+needs is a relay on the local port nginx routes those connections to, dialling the learned tuple and
+splicing the two.
+
 ### Put the deployment in the repository {#the-installer}
 
-- depends: #the-legs
+- depends: #the-datagram-leg
 - verify: cd software/ds-lite-punch/main && bash -n deploy/front-door/install.sh
 
 `deploy/front-door/` gains `install.sh`, which renders the configuration from its tokens, writes both
@@ -89,7 +99,7 @@ to survive a reboot. The lane runs the repository's own renderer, so CI tests th
 
 ### Fold the service's replies {#the-fold}
 
-- depends: #the-legs
+- depends: #the-datagram-leg
 - verify: cd software/ds-lite-punch/main && cargo test --release --locked
 
 The reply path is the gap the run found, and [call/0047](../../call/0047-a-front-door-slot-folds-its-services-replies.md)
