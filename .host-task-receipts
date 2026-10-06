@@ -573,3 +573,10 @@
     evidence = built and measured: the round trip closes, the client's datagram reaching the service and the service's answer returning, every hop captured on 2026-10-06
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-06
+
+[receipt "plan/0014#the-tcp-leg"]
+    disposition = done
+    verify = cd software/ds-lite-punch/main && cargo test --release --locked
+    evidence = measured on the rig: three TLS clients dialling the front's public port with the pass-through name brought back CN = the-service-behind-the-line, the front's log naming each hop; the slot's accept rule now sits ahead of fw4's zone jump
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-06
