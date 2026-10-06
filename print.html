@@ -4273,6 +4273,13 @@ peer by address, so a relay dialling the learned TCP tuple is not tied to the po
 dial already reaches an acceptor, since an SNI-less connection is routed to the relay's place. What it
 needs is a relay on the local port nginx routes those connections to, dialling the learned tuple and
 splicing the two.</p>
+<p>Built and measured, and smaller than the paragraph above expected. nginx proxies the named connection
+to the carrier tuple on its own, so no relay was needed; the arrival crossed the carrier and the box
+reset it, because the daemon's accept rule for the slot's port stood behind <code>fw4</code>'s zone jump, and a
+rule the chain reaches after the zone jump decides nothing. The rule is placed ahead of the first
+per-zone input jump now, the TCP poke names its own failures and leaves on every interval, and a
+STUN-over-TCP attempt is abandoned on time. Three TLS clients brought the service's own certificate
+back through the front door (<a href="plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-closes.html">the run</a>).</p>
 <h3 id="the-installer"><a class="header" href="#the-installer">Put the deployment in the repository</a></h3>
 <ul>
 <li>depends: #the-datagram-leg</li>
@@ -4305,6 +4312,9 @@ the service's answer returning to the client, every hop in the capture of 2026-1
 <p>The datagram half is closed: a client's datagram reached a service behind the line and the service's
 answer came back to that client. What this task still asks for is the TCP client, and the TCP leg's
 external handshake with it, which belongs to <code>#the-tcp-leg</code>.</p>
+<p>The TCP client is measured with it: three TLS clients dialled the front's public port with the
+pass-through name, and each brought the service's own certificate back. The receipt waits on the
+operator's word, because this task's verify is an attestation.</p>
 <h3 id="the-release"><a class="header" href="#the-release">Release it</a></h3>
 <ul>
 <li>depends: #the-first-byte</li>
