@@ -3619,3 +3619,20 @@ splicing from the poked port rather than from an ephemeral one.
 
 This is a design question rather than a fault in what stands. The protected class works because its
 upstream sits on the front itself, and the two views carry the front's routing over the tunnel.
+
+## 2026-10-06 — the datagram leg works at the front, and the vantage's own provider stops it
+
+The relay is deployed on the front and the poke reaches it now that the edge forwards 8443: the front's
+table reads `8443 37.228.213.83:59348; # poke`, the pokes arrive every two seconds, and a client's
+datagram from outside leaves for the learned tuple **from the poked port**. The capture at the front
+shows all three lines. Nothing reaches the line: zero packets at the slot, zero at the target, zero
+ICMP.
+
+So the two rules the earlier passes could not separate are both out. An absorbed poke admits no more
+than a refused one, and the onward datagram's source port matches the poke's destination port. What
+remains is the vantage's own provider NAT rewriting the source port of what the vantage sends, which
+is the mirror of the ingress rule the operator repaired. A front whose outbound source ports survive
+its provider is what the carrier's rule wants, and this one is not it.
+
+The daemon keeps `POKE=170.9.238.141:8443`, the leg's own socket, since the poke view it feeds is
+real and the report carries it.

@@ -64,6 +64,13 @@ proved locally with a fake slot that also plays the line, and in the lane, whose
 on`. nginx's UDP server and its port-keyed map are gone, and `--udp-only` leaves the port's TCP half
 to nginx. One flow at a time holds the socket, which the operator page has to say out loud.
 
+It is also measured on the rig, where the leg works at the front and the carrier still refuses its
+datagrams: the pokes land and teach it, a client's datagram leaves from the poked port, and nothing
+reaches the line. [The run](results/NOTE-2026-10-06-the-datagram-leg-at-the-front.md) reads that as
+this vantage's provider rewriting the source port of what it sends, which is the mirror of the
+ingress rule the operator repaired, and it leaves `#the-first-byte` waiting on a vantage whose
+outbound ports survive, or on the provider.
+
 ### Put the deployment in the repository {#the-installer}
 
 - depends: #the-legs
