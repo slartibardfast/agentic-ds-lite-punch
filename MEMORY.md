@@ -3679,3 +3679,40 @@ zero, which retired the pin for this job with evidence rather than an opinion.
 Also worth keeping: `flow_obs` is fine (a daemon command omits its table and the engine falls back to
 /proc), a flow's NAT decision is cached when the flow is created, and the relay's poke acknowledgement
 keeps a service's flow warm forever, which is why the service's port had to move for a clean test.
+
+## 2026-10-06 — the TCP leg closes, and the accept rule that stood behind the zone jump
+
+The TCP leg is measured. Three TLS clients dialled the front's public port with the pass-through name,
+and each brought back the service's own certificate (`CN = the-service-behind-the-line`), with the
+front's log naming the arrival, the proxy connection to the carrier tuple, and a disconnect that
+carried bytes each way. `plan/0014#the-tcp-leg` carries the receipt.
+
+The chain stopped on the box. A capture showed every SYN the front dialled arriving on `eth1` for the
+slot's inner port, and the box answering each one with a reset. The reset came from `fw4`: the daemon
+accepts a slot's port by adding the port to a set that one accept rule reads, and that rule stood
+behind `jump input_wan`, whose zone policy resets an arrival it meets. A rule the chain reaches after
+the zone jump decides nothing. The rule is placed ahead of the first per-zone input jump now, and
+after the carrier-watch counter, so the counter still sees its probe.
+
+Two more findings sat on the same path. `nft list chain` prints a rule's handle only with `-a`, so the
+daemon's listing carried none and every rule it meant to find or move stayed where it was (the older
+legacy sweep had the same hole). And the STUN-over-TCP attempt had no deadline, so a server that
+answers datagrams alone held the loop for the kernel's whole SYN-retry budget, which is why the slot
+looked dead between two pokes.
+
+The TCP poke was the third. Its error was discarded (`let _ = poke_round(...)`), so a dial that failed
+said nothing; it names the failure now. Its dial also ran only on a live STUN link, so the poke stopped
+with the link and the mapping lapsed with it; it leaves on every interval now.
+
+L got two readings wrong in the middle of this, and both are worth keeping. A capture greped for the
+slot's external port while the carrier rewrites the destination to the inner port before the wire, so
+the count read zero and the carrier looked guilty. And the sink behind the line answers nothing, so a
+client that timed out read a working path as a broken one.
+
+The lane went red for a reason of its own: the relay answered each poke with the marker the poke
+carried, nothing read that answer, and the harness's poke socket read the marker in place of the
+forwarded datagram. The answer is gone and the lane is green.
+
+One process lesson. L piped `cargo test` through `tail`, so the pipeline's status was `tail`'s and a
+compile error rode an `&&` chain into a pushed commit; the fix followed at once. Read the exit code of
+the build, not of the pager.
