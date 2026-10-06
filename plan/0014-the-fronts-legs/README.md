@@ -83,6 +83,14 @@ dial already reaches an acceptor, since an SNI-less connection is routed to the 
 needs is a relay on the local port nginx routes those connections to, dialling the learned tuple and
 splicing the two.
 
+Built and measured, and smaller than the paragraph above expected. nginx proxies the named connection
+to the carrier tuple on its own, so no relay was needed; the arrival crossed the carrier and the box
+reset it, because the daemon's accept rule for the slot's port stood behind `fw4`'s zone jump, and a
+rule the chain reaches after the zone jump decides nothing. The rule is placed ahead of the first
+per-zone input jump now, the TCP poke names its own failures and leaves on every interval, and a
+STUN-over-TCP attempt is abandoned on time. Three TLS clients brought the service's own certificate
+back through the front door ([the run](results/NOTE-2026-10-06-the-tcp-leg-closes.md)).
+
 ### Put the deployment in the repository {#the-installer}
 
 - depends: #the-datagram-leg
@@ -119,6 +127,10 @@ the service's answer returning to the client, every hop in the capture of 2026-1
 The datagram half is closed: a client's datagram reached a service behind the line and the service's
 answer came back to that client. What this task still asks for is the TCP client, and the TCP leg's
 external handshake with it, which belongs to `#the-tcp-leg`.
+
+The TCP client is measured with it: three TLS clients dialled the front's public port with the
+pass-through name, and each brought the service's own certificate back. The receipt waits on the
+operator's word, because this task's verify is an attestation.
 
 ### Release it {#the-release}
 
