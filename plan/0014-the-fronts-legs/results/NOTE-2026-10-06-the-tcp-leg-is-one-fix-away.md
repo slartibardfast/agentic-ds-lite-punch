@@ -1,6 +1,6 @@
 # The TCP leg is one fix away, and the front's log names it
 
-Date: 2026-10-06. Task: `plan/0014#the-tcp-leg`. The chain, the tuple, and the single thing missing.
+Date: 2026-10-06. Task: `plan/0014#the-tcp-leg`. Where the chain stops and what the fix has to reach.
 
 ## The tuple is supplied
 
@@ -43,3 +43,10 @@ slot.
 The probe container runs the TLS service on 8099, which the granted TCP slot's client names, so once
 the poke's dial works the client's handshake should come back with that service's certificate. The box
 runs the lane's relaying build, and the datagram round trip stays proven.
+
+## Corrected
+
+The fix landed somewhere else. The poke's dial arrives, and the box reset the arrival because the
+daemon's own accept rule for the slot's port stood behind `fw4`'s zone jump. The leg closes in
+[the closing note](NOTE-2026-10-06-the-tcp-leg-closes.md), which carries the capture and the three
+clients that brought the service's certificate back.

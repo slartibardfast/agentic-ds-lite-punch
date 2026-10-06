@@ -52,8 +52,8 @@ where it was.
 
 ## Two more defects on the same path
 
-The TCP poke reported no failure, because its error was discarded; it names one now, and the name is
-what led to the rest. Its dial also ran only on a live STUN link, so the poke stopped whenever the
+The TCP poke threw its error away, so a dial that failed said nothing. It names the failure now, and
+that name is what led to the rest. Its dial also ran only on a live STUN link, so the poke stopped whenever the
 link dropped and the mapping lapsed with it; the poke leaves on every interval now. The
 STUN-over-TCP attempt had no deadline, so a server that answers datagrams alone held the loop for the
 kernel's whole SYN-retry budget and left its fold behind; the attempt is abandoned on time, and its
