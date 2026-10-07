@@ -3528,6 +3528,26 @@ pipeline cannot be assembled by hand, and <code>deploy/rig-capture.sh</code> tak
 the carrier rewrites the arrival's destination before the wire and a filter on the external tuple port
 reads as a refusal. Both carry the reason in a one-line header, and the operator page states the
 convention beside them.</p>
+<h2 id="2026-10-07--the-kani-rung-gets-a-lane-and-its-first-verdict-is-that-nothing-compiled"><a class="header" href="#2026-10-07--the-kani-rung-gets-a-lane-and-its-first-verdict-is-that-nothing-compiled">2026-10-07 — the Kani rung gets a lane, and its first verdict is that nothing compiled</a></h2>
+<p>The lane exists: <code>workflow_dispatch</code> and weekly in the component's CI, Kani pinned at 0.67.0, the
+tree's own harnesses gating each under its own bound, and the facade's eight measured in a second job
+(<code>call/0050</code>). Its first finding is that nothing had compiled the crate under <code>--cfg kani</code>:
+<code>engine::verify::exit_due_matches_conditions</code> matched three arms while <code>call/0030</code> had added
+<code>ExitReason::DeviceGone</code> after it was written, so the suite could not build, and no lane noticed because
+there was no lane. The arm is added, and it carries a claim: <code>exit_due</code> reports ownership or staleness,
+and a device that left is <code>release_reason</code>'s finding.</p>
+<p>The gating half verified 32 of 32 harnesses on the runner, the slowest in 22 seconds, so the pre-facade
+record stands on a lane's verdict. The facade's eight were still running when this was written, and
+<code>call/0019</code> stays accepted until their verdicts land in <code>plan/0007</code>'s results.</p>
+<p>Two releases followed, because the source moved twice. <code>v0.6.0</code> carries the front's legs, and both legs
+are proved on its bytes. The Kani fix then moved the source after that release, so <code>v0.6.1</code> carries the
+lane and the harness fix. <code>--verify-build</code> proved the Kani-only edit left the <em>artifact</em> byte-identical,
+and the pin still had to move, because the pin names the source the bytes come from and a source change
+owes its own release. Both tags published bytes whose sha256 matches their recorded hash.</p>
+<h2 id="2026-10-07--the-fronts-fixtures-did-not-survive-the-boxs-restart"><a class="header" href="#2026-10-07--the-fronts-fixtures-did-not-survive-the-boxs-restart">2026-10-07 — the front's fixtures did not survive the box's restart</a></h2>
+<p>The service behind the line runs as <code>/tmp/echo3.py</code> while that file is gone from disk, so the process
+holds a deleted file and a rebuilt rig wants its fixtures re-created. Worth knowing before reading any
+rig measurement taken after a restart, because the answer's shape is what carries the news.</p>
 
                     </main>
 
