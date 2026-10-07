@@ -168,3 +168,10 @@
     authorization = plan/0014#the-release
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-07
+
+[receipt "release" "ds-lite-punch"]
+    disposition = done
+    evidence = v0.6.1@9281192cc3f1942f35643dbbe75aea4664a22fa64aeaf48de336ec98da68af8f
+    authorization = call/0050
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-07
