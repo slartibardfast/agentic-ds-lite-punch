@@ -41,18 +41,20 @@ its state; this table is the one-line view.
 | [plan/0009](plan/0009-mapping-keepalive-and-signalling/README.md) | the mapping keepalive and its signalling; done 2026-09-18 |
 | [plan/0010](plan/0010-the-filtering-proved-and-watched/README.md) | the carrier's filtering proved and watched; closed 2026-09-23 |
 | [plan/0011](plan/0011-documentation/README.md) | the operator pages, the generated help and the manual page; done 2026-09-22 |
-| [plan/0012](plan/0012-the-front-door/README.md) | the front door; done 2026-09-27, with its release still to run |
+| [plan/0012](plan/0012-the-front-door/README.md) | the front door; done 2026-09-27, released `v0.5.0` |
+| [plan/0013](plan/0013-the-fronts-two-views/README.md) | the front's two views; done, released `v0.5.1` |
+| [plan/0014](plan/0014-the-fronts-legs/README.md) | the front's legs on the poked socket; built and released `v0.6.0`, with two receipts held for the operator's word |
 
 The component:
 
 - The record in [`.host-software`](.host-software) names the pin, the toolchain and
-  the artifact hash, and the pin currently names the released `v0.3.5`. What moves it
-  onto the front door's work, and what that run needs, is in
-  [plan/0012](plan/0012-the-front-door/README.md), *What the release still needs*.
+  the artifact hash, and the pin names the released `v0.6.0`, whose bytes the tag's
+  lane published.
 - The component lane runs the test suite and the release build inside the pinned
   toolchain image, publishes the binary from the run, and proves the vendored
   dependency bundle builds with the network off.
-- The test router runs the bytes from that lane.
+- The test router runs the released bytes, checked against the recorded hash before it
+  starts.
 - The repository's sweep is the gate: `host-lifecycle software --check .` over the
   rooms (validate, the naming and prose audits, the reference sweep, reconcile, the
   phase receipts and the task graph), with `book --check` for the site.

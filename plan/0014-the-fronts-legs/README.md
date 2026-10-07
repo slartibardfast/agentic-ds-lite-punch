@@ -1,19 +1,21 @@
 # The front's legs on the poked socket
 
-**Status:** in progress, 2026-10-06.
+**Status:** built and released at `v0.6.0`, 2026-10-07. Two tasks wait on the operator's word:
+`#admission-rules` and `#the-first-byte`.
 
 ## What this milestone is
 
 The front is public and serving: the protected name answers `200` from the open Internet with the
 daemon's certificate and refuses the same request without it, and the control channel runs every
-minute over the tunnel with the view named. No byte of outside traffic has yet reached a service
-behind the line, and the wiring cannot carry one: the carrier admits a peer by the exact tuple the
-mapping spoke to, and nginx opens an ephemeral source port for every upstream. QUIC rides UDP, so
-the UDP leg is the modern front door, and it has to own its socket rather than borrow nginx's.
+minute over the tunnel with the view named. Both legs carry traffic to a service behind the line and
+back: a datagram from outside, and a TLS client that reaches the service's own certificate through
+the pass-through name. QUIC rides UDP, so the UDP leg is the modern front door, and it owns its own
+socket.
 
-This milestone makes the front's legs live on the poked socket, puts the front's deployment into the
-repository as artifacts, and carries the first real byte of outside traffic to a service behind the
-line.
+This milestone made the front's legs live on the poked socket, put the front's deployment into the
+repository as artifacts, and carried the first real byte of outside traffic to a service behind the
+line. [call/0049](../../call/0049-the-fronts-legs-ride-the-poked-socket.md) records the shape the
+measurements settled.
 
 ## Build sequence
 
@@ -36,6 +38,11 @@ known state: one slot per protocol, its tuple read immediately before the attemp
 so a mapping that moves mid-test is visible rather than fatal. The first pass is recorded in
 [the note](results/NOTE-2026-10-06-the-admission-rules-so-far.md), and it already settles one rule: a
 poke answered with a refusal does not admit the peer, in either protocol, from either port.
+
+The table is measured and recorded in [the rules](results/NOTE-2026-10-07-the-admission-rules.md):
+a poke has to be answered, the admission reads the address, the spoke's protocol decides which
+protocol is admitted, and a slot's arrival wants the box's own accept rule. The receipt waits on the
+operator's word, because this task's verify is an attestation.
 
 ### Build the datagram leg {#the-datagram-leg}
 
@@ -137,8 +144,11 @@ operator's word, because this task's verify is an attestation.
 - depends: #the-first-byte
 - verify: host-lifecycle software --check .
 
-A decision records the legs-on-the-poked-socket design and any single-flow limit the measurements
-impose, MEMORY takes the findings, and a release carries the installer and the relay.
+[call/0049](../../call/0049-the-fronts-legs-ride-the-poked-socket.md) records the legs-on-the-poked-socket
+design and the single-flow limit the measurements impose, MEMORY takes the findings, and the release
+carries the installer, the relay and the accept rule's place. It is cut at `v0.6.0`: the release verb
+re-derived the canonical hash in the recorded image with the network off, the tag's lane published
+those bytes, and the router runs them ([the run](results/NOTE-2026-10-07-the-release-and-both-legs.md))
 
 ## The fork the plan cannot decide alone
 
