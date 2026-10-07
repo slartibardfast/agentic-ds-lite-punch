@@ -580,3 +580,10 @@
     evidence = measured on the rig: three TLS clients dialling the front's public port with the pass-through name brought back CN = the-service-behind-the-line, the front's log naming each hop; the slot's accept rule now sits ahead of fw4's zone jump
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-06
+
+[receipt "plan/0014#the-release"]
+    disposition = done
+    verify = host-lifecycle software --check .
+    evidence = cut at v0.6.0: the release verb re-derived ccfee85724eaa9d3ee08de276c40d3c0725ae1fb056d5f49331edf5971f2b93d in the recorded image with the staged bundle and the network off, the tag's lane published those bytes, .host-software names the pin and the hash, the router runs them, and the gate reports no items
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-07
