@@ -27,8 +27,8 @@ line for each protocol:
 passthru.rig 37.228.213.83:59315; # push
 ```
 
-A datagram from the vantage to the front's public port reached the service behind the line, and the
-service's answer came back to that client:
+The vantage sent a datagram to the front's public port, it reached the service behind the line, and
+the service's answer came back to that client:
 
 ```
 ANSWER b'the service answered: the release leg, both ways' from ('170.9.238.141', 8443)
@@ -43,8 +43,8 @@ subject=CN = the-service-behind-the-line
 
 ## The stale half on the front
 
-The first probe's answer arrived as a runaway: forty-five copies of the service's prefix, ending in the
-poke's own marker. The front ran the relay from before `fcd62d4`, which answered each poke with the
+The first probe's answer arrived as a runaway: forty-five copies of the service's prefix, with the
+poke's own marker at the tail. The front ran the relay from before `fcd62d4`, which answered each poke with the
 marker it carried, and the daemon forwards every arrival at a relaying slot to its service, so the sink
 collected each echoed marker and answered with the whole buffer.
 
