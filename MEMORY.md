@@ -3749,3 +3749,29 @@ pipeline cannot be assembled by hand, and `deploy/rig-capture.sh` takes the slot
 the carrier rewrites the arrival's destination before the wire and a filter on the external tuple port
 reads as a refusal. Both carry the reason in a one-line header, and the operator page states the
 convention beside them.
+
+## 2026-10-07 — the Kani rung gets a lane, and its first verdict is that nothing compiled
+
+The lane exists: `workflow_dispatch` and weekly in the component's CI, Kani pinned at 0.67.0, the
+tree's own harnesses gating each under its own bound, and the facade's eight measured in a second job
+(`call/0050`). Its first finding is that nothing had compiled the crate under `--cfg kani`:
+`engine::verify::exit_due_matches_conditions` matched three arms while `call/0030` had added
+`ExitReason::DeviceGone` after it was written, so the suite could not build, and no lane noticed because
+there was no lane. The arm is added, and it carries a claim: `exit_due` reports ownership or staleness,
+and a device that left is `release_reason`'s finding.
+
+The gating half verified 32 of 32 harnesses on the runner, the slowest in 22 seconds, so the pre-facade
+record stands on a lane's verdict. The facade's eight were still running when this was written, and
+`call/0019` stays accepted until their verdicts land in `plan/0007`'s results.
+
+Two releases followed, because the source moved twice. `v0.6.0` carries the front's legs, and both legs
+are proved on its bytes. The Kani fix then moved the source after that release, so `v0.6.1` carries the
+lane and the harness fix. `--verify-build` proved the Kani-only edit left the *artifact* byte-identical,
+and the pin still had to move, because the pin names the source the bytes come from and a source change
+owes its own release. Both tags published bytes whose sha256 matches their recorded hash.
+
+## 2026-10-07 — the front's fixtures did not survive the box's restart
+
+The service behind the line runs as `/tmp/echo3.py` while that file is gone from disk, so the process
+holds a deleted file and a rebuilt rig wants its fixtures re-created. Worth knowing before reading any
+rig measurement taken after a restart, because the answer's shape is what carries the news.
