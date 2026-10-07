@@ -209,19 +209,21 @@ its state; this table is the one-line view.</p>
 <tr><td><a href="plan/0009-mapping-keepalive-and-signalling/README.html">plan/0009</a></td><td>the mapping keepalive and its signalling; done 2026-09-18</td></tr>
 <tr><td><a href="plan/0010-the-filtering-proved-and-watched/README.html">plan/0010</a></td><td>the carrier's filtering proved and watched; closed 2026-09-23</td></tr>
 <tr><td><a href="plan/0011-documentation/README.html">plan/0011</a></td><td>the operator pages, the generated help and the manual page; done 2026-09-22</td></tr>
-<tr><td><a href="plan/0012-the-front-door/README.html">plan/0012</a></td><td>the front door; done 2026-09-27, with its release still to run</td></tr>
+<tr><td><a href="plan/0012-the-front-door/README.html">plan/0012</a></td><td>the front door; done 2026-09-27, released <code>v0.5.0</code></td></tr>
+<tr><td><a href="plan/0013-the-fronts-two-views/README.html">plan/0013</a></td><td>the front's two views; done, released <code>v0.5.1</code></td></tr>
+<tr><td><a href="plan/0014-the-fronts-legs/README.html">plan/0014</a></td><td>the front's legs on the poked socket; built and released <code>v0.6.0</code>, with two receipts held for the operator's word</td></tr>
 </tbody></table>
 </div>
 <p>The component:</p>
 <ul>
 <li>The record in <a href=".host-software"><code>.host-software</code></a> names the pin, the toolchain and
-the artifact hash, and the pin currently names the released <code>v0.3.5</code>. What moves it
-onto the front door's work, and what that run needs, is in
-<a href="plan/0012-the-front-door/README.html">plan/0012</a>, <em>What the release still needs</em>.</li>
+the artifact hash, and the pin names the released <code>v0.6.0</code>, whose bytes the tag's
+lane published.</li>
 <li>The component lane runs the test suite and the release build inside the pinned
 toolchain image, publishes the binary from the run, and proves the vendored
 dependency bundle builds with the network off.</li>
-<li>The test router runs the bytes from that lane.</li>
+<li>The test router runs the released bytes, checked against the recorded hash before it
+starts.</li>
 <li>The repository's sweep is the gate: <code>host-lifecycle software --check .</code> over the
 rooms (validate, the naming and prose audits, the reference sweep, reconcile, the
 phase receipts and the task graph), with <code>book --check</code> for the site.</li>
