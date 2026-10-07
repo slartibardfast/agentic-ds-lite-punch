@@ -587,3 +587,17 @@
     evidence = cut at v0.6.0: the release verb re-derived ccfee85724eaa9d3ee08de276c40d3c0725ae1fb056d5f49331edf5971f2b93d in the recorded image with the staged bundle and the network off, the tag's lane published those bytes, .host-software names the pin and the hash, the router runs them, and the gate reports no items
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-07
+
+[receipt "plan/0014#admission-rules"]
+    disposition = done
+    verify = attested operator
+    evidence = the operator confirmed the rules table in results/NOTE-2026-10-07-the-admission-rules.md: a poke has to be answered, the admission reads the address, the spoke's protocol decides which protocol is admitted, and a slot's arrival wants the box's own accept rule
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-07
+
+[receipt "plan/0014#the-first-byte"]
+    disposition = done
+    verify = attested operator
+    evidence = the operator confirmed the first byte on both legs, recorded in results/NOTE-2026-10-07-the-release-and-both-legs.md: the vantage's datagram reached the service behind the line and its answer returned, and three TLS clients with the pass-through name each brought the service's own certificate back
+    tool = host-lifecycle@0.54.2
+    recorded = 2026-10-07
