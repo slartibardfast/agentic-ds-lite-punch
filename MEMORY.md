@@ -3716,3 +3716,36 @@ forwarded datagram. The answer is gone and the lane is green.
 One process lesson. L piped `cargo test` through `tail`, so the pipeline's status was `tail`'s and a
 compile error rode an `&&` chain into a pushed commit; the fix followed at once. Read the exit code of
 the build, not of the pager.
+
+## 2026-10-07 — v0.6.0 carries both legs, and the front ran a stale relay
+
+The release is cut. `v0.6.0` sits at `5bbd9cb`, which carries the version bump, the regenerated help
+text and manual page, and the operator page's correction. The release verb built it in the recorded
+image with the staged bundle and the network off, re-derived `ccfee857…`, and the tag's lane published
+exactly those bytes. `.host-software` names the pin and the hash, the router runs them, the task
+receipts for `#the-tcp-leg` and `#the-release` are recorded, and the gate reports no items.
+
+Both legs are proved on the released bytes. A datagram from the vantage reached the service behind the
+line and the service's answer came back to that client, and three TLS clients dialling with the
+pass-through name each brought `CN = the-service-behind-the-line` home.
+
+What the proof caught is worth more than the proof. The front ran the relay from before `fcd62d4`,
+which answered every poke with the marker it carried, and the daemon forwards every arrival at a
+relaying slot to its service, so the sink accumulated each echoed marker and the first probe's answer
+arrived as a forty-five-fold runaway with `dslp-poke` at its tail. The relay is installed from the
+repository now. The record held that fix for a day and the deployed file did not, so read the deployed
+artifact against the record before trusting a proof taken through it.
+
+Two smaller findings. The sink's fixture runs as `/tmp/echo3.py`, and that file is gone from disk while
+the process keeps serving, so the rig's fixtures did not survive the box's restart and a rebuilt rig
+wants them re-created. And the host-lifecycle on this machine is at the 0.54.2 era while upstream
+released v0.60.6, so host-lifecycle#31's fix is absent here and a version bump still owes its
+regenerated page inside the same commit by hand. The spine upgrade ledger is the work that closes that
+debt.
+
+The slips took two shapes as code. `tools/check.sh` in the component runs the generated-artifact check,
+the suite, the comment lint and the link check in one command under `set -euo pipefail`, so a masked
+pipeline cannot be assembled by hand, and `deploy/rig-capture.sh` takes the slot's own port, because
+the carrier rewrites the arrival's destination before the wire and a filter on the external tuple port
+reads as a refusal. Both carry the reason in a one-line header, and the operator page states the
+convention beside them.
