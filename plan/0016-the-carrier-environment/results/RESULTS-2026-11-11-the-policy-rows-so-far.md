@@ -55,12 +55,12 @@ A counting rule was inserted at the top of the carrier's prerouting chain,
 before the dnat rule, and both crossings were run inside one verify-policy
 session. The counters settled it: the front crossing's arrival matched the
 counting rule and the dnat rule (`packets 1 bytes 39`), and the stranger's
-arrival matched both too (`packets 2 bytes 81` — the two datagrams counted).
-The dnat rule matches every arrival, including the stranger's; the DNAT is
-applied; and yet the b4's listener received only the front crossing's datagram.
-The gap is between the DNAT decision and the listener's socket delivery, in the
-verify-policy run only — the same crossings pass in a standalone sequence. The
-next instrument is a capture on the b4's wire during exactly that
+arrival matched both too (`packets 2 bytes 81`, the two datagrams counted).
+Every arrival matches the dnat rule, the stranger's included. The DNAT is
+applied. Yet the b4's listener received only the front crossing's datagram.
+The gap sits between the DNAT decision and the listener's socket delivery; in
+the verify-policy run alone the same crossings pass in a standalone sequence.
+The next instrument is a capture on the b4's wire during exactly that
 verify-policy crossing, to name what drops or mis-delivers the stranger's
 translated datagram.
 
