@@ -18,6 +18,41 @@ the name is said to point at an external IPv4.
 The public zone is hosted at ClouDNS (pns21 through pns24) and maps the name, with
 `api.d07yx58.net`, to 84.203.115.61, the static Digiweb IPv4 that pppoe-vdsl4 holds.
 
+## The relay vantage
+
+The operator later named the vantage that reported the 404: iCloud Private Relay, on
+a household Apple device. It retires both of the fix shapes the first measurement
+suggested, because the relay does not only resolve the name publicly, it carries the
+connection: the egress proxy belongs to a third-party CDN, so the connection to
+84.203.115.61:443 arrives from an address no rule keyed on the source can recognize
+as the household member.
+
+Apple's iCloud Private Relay Overview (December 2021) documents the way out:
+
+> Private Relay only protects connections on public internet servers, while still
+> allowing users to access local or private servers directly with Private Relay
+> enabled. ... If a proxy or ODoH server detects that a specific server name is not
+> a public internet name, it instructs the device to try to access the server
+> directly over the local network.
+
+A name whose public record is a private address is not a public internet name, so
+the zone itself is the lever: republished as 192.168.21.1, the name sends the
+relayed device straight to the interface with the relay still enabled.
+
+Zone facts measured with the public resolvers:
+
+- There is no wildcard record; a random name under the zone answers NXDOMAIN, so
+  each name is its own record.
+- The IDN sibling `xn--um8h.d07yx58.net` carries the same 84.203.115.61 at TTL 900
+  (it shares the router's certificate).
+- `yarn.d07yx58.net` carries 84.203.115.61 at TTL 3600 and answers real work for
+  the api box, so it stays untouched; a republish touches the router names alone.
+- Public resolvers do serve private addresses from public zones (measured:
+  `localtest.me` answers 127.0.0.1 through Cloudflare, Google and Quad9).
+- The router's certificate renews by DNS-01 through the ClouDNS API, whose
+  credentials sit in the acme configuration on the box; renewal is indifferent to
+  the record's value.
+
 ## Where the public answer lands
 
 The redirect lives in `/etc/nftables.d/12-dslp-yarn.nft`, a persistent fw4 include,
@@ -61,8 +96,9 @@ The router answers its name correctly, with a valid certificate, for every clien
 that asks its dnsmasq, and that covers most of the LAN. The paths that bypass dnsmasq
 receive the public record: a browser that resolves for itself over DoH, the uk and us
 media groups whose port 53 the nft rules send to the VPN resolvers, or anything
-pointed at unbound's port 1053 (which holds no local zone although its UCI declares
-`dhcp_link 'dnsmasq'`; `/var/lib/unbound/conf.d` is empty). The public record's web
+pointed at unbound's port 1053 (its UCI declares `dhcp_link 'dnsmasq'`, yet it serves
+the name from recursion alone, with `/var/lib/unbound/conf.d` empty). The public
+record's web
 ports belong to the api box, whose default block answers with a 404. Nothing inside
 the router's DNS points anywhere wrong; the public half of the name's life is
 incomplete.
