@@ -18,14 +18,14 @@ the environment by the repository's own pipeline (install, render, mint, units),
 so iterating on the split by name, the relay, the map and the deployment itself
 is a harness run rather than an edit against production. The carrier around it is
 simulated at the fidelity the record measured, and the daemon rides in its b4
-namespace so the whole exchange — poke, admission, forward, answer, push — is
+namespace, so the whole exchange (poke, admission, forward, answer, push) is
 exercised with the front in the loop. Every deployment aspect is tested: the
 files land where the units expect, the certificates are minted the way the line
 mints them, the deployed files are checked against the record so the stale-relay
 class of failure fails the harness instead of the household.
 
-The fidelity model — every behaviour with its source, measured rows winning over
-RFC floors where the real device breaks them — is
+The fidelity model, which gives every behaviour a source and lets the measured
+rows win over the RFC floors the real device breaks, is
 [the research](results/RESEARCH-2026-11-11-the-aftr-in-the-record.md).
 
 ## Build sequence
@@ -33,7 +33,7 @@ RFC floors where the real device breaks them — is
 ### Record the AFTR fidelity model {#fidelity-model}
 
 - verify: test -f results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
-- inputs: results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
+- inputs: plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
 
 Done the day the milestone was claimed: the architecture (the hub as the
 transparent B4, the AFTR as the sole NAT44 with its IPv6-extended binding
@@ -43,12 +43,12 @@ real AFTR breaks, and today's native-path incident folded in as a scenario.
 ### Stand up the topology {#topology}
 
 - depends: #fidelity-model
-- verify: one command stands the five actors up and tears them down, and a datagram crosses from the internet actor to the carrier
+- verify: one command stands the five actors up and tears them down, and a datagram from the internet actor reaches the carrier
 
 The namespaces and their wiring: `carrier` (the simulated AFTR), `front` (where
 the nginx feature is deployed), `b4` (the real daemon), `service` (the target),
-`internet` (the external peer). One script stands it up, one tears it down, and
-nothing leaks outside them.
+`internet` (the external peer). One script stands the topology up and one tears
+it down; nothing leaks outside the namespaces.
 
 ### Write the carrier's data plane and policy {#carrier-policy}
 

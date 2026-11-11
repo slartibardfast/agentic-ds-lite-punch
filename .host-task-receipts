@@ -623,3 +623,12 @@
     evidence = unbound answers 192.168.21.1 at 127.0.0.1:1053 through the private-domain exception in /etc/unbound/unbound_ext.conf, with upstream recursion verified alive after the restart
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#fidelity-model"]
+    disposition = done
+    verify = test -f results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
+    inputs = plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
+    digest = b45ddb1eeac56a8dcd35f0d6ad8106909d473c5e
+    evidence = the fidelity model recorded with a source per row: the RFC 6333 architecture, the RFC 4787 floors, and the measured rows from plan/0010 and plan/0014, with the November native-path incident as a scenario
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
