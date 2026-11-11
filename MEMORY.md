@@ -4,6 +4,25 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — the relay named, and the fix moved into the zone
+
+- The vantage that saw the 404 is iCloud Private Relay: it resolves the name
+  publicly and carries the connection through a third-party CDN egress, so neither
+  source-keyed fix shape (the dnat exemption, the api-box vhost) can recognize the
+  household member. Both are retired in plan/0015, with the reasoning recorded.
+- Apple's Private Relay Overview (December 2021) documents the escape: a proxy or
+  ODoH server that detects a not-public-internet name instructs the device to go
+  direct over the LAN. The fix therefore republishes `router.d07yx58.net` (and the
+  IDN sibling `xn--um8h.d07yx58.net`, TTL 900) as 192.168.21.1 in the ClouDNS zone;
+  `yarn.d07yx58.net` and `api` keep 84.203.115.61 and must not be touched.
+- Zone facts measured: no wildcard (a random name is NXDOMAIN); the ClouDNS API
+  credentials sit in `acme.router.credentials` on the box, the same channel the
+  DNS-01 renewal uses; public resolvers do serve private addresses from public zones
+  (localtest.me answers 127.0.0.1 through Cloudflare, Google and Quad9).
+- Prose lane, two newly met shapes: "flips from A to B" about a record's value flags
+  as false-range, so write "becomes B (it was A)"; and "which holds no X although Y"
+  flags as negative-parallelism, so restructure the sentence.
+
 ## 2026-11-11 — plan/0015 claimed: the router's name, the api box's 404, and where each path lands
 
 - The symptom "browsers hit nginx, not the router's interface" is measured end to
