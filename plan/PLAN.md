@@ -16,5 +16,6 @@ sort key; see `call/0000`). A milestone is a thin, persona-serving increment.
 - [0013 the front's two views](0013-the-fronts-two-views/README.md)
 - [0014 the front's legs on the poked socket](0014-the-fronts-legs/README.md)
 - [0015 the router's name on the LAN](0015-the-routers-name/README.md)
+- [0016 the carrier environment](0016-the-carrier-environment/README.md)
 
 The next milestone number is allocated by `host-lifecycle next plan/`.
