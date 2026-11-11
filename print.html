@@ -4340,10 +4340,10 @@ relay would then have to originate from the very port nginx listens on, which no
 the rule comes back that way, the TCP leg takes a second number at the edge or waits for one. The
 rule table is reported before relay code is written, so the choice rests on measurement.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-routers-name-on-the-lan"><a class="header" href="#the-routers-name-on-the-lan">The router's name on the LAN</a></h1>
-<p><strong>Status:</strong> claimed 11 November 2026. The name's paths are measured, the household
-vantage is named (iCloud Private Relay), and the fix shape is settled by the
-measurement: republish the name's public record as its LAN address. The flip waits on
-the operator's word, because the record is public state.</p>
+<p><strong>Status:</strong> claimed 11 November 2026, and the fix landed the same day: the record is
+republished (the router name alone; the IDN sibling is the explicitly-outside name
+and keeps the public address, by the operator's word), unbound agrees through a
+rebinding exception, and the LAN proof waits on the operator's devices.</p>
 <h2 id="what-this-milestone-is-9"><a class="header" href="#what-this-milestone-is-9">What this milestone is</a></h2>
 <p><code>router.d07yx58.net</code> must reach the router's interface from LAN hosts, on every
 resolution path. The measurement (<a href="plan/0015-the-routers-name/results/NOTE-2026-11-11-the-name-paths.html">the note</a>)
@@ -4380,9 +4380,15 @@ a LAN host), and the relay vantage with the zone facts that settled the shape.</
 <li>verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 1.1.1.1 | grep -q 192.168.21.1'</li>
 </ul>
 <p>The ClouDNS record for the name becomes 192.168.21.1 (it was 84.203.115.61), changed
-through the same API the certificate renewal uses, and the IDN sibling (TTL 900)
-flips with it; <code>yarn.d07yx58.net</code> and the api name keep the public address. Every
-resolver path then lands on the interface:</p>
+through the same API the certificate renewal uses; <code>yarn.d07yx58.net</code> and the api
+name keep the public address, and the IDN sibling keeps it too, by the operator's
+word: it is explicitly the outside name. Every resolver path then lands on the
+interface:</p>
+<p>Done, 11 November 2026: the API edit (record id 480026278) answered Success, all
+four authoritative nameservers serve the LAN address, and the public resolvers
+(Cloudflare, Google, Quad9) followed within the hour the record's TTL 3600 bounds.
+Strangers stop finding the name; <code>xn--um8h.d07yx58.net</code> still serves them the
+public address, as it always did.</p>
 <ul>
 <li>dnsmasq's local zone answers as before, unchanged.</li>
 <li>unbound's recursion and the uk and us groups' VPN resolvers now receive the LAN
@@ -4400,10 +4406,17 @@ TTL 3600 bounds how long a resolver may hold the old answer.</p>
 <li>verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 127.0.0.1:1053 | grep -q 192.168.21.1'</li>
 </ul>
 <p>unbound at port 1053 answered the name with the public record because it recursed and
-the zone said so; after the flip its recursion lands on the LAN address once its cache
-drains. The task records why <code>/var/lib/unbound/conf.d</code> is empty although the UCI
-declares <code>dhcp_link 'dnsmasq'</code>, and whether unbound should hold the zone locally
-anyway; the verify passes when its answer agrees with dnsmasq's.</p>
+the zone said so; after the flip its recursion landed on the LAN address, which
+unbound's own rebinding filter then stripped (an empty answer, the <code>private-address</code>
+list with no exception for the zone). The remedy is the exception: a <code>server:</code> clause
+in <code>/etc/unbound/unbound_ext.conf</code> carries <code>private-domain: "d07yx58.net."</code>, and
+unbound answers the LAN address. Placing the line in <code>unbound_srv.conf</code> instead broke
+the service start (no logged error, and the box carries no checkconf binary to ask);
+that placement was reverted the same minute and the outage it caused, about two
+minutes of dead upstream recursion on the LAN, was closed by the revert. The UCI's
+<code>domain 'd07yx58.net'</code> does not reach the generated conf on this build; the ext conf
+is the channel that works, and <code>/var/lib/unbound/conf.d</code> stays empty with the
+generator's reason unestablished. The verify passes with dnsmasq's answer agreeing.</p>
 <h3 id="lan-proof"><a class="header" href="#lan-proof">Prove it from the LAN</a></h3>
 <ul>
 <li>depends: #republish-the-record</li>
