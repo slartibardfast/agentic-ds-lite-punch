@@ -1,7 +1,7 @@
 # The spine moves to 4c8ae9fd, and the ledger claims it
 
 - Status: accepted
-- Scope: this host's upgrade event — the techniques revision, the tool pins, and the two checks the newer gate raised
+- Scope: this host's upgrade event, meaning the techniques revision, the tool pins, and the two checks the newer gate raised
 - Date: 2026-11-11
 
 ## Context and Problem Statement
