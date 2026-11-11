@@ -1,6 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane and the front's deployment are receipted; the b4 and the service are the frontier.
+**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment and the b4 with its service are receipted; the deployment drift check is the frontier.
 
 ## What this milestone is
 
@@ -90,10 +90,26 @@ serving. Nothing is hand-placed.
 ### Bring up the b4 and the service {#b4-and-service}
 
 - depends: #front-deployment
-- verify: the daemon holds a mapping toward the carrier, the service answers through the slot, and the daemon's push reaches the front's report
+- verify: python3 deploy/env/envctl.py up-b4
+- inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/env/carrier-policy.py, software/ds-lite-punch/main/deploy/env/service-echo.py, software/ds-lite-punch/main/deploy/env/stun-server.py, software/ds-lite-punch/main/target/x86_64-unknown-linux-musl/release/ds-lite-punch
 
-The real daemon binary in the b4 namespace with its nft datapath, pointed at the
-carrier and the front, and the fake target service answering beside it.
+One command stands the whole exchange up: the carrier's policy plane runs the
+measured profile, the front is deployed by its pipeline, the echo service
+answers both protocols beside the daemon, a STUN responder answers in the
+internet actor, and the real daemon binary dials in with its production flags.
+The carrier's outbound leg is carried by the policy plane itself, from the
+carrier's own public tuple: a flow's first packet traverses the postrouting
+nat chain before its per-flow rule exists, the connection commits as
+un-natted, and the kernel never translates it afterwards, so the plane
+delivers what the rule would have and the leak chain keeps dropping what
+escapes untranslated. The daemon's TLS push rides a lane rule that exists
+before any flow, opened at policy start toward the poke target, for the same
+race. For proof: the daemon's writes hold a mapping, a client datagram to the
+front crosses the slot and the service's answer returns, and the daemon's
+push reaches the front's report, whose answer names the poke's tuple. The
+run's log already carries the milestone's differential finding: the daemon's
+STUN lane and the poke lane hold different external tuples for one source
+port, which is the open mapping conflict made reproducible.
 
 ### Check the deployment against the record {#drift-check}
 
