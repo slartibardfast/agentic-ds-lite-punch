@@ -1,9 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026, and the active goal. The carrier research is recorded with its sources, the generalised model and profiles follow from it, and the build sequence is sketched; the first two tasks are receipted and the shape is in the operator's hands for approval.
-sources, the generalised model and profiles follow from it, and the build
-sequence is sketched; the first task is receipted and the shape is in the
-operator's hands for approval.
+**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane and the front's deployment are receipted; the b4 and the service are the frontier.
 
 ## What this milestone is
 
@@ -73,12 +70,22 @@ hardest).
 ### Deploy the front by its own pipeline {#front-deployment}
 
 - depends: #carrier-policy
-- verify: install.sh, render.sh and mint.sh complete inside the front namespace, and the units come up serving on the public port
+- verify: python3 deploy/env/envctl.py deploy-front
+- inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
 
-The front is deployed by the repository's deployment pipeline into the front
-namespace, with the file layout and the unit equivalent the namespace supports.
-Nothing is hand-placed: a deployment step that only works on production is a
-defect this task exists to expose.
+One command deploys the front and probes it from outside the front
+namespace. mint.sh signs the authority and both identities inside the front
+namespace, and install.sh renders the configuration and the units with the
+new --units-dir mode: the namespace has no init to enable them, so the
+harness starts each unit's own ExecStart line. The distro nginx and its
+stream module are provisioned unprivileged (apt download and dpkg-deb -x)
+into the environment's cache, and the pipeline's --nginx and --module name
+them. The render names the workers' account (user root), because a
+namespace's setgroups denial makes the package's default account an invalid
+id and nginx refuses to start over it. For proof, the protected name answers
+the table over TLS with the daemon's minted identity, and a poke teaches the
+relay the tuple, which the map records before nginx reloads on it and keeps
+serving. Nothing is hand-placed.
 
 ### Bring up the b4 and the service {#b4-and-service}
 

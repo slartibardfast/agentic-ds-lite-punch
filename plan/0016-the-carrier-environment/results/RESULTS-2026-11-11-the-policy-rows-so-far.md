@@ -5,6 +5,17 @@ Date: 2026-11-11. Task: `plan/0016#carrier-policy`. The verify runs
 drives the carrier's policy plane through the three profiles, and asserts a row
 set per profile.
 
+## The close: each profile runs in its own environment
+
+The open row did not stay open. The stranger row's refusal was the previous
+profile's state, not the policy plane: a profile's nft table and conntrack
+entries survived into the next profile's run in the shared namespaces, and an
+arrival landed on rules the run no longer owned. verify-policy now tears the
+environment down and stands it up between profiles, and every row across the
+three profiles is green on the same command. The receipt
+`plan/0016#carrier-policy` records the run, and a later rerun on the day of
+the front deployment reproduced it.
+
 ## The rows that pass
 
 | Profile | Rows verified |
