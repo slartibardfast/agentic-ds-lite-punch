@@ -601,3 +601,25 @@
     evidence = the operator confirmed the first byte on both legs, recorded in results/NOTE-2026-10-07-the-release-and-both-legs.md: the vantage's datagram reached the service behind the line and its answer returned, and three TLS clients with the pass-through name each brought the service's own certificate back
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-07
+
+[receipt "plan/0015#name-paths"]
+    disposition = done
+    verify = test -f results/NOTE-2026-11-11-the-name-paths.md
+    inputs = results/NOTE-2026-11-11-the-name-paths.md
+    evidence = the note results/NOTE-2026-11-11-the-name-paths.md records every path's answer, the public answer landing on the api box's default block, and the relay vantage with the zone facts that settled the shape
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
+
+[receipt "plan/0015#republish-the-record"]
+    disposition = done
+    verify = ssh root@192.168.21.1 'nslookup router.d07yx58.net 1.1.1.1 | grep -q 192.168.21.1'
+    evidence = the ClouDNS API edit (record id 480026278) answered Success on 11 November 2026; all four authoritative nameservers and the public resolvers answer 192.168.21.1; the IDN sibling keeps the public address as the explicitly-outside name, by the operator's word
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
+
+[receipt "plan/0015#resolver-consistency"]
+    disposition = done
+    verify = ssh root@192.168.21.1 'nslookup router.d07yx58.net 127.0.0.1:1053 | grep -q 192.168.21.1'
+    evidence = unbound answers 192.168.21.1 at 127.0.0.1:1053 through the private-domain exception in /etc/unbound/unbound_ext.conf, with upstream recursion verified alive after the restart
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11

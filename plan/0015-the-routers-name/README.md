@@ -1,9 +1,9 @@
 # The router's name on the LAN
 
-**Status:** claimed 11 November 2026. The name's paths are measured, the household
-vantage is named (iCloud Private Relay), and the fix shape is settled by the
-measurement: republish the name's public record as its LAN address. The flip waits on
-the operator's word, because the record is public state.
+**Status:** claimed 11 November 2026, and the fix landed the same day: the record is
+republished (the router name alone; the IDN sibling is the explicitly-outside name
+and keeps the public address, by the operator's word), unbound agrees through a
+rebinding exception, and the LAN proof waits on the operator's devices.
 
 ## What this milestone is
 
@@ -46,9 +46,16 @@ a LAN host), and the relay vantage with the zone facts that settled the shape.
 - verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 1.1.1.1 | grep -q 192.168.21.1'
 
 The ClouDNS record for the name becomes 192.168.21.1 (it was 84.203.115.61), changed
-through the same API the certificate renewal uses, and the IDN sibling (TTL 900)
-flips with it; `yarn.d07yx58.net` and the api name keep the public address. Every
-resolver path then lands on the interface:
+through the same API the certificate renewal uses; `yarn.d07yx58.net` and the api
+name keep the public address, and the IDN sibling keeps it too, by the operator's
+word: it is explicitly the outside name. Every resolver path then lands on the
+interface:
+
+Done, 11 November 2026: the API edit (record id 480026278) answered Success, all
+four authoritative nameservers serve the LAN address, and the public resolvers
+(Cloudflare, Google, Quad9) followed within the hour the record's TTL 3600 bounds.
+Strangers stop finding the name; `xn--um8h.d07yx58.net` still serves them the
+public address, as it always did.
 
 - dnsmasq's local zone answers as before, unchanged.
 - unbound's recursion and the uk and us groups' VPN resolvers now receive the LAN
@@ -67,10 +74,17 @@ TTL 3600 bounds how long a resolver may hold the old answer.
 - verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 127.0.0.1:1053 | grep -q 192.168.21.1'
 
 unbound at port 1053 answered the name with the public record because it recursed and
-the zone said so; after the flip its recursion lands on the LAN address once its cache
-drains. The task records why `/var/lib/unbound/conf.d` is empty although the UCI
-declares `dhcp_link 'dnsmasq'`, and whether unbound should hold the zone locally
-anyway; the verify passes when its answer agrees with dnsmasq's.
+the zone said so; after the flip its recursion landed on the LAN address, which
+unbound's own rebinding filter then stripped (an empty answer, the `private-address`
+list with no exception for the zone). The remedy is the exception: a `server:` clause
+in `/etc/unbound/unbound_ext.conf` carries `private-domain: "d07yx58.net."`, and
+unbound answers the LAN address. Placing the line in `unbound_srv.conf` instead broke
+the service start (no logged error, and the box carries no checkconf binary to ask);
+that placement was reverted the same minute and the outage it caused, about two
+minutes of dead upstream recursion on the LAN, was closed by the revert. The UCI's
+`domain 'd07yx58.net'` does not reach the generated conf on this build; the ext conf
+is the channel that works, and `/var/lib/unbound/conf.d` stays empty with the
+generator's reason unestablished. The verify passes with dnsmasq's answer agreeing.
 
 ### Prove it from the LAN {#lan-proof}
 
