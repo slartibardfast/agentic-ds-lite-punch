@@ -1,0 +1,29 @@
+# The derived inventory's exclusions (host#24): modules whose building work lives
+# in closed milestones, so no open task's `- inputs:` line cites them. Each line
+# names the file and the milestone that owns it; the covering evidence is the
+# component's CI suite (the test lane and the release build) and, where a harness
+# exists, the weekly Kani lane (call/0050). A module reopened for work moves out
+# of this file and into the owning task's `- inputs:` line.
+software/ds-lite-punch/main/src/carrier.rs plan/0010's carrier-filtering watcher (call/0033): the rising counter and the silence alarm
+software/ds-lite-punch/main/src/cdc.rs plan/0004's change-data-capture backends feeding the observation engine
+software/ds-lite-punch/main/src/ct.rs plan/0009's conntrack deletion finding: this kernel refuses EINVAL, the self-pin replaced it
+software/ds-lite-punch/main/src/dp.rs plan/0008's DeviceProtection:1 core: the PKCS5 ceremony, roles, and the pure-Rust hashes
+software/ds-lite-punch/main/src/engine.rs plan/0009/0010's observation refresh engine: claims, shadow keepalives, releases
+software/ds-lite-punch/main/src/forward.rs plan/0004's source-preserving UDP forward on the IP_TRANSPARENT socket
+software/ds-lite-punch/main/src/front.rs plan/0012/0013's front-door client: the table, the push, the two views
+software/ds-lite-punch/main/src/identity.rs plan/0012's daemon identity: the PEM files a TLS client presents
+software/ds-lite-punch/main/src/keepalive.rs plan/0009's allowlist admission (call/0025) and the local keepalive policy
+software/ds-lite-punch/main/src/main.rs plan/0004's daemon entry: one socket per slot, the AFTR mapping kept alive
+software/ds-lite-punch/main/src/mapping.rs plan/0004/0009's shared runtime state and the tuple health machine
+software/ds-lite-punch/main/src/nft.rs plan/0004's nft datapath, with plan/0014's slot accept placed ahead of the zone jumps
+software/ds-lite-punch/main/src/obs.rs plan/0010's conntrack parser and the br-lan predicate
+software/ds-lite-punch/main/src/pcp.rs plan/0007/0008's PCP and NAT-PMP codec, both dialects on one port
+software/ds-lite-punch/main/src/persist.rs plan/0004's epoch and lease records at the fixed /tmp/dslp path
+software/ds-lite-punch/main/src/presence.rs plan/0009's LAN presence rule (call/0030), shared by the holds and the leases
+software/ds-lite-punch/main/src/publish.rs plan/0013's tuple publishing: the state file, the JSON line, the facade's watch
+software/ds-lite-punch/main/src/slot.rs plan/0004's slot engine core: per-mapping state, leases, the port allocator
+software/ds-lite-punch/main/src/stun.rs plan/0004's minimal STUN codec (RFC 5389) with the XOR-mapped roundtrip
+software/ds-lite-punch/main/src/tcpslot.rs plan/0012/0014's TCP slot datapath: the splice and the STUN link
+software/ds-lite-punch/main/src/upnp.rs plan/0007's UPnP facade core, the alloc-free layer the Kani proofs run over
+software/ds-lite-punch/main/src/upnpsvc.rs plan/0007/0008's facade runtime: SSDP, SOAP, GENA, grants, the tuple watch
+software/ds-lite-punch/main/src/vote.rs plan/0004/0009's STUN majority vote: the canonical confirmed tuple
