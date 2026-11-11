@@ -4,6 +4,31 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — the flip landed: router.d07yx58.net is 192.168.21.1, unbound agrees, one outage lesson
+
+- The record flipped through the ClouDNS API (record id 480026278, TTL 3600
+  unchanged): all four authoritative nameservers serve 192.168.21.1, and Cloudflare,
+  Google and Quad9 followed within the hour. The IDN sibling `xn--um8h.d07yx58.net`
+  keeps 84.203.115.61: the operator NAK'd changing it, it is explicitly the outside
+  name. `yarn` and `api` keep the public address as well.
+- unbound's rebinding filter (`private-address: 192.168.0.0/16`, no exception)
+  stripped the new LAN answer into an empty response. The exception lives as a
+  `server:` clause with `private-domain: "d07yx58.net."` in
+  `/etc/unbound/unbound_ext.conf`, and unbound at 127.0.0.1:1053 answers the LAN
+  address with upstream recursion verified alive.
+- **The outage lesson:** placing the same line in `/etc/unbound/unbound_srv.conf`
+  (the header-comment-canonical spot) broke the service start with no logged error
+  and no unbound-checkconf on the box to ask, and dnsmasq forwards everything to
+  1053, so upstream DNS on the LAN went dead for about two minutes until the revert.
+  The ext-conf placement (a second `server:` clause at the end of the generated
+  conf) is the one measured working; use it, and take a resolver restart on this box
+  as an outage-risk step: verify upstream recursion immediately after.
+- The UCI's `unbound.ub_main.domain='d07yx58.net'` does not reach the generated conf
+  on this build, and `/var/lib/unbound/conf.d` stays empty; the generator's reason
+  is unestablished and recorded as such in plan/0015.
+- plan/0015 stands at three receipts done; `#lan-proof` (attested operator) waits on
+  an Apple device with Private Relay enabled loading `https://router.d07yx58.net/`.
+
 ## 2026-11-11 — the relay named, and the fix moved into the zone
 
 - The vantage that saw the 404 is iCloud Private Relay: it resolves the name
