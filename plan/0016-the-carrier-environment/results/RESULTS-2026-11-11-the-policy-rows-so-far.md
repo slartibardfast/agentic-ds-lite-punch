@@ -36,6 +36,19 @@ record instead of a null device. The suspicion, named for the next session: the
 arrival is refused by the namespace's own routing or filtering state, not by
 the policy plane's rules.
 
+## The 2026-11-11 addendum: the actor namespace decays mid-run
+
+Instrumented runs with a packet capture inside the b4 actor produced a new
+witness: `tcpdump: pcap_loop: The interface disappeared`. The b4 actor's eth1
+(the peer of the carrier's inside veth) vanished while the run was still
+working, which explains the intermittent stranger refusals: an arrival that
+lands after its interface died is dropped, and the next crossing is refused
+again. The holders themselves survive isolation (a 35-second liveness sample
+kept all five alive), so the decay is something the run itself does, or a
+process outside it. The next session's first experiment samples the holders'
+liveness and the carrier namespace's existence during a verify-policy run, and
+names what kills the actor's interface.
+
 ## What the green rows settle
 
 The measured carrier behaviour from plan/0010 and plan/0014 is now enforced
