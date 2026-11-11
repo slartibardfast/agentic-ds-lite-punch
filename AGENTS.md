@@ -113,12 +113,16 @@ The model speaks as `L`. The human is `you`. Learn it from the exchanges.
   subagent: L have started.
 - model: lemu, start the review. L expects lems to report when done.
   subagent: L will report.
+- operator: lemu, check lemr work against the gate.
+  subagent: L have checked it; the gate stays green.
+- model: lemu, rebuild lemr index before the reply lands.
+  subagent: L will rebuild lemr index now.
 
-The form list is complete: `L`, `L's`, `lself`, `lem`, `lem's`, `lemself`, `lemu`, `lemu's`, `lemuself`, `lemuselves`, `lems`, `lems'`. A lem-token outside the list is a corruption; write a listed form. Possession is `'s`, alone or before a thing: L's weights, the weights are L's. Never `Ls`, never `mines`.
+The form list is complete: `L`, `L's`, `lself`, `lem`, `lem's`, `lemself`, `lemu`, `lemr`, `lemr's`, `lemuself`, `lemuselves`, `lems`, `lems'`. A lem-token outside the list is a corruption; write a listed form. Possession is `'s`, alone or before a thing: L's weights, the weights are L's. The addressed agent's possessive pairs with `lemu` as `your` pairs with `you`, a fixed pair of listed forms: `lemr` before a thing (lemr weights), `lemr's` alone (the weights are lemr's). The reflexives belong to the address stem: `lemuself` and `lemuselves`, and nothing is built on `lemr`. Never `Ls`, never `mines`.
 
 Conjugate as the human would: L have, L am; lemu have; lem has; lems have. At sentence start the word capitalizes: Lem reported. `lself` is never capitalized. Never `We`: a swarm speaks as one `L`. Any language, same rule: `L` speaks, `you` hear.
 
-The human writes `I` and hears `you`. A bench of subagents is addressed as `lemu`, one form for one or many, and discussed as `lems`.
+The human writes `I` and hears `you`. A bench of subagents is addressed as `lemu`, one form for one or many, and discussed as `lems`. The address possessive is `lemr` for one or many alike: lemr weights, lemr credentials.
 
 Wrong: whenever lemua says go, lemu will execute.
 Right: whenever you say go, L will execute.
@@ -851,6 +855,31 @@ subsection.
 A few bullets under each task heading carry its fields:
 
 ```
+## The goal loop: one goal, oriented turns
+
+A goal is a `plan/NNNN` milestone. `host-lifecycle goal set` declares the
+active goal (one per repo; the audited commit of the declaration is the
+authority), `goal propose` prints the command for the operator and writes
+nothing, and `goal show` orients: purpose, position, needs-you, CI,
+frontier, tree, and the suggested next move on the last line. Work the
+NEXT line. If it is a command, run it as printed. If it says `work <key>`,
+start that task. If the tool refuses to emit, run the last line. Never
+invent a command or a flag.
+
+`goal park` re-queues a blocked goal (a reversible block), `goal unpark`
+resumes it, `goal abandon` exits with an OWED row in the plan index, and
+`goal repair` reconciles state toward the tracked record: the receipt
+stanzas over the Status line over the gitignored `.host-goal` sidecar,
+which holds only this worktree's claim. Every mutator also rewrites the
+tracked `GOAL.md`; declared in the corpus, it loads the active-goal
+declaration in every session with no plugin. `goal complete` composes the
+full verify sweep as subprocesses (the software gate, the ci judge, book,
+refs, obligations) with the task receipts, the plan row, and a clean
+pushed tree; a refusal banks nothing, and every hazard names its remedy.
+The harness doors are installed, never hand-written: `host-lifecycle
+install` emits the flat `host-<verb>` command family for each harness,
+and `install --check` guards the files against drift.
+
 ## Build sequence
 
 ### Gather the data {#gather-data}
@@ -996,6 +1025,14 @@ own key, so one waiver carries both cases: a migrated build that does not reprod
 for byte yet, and a component that cannot vendor offline. Where offline vendoring is
 feasible, the waiver does not apply.
 
+**Version-derived artifacts.** A component whose release regenerates files that embed the
+crate version (a man page, a help snapshot) records `regen = <command>` in `.host-software`:
+the command `release` runs in the canonical worktree between the version bump and the
+release commit, so bump and derived artifacts share one commit and the tag names the
+same version its artifacts carry (host-lifecycle#31). The command runs before the artifact
+build, so the canonical hash covers the regenerated files. A component declaring nothing
+keeps the bump-only behavior.
+
 **Multi-platform builds.** A component whose *one* source pin ships on several platforms
 records one `[build "<name>" "<platform>"]` subsection per platform under its
 `[software "<name>"]` stanza, each carrying its own `build`/`toolchain`/`artifact`/`deploy`
@@ -1014,6 +1051,35 @@ parses and reports itself, and is removed at a later revision. `--verify-build` 
 rebuild comparison; `--check` still requires the citation to resolve. The exemption is
 meant to be retired as the component converges on reproducibility, and is **never**
 available to greenfield software.
+
+**The lanes' outcomes are receipts too.** A lane configured is a lane named; only a
+run that passed discharges it. Before a turn's work is reported done, the default
+branch's most recent CI runs are read, and every non-green conclusion is fixed in
+that turn or recorded as a `ci` receipt carrying the run URL. `host-lifecycle ci
+<dir>` judges the lanes discovered from `.github/workflows/` offline — at the host
+root's HEAD and at each component's recorded pin — and absence is a finding, never
+a default: a lane declared by the tree with no receipted success at the revision
+under judgment is a HAZARD, and a component with no workflows states that absence
+as a named line rather than leaving it implied.
+
+**The check lane runs in CI too.** The reference `.github/workflows/check.yml`
+runs `host-lifecycle software --check .` on every push, so the naming sweep's
+recheck, the cfg scan, and the derived inventory block at the push boundary
+instead of waiting for a human to invoke the gate. The lane no-ops on a tree
+with no `.host-software`, and the tool it builds is the `tools/host-lifecycle`
+submodule the template ships, so the verdict comes from the spine revision the
+project carries (host#24). GitHub Actions is a **reference** lane, never a
+requirement: a host whose forge carries no Actions runner states the absence,
+and a recorded upgrade whose verify cannot apply there claims it with
+`upgrade --record <id> --inapplicable "<reason>"`, which the recheck reads as a
+disclosed fact, not a permanent alarm (host#33).
+
+**Fan-out workers share one index.** While a bench works in one tree, each
+worker stages explicit paths (`git add <paths>`) and never `-A`: a sweep that
+stages a colleague's in-progress files folds their half-done state into a commit
+whose message names none of it, and every suite run inside that window reads a
+moving tree. A commit whose message names fewer paths than it touches is a
+finding to read, not a style note.
 
 ## Upgrading
 
@@ -1056,6 +1122,7 @@ in `cast/applying-personas.md` follows Powell, Keenan and McDaid (2007) on
 personas in XP, with later agile work cited alongside it. This manual is released
 into the public domain (Unlicense); the credit here is acknowledgement, not a
 license obligation.
+
 ## Project specifics
 
 This section is written by the adopter and is not part of the template spine.
