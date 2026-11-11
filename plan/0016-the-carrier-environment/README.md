@@ -48,7 +48,7 @@ measurement eras.
 ### Stand up the topology {#topology}
 
 - depends: #fidelity-model
-- verify: bash deploy/env/standup.sh verify
+- verify: python3 deploy/env/envctl.py verify
 
 One command stands the five actors up and tears them down, and a datagram from
 the internet actor reaches the carrier. The namespaces and their wiring:
@@ -61,7 +61,7 @@ inside a user namespace, so the whole environment runs unprivileged.
 ### Write the carrier's data plane and policy {#carrier-policy}
 
 - depends: #topology
-- verify: with the vm-dslite profile a poke from b4 allocates a tuple, the poked peer's arrival crosses and a stranger's is refused; with the symmetric profile the same poke allocates a different tuple per destination; silence expires the mapping
+- verify: python3 deploy/env/envctl.py verify-policy
 
 The nftables NAT44 on the carrier plus the userspace policy plane reading a
 profile: the mapping and filtering behaviours, the timers with silent expiry,
