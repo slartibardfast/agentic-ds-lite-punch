@@ -4,6 +4,29 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — the whole exchange runs in the carrier environment, and the leak chain's priority was the wall
+
+`envctl up-b4` stands the carrier, the front (by its pipeline), the echo
+service, a STUN responder and the real daemon binary in one command, and all
+four rows are green: the mapping holds, a client datagram crosses the slot and
+the service's answer returns, and the daemon's push reaches the front's
+report. The wall that took the longest to name was one priority number: the
+carrier's leak chain sat at postrouting `filter + 10` (= 10), ahead of the
+srcnat chain (= 100), so every outbound packet was dropped untranslated before
+its own snat rule could run. Inbound dnat (at −100) never noticed, which is
+why the policy rows stayed green while nothing crossed. The chain now sits at
+`srcnat + 10`. Around the priority the mechanism stack is deliberate: a flow's
+first packet traverses postrouting before its per-flow rule exists and the
+connection commits un-natted forever, so the policy plane carries the outbound
+UDP leg itself from the carrier's own public tuple, its resends leave no
+conntrack trace (notrack), and the daemon's TLS push rides a lane rule opened
+at policy start. The differential finding is now reproducible on demand: the
+daemon's STUN lane learned 10.9.0.1:40000 while the poke lane the front routes
+on held 10.9.0.1:45394 for the same source port, which is the open mapping
+conflict of the two measurement eras in one log. The receipt
+`plan/0016#b4-and-service` carries the run, and verify-policy reran green on
+the same carrier changes.
+
 ## 2026-11-11 — the front deploys by its own pipeline inside the carrier environment
 
 `envctl deploy-front` mints, installs and starts the front in its namespace by the repository's pipeline
