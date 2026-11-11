@@ -646,3 +646,10 @@
     evidence = envctl verify exits 0 unprivileged: the carrier received 'hello carrier' from 10.9.0.10 on the public bridge
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#carrier-policy"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py verify-policy
+    evidence = envctl verify-policy exits 0 with every profile row green: the vm-dslite profile's five rows (per-destination allocation, the poked peer's crossing, the stranger's refusal, the silence expiry), the rfc-bcp profile's four rows (the stranger crossing under EIM+EIF), and the symmetric profile's four rows (the poked-port-only crossing), each profile in a fresh environment
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
