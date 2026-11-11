@@ -632,3 +632,10 @@
     evidence = the fidelity model recorded with a source per row: the RFC 6333 architecture, the RFC 4787 floors, and the measured rows from plan/0010 and plan/0014, with the November native-path incident as a scenario
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#topology"]
+    disposition = done
+    verify = bash deploy/env/standup.sh verify
+    evidence = standup.sh verify exits 0: the five actors stand up and tear down, and the carrier received 'hello carrier' from 10.9.0.10
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
