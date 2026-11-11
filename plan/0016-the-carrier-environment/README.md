@@ -1,6 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment and the b4 with its service are receipted; the deployment drift check is the frontier.
+**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service and the deployment drift check are receipted; the harness is the frontier.
 
 ## What this milestone is
 
@@ -114,11 +114,18 @@ port, which is the open mapping conflict made reproducible.
 ### Check the deployment against the record {#drift-check}
 
 - depends: #front-deployment
-- verify: a seeded drift (an edited deployed file) fails the check, and a clean deployment passes it
+- verify: python3 deploy/env/envctl.py drift-check
+- inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
 
-The stale-relay class of failure as a test: every deployed front file is hashed
-against the record the repository ships, and a mismatch fails the run with the
-drifting file named.
+The record the repository ships is what its own pipeline renders now: the
+check re-runs install.sh into a throwaway root with the deployment's flags
+and hashes the deployed relay, configuration and units against the probe's,
+whose bytes are read as if rendered into the deployed root. A deployed tree
+from an older pipeline passes a snapshot comparison and fails this one, which
+is the stale-relay class the check exists to catch. For proof, a clean
+deployment matches the record and a seeded drift (one edited deployed file)
+fails the check naming its file. The restoration comes from the repository's
+own installer content, and it matches again.
 
 ### Assert the whole exchange {#the-harness}
 
