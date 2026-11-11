@@ -653,3 +653,12 @@
     evidence = envctl verify-policy exits 0 with every profile row green: the vm-dslite profile's five rows (per-destination allocation, the poked peer's crossing, the stranger's refusal, the silence expiry), the rfc-bcp profile's four rows (the stranger crossing under EIM+EIF), and the symmetric profile's four rows (the poked-port-only crossing), each profile in a fresh environment
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#front-deployment"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py deploy-front
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = b0f5f73acaef4947cf0cb3c8eddb6aca6eee9e4b,db5296ada22f016b5b545767f13f1ef8e17cc790,ddb9b279b9f103bb81f884aa177bb9cc08f74c64,175bddc2ff3977a3fb7717eb7c30dedb38f255b3,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = deploy-front exits 0: mint.sh and install.sh completed inside the front namespace by the pipeline's new --units-dir mode, the harness started both units' own ExecStart lines, the protected name answered the table over TLS with the daemon's minted identity, a poke taught the relay the tuple that the map recorded, and nginx reloaded on the map change and kept serving; a second run redeployed over the standing environment and verify-policy reran green beside it
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
