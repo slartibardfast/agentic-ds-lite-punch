@@ -174,8 +174,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="the-routers-name-on-the-lan"><a class="header" href="#the-routers-name-on-the-lan">The router's name on the LAN</a></h1>
-<p><strong>Status:</strong> claimed 11 November 2026. The name's paths are measured and recorded; the
-fix waits on the operator's choice between the two shapes the fork names.</p>
+<p><strong>Status:</strong> claimed 11 November 2026. The name's paths are measured, the household
+vantage is named (iCloud Private Relay), and the fix shape is settled by the
+measurement: republish the name's public record as its LAN address. The flip waits on
+the operator's word, because the record is public state.</p>
 <h2 id="what-this-milestone-is"><a class="header" href="#what-this-milestone-is">What this milestone is</a></h2>
 <p><code>router.d07yx58.net</code> must reach the router's interface from LAN hosts, on every
 resolution path. The measurement (<a href="results/NOTE-2026-11-11-the-name-paths.html">the note</a>)
@@ -184,12 +186,16 @@ served by nginx under a valid ACME certificate, while the paths that bypass dnsm
 receive the public record 84.203.115.61: a browser that resolves for itself over DoH,
 or the uk and us media groups whose port 53 the nft rules send to the VPN resolvers.
 The public record's web ports are redirected, by a persistent fw4 include, to the api
-box, whose nginx has no block for the name; its default block answers with a stock
-404, which is the page reported as browsers hitting nginx instead of the router's
-interface.</p>
-<p>The fix is to make the public record's port serve the interface for local sources, so
-even a client that resolves the name publicly lands on its router. When the shape is
-picked it gets its own decision record, as the fork below expects.</p>
+box, whose nginx holds no block for the name; the default block answers with a stock
+404, the page the household reported as nginx standing where the interface should be.</p>
+<p>The vantage that reported the 404 is iCloud Private Relay, which resolves publicly and
+also carries the connection through a third-party egress, so no rule keyed on the
+connection's source can recognize the household member in it. Apple's relay is
+documented to step aside for a name that is not a public internet name: the Overview
+says a proxy or ODoH server that detects such a name instructs the device to try the
+server directly over the local network. The fix is therefore the zone: republish
+<code>router.d07yx58.net</code> (with its IDN sibling) as 192.168.21.1, which serves the
+interface to every vantage at once, with dnsmasq's local zone unchanged.</p>
 <h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
 <h3 id="name-paths"><a class="header" href="#name-paths">Record the name's paths</a></h3>
 <ul>
@@ -199,58 +205,58 @@ picked it gets its own decision record, as the fork below expects.</p>
 <p>Done the day the milestone was claimed: every path's answer, where the public answer
 lands (the api box's default block, with the api certificate and the stock 404), the
 router's own two blocks with the ACME certificate, the ACME renewal's independence
-from the web ports (DNS-01 through ClouDNS), and the vantage curiosity: the router's
-own connection to the public address is denied by <code>restrict_locally</code>, so proofs run
-from a LAN host.</p>
-<h3 id="hairpin-lands"><a class="header" href="#hairpin-lands">Land the public record on the interface for local sources</a></h3>
+from the web ports (DNS-01 through ClouDNS), the vantage curiosity (the router's own
+connection to the public address is denied by <code>restrict_locally</code>, so proofs run from
+a LAN host), and the relay vantage with the zone facts that settled the shape.</p>
+<h3 id="republish-the-record"><a class="header" href="#republish-the-record">Republish the name as its LAN address</a></h3>
 <ul>
 <li>depends: #name-paths</li>
-<li>verify: curl -sk --max-time 8 --resolve router.d07yx58.net:443:84.203.115.61 https://router.d07yx58.net/ | grep -q cgi-bin/luci</li>
+<li>verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 1.1.1.1 | grep -q 192.168.21.1'</li>
 </ul>
-<p>The chosen shape makes a local-source connection to 84.203.115.61's web port reach
-the router's interface instead of the api box's default block. The verify runs from a
-LAN vantage (this workstation's public path crosses the box, as the note records),
-and it passes when the public record's page is the LuCI entry whichever resolver the
-client used.</p>
+<p>The ClouDNS record for the name becomes 192.168.21.1 (it was 84.203.115.61), changed
+through the same API the certificate renewal uses, and the IDN sibling (TTL 900)
+flips with it; <code>yarn.d07yx58.net</code> and the api name keep the public address. Every
+resolver path then lands on the interface:</p>
+<ul>
+<li>dnsmasq's local zone answers as before, unchanged.</li>
+<li>unbound's recursion and the uk and us groups' VPN resolvers now receive the LAN
+address, as does every browser DoH; each connects directly.</li>
+<li>A relayed Apple device is instructed to go direct (the Overview's rule), so the
+relay stops standing between the household member and the interface.</li>
+<li>Strangers stop finding the name at all; nothing outside used it (the interface
+answers them with 403 today).</li>
+</ul>
+<p>The flip is one edit in public state, so the operator's word precedes it. The record's
+TTL 3600 bounds how long a resolver may hold the old answer.</p>
 <h3 id="resolver-consistency"><a class="header" href="#resolver-consistency">Make the box's other resolver agree</a></h3>
 <ul>
-<li>depends: #name-paths</li>
-<li>verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 127.0.0.1:1053 2&gt;/dev/null | grep -q 192.168.21.1'</li>
+<li>depends: #republish-the-record</li>
+<li>verify: ssh root@192.168.21.1 'nslookup router.d07yx58.net 127.0.0.1:1053 | grep -q 192.168.21.1'</li>
 </ul>
-<p>unbound listens on every interface at port 1053 and answers the name with the public
-record, because it holds no local zone: its UCI declares <code>dhcp_link 'dnsmasq'</code> yet
-<code>/var/lib/unbound/conf.d</code> is empty. Either it serves the name locally (the verify
-above) or it stops answering LAN clients at all; which one is the operator's word,
-since nothing on the LAN is configured to use it.</p>
+<p>unbound at port 1053 answered the name with the public record because it recursed and
+the zone said so; after the flip its recursion lands on the LAN address once its cache
+drains. The task records why <code>/var/lib/unbound/conf.d</code> is empty although the UCI
+declares <code>dhcp_link 'dnsmasq'</code>, and whether unbound should hold the zone locally
+anyway; the verify passes when its answer agrees with dnsmasq's.</p>
 <h3 id="lan-proof"><a class="header" href="#lan-proof">Prove it from the LAN</a></h3>
 <ul>
-<li>depends: #hairpin-lands</li>
+<li>depends: #republish-the-record</li>
 <li>verify: attested operator</li>
 </ul>
-<p>The proof a household member would notice: a phone on the wireless and a firetv of
-the uk group each load <code>https://router.d07yx58.net/</code> and reach the interface with a
-valid certificate chain, each with its own DNS settings untouched.</p>
-<h2 id="the-fork-the-plan-cannot-decide-alone"><a class="header" href="#the-fork-the-plan-cannot-decide-alone">The fork the plan cannot decide alone</a></h2>
-<p>Two shapes close the same defect, and both leave strangers on the page they get
-today:</p>
-<ul>
-<li>The router keeps its web ports for local sources: a rule ahead of the dnat in the
-fw4 include sends local-source connections to the router's own nginx, which already
-serves the name with a valid certificate. The include
-(<code>/etc/nftables.d/12-dslp-yarn.nft</code>) is persistent, so the change persists with it.
-Nothing on the LAN is known to reach the api vhost through the public record
-(internal api clients resolve to 192.168.21.10 through dnsmasq), but a client that
-did, with a public resolver, would reach the router instead.</li>
-<li>The api box holds a block for the name: nginx on 192.168.21.10 gains a server block
-for <code>router.d07yx58.net</code> that proxies to the router's interface, restricted to
-local sources, with a certificate the box renews the way it renews the api one. The
-dnat stays untouched and the api name's public path is unchanged.</li>
-</ul>
-<p>There is also a shape that fixes DNS alone, teaching every bypassing resolver the
-local answer, and the measurement says it cannot work: the zone's public half is
-served by ClouDNS, browsers can carry their own resolver, and the uk and us groups'
-resolvers belong to the tunnel endpoints. Landing the public record on the interface
-covers them all.</p>
+<p>The proof a household member would notice: an Apple device with Private Relay
+enabled and a firetv of the uk group each load <code>https://router.d07yx58.net/</code> and
+reach the interface with a valid certificate chain, each with its own DNS settings
+untouched.</p>
+<h2 id="the-retired-shapes-and-why"><a class="header" href="#the-retired-shapes-and-why">The retired shapes and why</a></h2>
+<p>The first measurement suggested two shapes: a local-source exemption ahead of the api
+box's dnat, or a name block on the api box proxying to the router. Both work for a
+client that connects for itself, and the relay retires both, because a relayed
+connection arrives from a third-party egress address that carries no mark of the
+household. Teaching every bypassing resolver the local answer cannot work either,
+because the zone's public half is served by ClouDNS and browsers can carry their own
+resolver. The zone is the only lever every vantage must pass through, and Private
+Relay is documented to step aside for a name whose record is not a public internet
+address.</p>
 
                     </main>
 
