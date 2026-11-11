@@ -1,6 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026. The carrier research is recorded with its — active goal since 2026-11-11
+**Status:** claimed 11 November 2026, and the active goal. The carrier research is recorded with its sources, the generalised model and profiles follow from it, and the build sequence is sketched; the first two tasks are receipted and the shape is in the operator's hands for approval.
 sources, the generalised model and profiles follow from it, and the build
 sequence is sketched; the first task is receipted and the shape is in the
 operator's hands for approval.
