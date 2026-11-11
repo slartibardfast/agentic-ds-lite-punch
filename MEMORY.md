@@ -4,6 +4,21 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — the front deploys by its own pipeline inside the carrier environment
+
+`envctl deploy-front` mints, installs and starts the front in its namespace by the repository's pipeline
+(mint.sh; install.sh with the new `--units-dir`; each unit's own ExecStart line), then probes the table
+over TLS, the poke, and the reload. The namespace's walls, all measured here: the kernel allows an
+unprivileged uid map only over inside-uid 0 and the setuid `newuidmap` refuses every variant on this
+machine, so every actor runs as uid 0; a setgroups-denied namespace makes `initgroups` fail forever,
+nginx 1.24 logs the emerg and keeps its workers running as root, but with no `user` directive the
+compiled-default account (nobody, 65534, unmapped) breaks the temp-path chown at startup — hence
+render's `--user`; and `s_client` tears the TLS session down at stdin EOF by default, so the table probe
+passes `-ign_eof` and waits for the server's close. A run killed mid-flight leaves holders no state file
+can vouch for only until the next invocation: `cmd_down` now reads both state files and stops what they
+name, and the same-uid rule makes those signals land. The receipt `plan/0016#front-deployment` carries
+the run and the digests; the standing environment is left serving for `#b4-and-service`.
+
 ## 2026-11-11 — the flip landed: router.d07yx58.net is 192.168.21.1, unbound agrees, one outage lesson
 
 - The record flipped through the ClouDNS API (record id 480026278, TTL 3600
