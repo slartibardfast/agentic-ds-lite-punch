@@ -1,9 +1,9 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026. The AFTR research is recorded with its
-sources, the design follows from it, and the build sequence is sketched; the
-shape is in the operator's hands for approval before the first task is
-receipted.
+**Status:** claimed 11 November 2026. The carrier research is recorded with its
+sources, the generalised model and profiles follow from it, and the build
+sequence is sketched; the first task is receipted and the shape is in the
+operator's hands for approval.
 
 ## What this milestone is
 
@@ -17,28 +17,33 @@ household actually consumes: **the nginx front door**. The front is deployed int
 the environment by the repository's own pipeline (install, render, mint, units),
 so iterating on the split by name, the relay, the map and the deployment itself
 is a harness run rather than an edit against production. The carrier around it is
-simulated at the fidelity the record measured, and the daemon rides in its b4
-namespace, so the whole exchange (poke, admission, forward, answer, push) is
-exercised with the front in the loop. Every deployment aspect is tested: the
+a generalised AFTR: the RFC 4787/5382 behavioural space as configuration
+(mapping and filtering behaviours, timers, port assignment, hairpinning), with
+carrier profiles as configurations and the measured Virgin Media ds-lite profile
+as the default instantiation, so the daemon is exercised across carriers instead
+of against one ISP's idioms. The daemon rides in its b4 namespace, so the whole
+exchange (poke, admission, forward, answer, push) is exercised with the front in
+the loop. Every deployment aspect is tested: the
 files land where the units expect, the certificates are minted the way the line
 mints them, the deployed files are checked against the record so the stale-relay
 class of failure fails the harness instead of the household.
 
-The fidelity model, which gives every behaviour a source and lets the measured
-rows win over the RFC floors the real device breaks, is
+The carrier model, the profiles, and the open mapping conflict the harness's
+differential run settles, are
 [the research](results/RESEARCH-2026-11-11-the-aftr-in-the-record.md).
 
 ## Build sequence
 
-### Record the AFTR fidelity model {#fidelity-model}
+### Record the carrier fidelity model {#fidelity-model}
 
 - verify: test -f results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
 - inputs: plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
 
-Done the day the milestone was claimed: the architecture (the hub as the
-transparent B4, the AFTR as the sole NAT44 with its IPv6-extended binding
-table), the eleven-row behaviour table with a source per row, the RFC floors the
-real AFTR breaks, and today's native-path incident folded in as a scenario.
+Done the day the milestone was claimed: the general model (the RFC 4787/5382
+behavioural space as knobs, with the RFC 6333 extended binding table and the
+transparent B4), the three carrier profiles, and the measured Virgin rows with
+their sources, including the open mapping conflict between the two measurement
+eras and the November native-path incident folded in as a scenario.
 
 ### Stand up the topology {#topology}
 
@@ -53,11 +58,14 @@ it down; nothing leaks outside the namespaces.
 ### Write the carrier's data plane and policy {#carrier-policy}
 
 - depends: #topology
-- verify: a poke from b4 allocates a tuple, the poked peer's arrival crosses, a stranger's is refused, and silence expires the mapping
+- verify: with the vm-dslite profile a poke from b4 allocates a tuple, the poked peer's arrival crosses and a stranger's is refused; with the symmetric profile the same poke allocates a different tuple per destination; silence expires the mapping
 
-The nftables NAT44 on the carrier plus the userspace policy plane implementing
-rows 1-6 of the fidelity model: the answered-poke table, the per-destination
-tuple allocation, and the short silent timer set to the measured value.
+The nftables NAT44 on the carrier plus the userspace policy plane reading a
+profile: the mapping and filtering behaviours, the timers with silent expiry,
+the answered-poke precondition where the profile sets it, and the port
+assignment. Three profiles ship: `vm-dslite` (the measured default, its open
+mapping conflict named), `rfc-bcp` (the RFC best case), and `symmetric` (the
+hardest).
 
 ### Deploy the front by its own pipeline {#front-deployment}
 
@@ -89,7 +97,7 @@ drifting file named.
 ### Assert the whole exchange {#the-harness}
 
 - depends: #b4-and-service, #drift-check
-- verify: every scenario row green in one command, and the suite runs in CI
+- verify: every scenario row green across the three profiles in one command, and the suite runs in CI
 
 One command asserting the nginx feature end to end: the pass-through name
 reaches the service's own certificate, the protected name refuses without a
