@@ -43,7 +43,7 @@ Done the day the milestone was claimed: the general model (the RFC 4787/5382
 behavioural space as knobs, with the RFC 6333 extended binding table and the
 transparent B4), the three carrier profiles, and the measured Virgin rows with
 their sources, including the open mapping conflict between the two measurement
-eras and the November native-path incident folded in as a scenario.
+eras. The November native-path incident is folded in as a scenario.
 
 ### Stand up the topology {#topology}
 

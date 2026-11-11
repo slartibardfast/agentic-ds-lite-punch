@@ -2,7 +2,7 @@
 
 Date: 2026-11-11. Task: `plan/0016#fidelity-model`. The question: what must a
 simulated carrier implement so the end-to-end environment is a faithful stand-in
-for a carrier-grade NAT behind ds-lite — and for the lines that stop being one?
+for a carrier-grade NAT behind ds-lite, and for the lines that stop being one?
 The answer is a parameterised model from the RFC behavioural taxonomy, with
 carrier profiles as configurations. A fake built around one ISP's idioms would
 be a fake of one machine on one day, and the record itself shows why that fails:
@@ -39,10 +39,10 @@ A profile is a configuration of the knobs, and the harness runs its scenarios
 across profiles, because the daemon is used on one of these lines and should
 behave correctly on the others inside its design envelope.
 
-### `vm-dslite` — the measured profile, and the default
+### `vm-dslite`, the measured profile and the default
 
 The Virgin Media ds-lite line (`aftr01.upc.ie`), as measured across plan/0004,
-plan/0010, plan/0012–0014:
+plan/0010, and plan/0012 with plan/0014:
 
 - UDP filtering: address-dependent, and port-independent toward a contacted
   address ([the 2026-09-17 session](../../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.md):
@@ -59,18 +59,18 @@ plan/0010, plan/0012–0014:
   characterises UDP mapping as EIM (one local port served eight peers with
   symmetric volume), while the front era measured an external tuple per
   destination. Both readings have evidence on tape, and the distinguishing
-  variable is unestablished — the daemon's own fold layer is itself a NAT44 in
+  variable is unestablished, and a candidate mechanism is sitting in the path:
   the path. The harness's differential run is the instrument that settles this:
   the same inner endpoint toward two destinations, with the fold out of the path,
   compared on the wire.
 
-### `rfc-bcp` — the reference profile
+### `rfc-bcp`, the reference profile
 
 RFC 4787's best case: EIM + EIF, the two-minute UDP floor, hairpinning on, no
 protocol scoping, the RFC 5382 TCP floor. This is the profile the daemon's
 documentation claims to serve.
 
-### `symmetric` — the hardest profile
+### `symmetric`, the hardest profile
 
 EDM + APDF with per-destination tuples and short timers: the shape plan/0004's
 investigation named as the one that would have forced the VPS-relay fallback.
@@ -85,8 +85,8 @@ front-view reports `84.203.115.61:40000` from the poke. Two things follow:
 - **Line mode is a knob** (ds-lite tunnel, native NAT44), and the harness runs
   both, because the daemon is now exercised under both.
 - The native path's arrivals land on an interface the daemon's nft rules do not
-  key on, and nothing answers them. That is a product finding — the WAN
-  interface is a hard-coded assumption today — and the native scenario exists to
+  key on, and nothing answers them. That is a product finding: the WAN
+  interface is a hard-coded assumption today, and the native scenario exists to
   reproduce it as a test, with the interface-name fix developed against it.
 - The front's relay followed the poke's source across the change, which is the
   two-views design holding; the TCP half is unrouted because no TCP slot exists
