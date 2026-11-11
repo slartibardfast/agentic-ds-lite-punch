@@ -671,3 +671,12 @@
     evidence = up-b4 exits 0 with every row green: the policy plane runs the measured profile, the front is deployed by its pipeline, the echo service answers both protocols, a STUN responder answers in the internet actor, the real daemon binary dials in with production flags and holds a carrier mapping, a client datagram to the front crosses the slot and the service's answer returns, and the daemon's push reaches the front's report, whose answer names the poke's tuple; the daemon's front-view carries the differential finding, its STUN lane and the poke lane holding different external tuples for one source port
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#drift-check"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py drift-check
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = 76aae279a1da9bdd9a3a269943cf45dcb3245c86,db5296ada22f016b5b545767f13f1ef8e17cc790,ddb9b279b9f103bb81f884aa177bb9cc08f74c64,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = drift-check exits 0 with every row green: a fresh deployment matches the record the pipeline renders now, a seeded drift (an edited deployed poke-listener.py) fails the check naming its file, and the restoration from the repository's own installer content matches again; the probe renders with the deployment's own flags and its bytes are read as if rendered into the deployed root
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
