@@ -48,12 +48,15 @@ measurement eras.
 ### Stand up the topology {#topology}
 
 - depends: #fidelity-model
-- verify: one command stands the five actors up and tears them down, and a datagram from the internet actor reaches the carrier
+- verify: bash deploy/env/standup.sh verify
 
-The namespaces and their wiring: `carrier` (the simulated AFTR), `front` (where
+One command stands the five actors up and tears them down, and a datagram from
+the internet actor reaches the carrier. The namespaces and their wiring:
+`carrier` (the simulated AFTR), `front` (where
 the nginx feature is deployed), `b4` (the real daemon), `service` (the target),
 `internet` (the external peer). One script stands the topology up and one tears
-it down; nothing leaks outside the namespaces.
+it down; nothing leaks outside the namespaces. Without root it re-execs itself
+inside a user namespace, so the whole environment runs unprivileged.
 
 ### Write the carrier's data plane and policy {#carrier-policy}
 
