@@ -3843,3 +3843,26 @@ owes its own release. Both tags published bytes whose sha256 matches their recor
 The service behind the line runs as `/tmp/echo3.py` while that file is gone from disk, so the process
 holds a deleted file and a rebuilt rig wants its fixtures re-created. Worth knowing before reading any
 rig measurement taken after a restart, because the answer's shape is what carries the news.
+
+## 2026-11-11 — the spine is claimed and the techniques move to 4c8ae9fd
+
+David pointed L at connollydavid/host, whose README owns the adopt/migrate/upgrade procedure. This host
+is its case (c). The four pending ledger entries (`REFS-a-number-resolves`, `GATE-refs-in-verify`,
+`LEM-pronoun-system`, `REFS-a-foreign-citation-names-its-repository`) were recorded through their verify
+post-conditions, each passing against the tree as it stood: the rules were already obeyed, and the
+claims now say so. The techniques are re-applied at template `4c8ae9fd` — the address possessive
+(`lemr`), the goal loop, the `regen` recipe key, and the lanes-are-receipts rule — with this host's
+Project specifics preserved, and the tool pins moved to `v0.63.0`/`v0.24.1`. The event is recorded in
+`call/0051`.
+
+What the newer gate raised, and how it was answered: the twenty-three component modules with no task
+`inputs` are named in `.host-inventory`, each with the milestone that owns them — citing them into
+closed task graphs would have rewritten recorded history. The `kani:` disposition lands when run
+43063101075 reports all eight facade harnesses, because the weekly lane's per-harness loop had a stdin
+drain that silently skipped the last two (`sid_set_invariants`, `soap_classify_never_panics`); the drain
+is fixed, and the run now in flight is the first that measures all eight. The `regen` recipe key means
+the hand step from the `v0.6.0`/`v0.6.1` releases is never hand-rolled again.
+
+One process note: L's `host-lifecycle install --help` was not a help read — the verb emitted the harness
+doors, and L removed the stray `.claude/commands` and `.opencode` trees it wrote. Read a verb's contract
+before invoking it; `--help` is not always read-only.
