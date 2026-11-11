@@ -1,0 +1,4 @@
+# Tool-written (plan/0101): this worktree's claim on the repo's active goal.
+# Re-derivable: host-lifecycle goal repair <dir>. Never hand-edit.
+[claim]
+    target = plan/0016-the-carrier-environment

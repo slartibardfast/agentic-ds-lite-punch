@@ -175,3 +175,9 @@
     authorization = call/0050
     tool = host-lifecycle@0.54.2
     recorded = 2026-10-07
+
+[receipt "goal" "set"]
+    disposition = done
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
+    target = plan/0016-the-carrier-environment
