@@ -639,3 +639,10 @@
     evidence = standup.sh verify exits 0: the five actors stand up and tear down, and the carrier received 'hello carrier' from 10.9.0.10
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#topology"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py verify
+    evidence = envctl verify exits 0 unprivileged: the carrier received 'hello carrier' from 10.9.0.10 on the public bridge
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-11
