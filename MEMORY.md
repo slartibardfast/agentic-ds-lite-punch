@@ -4,6 +4,30 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — plan/0015 claimed: the router's name, the api box's 404, and where each path lands
+
+- The symptom "browsers hit nginx, not the router's interface" is measured end to
+  end (plan/0015's note). dnsmasq answers `router.d07yx58.net` with 192.168.21.1
+  (the local zone plus expand-hosts over /tmp/hosts), and the router's nginx serves
+  LuCI on the name under a valid ACME certificate (`dns_cloudns`, DNS-01, so renewal
+  never depended on the web ports). Every bypassing path (browser DoH, the uk/us
+  groups' redirected port 53, unbound at :1053 which holds no local zone although
+  `dhcp_link 'dnsmasq'` is declared and `/var/lib/unbound/conf.d` is empty) receives
+  84.203.115.61, whose web ports the persistent fw4 include
+  `/etc/nftables.d/12-dslp-yarn.nft` dnats to the api box 192.168.21.10; that nginx
+  has no block for the name, so its default block (certificate CN api.d07yx58.net)
+  answers the stock 404.
+- The fix fork sits in plan/0015: exempt local sources from the dnat so they land on
+  the router's own nginx (which already serves the name), or add a name block on the
+  api box that proxies to the router. DNS-only shapes cannot cover a browser that
+  carries its own resolver.
+- Vantage trap, recorded: a connection the router itself opens to 84.203.115.61
+  bypasses the prerouting dnat and lands on its own nginx with a WAN source, which
+  `restrict_locally` denies (403). Proofs of the fix must run from a LAN vantage.
+- This workstation resolves the name correctly (its Windows resolver is 192.168.21.1
+  through the tunnel), so its default resolution was never the broken path; the
+  broken vantage is anything that resolves publicly.
+
 ## 2026-09-17 — state hand-off: where the work stands and what is on the box
 
 Written for a session with no memory of this conversation. Everything below
