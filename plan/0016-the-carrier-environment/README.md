@@ -1,6 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check and the harness are receipted; the monitors are the frontier.
+**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check, the harness and the monitors are receipted; the operator's attestations and the release remain.
 
 ## What this milestone is
 
@@ -147,11 +147,19 @@ command; the suite runs in the component's CI.
 ### Stand up the monitors {#the-monitors}
 
 - depends: #the-harness
-- verify: the external monitor and the router-side event sampler are emitted by the repository and documented
+- verify: python3 deploy/env/envctl.py monitors
 
-The standing correlation pair the record calls for: an external monitor over the
-published path, and a router-side event sampler, so a line anomaly arrives with
-its mechanism named.
+The repository emits the correlation pair the record calls for. The external
+monitor watches the published path from outside the line: the protected
+name's table answer over TLS with the household identity, and the passthrough
+name's certificate against the service's own. The router-side sampler reads
+what the line looks like from beside the daemon: its event log since the
+sampler last looked, the WAN interface's byte counters, and the conntrack
+weight. Both emit one JSON line per pass in the same shape, so the two
+streams correlate by timestamp; `--once` is how the environment's command
+runs them against the standing exchange, and `--interval` is the standing
+cadence on the deployed line. `deploy/monitor/README.md` documents where each
+runs and what it takes.
 
 ## The retired shapes and why
 
