@@ -64,3 +64,15 @@ section 4 => the Xbox One legacy-client facts
 section 0 => the DeviceProtection role definitions
 plan/0008 section 12 => plan/0008's bounded burst debounce
 plan/0008 section 26.8 => plan/0008's security context
+
+# plan/0016's research note cites RFC 6333 by clause number; the clause's own
+# name is the content, so the audit reads the name and the file keeps the
+# citation. §6.6 defines the extended binding table, §8.2 the mapping
+# behaviour's requirements, §8.5 the mapping protocols the record measured
+# against; (b4) is the record's own role name in a table row.
+
+§6.6 => the extended-binding-table clause
+§8.2 => the mapping-behaviour clause
+§8.5 => the mapping-protocols clause
+**b4** => the B4
+(b4) => (the household bridge)

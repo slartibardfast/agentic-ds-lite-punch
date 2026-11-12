@@ -4,6 +4,24 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — plan/0016's build sequence is fully discharged
+
+All eight tasks are receipted: the fidelity model, the topology, the carrier's
+policy plane, the front's deployment, the b4 with its service, the deployment
+drift check, the harness, and the monitors. The gates: prose clean, refs
+resolve, validate ok, tasks clean, the remap phase's recheck clean (the
+research note's RFC clause citations and the record's own role name are
+sanctioned by .host-remap rules that read the clause's name and the role's
+prose form — the sanctioned-substitution pattern the host's dictionary
+already carried). Two items remain, both the operator's: the component's
+software-check HAZARD is the undeclared Kani rung (sources carry
+`#[cfg(kani)]` harnesses and the manifest declares no rung — the ladder's
+opt-in is a maintainer decision, per the Kani-proof-discipline memory), and
+the component main runs ahead of its release pin (e6b15bb vs 33e1707) until
+the next cut bumps, tags, and re-pins. The monitors' inherited-log-fd
+overwrite explains earlier vanished exit lines: the standing services write
+at their own offsets over anything appended after the verdict.
+
 ## 2026-11-11 — the harness is green across the three profiles
 
 `envctl harness` (or `harness <profile>` for one) asserts eleven scenario rows

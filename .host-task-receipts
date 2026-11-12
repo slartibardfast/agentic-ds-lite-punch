@@ -701,3 +701,39 @@
     evidence = monitors exits 0 with both rows green: the exchange stands and the repository's correlation pair answers once each — the external monitor from the internet actor over the published path (the protected name's table with the daemon's identity, the passthrough name's certificate against the service's own, both state ok) and the router-side sampler from the b4 actor (the daemon's events counted, the line's counters read, the conntrack weight carried), both in the same JSON shape; deploy/monitor/README.md documents where each runs and what it takes
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-12
+
+[receipt "plan/0016#fidelity-model"]
+    disposition = done
+    verify = test -f results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
+    inputs = plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
+    digest = c1bba012dea4508613fa9ee78525d0dcf116781a
+    evidence = the AFTR's possibility space is recorded with its sources: the RFC 6333 architecture, the RFC 4787 and 5382 floors the real device breaks, the measured rows plan/0010 and plan/0014 carry, and the November native-path incident folded in as a scenario; the research doc carries the citations
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
+
+[receipt "plan/0016#front-deployment"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py deploy-front
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = 6a5e1642c177d753ce6cee555161f62d0ebaa3ee,2b97f84cb0004f7898bda10e9ef4967d36215433,fb089b756296416b60af5f3c9f6e64e84168f70e,175bddc2ff3977a3fb7717eb7c30dedb38f255b3,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = deploy-front exits 0: the pipeline minted, installed and started the front inside the front namespace, and the probes answer — the protected name's table over TLS with the daemon's identity, the poke writing the map, the reload keeping nginx serving
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
+
+[receipt "plan/0016#b4-and-service"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py up-b4
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/env/carrier-policy.py, software/ds-lite-punch/main/deploy/env/service-echo.py, software/ds-lite-punch/main/deploy/env/stun-server.py, software/ds-lite-punch/main/target/x86_64-unknown-linux-musl/release/ds-lite-punch
+    digest = 6a5e1642c177d753ce6cee555161f62d0ebaa3ee,f995515e3849b8d23397636aa8de371f96a97372,c25894daab7be135c3a12807e7f0bb527aaa683a,ce528e9b8320d786b79c35fbbc189ac0385510e2,beeaa69518ef0752d85aed876de4faac9c71a230
+    evidence = up-b4 exits 0 with every row green: the exchange stands with the daemon, the front, the service and STUN, the mapping holds, a client datagram crosses the slot and the service's answer returns, and the push reaches the front's report
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
+
+[receipt "plan/0016#drift-check"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py drift-check
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = 6a5e1642c177d753ce6cee555161f62d0ebaa3ee,2b97f84cb0004f7898bda10e9ef4967d36215433,fb089b756296416b60af5f3c9f6e64e84168f70e,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = drift-check exits 0: a fresh deployment matches the record, a seeded drift fails naming its file, and the restoration matches again
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
