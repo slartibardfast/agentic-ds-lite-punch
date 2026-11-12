@@ -4,6 +4,29 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — the harness is green across the three profiles
+
+`envctl harness` (or `harness <profile>` for one) asserts eleven scenario rows
+per profile in one command, about ten minutes, and every row is green on every
+profile: the PCP grant, the mapping, the datagram leg, the relay's poke, the
+stranger per the profile's filtering, the push, the passthrough certificate,
+the protected name both ways, the unpublished name, and the lease's expiry and
+refill. Three findings landed with it. The daemon's fold pins presented a
+compiled hub address (192.168.0.21); they now present the bind address, which
+is identical in production and reachable anywhere else, and that alone let the
+granted TCP slot's STUN-over-TCP link and its pokes cross the carrier. The
+facade's PCP grant answers discovery-pending before the slot's own STUN
+publishes, so the probe retries past it. And the passthrough row asserts per
+profile: under the port-and-address dependent carrier the faithful refusal is
+the expected answer, because the passthrough's egress is the front's own
+socket and only the poke's own peer port is admitted. The suite runs in the
+component's CI as a carrier-harness lane with a 20-minute cap, and the
+controller exits by syscall after its verdict because the run leaves its
+holders and services standing on purpose (their inherited log fds overwrite
+anything appended after the verdict, which is why the exit line vanished in
+earlier runs). The receipt `plan/0016#the-harness` carries the run and the
+digests; the monitors are the frontier.
+
 ## 2026-11-11 — the harness runs across the three profiles, and the passthrough waits on the fold-pin's TCP
 
 `envctl harness` asserts eleven scenario rows per carrier profile in one
