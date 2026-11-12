@@ -181,3 +181,10 @@
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
     target = plan/0016-the-carrier-environment
+
+[receipt "release" "ds-lite-punch"]
+    disposition = done
+    evidence = v0.6.2@a0105d429854ef783b27ffb3e29deeccf2e61693cc3b092a6252d53c7f7867d9
+    authorization = plan/0016
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
