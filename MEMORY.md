@@ -4,6 +4,24 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-12 — ds-lite-punch v0.6.2 cut, verified, tagged and re-pinned
+
+The gated release ran end to end (`host-lifecycle release ds-lite-punch
+--change-class neither --authorized plan/0016`): the verify gate green, the
+deps bundle staged with its recorded sha, the build in the digest-pinned musl
+image, and the artifact reproduced byte-identically at
+a0105d429854…; `software --verify-build` re-derived it from the pin
+afterwards, 1 reproduced / 0 deferred / 0 exempt. The component bumped
+0.6.1 → 0.6.2 (commit 73d7de9), tagged v0.6.2, pushed; the host re-pinned and
+recorded the release receipt. One task receipt (b4-and-service) went stale
+when envctl evolved under it and was re-derived on the v0.6.2 daemon — the
+exchange green again (the poke tuple 10.9.0.1:54995). Still the operator's:
+the Kani rung declaration (call/0050's CI lane exists; the obligations
+manifest needs the `kani:` disposition to silence the software-check HAZARD).
+Note for the next release: `host-lifecycle release` takes no `--record` flag —
+it prints the outward steps (commit, tag, push, re-pin, receipt) for the
+session to execute.
+
 ## 2026-11-11 — plan/0016's build sequence is fully discharged
 
 All eight tasks are receipted: the fidelity model, the topology, the carrier's
