@@ -1,6 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service and the deployment drift check are receipted; the harness is the frontier.
+**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check and the harness are receipted; the monitors are the frontier.
 
 ## What this milestone is
 
@@ -130,14 +130,19 @@ own installer content, and it matches again.
 ### Assert the whole exchange {#the-harness}
 
 - depends: #b4-and-service, #drift-check
-- verify: every scenario row green across the three profiles in one command, and the suite runs in CI
+- verify: python3 deploy/env/envctl.py harness
 
-One command asserting the nginx feature end to end: the pass-through name
-reaches the service's own certificate, the protected name refuses without a
-client certificate and serves with one, an unpublished name reaches nothing, the
-datagram leg closes, the relay follows the poke, the push names its view, the
-lease expires, and the stranger is refused. Iterating on the nginx feature means
-editing its source, deploying into the environment, and running this command.
+One command, one carrier profile at a time or all three, asserting the nginx
+feature end to end: the pass-through name reaches the service's own
+certificate, the protected name refuses without a client certificate and
+serves with one, an unpublished name reaches nothing, the datagram leg closes,
+the relay follows the poke, the push names its view, the lease expires, and
+the stranger is refused. The rows that depend on the carrier's behaviour
+assert per profile: the stranger crosses only under endpoint-independent
+filtering, and the passthrough's egress is the front's own socket, which a
+port-and-address dependent carrier refuses. Iterating on the nginx feature
+means editing its source, deploying into the environment, and running this
+command; the suite runs in the component's CI.
 
 ### Stand up the monitors {#the-monitors}
 
