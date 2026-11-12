@@ -694,3 +694,10 @@
     evidence = harness exits 0 with every scenario row green across the three profiles: the service's PCP grant, the mapping, the datagram leg, the relay's poke, the stranger (crossing only under endpoint-independent filtering), the push naming the daemon's TCP tuple, the passthrough (serving the service's own certificate under the address-dependent profiles, faithfully refused under the port-and-address dependent one), the protected name with and without the daemon's identity, an unpublished name, and the lease's expiry and refill. The chain needed the daemon's fold pins to present the bound address instead of the compiled hub address, the STUN responder answering over TCP, the carrier's pre-opened TCP lanes, and the PCP probe retrying past the discovery-pending answer
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-12
+
+[receipt "plan/0016#the-monitors"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py monitors
+    evidence = monitors exits 0 with both rows green: the exchange stands and the repository's correlation pair answers once each — the external monitor from the internet actor over the published path (the protected name's table with the daemon's identity, the passthrough name's certificate against the service's own, both state ok) and the router-side sampler from the b4 actor (the daemon's events counted, the line's counters read, the conntrack weight carried), both in the same JSON shape; deploy/monitor/README.md documents where each runs and what it takes
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
