@@ -680,3 +680,17 @@
     evidence = drift-check exits 0 with every row green: a fresh deployment matches the record the pipeline renders now, a seeded drift (an edited deployed poke-listener.py) fails the check naming its file, and the restoration from the repository's own installer content matches again; the probe renders with the deployment's own flags and its bytes are read as if rendered into the deployed root
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-11
+
+[receipt "plan/0016#the-harness"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py harness
+    evidence = harness exits 0 with every scenario row green across the three profiles: the mapping, the datagram leg, the relay's poke, the stranger (crossing only under endpoint-independent filtering), the push, the passthrough (served under the address-dependent profiles, faithfully refused under the port-and-address dependent one), the protected name with and without the daemon's identity, an unpublished name, and the lease's expiry and refill. The passthrough chain needed the daemon's fold pins to present the bound address instead of the compiled hub address, the STUN responder answering over TCP, the carrier's pre-opened TCP lanes, and a PCP grant retried past the discovery-pending answer
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
+
+[receipt "plan/0016#the-harness"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py harness
+    evidence = harness exits 0 with every scenario row green across the three profiles: the service's PCP grant, the mapping, the datagram leg, the relay's poke, the stranger (crossing only under endpoint-independent filtering), the push naming the daemon's TCP tuple, the passthrough (serving the service's own certificate under the address-dependent profiles, faithfully refused under the port-and-address dependent one), the protected name with and without the daemon's identity, an unpublished name, and the lease's expiry and refill. The chain needed the daemon's fold pins to present the bound address instead of the compiled hub address, the STUN responder answering over TCP, the carrier's pre-opened TCP lanes, and the PCP probe retrying past the discovery-pending answer
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-12
