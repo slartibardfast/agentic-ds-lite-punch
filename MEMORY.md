@@ -3989,3 +3989,23 @@ the hand step from the `v0.6.0`/`v0.6.1` releases is never hand-rolled again.
 One process note: L's `host-lifecycle install --help` was not a help read — the verb emitted the harness
 doors, and L removed the stray `.claude/commands` and `.opencode` trees it wrote. Read a verb's contract
 before invoking it; `--help` is not always read-only.
+
+## 2026-11-12 — the front door has a manual, and the cast has a client
+
+Written for the human factors David asked for after the release: a tight manual, `docs/manual.md` in the
+component, with the household runbook first and the client's recipes second, canonical example values
+throughout. The client half is written against a new persona, `cast/client.md`, drafted by discussion: the
+four shapes (household member on a phone, the operator roaming, a friend on a short-lived certificate, an
+agentic peer) share one profile, and its rule of two tries then a four-line report is the manual's triage
+section verbatim.
+
+What the work changed beyond the two documents: the component's link checker now reads every top-level
+docs page (`docs/*.md`), because its corpus was `README.md docs/index.md docs/operators/*.md` and a page
+outside those directories went unchecked — the manual would have shipped unchecked. The audits are clean
+on the new text. One environment fact worth keeping: the local `host-lint` binary is newer than the CI
+pin (`v0.22.0`) and flags the older corpus at the advisory tier (the monitor README's decoration dash,
+the staccato notes on README and index), findings that predate this work; the CI lane is the authority.
+
+Facts worth keeping: the protected name's `/table` is also the client's health answer, and the mint
+ceremony hands over four things (the p12, the authority, the name, the link to the client half). Static
+ports sit inside `SLOT_RANGE` while the legacy `BIND` port stays outside it; the manual states both.
