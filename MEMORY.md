@@ -4,6 +4,32 @@ Ground truth, measurements, and session state that a fresh session needs. Newest
 entry on top. Append, never rewrite; an entry that is wrong is superseded by a
 newer one, not edited.
 
+## 2026-11-11 — the harness runs across the three profiles, and the passthrough waits on the fold-pin's TCP
+
+`envctl harness` asserts eleven scenario rows per carrier profile in one
+command (about nine minutes). Green everywhere already: the mapping, the
+datagram leg, the protected name with and without the daemon's identity, the
+unpublished name, and the two differential findings — the stranger crosses
+only under rfc-bcp's endpoint-independent filtering, and the poke tuple per
+profile reflects the carrier's mapping behaviour (EIM reuses the STUN
+allocation, symmetric allocates sequentially, vm-dslite per destination; the
+relay's own map, not the policy log, is the authoritative tuple source because
+an EIM carrier never logs a second ALLOC for the poke). Converging, with the
+blockers named: the legacy `--bind` form spawns no TCP slot, so the
+passthrough row rides a PCP grant (`start_b4(pcp=True)` runs the facade on
+192.168.77.1, and the service maps its own 40001 to a suggested 40000), but
+the facade's grant answers with the carrier's actual external port, never the
+suggested one — the probe must accept the answered port. The granted TCP slot
+then dials STUN over TCP and pokes through a fold pin (`nft::add_pin`, a
+snat_map element folded at the daemon's postrouting −150), and both dials
+time out: the SYNs leave the b4 and never get answers from the front, so the
+next instrument is a tcpdump pair on the b4's eth1 and the front's pub0
+during one harness run. The lease row's withdraw also needs eyes: the relay
+logs the expiry but the refill half has failed every profile, and the row now
+prints the withdraw-time map. The harness takes no receipt until every row is
+green on every profile; the state is committed at b88e688 plus the PCP and
+diagnostics follow-ups.
+
 ## 2026-11-11 — the whole exchange runs in the carrier environment, and the leak chain's priority was the wall
 
 `envctl up-b4` stands the carrier, the front (by its pipeline), the echo
