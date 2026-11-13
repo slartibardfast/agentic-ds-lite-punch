@@ -4009,3 +4009,37 @@ the staccato notes on README and index), findings that predate this work; the CI
 Facts worth keeping: the protected name's `/table` is also the client's health answer, and the mint
 ceremony hands over four things (the p12, the authority, the name, the link to the client half). Static
 ports sit inside `SLOT_RANGE` while the legacy `BIND` port stays outside it; the manual states both.
+
+## 2026-11-13 — the lanes went red, and what fixing them taught
+
+Yesterday's entry called the pinned auditor's findings "advisory tier"; wrong on the material point.
+Measured at the CI pin (v0.22.0, built and run locally): notes do not gate (the punchy-fragments notes
+exit 0), the warning tier does (the monitor README's em dash exited 3), and the CI step fails on any
+nonzero. That one dash made every component CI run on main red since the monitor README landed —
+including the release's own push, which the release turn never read. The release receipt attests the
+artifact; the CI sweep is a separate fact, and the lanes rule means reading it before reporting done.
+
+Three more fixes rode the same sweep. The v0.6.2 bump left the man page at 0.6.1 because the component
+declared no `regen`, so the release kept bump-only behavior; the page is back-filled at main and `regen`
+now stands in `.host-software`, so the next release regenerates it itself. The carrier-harness job
+crashed on the 24.04 runner image (`apparmor_restrict_unprivileged_userns=1` denies the setgroups and
+id-map writes that entering a user namespace needs); `sudo sysctl -w
+kernel.apparmor_restrict_unprivileged_userns=0` before the harness step gave the job its first green
+run. The Site lane refused four tracked-but-unrendered September records; their own front-matter named
+plan/0009, and they moved under its `results/` beside the acceptance record.
+
+The naming lane taught twice. `host-lint lexicon add` refused a declaration for the `b4` token outright
+("masking it would blank that token out of a real tell; rename the work after its content"), so the
+environment's actor renamed to the operator's sanctioned content name, `household-bridge` — the quoted
+actor strings only; `up-b4` (a receipted command), `tap-b4`, the log and state filenames and the prose
+mentions stay. The rename also exposed that `pair()`/`attach()` baked actor names into the transient
+veth tags, and `p-carrier-household-bridge` is over the kernel's fifteen-character ifname cap: the tags
+now carry per-actor indexes (`a0`..), and the actor's name stays free to be its content name. Verify
+green locally, all three profiles green in CI on the renamed commit.
+
+Two smaller lessons. `gh run watch --exit-status | tail` swallows the exit code — the pipeline's status
+is tail's; capture `$?` unpiped or poll `--json status,conclusion`. And the symmetric lease row
+stalls/fails locally on BOTH pre-rename and renamed code (a discriminator run on stashed pre-rename
+code reproduced the identical stall: a four-minute silent phase, EXPIRE, refill, no verdict), while CI's
+carrier-harness ran the same rows green — a local-machine sensitivity, recorded here as the standing
+reminder that the local lane is the flaky one and CI is the authority.
