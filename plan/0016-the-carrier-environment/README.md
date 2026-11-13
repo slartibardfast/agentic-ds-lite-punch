@@ -50,7 +50,7 @@ measurement eras.
 One command stands the five actors up and tears them down, and a datagram from
 the internet actor reaches the carrier. The namespaces and their wiring:
 `carrier` (the simulated AFTR), `front` (where
-the nginx feature is deployed), `b4` (the real daemon), `service` (the target),
+the nginx feature is deployed), `household-bridge` (the real daemon), `service` (the target),
 `internet` (the external peer). One script stands the topology up and one tears
 it down; nothing leaks outside the namespaces. Without root it re-execs itself
 inside a user namespace, so the whole environment runs unprivileged.
