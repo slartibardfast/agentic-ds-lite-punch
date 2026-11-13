@@ -746,3 +746,39 @@
     evidence = up-b4 exits 0 with every row green on the v0.6.2 daemon: the exchange stands with the daemon, the front, the service and STUN, the mapping holds, a client datagram crosses the slot and the service's answer returns, and the push reaches the front's report
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-12
+
+[receipt "plan/0016#front-deployment"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py deploy-front
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = 0d518b6143a11238eed37578ac124ef20e2a7f40,2b97f84cb0004f7898bda10e9ef4967d36215433,fb089b756296416b60af5f3c9f6e64e84168f70e,175bddc2ff3977a3fb7717eb7c30dedb38f255b3,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = deploy-front exits 0 with every row green on the renamed control plane: mint.sh signs the authority and both identities inside the front namespace, install.sh renders the configuration and both units, the protected name answers the table over TLS with the daemon's identity, the poke teaches the relay and the map names it, and nginx reloads on the map change and still serves
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-13
+
+[receipt "plan/0016#b4-and-service"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py up-b4
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/env/carrier-policy.py, software/ds-lite-punch/main/deploy/env/service-echo.py, software/ds-lite-punch/main/deploy/env/stun-server.py, software/ds-lite-punch/main/target/x86_64-unknown-linux-musl/release/ds-lite-punch
+    digest = 397f107a707ae2db5b811c08933bfd9840997a40,f995515e3849b8d23397636aa8de371f96a97372,c25894daab7be135c3a12807e7f0bb527aaa683a,ce528e9b8320d786b79c35fbbc189ac0385510e2,f48701ae3299c116ad02033cacc8726cdc2da5f7
+    evidence = up-b4 exits 0 with every row green on a clean environment: the exchange stands with the daemon, the front, the service and STUN, the mapping holds, a client datagram crosses the slot and the service's answer returns, and the push reaches the front's report; the run needed the mint fix that mints the echo's TLS identity per run
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-13
+
+[receipt "plan/0016#drift-check"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py drift-check
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = 397f107a707ae2db5b811c08933bfd9840997a40,2b97f84cb0004f7898bda10e9ef4967d36215433,fb089b756296416b60af5f3c9f6e64e84168f70e,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = drift-check exits 0 with every row green: a clean deployment matches the record, a seeded drift fails the check naming its file, and the restored deployment matches again
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-13
+
+[receipt "plan/0016#front-deployment"]
+    disposition = done
+    verify = python3 deploy/env/envctl.py deploy-front
+    inputs = software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
+    digest = 397f107a707ae2db5b811c08933bfd9840997a40,2b97f84cb0004f7898bda10e9ef4967d36215433,fb089b756296416b60af5f3c9f6e64e84168f70e,175bddc2ff3977a3fb7717eb7c30dedb38f255b3,2f1f89bb8b15d70bee7296af0d450eaa9c1531ba,98036c97959607e6cc9d1af69f439cf281d7a8ab,6c4dd94be43a037ba3445ca374c5b956f6839629,b38ec06e4583c25ede5952534e889aaf8016f0d1
+    evidence = deploy-front exits 0 with every row green on the final control plane: mint.sh signs the authority and both identities inside the front namespace, install.sh renders the configuration and both units, the protected name answers the table over TLS with the daemon's identity, the poke teaches the relay and the map names it, and nginx reloads on the map change and still serves
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-13
