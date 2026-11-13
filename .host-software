@@ -12,6 +12,12 @@
 	branch = main
 	toolchain = ghcr.io/rust-cross/rust-musl-cross@sha256:ce75e9174325d4fbb3de85c309e2d7ca29f7500169bc4b5d2c611ff7e86d549a
 	build = cargo build --release --target x86_64-unknown-linux-musl
+	# The manual page and the help text embed the crate version, so the
+	# release runs this between the bump and the release commit. The CI
+	# docs job regenerates both and fails on any diff, which is how the
+	# gap surfaced: the v0.6.2 bump left the page at 0.6.1 until main
+	# back-filled it.
+	regen = cargo run --quiet --manifest-path tools/argdoc/Cargo.toml --target x86_64-unknown-linux-gnu
 	artifact = target/x86_64-unknown-linux-musl/release/ds-lite-punch a0105d429854ef783b27ffb3e29deeccf2e61693cc3b092a6252d53c7f7867d9
 	deps-bundle = https://github.com/slartibardfast/ds-lite-punch/releases/download/deps-vendor-v1/deps-vendor.tar.gz 7341bc06d101ebea32736db1d2d333af3d3b051a44590a521294b985b5e29730
 # The toolchain is a digest-pinned container rather than a target triple:
