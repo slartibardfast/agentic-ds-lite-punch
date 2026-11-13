@@ -18214,6 +18214,14 @@ stalls/fails locally on BOTH pre-rename and renamed code (a discriminator run on
 code reproduced the identical stall: a four-minute silent phase, EXPIRE, refill, no verdict), while CI's
 carrier-harness ran the same rows green — a local-machine sensitivity, recorded here as the standing
 reminder that the local lane is the flaky one and CI is the authority.</p>
+<p>The same sweep surfaced a real defect the receipts machinery was built to catch: <code>up-b4</code> — the receipted
+verify of plan/0016#b4-and-service — was broken by construction on a clean environment, because it
+started the echo with TLS certificates only the harness flow ever minted; every green <code>up-b4</code> before
+today leaned on leftover <code>/tmp/dslp-env</code> state. <code>cmd_up_b4</code> now calls <code>mint_service_cert()</code> per run
+(component 92f0260), the clean-slate run went green, and the three stale receipts re-recorded with
+fresh digests. The re-derive verb takes a directory, not an anchor: the working refresh is run the
+verify, then <code>tasks --record plan/0016#&lt;anchor&gt; --disposition done --record-digests --evidence ...</code>,
+and record LAST, after the final code state, or the record re-stales on its own edit.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
