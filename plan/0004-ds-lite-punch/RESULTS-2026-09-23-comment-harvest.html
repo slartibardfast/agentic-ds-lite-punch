@@ -1,0 +1,1106 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The comment harvest - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../../cast/client.html"><strong aria-hidden="true">1.3.</strong> Client: the remote member of the household</a></li><li class="chapter-item expanded "><a href="../../cast/operator.html"><strong aria-hidden="true">1.4.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../../PLAN.html"><strong aria-hidden="true">2.</strong> PLAN: milestone index</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/IMPLEMENTATION.html"><strong aria-hidden="true">2.1.1.</strong> ds-lite-punch implementation brief v2: facades + observation rescue over one slot engine</a></li><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html"><strong aria-hidden="true">2.1.2.</strong> RESULTS-2026-09-17-switch-nat-type: NAT type A on the Virgin Media line, and what earned it</a></li><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-23-comment-harvest.html" class="active"><strong aria-hidden="true">2.1.3.</strong> The comment harvest</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/ANALYSIS-2026-09-13.html"><strong aria-hidden="true">2.2.1.</strong> ANALYSIS-2026-09-13: soak timing, the AFTR refreshes its mappings on inbound</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13-A1.html"><strong aria-hidden="true">2.2.2.</strong> RESULTS-2026-09-13-A1: the reply-through-mapping leg (the sink shares the relay pin)</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13-run2.html"><strong aria-hidden="true">2.2.3.</strong> RESULTS-2026-09-13-run2: A3 keepalive-pause soak with the forward leg open</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13-run3.html"><strong aria-hidden="true">2.2.4.</strong> RESULTS-2026-09-13-run3: the probe-quiet pause (mapping survival under silence)</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13.html"><strong aria-hidden="true">2.2.5.</strong> RESULTS-2026-09-13: A3 keepalive-pause soak (first campaign)</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/results/index.html"><strong aria-hidden="true">2.2.6.</strong> results</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/results/RESULTS-2026-09-13-exam.html"><strong aria-hidden="true">2.3.1.</strong> RESULTS-2026-09-13: PSN examination (organic failure, OS update, NAT Type 2)</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-13-c3.html"><strong aria-hidden="true">2.4.1.</strong> RESULTS-2026-09-13-c3: AFTR TCP mapping idle lifetime</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-13-pinning.html"><strong aria-hidden="true">2.4.2.</strong> RESULTS-2026-09-13-pinning: the 2 s keepalive and the external IP</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-13-tcp-datapath.html"><strong aria-hidden="true">2.4.3.</strong> RESULTS-2026-09-13-tcp-datapath: staged line verification</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-15-facade-review.html"><strong aria-hidden="true">2.4.4.</strong> RESULTS-2026-09-15-facade-review: the E1-E8 facade review and its fixes</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-15-ps3-facade.html"><strong aria-hidden="true">2.4.5.</strong> RESULTS-2026-09-15-ps3-facade: E6 console sign-off with the facade live</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.html"><strong aria-hidden="true">2.4.6.</strong> RESULTS-2026-09-17-kani-state: the Kani lane's true state and what is left in it</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-10-07-the-kani-rung-on-a-runner.html"><strong aria-hidden="true">2.4.7.</strong> The Kani rung on a runner: the tree's own harnesses verify, and the facade's are in flight</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/RESULTS-2026-09-17-bench-matrix.html"><strong aria-hidden="true">2.5.1.</strong> T4 results: the client-class matrix on the deployed box</a></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/RESULTS-2026-09-17-miniupnpc-interop.html"><strong aria-hidden="true">2.5.2.</strong> RESULTS-2026-09-17-miniupnpc-interop: the reference client reads the v2 listing, and what it found</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/index.html"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/IMPLEMENTATION.html"><strong aria-hidden="true">2.6.1.</strong> Implementation plan: the mapping hold, its admission, and the signalling</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-17-implementation.html"><strong aria-hidden="true">2.6.2.</strong> Results: the hold, its admission, and the signalling, as built</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-acceptance.html"><strong aria-hidden="true">2.6.3.</strong> Results: the acceptance run on the router, and the two defects it found</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-collision-yield.html"><strong aria-hidden="true">2.6.4.</strong> A device's flow onto a leased port makes the daemon move that lease</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-field-session.html"><strong aria-hidden="true">2.6.5.</strong> Results: the field session, the hold under real play, and a state-directory incident</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-held-mapping-silence.html"><strong aria-hidden="true">2.6.6.</strong> A held mapping answers the outside across its client's silence</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-tuple-analysis.html"><strong aria-hidden="true">2.6.7.</strong> The uplink's tuple behaviour, read from the daemon's own log</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-19-soak.html"><strong aria-hidden="true">2.6.8.</strong> The daemon over seventeen hours: flat, and no state write failed</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/index.html"><strong aria-hidden="true">2.7.</strong> Milestone: the carrier's filtering, proved and watched</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/PROCEDURE-2026-10-07-the-lobby-case.html"><strong aria-hidden="true">2.7.1.</strong> Procedure: the lobby case on a real console</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-alarm-proof.html"><strong aria-hidden="true">2.7.2.</strong> The watch counts the helper's probe, and silence raises the alarm</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-inbound-translation.html"><strong aria-hidden="true">2.7.3.</strong> An arrival at a slot port is translated to its client</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-slot-datapath-defects.html"><strong aria-hidden="true">2.7.4.</strong> Two datapath defects, written up</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-stranger-probe.html"><strong aria-hidden="true">2.7.5.</strong> The line forwards a stranger's datagram to a held mapping</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-21-the-probe-the-translation-hid.html"><strong aria-hidden="true">2.7.6.</strong> The probe the translation hid</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-23-the-watch-that-lost-its-own-rule.html"><strong aria-hidden="true">2.7.7.</strong> The watch that lost its own rule</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0011-documentation/index.html"><strong aria-hidden="true">2.8.</strong> Milestone: the documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0011-documentation/results/RESULTS-2026-09-22-documentation.html"><strong aria-hidden="true">2.8.1.</strong> The documentation, delivered</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/index.html"><strong aria-hidden="true">2.9.</strong> Milestone: the front door</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-09-27-the-remap-disposition.html"><strong aria-hidden="true">2.9.1.</strong> The last receipt's blocker, and the two ways the doctrine offers out of it</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-09-28-the-canonical-build-and-the-lanes.html"><strong aria-hidden="true">2.9.2.</strong> The canonical build, and the lanes that did not match it</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-10-02-the-front-deployed-on-the-rig.html"><strong aria-hidden="true">2.9.3.</strong> The front, deployed on the rig</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-10-02-the-granted-tcp-slot-at-the-lan.html"><strong aria-hidden="true">2.9.4.</strong> The granted TCP slot at the LAN, and the wall outside it</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-26-stranger-arrival.html"><strong aria-hidden="true">2.9.5.</strong> The stranger's arrival: a held port admits its peers, not the world</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-front-door.html"><strong aria-hidden="true">2.9.6.</strong> The front door: what the line, the front and a deployment each hold</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-pinhole.html"><strong aria-hidden="true">2.9.7.</strong> The pinhole: a held port admits the peer the line has spoken to</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-return-path.html"><strong aria-hidden="true">2.9.8.</strong> The TCP fault is the client's return path, not the box's input path</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-slot-complete.html"><strong aria-hidden="true">2.9.9.</strong> The TCP slot's protocol is whole; a service host is what remains</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-tcp-slot.html"><strong aria-hidden="true">2.9.10.</strong> The TCP slot: a tuple that needed a server speaking over TCP</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-tcp-syn.html"><strong aria-hidden="true">2.9.11.</strong> The TCP poke admits the SYN; the SYN-ACK is the fault that remains</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0013-the-fronts-two-views/index.html"><strong aria-hidden="true">2.10.</strong> The front's two views</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/index.html"><strong aria-hidden="true">2.11.</strong> The front's legs on the poked socket</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-corrected-the-datagram-leg-carries-traffic.html"><strong aria-hidden="true">2.11.1.</strong> Corrected: the datagram leg carries traffic, and the reply path is what is missing</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-admission-rules-so-far.html"><strong aria-hidden="true">2.11.2.</strong> The admission rules, so far</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-datagram-leg-at-the-front.html"><strong aria-hidden="true">2.11.3.</strong> The datagram leg at the front, and the edge that will not carry it</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-fold-installed-and-inert.html"><strong aria-hidden="true">2.11.4.</strong> The fold is installed and inert, and the lead is in the daemon's own log</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-pin-cannot-carry-a-services-reply.html"><strong aria-hidden="true">2.11.5.</strong> The pin cannot carry a service's reply, and what a front-door slot needs instead</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-round-trip-closes.html"><strong aria-hidden="true">2.11.6.</strong> The round trip closes: the front door carried a datagram both ways</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-closes.html"><strong aria-hidden="true">2.11.7.</strong> The TCP leg closes: the front door carried a TLS client to the service behind the line</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-is-one-fix-away.html"><strong aria-hidden="true">2.11.8.</strong> The TCP leg is one fix away, and the front's log names it</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-needs-a-tuple.html"><strong aria-hidden="true">2.11.9.</strong> The TCP leg needs a tuple the front does not have</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-07-the-admission-rules.html"><strong aria-hidden="true">2.11.10.</strong> The admission rules, measured</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-07-the-release-and-both-legs.html"><strong aria-hidden="true">2.11.11.</strong> The release carries both legs, and the front's relay was the stale half</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0015-the-routers-name/index.html"><strong aria-hidden="true">2.12.</strong> The router's name on the LAN</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0015-the-routers-name/results/NOTE-2026-11-11-the-name-paths.html"><strong aria-hidden="true">2.12.1.</strong> The name's paths, measured</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0016-the-carrier-environment/index.html"><strong aria-hidden="true">2.13.</strong> The carrier environment for end-to-end testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.html"><strong aria-hidden="true">2.13.1.</strong> Research: the carrier model, generalised</a></li><li class="chapter-item expanded "><a href="../../plan/0016-the-carrier-environment/results/RESULTS-2026-11-11-the-policy-rows-so-far.html"><strong aria-hidden="true">2.13.2.</strong> The policy rows so far: thirteen green, one open</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li><li class="chapter-item expanded "><a href="../../call/0026-tcp-keepalive-is-signalled-not-injected.html"><strong aria-hidden="true">4.15.</strong> The TCP half of the hold: what can be held, and what can only be said</a></li><li class="chapter-item expanded "><a href="../../call/0027-collisions-for-punched-ports.html"><strong aria-hidden="true">4.16.</strong> Collision rules for ports nobody allocated: the punch and the lease table</a></li><li class="chapter-item expanded "><a href="../../call/0028-a-shared-tuple-is-reachable-and-the-incumbent-keeps-it.html"><strong aria-hidden="true">4.17.</strong> A shared tuple is reachable, and the incumbent keeps it</a></li><li class="chapter-item expanded "><a href="../../call/0029-the-named-device-is-the-admission.html"><strong aria-hidden="true">4.18.</strong> The hold's admission is the named device, its liveness is the device and its peers, and a failed write is never fatal</a></li><li class="chapter-item expanded "><a href="../../call/0030-a-mapping-ends-with-its-device.html"><strong aria-hidden="true">4.19.</strong> A mapping asked for by a device ends when that device leaves, and never when it is quiet</a></li><li class="chapter-item expanded "><a href="../../call/0031-the-datapath-needs-no-listing.html"><strong aria-hidden="true">4.20.</strong> The datapath never needs a listing, and an intermittent nft crash is tolerated</a></li><li class="chapter-item expanded "><a href="../../call/0032-the-builder-of-record-is-the-lane.html"><strong aria-hidden="true">4.21.</strong> The builder of record is the CI lane, and a deployment takes its artifact</a></li><li class="chapter-item expanded "><a href="../../call/0033-the-filtering-is-watched-from-outside.html"><strong aria-hidden="true">4.22.</strong> The filtering is watched by a stranger's probe, and the daemon is told</a></li><li class="chapter-item expanded "><a href="../../call/0034-the-repositories-are-public-and-a-tag-is-the-release.html"><strong aria-hidden="true">4.23.</strong> The repositories are public, and a tag is the release</a></li><li class="chapter-item expanded "><a href="../../call/0035-plain-language-for-the-program.html"><strong aria-hidden="true">4.24.</strong> Plain language for the program: keepalive, owned, entry</a></li><li class="chapter-item expanded "><a href="../../call/0036-the-pin-names-the-tag-the-bytes-come-from.html"><strong aria-hidden="true">4.25.</strong> The release's bytes move with the version, so the pin names the tag</a></li><li class="chapter-item expanded "><a href="../../call/0037-comments-are-one-line-and-technical.html"><strong aria-hidden="true">4.26.</strong> Comments are one line, and technical</a></li><li class="chapter-item expanded "><a href="../../call/0038-the-front-door-is-a-held-port.html"><strong aria-hidden="true">4.27.</strong> A port is served from outside the line by a front the daemon tells</a></li><li class="chapter-item expanded "><a href="../../call/0039-the-control-channel-carries-a-tls-client.html"><strong aria-hidden="true">4.28.</strong> The control channel carries a TLS client, and the build carries a bundle</a></li><li class="chapter-item expanded "><a href="../../call/0040-admission-is-a-certificate-minted-on-the-line.html"><strong aria-hidden="true">4.29.</strong> A client's admission is a certificate the line minted</a></li><li class="chapter-item expanded "><a href="../../call/0041-the-fronts-proofs-are-the-components-lane.html"><strong aria-hidden="true">4.30.</strong> The front's proofs are the component's lane, and a deployment's are the recipe's</a></li><li class="chapter-item expanded "><a href="../../call/0042-the-poke-delivers-the-tuple.html"><strong aria-hidden="true">4.31.</strong> The poke delivers the tuple, so the push waits for a payload</a></li><li class="chapter-item expanded "><a href="../../call/0043-the-artifact-lanes-build-the-canonical-recipe.html"><strong aria-hidden="true">4.32.</strong> The artifact lanes build the canonical recipe</a></li><li class="chapter-item expanded "><a href="../../call/0044-a-granted-tcp-slot-is-served-by-the-daemons-own-connection.html"><strong aria-hidden="true">4.33.</strong> A granted TCP slot is served by the daemon's own connection</a></li><li class="chapter-item expanded "><a href="../../call/0045-the-control-channel-carries-the-tuple-the-front-sees.html"><strong aria-hidden="true">4.34.</strong> The control channel carries the tuple the front sees</a></li><li class="chapter-item expanded "><a href="../../call/0046-the-front-learns-from-the-poke-and-from-the-push.html"><strong aria-hidden="true">4.35.</strong> The front learns from the poke first, and the push names itself when it fills in</a></li><li class="chapter-item expanded "><a href="../../call/0048-a-slot-that-pokes-a-front-answers-as-the-peer.html"><strong aria-hidden="true">4.36.</strong> A slot that pokes a front answers its service as the peer</a></li><li class="chapter-item expanded "><a href="../../call/0049-the-fronts-legs-ride-the-poked-socket.html"><strong aria-hidden="true">4.37.</strong> The front's legs ride the poked socket, and the firewall's place carries the TCP one</a></li><li class="chapter-item expanded "><a href="../../call/0050-the-kani-rung-runs-on-a-runner.html"><strong aria-hidden="true">4.38.</strong> The Kani rung runs on a runner, and the tree's own harnesses gate it</a></li><li class="chapter-item expanded "><a href="../../call/0051-the-spine-moves-to-4c8ae9fd.html"><strong aria-hidden="true">4.39.</strong> The spine moves to 4c8ae9fd, and the ledger claims it</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../GOAL.html"><strong aria-hidden="true">6.1.</strong> The active goal</a></li><li class="chapter-item expanded "><a href="../../MIGRATION.html"><strong aria-hidden="true">6.2.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../../STRUCTURE.html"><strong aria-hidden="true">6.3.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../../UPGRADING.html"><strong aria-hidden="true">6.4.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/INVESTIGATION.html"><strong aria-hidden="true">8.</strong> INVESTIGATION: the Virgin Media ds-lite possibility space (superseded)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.1.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li><li class="chapter-item expanded "><a href="../../call/0047-a-front-door-slot-folds-its-services-replies.html"><strong aria-hidden="true">8.2.</strong> A front-door slot folds its service's replies (superseded)</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-comment-harvest"><a class="header" href="#the-comment-harvest">The comment harvest</a></h1>
+<ul>
+<li>Date: 2026-09-23</li>
+<li>Component: ds-lite-punch at <code>13a5fc06</code> (the <code>v0.3.4</code> tag), whose source
+comments are being collapsed to one line each</li>
+<li>Why: a comment run of more than one line dilutes the code, so the rule from
+this date is one line, technical only. This record takes what the long
+comments stated and nothing else does, so the collapse loses no fact.</li>
+</ul>
+<h2 id="what-this-record-is-and-what-it-is-not"><a class="header" href="#what-this-record-is-and-what-it-is-not">What this record is, and what it is not</a></h2>
+<p>It is the residue: the facts that lived only in a source comment. It is not a
+copy of the design, and not a copy of the measurements. The comparison
+documents were <code>plan/0004-ds-lite-punch/IMPLEMENTATION.md</code> (the design brief),
+<code>MEMORY.md</code>, and the results files of plan/0007, plan/0008, plan/0009 and
+plan/0010. Facts those documents already carry are named below as carried, and
+not restated.</p>
+<p>The full pre-collapse text of every comment stays in the git history of the
+commit that removed it, one commit per file.</p>
+<h2 id="persistence-and-the-two-state-directories"><a class="header" href="#persistence-and-the-two-state-directories">Persistence, and the two state directories</a></h2>
+<p><code>persist.rs</code> and <code>publish.rs</code> write the daemon's state into <strong>two</strong> directories,
+and nothing else in the project says so. This is the finding the harvest paid
+for, because the manual page and the operator pages stated one directory.</p>
+<div class="table-wrapper"><table><thead><tr><th>Directory</th><th>Files</th><th>Written by</th></tr></thead><tbody>
+<tr><td><code>/tmp/dslp</code>, a fixed path (<code>persist::DEFAULT_DIR</code>)</td><td><code>epoch</code>, <code>leases.tsv</code>, <code>upnp.tsv</code></td><td><code>persist.rs</code>, on every change, atomically</td></tr>
+<tr><td>the state directory, <code>--state-dir</code>, default <code>/run/ds-lite-punch</code></td><td><code>tuple</code>, <code>tuple-&lt;R&gt;</code>, <code>upnp-ident</code>, and <code>dp.tsv</code></td><td><code>publish.rs</code>, <code>upnpsvc.rs</code></td></tr>
+</tbody></table>
+</div>
+<p>Confirmed on the router on 2026-09-23. The fixed path held three files:</p>
+<pre><code class="language-host-lint:ignore">`epoch` (11 bytes, written 2026-09-14), `leases.tsv` (38 bytes), `upnp.tsv` (empty)
+</code></pre>
+<p>Under the state directory sat <code>tuple</code>, <code>tuple-40000</code> and <code>upnp-ident</code>. The init
+script seeds the DeviceProtection store at <code>$STATE/dp.tsv</code>, where <code>STATE</code> is
+<code>/run/ds-lite-punch</code>.</p>
+<p>Both directories are on temporary filesystems, so every file survives a restart
+of the daemon and none of them survives a reboot.</p>
+<p><strong>Carried elsewhere:</strong> that a lease record and a mapping share a lifetime
+(MEMORY, the lease-churn work), and the tuple file's role in answering a client
+(call/0022, the man page's FILES section).</p>
+<h2 id="the-tuple-files-lifetime-and-the-write-that-publishes"><a class="header" href="#the-tuple-files-lifetime-and-the-write-that-publishes">The tuple file's lifetime, and the write that publishes</a></h2>
+<p>From <code>publish.rs</code>, two facts worth keeping as one line each in the code:</p>
+<ul>
+<li>A tuple file goes when its mapping goes. The file holds the <strong>learned</strong> tuple,
+so one that outlives its mapping is a lie a client can act on: a later mapping
+that takes the same bind port would be answered with the dead port. The box
+found this on 2026-09-17 with three revoked slots still carrying their old
+tuples.</li>
+<li>Renaming a temporary file over the good one is what publishes a record, so the
+rename must happen only when the write did. Renaming unconditionally published
+an empty file over a good table when the state directory was full, which is
+what a zero-byte <code>upnp.tsv</code> and a long-running daemon were on the router on
+2026-09-18.</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the emit helpers exist because <code>panic = "abort"</code> makes a
+panicking <code>println!</code> fatal and a poisoned mutex abort the next request
+(call/0029). The memory-first tuple read is documented in the manual page's
+FILES section.</p>
+<h2 id="the-netlink-conntrack-delete-abandoned"><a class="header" href="#the-netlink-conntrack-delete-abandoned">The netlink conntrack delete, abandoned</a></h2>
+<p><code>ct.rs</code> is a documented dead end, and the reason is a kernel-build quirk:</p>
+<ul>
+<li>Deleting a conntrack entry by netlink returns <code>EINVAL</code> on this 6.12.35
+ImmortalWrt build for <strong>every</strong> encoding tried (family 0 and 2, with and
+without <code>NLA_F_NESTED</code>, original and reply direction, with and without a
+zone), while a canonical libmnl-shaped message fails the same way. No
+conntrack tool is installable from the router's package set.</li>
+<li>The encodings were bisected with a <code>--ct-probe</code> flag that creates its own
+conntrack entry from a fresh local socket, tries each variant against it, and
+prints each acknowledgement code. That flag stays in the binary for
+re-bisecting.</li>
+<li>The mechanism that replaced it is the self-pin: an explicit
+<code>(NAT, R_nat) → (NAT, R_nat)</code> map element makes the shadow's keepalives egress
+under the observed tuple with no deletion at all, by the same explicit-tuple
+source translation the slot pins use.</li>
+<li>Why the deletion was wanted: the kernel source-translates the shadow's
+keepalives to a fresh ephemeral port (measured on this box 2026-09-02,
+41077 to 1024), so the refresh lands on a mapping of its own while the
+observed one dies at the AFTR's timeout.</li>
+<li>The wire shape is recorded here because the code is dead: the tuple bytes
+appear big-endian in the payload, and nested attributes need
+<code>NLA_F_NESTED</code> or strict nfnetlink validation rejects them with <code>EINVAL</code>.</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the self-pin is item G3(c) of the brief's observation
+engine and appears in the engine's own comments and in MEMORY; the ephemeral
+port measurement is in MEMORY.</p>
+<h2 id="the-slot-engines-gates-and-budgets"><a class="header" href="#the-slot-engines-gates-and-budgets">The slot engine's gates and budgets</a></h2>
+<p>None of these constants appears anywhere outside the component.</p>
+<div class="table-wrapper"><table><thead><tr><th>What it governs</th><th>Value</th><th>Where</th></tr></thead><tbody>
+<tr><td>the engine's tick</td><td>2 s, chosen under the AFTR's 5 to 10 s idle timeout</td><td>engine.rs:52</td></tr>
+<tr><td>the grace before a candidate is claimed</td><td>3 ticks, about 6 s, counted from the entry's death, which itself lags the device's silence</td><td>engine.rs:54</td></tr>
+<tr><td>the silence that makes a candidate</td><td>3 ticks (<code>KEEPALIVE_AFTER_TICKS</code>), so a flow the device still refreshes is never claimed</td><td>engine.rs:564</td></tr>
+<tr><td>the silence that releases a hold</td><td>150 ticks (<code>LONG_QUIET_TICKS</code>), the backstop behind the presence probe</td><td>engine.rs:570</td></tr>
+<tr><td>failed LAN probes that release a hold</td><td>3 (<code>DEV_MISSES_TO_RELEASE</code>)</td><td>engine.rs:575</td></tr>
+<tr><td>the device probe cadence</td><td>one probe every 3 ticks, round robin, so a tick never waits on two</td><td>engine.rs:577</td></tr>
+<tr><td>holds per device</td><td>4</td><td>engine.rs:239</td></tr>
+<tr><td>the lease stamp rate</td><td>one last-seen write per slot per 15 s (<code>LEASE_STAMP_MIN_S</code>), ample for a 24 hour grace</td><td>main.rs:441</td></tr>
+<tr><td>the GC loop</td><td>every 60 s, and the facade's own GC takes over when the facade is on</td><td>main.rs:694</td></tr>
+<tr><td>the TCP keepalive interval</td><td>60 s (<code>TCP_KEEPALIVE_SECS</code>), strictly under the 120 s silent-death bound</td><td>tcpslot.rs:26</td></tr>
+<tr><td>the vote's servers</td><td><code>MAX_VOTE_SERVERS = 4</code>, and two are needed for a vote</td><td>vote.rs:30</td></tr>
+</tbody></table>
+</div>
+<p>Behaviour the constants serve, one line each:</p>
+<ul>
+<li><code>ExitReason::DeviceGone</code> is the third exit: a keepalive for a device that is
+off or asleep releases nothing anyone uses (engine.rs:61).</li>
+<li><code>release_reason</code> is the one place a keepalive's end is decided, and it is pure
+so the policy is testable without a clock; <code>long_quiet</code> arrives as a
+parameter (engine.rs:581).</li>
+<li>The young-candidate map keys on the bind tuple and holds the device's packet
+count and its quiet ticks; a candidate leaves it when it leaves the live set
+(engine.rs:205).</li>
+<li>A candidate takes its packet baseline from its own host port until the table carries a count (engine.rs:333).</li>
+<li>The report set keeps only tuples that are still live, in both modes, so a
+tuple that is gone cannot keep a place in it (engine.rs:281).</li>
+<li>The per-flow tuple report fires on the first look and on every change, so a
+re-key appears beside its decision (engine.rs:544).</li>
+<li><code>PinOps::del</code> removes a self-pin only, guarded by the NAT address: a device-key
+element is not ours to take away with the tuple (engine.rs:123).</li>
+<li><code>NftPins::add</code> ignores its host arguments and always installs the self-pin;
+the device pin is a separate call (engine.rs:113).</li>
+<li><code>device_packets</code> sums the entries whose NAT side is the tuple and whose origin
+is the device, because a game talking to several peers is several entries on
+one tuple; the daemon's own writes carry the NAT address as origin and count
+out (engine.rs:607).</li>
+<li>A slot's own keepalive egresses with the NAT address as origin, so it can never
+be read as the device's liveness (engine.rs:437).</li>
+<li>The used set is a sorted <code>Vec</code> and uses <code>swap_remove</code>, because a tail <code>memmove</code>
+stalls the Kani solver and slot order carries no meaning (slot.rs:124).</li>
+<li>The <code>avoid</code> reservation is sorted, unique, filtered to the allocator's range,
+and replaced on every refresh instead of accumulated, so a tuple that goes
+quiet stops reserving its port (slot.rs:176).</li>
+<li><code>find_free_bind_port</code> scans the live slots directly, so Kani sees iteration
+over arrays and no intermediate collection (slot.rs:210).</li>
+<li>A lease keeps wall-clock integers instead of <code>Instant</code> so its arithmetic is
+provable; <code>expires_at_unix == 0</code> means none, for a static (slot.rs:52).</li>
+<li><code>StaticMapErr</code> stays <code>Copy</code> and heap-free because the proofs walk its error
+paths; the human-readable text is built at the <code>main.rs</code> boundary (slot.rs:420).</li>
+<li><code>insert_static</code> is UDP by definition, the classic relay datapath; a TCP pin
+arrives only through the grant path (slot.rs:414).</li>
+<li>Restore sets <code>expires_at_unix = now + remaining.clamp(1, lifetime)</code> and seeds
+<code>last_activity_unix = now</code>, so a grant that survived a restart is never reaped
+at once; the last-seen clock is not persisted (slot.rs:588).</li>
+<li><code>gc</code> requires an expired lease, past the grace and unbusy, and never touches a
+static (slot.rs:476).</li>
+<li>TCP grants sit outside the idle policy: a live splice can be control-silent,
+and the AFTR reaps an idle TCP mapping at its own bound (slot.rs:511).</li>
+<li><code>evict_idle_client</code> takes the longest-idle UDP grant of another client; the
+requester's own grants are never candidates (slot.rs:527).</li>
+<li><code>by_upnp_key</code> treats the bookkeeping external port as the bind port, because
+the AFTR's real port is learned by STUN and reported separately, so delete and
+enumerate stay unique on the control point's requested port (slot.rs:337).</li>
+<li><code>avoid_steering</code> reports only the live tuples below the chosen port that no
+slot holds, which is the set the rule decided; empty means the choice was free
+(slot.rs:311).</li>
+<li><code>move_bind_port</code> pushes the old port into <code>avoid</code> before probing, because that
+tuple is a device's now (slot.rs:283).</li>
+<li>The <code>Cdc</code> trait is <code>Send + Sync</code> because the backends live behind an <code>Arc</code> in a
+spawned task and the engine reads the lease table across an await while holding
+the lock (cdc.rs:41).</li>
+<li><code>NftCdc</code> resolves a tuple's identity once from a <code>/proc</code> scan and caches it
+until the mirror evicts the tuple, so steady state reads no proc files
+(cdc.rs:103).</li>
+<li>The mirror carries the bind tuples only, and identity is absent from it, which
+is why the code reads both sources (cdc.rs:106).</li>
+<li><code>reconcile</code>'s budget caps how many fresh tuples resolve per tick (cdc.rs:284).</li>
+<li>The vote's pending observations are slotted per server and use a sentinel for a
+server that has not weighed in, so no collision bookkeeping is needed
+(vote.rs:47).</li>
+<li>Re-seeing the confirmed value clears every pending suspicion, because the
+disagreement was transient (vote.rs:77).</li>
+<li>The vote's proofs are named for the five properties they carry (vote.rs:130).</li>
+</ul>
+<h2 id="the-observation-arm"><a class="header" href="#the-observation-arm">The observation arm</a></h2>
+<ul>
+<li>
+<p>The conntrack line layout is documented in the code, token by token, including
+the optional flags and the trailing mark, zone and use fields (obs.rs:36). The
+kernel version it documents:</p>
+<pre><code class="language-host-lint:ignore">the 6.12 kernel
+</code></pre>
+</li>
+<li>
+<p>The parse assumes the protocol in the fourth token and rejects a line with
+fewer than 16 tokens, so a kernel layout change yields no candidates and no
+error (obs.rs:229).</p>
+</li>
+<li>
+<p>The reply half is found at the position of the second <code>src=</code> token, which is
+where the original window ends (obs.rs:244).</p>
+</li>
+<li>
+<p><code>orig_dport</code> is never parsed and is always zero, because nothing consumes it;
+the symbolic proof entry pins both ports to zero so the tree stays small
+(obs.rs:266).</p>
+</li>
+<li>
+<p>The predicate requires the reply destination to be the VM address, since only
+flows that egress that line have a mapping to refresh (obs.rs:154).</p>
+</li>
+<li>
+<p><code>scan</code> returns candidates in stable line order and caps a scan at the refresh
+budget (obs.rs:189).</p>
+</li>
+<li>
+<p>The parser's fixtures are real conntrack lines captured on the router on
+2026-08-31, and <code>cdc.rs</code> reuses them (obs.rs:294).</p>
+</li>
+<li>
+<p>The proc backend takes a test path, and a missing proc file yields an empty
+tick instead of a panic (cdc.rs:65).</p>
+</li>
+<li>
+<p>The backends are named <code>proc</code> and <code>nft</code>, and the chosen name is what the
+startup observe event reports (cdc.rs:100).</p>
+</li>
+</ul>
+<h2 id="the-nft-datapath-and-the-spellings-that-fail-in-silence"><a class="header" href="#the-nft-datapath-and-the-spellings-that-fail-in-silence">The nft datapath, and the spellings that fail in silence</a></h2>
+<p>This is the most valuable residue of the harvest, because each entry is a
+spelling or a shape that was measured failing with nothing to show for it.</p>
+<div class="table-wrapper"><table><thead><tr><th>Spelling or shape</th><th>What a different spelling does</th><th>Where</th></tr></thead><tbody>
+<tr><td><code>priority -150</code> for the translation chains</td><td>the nat hook floor is -200 and nft rejects that value itself, validated on the box; the priority must also stay below the firewall's source translation at -100, or the map is handed the post-translation tuple</td><td>nft.rs:17</td></tr>
+<tr><td><code>meta l4proto udp</code></td><td>a bare <code>udp</code> before a payload expression is a hard syntax error, and before the map statement it parses ambiguously; the payload case shipped broken through two releases</td><td>nft.rs:22</td></tr>
+<tr><td><code>counter name "carrier_probe"</code>, quoted</td><td>the install compares its text with the chain listing, and the listing quotes the name; unquoted, the install reads its own rule as absent and adds a copy per poll, 39 of them in minutes</td><td>nft.rs:589</td></tr>
+<tr><td>the install reads the chain back</td><td>the listing is the only oracle for whether a rule landed, and a repair reported without one announced a change every five seconds</td><td>nft.rs:762</td></tr>
+<tr><td><code>insert</code> for the counting rule</td><td>the firewall's own accepts sit earlier in the same chain, so the rule is inserted ahead of them to count at all</td><td>nft.rs:672</td></tr>
+<tr><td><code>update</code> for the mirror element</td><td>the element's 15 s timeout goes unrefreshed, so it expires under a 2 s keepalive and the engine reads the flow as gone</td><td>nft.rs:498</td></tr>
+<tr><td>the inbound rule is a translation, and the grant and revoke work on the translation alone</td><td>a reintroduced pin creates the two-tuple fault call/0014 settled against; the grant installs no pin, so a pin delete could only fail, 54 error lines in one session on 2026-09-20</td><td>nft.rs:192</td></tr>
+<tr><td>the translation chain is installed before its rule</td><td>without the chain the install errors, and the daemon refuses to start, which is the only safe direction</td><td>nft.rs:213</td></tr>
+<tr><td>each revoke statement runs on its own</td><td>a batch is all-or-nothing, so one absent element cancels the rest and leaves a port accepted with nothing translating it</td><td>nft.rs:330</td></tr>
+<tr><td>the revoke is read back</td><td>a translation left behind can deliver another client's traffic to a port that was reallocated</td><td>nft.rs:349</td></tr>
+<tr><td>the pin install replaces a stale element</td><td>a stale value mis-translates the device's traffic to a port the device has left, and the fault shows up nowhere</td><td>nft.rs:838</td></tr>
+<tr><td>the accept sets are flushed at install, and the two accept rules stay</td><td>flushing keeps a port's life to the life of the process that wanted it, and leaving the two rules avoids churn on every restart</td><td>nft.rs:229</td></tr>
+<tr><td>a set reference is table-scoped</td><td>the input counting rule reaches the accept set because both live in the firewall's table; moving either breaks the match silently</td><td>nft.rs:571</td></tr>
+</tbody></table>
+</div>
+<p>Further one-liners. The legacy sweep takes only the lines whose comment names the
+daemon, so the sets' own rules stay outside its reach (nft.rs:166). The inbound set,
+the inbound map and the accept sets are all created with room for 65535 entries
+(nft.rs:253). <code>ensure_inbound</code> tolerates an existing chain, set or map, checks
+for the rule's exact text before adding it, and flushes both sets (nft.rs:229).
+<code>hold_in_force</code> parses the table after the apply instead of trusting the batch's
+exit status, because the parse is the evidence (nft.rs:107). An unreadable
+firewall listing reads as "the accept is there", since a duplicate accept changes
+nothing about which packets pass (nft.rs:434). The source translation rules are
+recognised by two exact needles (nft.rs:463). The observer's rule set is
+installed from its own function so the production ruleset stays byte-identical to
+the one already deployed, and its set is an address and service pair with a 15 s
+timeout (nft.rs:475). The mark is the eight bytes at the start of the transport
+payload, at bit 64 of the transport header (nft.rs:598). The counter's name is
+defined once, so the rule and the counter read cannot drift (nft.rs:564).
+<code>parse_carrier_probe</code> reads the first packet-count token and reports zero when the
+listing has none (nft.rs:802). Two accept sets exist, one per protocol, because
+one set for both would accept TCP on a UDP slot's port (nft.rs:866).</p>
+<h2 id="the-stun-reading"><a class="header" href="#the-stun-reading">The STUN reading</a></h2>
+<ul>
+<li>Message and attribute codes: binding request <code>0x0001</code>, success response
+<code>0x0101</code>, mapped address <code>0x0001</code>, xor-mapped address <code>0x0020</code>, IPv4 family
+<code>0x01</code> (stun.rs:5).</li>
+<li><code>parse_mapped</code> refuses a message type other than the success response and a
+cookie other than the magic value, and returns nothing for a buffer under 20
+bytes (stun.rs:40).</li>
+<li>Attribute values pad to four bytes, and the walk advances by the padded length
+(stun.rs:78). The message length is clamped to the buffer (stun.rs:52).</li>
+<li>The transaction id comes from a small linear congruential generator seeded from
+the clock, and uniqueness is all it needs, because STUN is unauthenticated
+(stun.rs:20).</li>
+<li>The xor unmask is the port against the cookie's high half and the address one
+byte at a time (stun.rs:69).</li>
+<li><code>build_mapped_response</code> is shared by the unit tests and the proofs, so both
+exercise one wire format (stun.rs:83).</li>
+<li>The proof set is: the parser never panics, the xor is an exact inverse, the
+request always has the RFC 5389 layout, a <code>Some</code> result implies a genuine
+success response, and a truncated response yields nothing or the same tuple
+(stun.rs:139). The unwinding bounds are 13 for the parser loop and 6 for the
+two shorter loops (stun.rs:152).</li>
+<li>The default server list is <code>stun.l.google.com:19302</code> and
+<code>stun.cloudflare.com:3478</code> (main.rs:357), and resolution takes the first IPv4
+address per host, with a warning when a host does not resolve (main.rs:470).</li>
+</ul>
+<h2 id="the-tcp-connection"><a class="header" href="#the-tcp-connection">The TCP connection</a></h2>
+<ul>
+<li>The state machine has two states, live and dead; an error from live changes it
+and an error from dead does not, and re-establishment restores it
+(tcpslot.rs:44).</li>
+<li>The connection is re-established on the next interval and rotates the server
+(tcpslot.rs:186).</li>
+<li>The ephemeral fold element from the previous round is deleted before the next,
+so a fold does not leak across re-establishes (tcpslot.rs:186).</li>
+<li>The listener binds the wildcard address with a backlog of 128, and the WAN-side
+scoping of inbound is the firewall's accept, and not the bind (tcpslot.rs:62).</li>
+<li>The specific-tuple bind beside the wildcard listener is the classic reuse
+exception: no reuseport group exists, so an inbound connection reaches the
+listener's queue, measured on this kernel (tcpslot.rs:69).</li>
+<li><code>splice</code> is deliberately minimal: one dial per accept, a dial failure closes
+the peer, and the copy dominates the work (tcpslot.rs:95).</li>
+<li>A proof asserts the interval sits under the 120 s bound at compile time, so the
+margin is machine-checked (tcpslot.rs:232), and another asserts the state
+machine alternates with no third state (tcpslot.rs:243).</li>
+</ul>
+<h2 id="four-comments-that-disagreed-with-the-code"><a class="header" href="#four-comments-that-disagreed-with-the-code">Four comments that disagreed with the code</a></h2>
+<p>The harvest's other finding. Each is fixed rather than collapsed as written.</p>
+<ol>
+<li><strong><code>main.rs:736</code> claimed a pin the code does not install.</strong> It said the boot
+path installs a pin and an accept per slot, with the pin key
+<code>(target ip, target port) → (NAT_ADDR, R)</code>. The code installs the ingress
+translation and the accept with no pin, and the comment thirteen lines below
+says so. Collapsing the first one as written would have re-enshrined the
+regress call/0014 settled against.</li>
+<li><strong><code>obs.rs:175</code> described a deletion that no longer happens.</strong> It called the
+candidate's peer "the other half of the conntrack orig tuple the claim
+deletes". The engine self-pins, and <code>ct.rs</code> is recorded as an abandoned dead
+end. The measurement it carried, 41077 to 1024, is in this record.</li>
+<li><strong><code>obs.rs:125</code> listed a mask the code does not have.</strong> It named five
+destinations as private or local; the code masks four, which are 10/8,
+172.16/12, 192.168/16 and 127/8. The fifth, 0/8, was never implemented. It is
+also unreachable, because the predicate requires the reply destination to be
+the VM address, so the comment drops it and the code stands.</li>
+<li><strong>The two nftables version numbers are both right.</strong> <code>nft.rs</code> says the on-box
+validation was on nftables 1.1.1, and MEMORY records libnftables 1.1.0. The
+router's own <code>nft --version</code> reports 1.1.1, and the library named in the
+segfault messages is <code>libnftables.so.1.1.0</code>. One is the tool and the other is
+the library.</li>
+</ol>
+<h2 id="startup-and-wiring"><a class="header" href="#startup-and-wiring">Startup and wiring</a></h2>
+<p>One-liners that live only in <code>main.rs</code>. The keepalive is a sibling task whose
+handle the caller owns, because its own reference would keep the slot socket
+bound after the receive loop is aborted, which is the leak of 2026-09-14
+(main.rs:525). The slot table is built entirely through restore, so a static is
+inserted once, and a collision or an out-of-range static is fatal at startup
+because it is a configuration error (main.rs:628). A persisted grant whose port
+collides with a configured static is dropped as stale, with the configuration
+winning (main.rs:647). One projection of the slot table exists, in the persist
+module, and the boot path must not carry a second copy that can drift from it
+(main.rs:686). TCP slots spawn their own path with a fresh vote state and no UDP
+keepalive (main.rs:786). In facade mode the facade rebuilds the restored leases
+and is the one owner that can tear them down, so a second spawn here would
+double-bind the socket (main.rs:780). The termination handler is registered only
+when the signal registration succeeds, because a failed registration must leave
+the default action in place, and on a signal the facade sends its goodbye
+notifications, waits 150 ms and exits zero (main.rs:1088). The external address
+is seeded from the per-slot tuple file first and the aggregate second, trimming
+before splitting, and an unreadable file yields the unspecified address
+(main.rs:1110). The help-coverage test reads the parser's own arms out of the
+source instead of trusting the help text (main.rs:1160); a double-dash token
+counts as a flag only when the rest is lowercase or a hyphen, and a single-dash
+token only when one letter follows (main.rs:1146). The allowlist is read and
+validated while parsing, so a typo fails the start and every bad line is named
+(main.rs:214). The manual-page test asserts that the appended sections survive,
+that the dropped extra block has not returned, and that the neutral name sits in
+the fifth header field (main.rs:1220). An unwired backend and a PCP listener
+without a facade exit two, and a command line with no mappings exits two after
+printing the help to standard error, so a service log keeps the text (main.rs:288).
+The argument parser is a separate function so the repeatable form is testable
+without running the binary (main.rs:114). The engine is handed the live lease
+table, so a tuple a grant has taken since startup is never captured (main.rs:950).
+A facade that fails to start is not fatal: the daemon logs it and runs on
+(main.rs:876).</p>
+<h2 id="carried-elsewhere-and-not-restated-here"><a class="header" href="#carried-elsewhere-and-not-restated-here">Carried elsewhere, and not restated here</a></h2>
+<p>The brief, MEMORY and the results files already hold: the self-pin and its
+measurement; the 2 s cadence against the AFTR's timeout; the shadow's server
+rotation; the accept at claim time; the allowlist as admission; liveness as the
+device's counters; the presence probe and the device-gone exit; the engine
+reading the live table; the collision report; the log-only stage; the absent
+netlink events; the mirror rule and its priority; the counting rule's placement;
+the inbound translation defects; the grant and revoke shapes; the punch-collision
+rules; the epoch semantics; the allocator's determinism; the Kani invariants; the
+vote policy; the STUN cookie and its fallback; the TCP fold and its three-way
+reuse bisect; the firewall's TCP accept; the C3 window; the egress policy and the
+STUN host routes; the stagger; the restored-slot datapath; the socket-leak class;
+the facade's GC ownership; the version line and the coverage tests; the facade's
+scope and its goodbye; and the PCP admission. Each appears in
+<code>IMPLEMENTATION.md</code>, in MEMORY, or in a results file of plan/0007, plan/0009 or
+plan/0010, and the harvest leaves them there.</p>
+<h2 id="the-upnp-facade-deviceprotection-and-the-pcp-codec"><a class="header" href="#the-upnp-facade-deviceprotection-and-the-pcp-codec">The UPnP facade, DeviceProtection and the PCP codec</a></h2>
+<p>The line numbers are from the component worktree at <code>65acff8</code>, later than the
+<code>13a5fc06</code> this record names, because the collapse landed <code>persist.rs</code> and
+<code>publish.rs</code> first. The comparison set is the one this record declares, extended
+by <code>plan/0011</code> and by the component's own shipped pages (<code>docs/operators/</code>,
+<code>deploy/ds-lite-punch.env</code>, <code>deploy/man/ds-lite-punch.8</code>), which stay and carry
+the store format and the shared port.</p>
+<h3 id="the-soap-and-gena-layers"><a class="header" href="#the-soap-and-gena-layers">The SOAP and GENA layers</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>What it governs</th><th>Value</th><th>Where</th></tr></thead><tbody>
+<tr><td>the SSDP advertisement age</td><td>1800 s (<code>SSDP_MAX_AGE</code>)</td><td>upnp.rs:31</td></tr>
+<tr><td>the alive NOTIFY interval</td><td>900 s, half the advertisement age</td><td>upnp.rs:31</td></tr>
+<tr><td>the SOAP envelope namespace an M-POST MAN header must name</td><td><code>http://schemas.xmlsoap.org/soap/envelope/</code></td><td>upnp.rs:34</td></tr>
+<tr><td>the request head and body cap</td><td>8192 bytes (<code>HTTP_CAP</code>)</td><td>upnp.rs:37</td></tr>
+<tr><td>live GENA subscriptions</td><td>8 (<code>MAX_GENA_SUBS</code>)</td><td>upnp.rs:40</td></tr>
+<tr><td>a callback URL length</td><td>256 bytes (<code>GENA_CB_MAX</code>)</td><td>upnp.rs:41</td></tr>
+<tr><td>a subscription's requested timeout</td><td>capped at 1800 s (<code>GENA_TIMEOUT_CAP</code>)</td><td>upnp.rs:42</td></tr>
+<tr><td>the SERVER product line</td><td><code>ImmortalWrt/1.0 UPnP/1.0 ds-lite-punch/0.1</code></td><td>upnp.rs:45</td></tr>
+<tr><td>the M-SEARCH MX ceiling</td><td>5 s, the SSDP recommended maximum response delay</td><td>upnp.rs:194</td></tr>
+<tr><td>the SSDP and USN UDN suffix</td><td>41 bytes, <code>uuid:</code> plus 36</td><td>upnp.rs:245</td></tr>
+<tr><td>concurrent HTTP connections</td><td>16 (<code>HTTP_CONN_CAP</code>)</td><td>upnpsvc.rs:38</td></tr>
+<tr><td>one connection's lifetime</td><td>30 s, which bounds a stalled handler</td><td>upnpsvc.rs:1991</td></tr>
+<tr><td>the GENA prune pass</td><td>60 s (<code>GENA_PRUNE_S</code>)</td><td>upnpsvc.rs:74</td></tr>
+<tr><td>the local lease GC pass</td><td>60 s (<code>GC_TICK_S</code>)</td><td>upnpsvc.rs:76</td></tr>
+<tr><td>one NOTIFY delivery</td><td>2 s (<code>NOTIFY_TIMEOUT</code>)</td><td>upnpsvc.rs:78</td></tr>
+<tr><td>the per-control-point burst window</td><td>1000 ms (<code>DISCOVERY_DEBOUNCE_MS</code>)</td><td>upnpsvc.rs:48</td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>An M-SEARCH carries MAN with <code>ssdp:discover</code>, and a missing MX parses as zero (upnp.rs:161).</li>
+<li>ST matching strips one pair of surrounding double quotes and compares case-insensitively, and an unrecognised target answers as <code>Ignore</code> (upnp.rs:151).</li>
+<li>Header lookup is case-insensitive on the key, skips the request line, ends a line at a bare <code>\n</code>, strips a trailing <code>\r</code>, and splits at the first <code>:</code> (upnp.rs:84).</li>
+<li><code>trim</code> removes ASCII space, tab, CR and LF only (upnp.rs:73).</li>
+<li>Only the text after the last <code>#</code> in a SOAPACTION value is the action name, and action names are case-sensitive (upnp.rs:631).</li>
+<li>A SOAPACTION value with no <code>#</code> yields no action (upnp.rs:635).</li>
+<li>An M-POST MAN value is <code>"&lt;envelope-ns&gt;";ns=NN</code>, only the URL is quoted, so a leading quote is dropped before the prefix match (upnp.rs:471).</li>
+<li>The M-POST action header is spelled <code>&lt;ns&gt;-SOAPACTION</code> (upnp.rs:506), and the <code>ns</code> token is 1 to 4 bytes (upnp.rs:473).</li>
+<li>The four control URLs are <code>/ctl/IPConn</code>, <code>/ctl/PPPConn</code>, <code>/ctl/CmnIfCfg</code> and <code>/ctl/DP</code>, matched case-insensitively (upnp.rs:353).</li>
+<li>The GET paths served are <code>/</code>, <code>/rootDesc.xml</code>, <code>/WANIPC.xml</code>, <code>/WANPPP.xml</code>, <code>/WANCfg.xml</code>, and any path beginning <code>/igd/v1/</code> or <code>/igd/v2/</code> (upnp.rs:715).</li>
+<li>The legacy description paths stay served beside the versioned prefixes (upnpsvc.rs:2041).</li>
+<li>A request that is not a GET, SUBSCRIBE, UNSUBSCRIBE, POST or M-POST answers 404, and a SOAP-shaped request whose action or MAN does not resolve answers 401 (upnp.rs:672).</li>
+<li>The GENA markers run on POST and M-POST alike: <code>NT</code> with <code>upnp:event</code> beside <code>CALLBACK</code> marks a subscribe, and <code>SID</code> marks a renewal (upnp.rs:690).</li>
+<li>The SOAP fault envelope is fixed: <code>s:Client</code>, the fault string <code>UPnPError</code>, and <code>detail/UPnPError</code> in namespace <code>urn:schemas-upnp-org:control-1-0</code> (upnp.rs:1258).</li>
+<li>The SOAP success envelope declares <code>s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"</code> (upnp.rs:1197).</li>
+<li>The response envelope's namespace comes from the SOAPACTION's own URN, so a <code>:2</code> invocation is answered in the <code>:2</code> namespace (upnp.rs:335).</li>
+<li>A SID is accepted as <code>uuid:</code> plus 36 dashed hex characters, or as 32 raw hex characters (upnp.rs:266).</li>
+<li><code>Sid::v4</code> sets the version nibble to 4 and the variant bits to <code>0b10</code> (upnp.rs:377).</li>
+<li>The eventKey starts at 0 with the initial NOTIFY and wraps at 2^32 (upnp.rs:399).</li>
+<li>The initial event carries every declared variable whether or not it moved (upnpsvc.rs:1624).</li>
+<li>A NOTIFY is delivered when something moved for that subscriber, and a subscription stores the view it was last told so each event carries the delta (upnpsvc.rs:134, 1641).</li>
+<li>The three evented variables the daemon reports are the external address, the connection status, and the subscriber's own mapping count (upnpsvc.rs:1573).</li>
+<li>The subscriber's own count is computed with the containment its reads apply, and the port floor binds the v2 face only (upnpsvc.rs:131, 1573).</li>
+<li>A datapath re-key leaves SystemUpdateID alone, because the reported port is the client's label and an event would invent a port change; the address is reported through ExternalIPAddress (upnpsvc.rs:1593).</li>
+<li>A mapping's appearance or removal is signalled before the entry index is persisted (upnpsvc.rs:740).</li>
+<li>The GENA TIMEOUT parser accepts <code>Second-N</code> and the literal <code>infinite</code> (upnpsvc.rs:2810).</li>
+<li>A SUBSCRIBE is refused with 501 Action Failed when the subscription table is full (upnpsvc.rs:1516).</li>
+<li>A subscription records its caller at SUBSCRIBE, and the callback address is not the caller (upnpsvc.rs:128).</li>
+<li>Any SOAP action from a client IP refreshes that client's grants' last-seen, whatever the action's own outcome (upnpsvc.rs:1909).</li>
+<li>The LAN-presence miss counter lives on the facade, because the GC runs one pass per tick and a pass-local counter would reset before its threshold (upnpsvc.rs:216).</li>
+<li>The request body may already sit in the same read as the head, so it is split out before the rest is read (upnpsvc.rs:2013).</li>
+<li>A deferred <code>ssdp:all</code> answer goes out at the window deadline with no added jitter, and the deadline is at most the assumed 1 s MX floor (upnpsvc.rs:521).</li>
+<li>The deferred <code>ssdp:all</code> answer echoes <code>upnp:rootdevice</code> as its ST (upnpsvc.rs:6050).</li>
+<li>Pending bursts are keyed by control point, the source address and port (upnpsvc.rs:204).</li>
+<li>A <code>watch::changed()</code> error means the sender dropped, and the last value still decides (upnpsvc.rs:184).</li>
+<li><code>GetCommonLinkProperties</code> reports Up whenever the tuple watch holds a value, and reports 0 for both Layer-1 bit rates because the symmetric ds-lite line offers no measurable rate: the value is absent, not a measured zero (upnpsvc.rs:561).</li>
+<li>The connection status has two honest states on this line, the external tuple is known or it is not, because nothing dials the connection (upnpsvc.rs:2967).</li>
+<li><code>GetNATRSIPStatus</code> answers NAT 1 and RSIP 0 (upnpsvc.rs:2246).</li>
+<li>The LAN interface is selected by index and never by address: the LAN IP can be bound to more than one interface, and <code>join_multicast_v4(addr)</code> resolves from the local table and picked a point-to-point tunnel, so <code>ip_mreqn</code> with an explicit ifindex and <code>imr_address = 0</code> is the form that hears br-lan multicast (upnpsvc.rs:3412).</li>
+<li><code>lan_ifindex</code> prefers a broadcast-scope interface over a point-to-point one, and falls back to any owner when a tunnel alone carries the address (upnpsvc.rs:3457).</li>
+<li>The SSDP fd is created <code>O_NONBLOCK|O_CLOEXEC</code>, because tokio's <code>from_std</code> only debug-asserts nonblocking and a release build strips the assert (upnpsvc.rs:3366).</li>
+<li>The interface name is zero-padded, so only the used portion may be handed to <code>CString</code> (upnpsvc.rs:3496).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the SSDP group and port, the search targets, the MX jitter, the alive NOTIFY with its byebye, the stable UDN and the bootid, the description chain with the WANPPPConnection:1 alias, the miniupnpd-derived SCPDs, the versioned URLs, the POST and M-POST parity with its multi-line corner, the E7 Kani scope, the burst window with its <code>seen_v2</code> rule, and the SSDP bind degrading the facade are in <code>IMPLEMENTATION.md</code>, MEMORY and the results files of plan/0007 and plan/0008. The SID OOM root cause is in MEMORY.</p>
+<h3 id="the-deviceprotection-store-identity-and-roles"><a class="header" href="#the-deviceprotection-store-identity-and-roles">The DeviceProtection store, identity and roles</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>What it governs</th><th>Value</th><th>Where</th></tr></thead><tbody>
+<tr><td>a session's idle ceiling</td><td>1800 s (<code>DP_SESSION_TTL_SECS</code>)</td><td>dp.rs:341</td></tr>
+<tr><td>failed logins before the challenge is freed</td><td>5 (<code>DP_LOGIN_FAILURE_LIMIT</code>)</td><td>dp.rs:345</td></tr>
+<tr><td>PBKDF2 iterations for STORED</td><td>5000 (<code>DP_PBKDF2_ITERATIONS</code>)</td><td>dp.rs:260</td></tr>
+<tr><td>the device identity and the CP identity</td><td>16 octets each</td><td>dp.rs:160, 173</td></tr>
+<tr><td>the mapping description's stored length</td><td>64 bytes (<code>DESC_MAX</code>)</td><td>upnpsvc.rs:61</td></tr>
+<tr><td>the automatic external-port floor</td><td>1024 (<code>ANY_PORT_BASE</code>)</td><td>upnpsvc.rs:58</td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>The DP core is io-free and unit-tested, and the ceremony's invariants are the standard vector pins for SHA-256, HMAC and PBKDF2, which is this module's Kani non-goal (dp.rs:18).</li>
+<li>SHA-256, HMAC and PBKDF2 are written out in pure Rust because the crate carries no dependencies (dp.rs:15).</li>
+<li><code>pbkdf2_hmac_sha256</code>, <code>DP_PBKDF2_ITERATIONS</code> and <code>stored_for</code> are the control-point side of the ceremony and are dead on the device, kept for the vector tests (dp.rs:113).</li>
+<li>An identity's <code>name</code> is case-sensitive and is the control point's certificate CN, and its <code>alias</code> is a display label with no certificate impact (dp.rs:155).</li>
+<li>One user record carries Salt and STORED plus the roles associated with the Name (dp.rs:171).</li>
+<li>The role hierarchy is two levels, Basic at 0 and Admin at 1, and an unknown role satisfies nothing (dp.rs:174).</li>
+<li>The authorization decision is a pure function of the principal's roles and the action's requirement, and it never consults the transport address (dp.rs:200).</li>
+<li>A session is keyed by the control point's IPv4 address, the plain-HTTP analogue of the spec's TLS session, and that address keys the store without being an authorization input (dp.rs:312).</li>
+<li>SetupReady is reported as permanently 1 with no transitions, because the device runs no setup-protocol registrar and no setup operation is pending; the pressure a setup-capable control point can meet is the SendSetupMessage fault path (dp.rs:401).</li>
+<li>A user identity carries an all-zero 16-octet ID and is skipped when the login searches the ACL for a ControlPointID (dp.rs:483).</li>
+<li>GetUserLoginChallenge returns the user's Salt and a fresh Challenge and replaces the session's previous challenge (dp.rs:407).</li>
+<li>A failed login leaves an existing session's roles intact (dp.rs:1247).</li>
+<li><code>add_identities</code> keys a User identity by name and a CP identity by its 16-octet ID, and re-adds nothing already present (dp.rs:633).</li>
+<li><code>remove_identity</code> removes by Name case-sensitively, treats an absent identity as a no-op success, and leaves the 600 for an invalid Identity to the caller (dp.rs:641).</li>
+<li><code>set_user_password</code> creates a user record when the Name already names an ACL identity or at least one CP identity exists, and returns false otherwise (dp.rs:650).</li>
+<li><code>add_roles</code> and <code>remove_roles</code> resolve the identity against the user records first and the ACL identities second (dp.rs:680).</li>
+<li>The DP action policy hardens six actions to Admin: <code>GetACLData</code>, <code>AddIdentityList</code>, <code>RemoveIdentity</code>, <code>SetUserLoginPassword</code>, <code>AddRolesForIdentity</code>, <code>RemoveRolesForIdentity</code> (dp.rs:734).</li>
+<li><code>valid_role</code> admits <code>Admin</code> and <code>Basic</code>, <code>Public</code> is not an assignable role, and an unknown role answers 600 (dp.rs:753).</li>
+<li>The store's rows are <code>U&lt;TAB&gt;name&lt;TAB&gt;salt-hex32&lt;TAB&gt;stored-hex32&lt;TAB&gt;roles</code> and <code>A&lt;TAB&gt;name&lt;TAB&gt;alias-or-dash&lt;TAB&gt;id-hex32&lt;TAB&gt;roles</code>, with <code>-</code> for an absent alias and unknown roles dropped on load (dp.rs:760).</li>
+<li><code>config_from_tsv</code> skips a malformed line, and a partial parse is the caller's decision (dp.rs:783).</li>
+<li>The base64 decoder tolerates ASCII whitespace anywhere and admits <code>=</code> only in the final group's last two slots (dp.rs:864).</li>
+<li>The device ID derives from the root UDN: the dashed-hex UUID's bytes when the UDN is dashed hex, and a stable FNV projection otherwise, so device and control point derive one value from one UDN (upnpsvc.rs:3521).</li>
+<li>An absent or unreadable <code>dp.tsv</code> yields an empty ACL, so every protected action answers 606 until the operator provisions the store (upnpsvc.rs:3546).</li>
+<li><code>dp_save</code> writes the store through a temporary file and a rename (upnpsvc.rs:3559).</li>
+<li>A DP nonce is exactly 16 bytes read from <code>/dev/urandom</code>, and the earlier unbounded read is the recorded OOM root cause (upnpsvc.rs:3571).</li>
+<li><code>GetRolesForAction</code> answers RoleList with the unconditional roles and an empty RestrictedRoleList, because no role is conditional in this policy (upnpsvc.rs:2471).</li>
+<li>The RoleList argument is space-separated, and each role must be one the device understands (upnpsvc.rs:2645).</li>
+<li>The identity-name reader takes every <code>&lt;Name&gt;</code> inside each <code>&lt;Identity&gt;</code> element with a minimal scanner (upnpsvc.rs:2656).</li>
+<li>The DP error set mapped to SOAP faults is 600, 606, 701 and 704, and 704 is shared with the WANIPConnection fault <code>ConnectionSetupFailed</code> (upnpsvc.rs:3584).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the PKCS5 parameters with the union-of-roles login, the identity-must-be-in-ACL rule, the live ACL evaluation, the persistence split with sessions transient, the operator bootstrap through <code>/etc/ds-lite-punch.acl</code>, the boundary in front of the engine, the lift as the principal's roles, the containment clauses with the 1024 floor on the v2 face, and the five unauthenticated refusals are in MEMORY, call/0021, call/0023, call/0024 and the results files of plan/0008. The store's row format is also on the component's own pages (<code>docs/operators/install.md:149</code>, <code>deploy/ds-lite-punch.env:23</code>).</p>
+<h3 id="the-service-descriptions-and-the-transcribed-tables"><a class="header" href="#the-service-descriptions-and-the-transcribed-tables">The service descriptions and the transcribed tables</a></h3>
+<ul>
+<li>The mapping description's stored length is bounded at 64 bytes, because the format is application-defined with no spec bound and this keeps the persisted index line bounded (upnpsvc.rs:61).</li>
+<li>The automatic external-port choice starts at 1024, and its scan terminates because the lease table caps at a few hundred slots while the port space holds 64512 ports (upnpsvc.rs:58, 2863).</li>
+<li><code>parse_desc</code> drops control characters, because the persisted index holds one tab-separated line per entry and a newline in the label would forge a second row, and it bounds the length (upnpsvc.rs:2952).</li>
+<li><code>xml_escape</code> escapes the five XML metacharacters, and the comment says the mapping description is the one field that needs it because the other emitted fields are numbers or a parsed address (upnpsvc.rs:3114).</li>
+<li>The listing fragment is carried in a CDATA section inside <code>&lt;NewPortListing&gt;</code>, because the reference client collects the listing from that element's character data alone (upnpsvc.rs:3878).</li>
+<li>A description cannot break the CDATA section, because <code>xml_escape</code> renders <code>&gt;</code> as <code>&amp;gt;</code>, so the sequence <code>]]&gt;</code> cannot occur inside a fragment (upnpsvc.rs:3885).</li>
+<li>The PortListing root names <code>xmlns:xsi</code> and an <code>xsi:schemaLocation</code> at <code>http://www.upnp.org/schemas/gw/WANIPConnection-v2.xsd</code>, a URL that no longer answers, so the spec's own sample is the shape authority (upnpsvc.rs:3871).</li>
+<li>The WANIPConnection:1 and WANCommonInterfaceConfig:1 SCPDs are cribbed from miniupnpd (<code>netfilter/upnp_desc.c</code>, BSD) with attribution (upnpsvc.rs:3890, 3971).</li>
+<li>The PPP alias serves the identical SCPD constant, because the WANPPPConnection:1 action set matches for the actions honoured (upnpsvc.rs:3967).</li>
+<li>The WANCommonInterfaceConfig:1 service must appear in the root description, because miniupnpc's <code>GetValidIGD</code> marks a device an IGD only when its rootDesc carries it, and one action is answered (upnpsvc.rs:486, 4320).</li>
+<li>The embedded devices get their own derived UDNs from the root UDN (upnpsvc.rs:4326).</li>
+<li><code>&lt;URLBase&gt;</code> is emitted as <code>http://&lt;lan-ip&gt;:&lt;port&gt;/</code> (upnpsvc.rs:3759, 3815).</li>
+<li>A Kani gate checks that the published DP SCPD carries the authoritative action names, so the superseded miniupnpd-derived names cannot return (upnpsvc.rs:4125).</li>
+<li>The seven OPTIONAL actions of table 2-10 are absent from the published v2 SCPD, because publishing them would promise a disconnect the ISP-managed line cannot make, and an invocation of one answers 401 (upnpsvc.rs:5748).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the 21 actions and 23 state variables of WANIPConnection:2 with five evented, the fourteen REQUIRED actions with their argument tables, the 13 DeviceProtection actions, the superseded placeholder names with its invented argument types, the lease of 0 reading as 604800 on v2, and the lease-remaining rule for a listing query are in the two transcriptions, in MEMORY and in plan/0008.</p>
+<h3 id="argument-parsing-and-faults"><a class="header" href="#argument-parsing-and-faults">Argument parsing and faults</a></h3>
+<ul>
+<li><code>xml_tag</code> returns the text of the first element named exactly <code>tag</code>, tolerates whitespace and comments or CDATA around the value, and fails closed at the caller's parse when a comment or CDATA sits inside the value or when same-name elements nest; a real parser is the escalation (upnp.rs:857).</li>
+<li>A CDATA wrapper is unwrapped when it is the whole value, and a span with text outside it is returned whole so the caller's parse rejects it (upnp.rs:941).</li>
+<li>The closer search skips comment spans and CDATA spans, whose contents are not element text (upnp.rs:888).</li>
+<li><code>xml_tag</code> returns nothing when the opening <code>&lt;</code> has no <code>&gt;</code> (upnp.rs:874).</li>
+<li>A missing <code>NewLeaseDuration</code> parses as the maximum, <code>NewRemoteHost</code> is accepted and ignored, and <code>NewEnabled</code> and the description are descriptive (upnpsvc.rs:2778).</li>
+<li>The wildcard <code>NewExternalPort</code> of 0 is admitted for <code>AddAnyPortMapping</code> and refused by <code>AddPortMapping</code>'s parser, and that flag is the only difference between the two callers (upnpsvc.rs:2749, 2758).</li>
+<li>The range parsers treat the endpoints as an entry filter, so no scan runs over the port span, and a start above the end answers 733 <code>InconsistentParameters</code> (upnpsvc.rs:2694).</li>
+<li><code>GetListOfPortMappings</code> accepts <code>NewProtocol</code> of <code>TCP</code>, <code>UDP</code> or <code>ALL</code>, and accepts and ignores <code>NewManage</code>, because managed entries are not a concept this facade exposes (upnpsvc.rs:2712).</li>
+<li>The range delete collects its target list before it removes anything, and its cost is bounded by the entries table and never by the port span (upnpsvc.rs:1390).</li>
+<li>A contained caller's request is judged before the port is resolved, so a preference below the floor is a request the caller may not make (upnpsvc.rs:1362).</li>
+<li>The containment carries its port floor as a field, because the floor binds the v2 face where a control point can authenticate to lift it, while the caller's-own-address clause binds both faces (upnpsvc.rs:2891).</li>
+<li>The containment covers reads and writes alike, and a lift belongs to the principal, so an authenticated control point reaches the whole table on either face (upnpsvc.rs:2178).</li>
+<li>An entry a contained caller may not see answers 606, and an empty selection answers 730 (upnpsvc.rs:1278, 1403).</li>
+<li>The fault table carries two faults on code 704, WANIPConnection's <code>ConnectionSetupFailed</code> and DeviceProtection's <code>Processing Error</code> (upnp.rs:565).</li>
+<li>730 <code>PortMappingNotFound</code> and 733 <code>InconsistentParameters</code> are WANIPConnection:2's own codes for the range actions, and 731 <code>ReadOnly</code> answers a <code>SetConnectionType</code> on an auto-configured line (upnp.rs:575).</li>
+<li>Every parse is fallible and no parse panics (upnpsvc.rs:2743).</li>
+<li>The wildcard external port resolves above the floor, which is why <code>AddAnyPortMapping</code> admits it (upnpsvc.rs:2904).</li>
+<li><code>preferred_port</code> honours the requested port while another client holds it, and the wildcard is the one request that states no preference (upnpsvc.rs:2922).</li>
+<li>The version 2 lease reading is applied at the dispatch arm, keyed on the SOAPACTION URN's version (upnpsvc.rs:2260).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the range refusals 730 and 733, the wildcard's refusal before the facade saw it, the containment's clauses, the <code>NewManage</code> semantics, the versioned lease reading, and the DP fault set are in MEMORY and plan/0008.</p>
+<h3 id="the-pcp-and-nat-pmp-codec"><a class="header" href="#the-pcp-and-nat-pmp-codec">The PCP and NAT-PMP codec</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>What it governs</th><th>Value</th><th>Where</th></tr></thead><tbody>
+<tr><td>the shared port</td><td>5351 (<code>PORT</code>)</td><td>pcp.rs:37</td></tr>
+<tr><td>the PCP version answered</td><td>2 (<code>VERSION</code>)</td><td>pcp.rs:40</td></tr>
+<tr><td>the longest PCP message</td><td>1100 octets (<code>MAX_MSG</code>)</td><td>pcp.rs:48</td></tr>
+<tr><td>the PCP common header</td><td>24 octets (<code>HEADER</code>)</td><td>pcp.rs:50</td></tr>
+<tr><td>MAP and PEER request data</td><td>36 octets (<code>OPCODE_DATA</code>)</td><td>pcp.rs:52</td></tr>
+<tr><td>the longest PCP mapping lifetime</td><td>600 s (<code>MAX_LIFETIME</code>)</td><td>pcp.rs:41</td></tr>
+<tr><td>NAT-PMP's lifetime</td><td>7200 s (<code>NPMP_LIFETIME</code>)</td><td>pcp.rs:44</td></tr>
+<tr><td>the THIRD_PARTY option length</td><td>16 octets (<code>OPT_THIRD_PARTY_LEN</code>)</td><td>pcp.rs:114</td></tr>
+<tr><td>the FILTER option length</td><td>20 octets (<code>OPT_FILTER_LEN</code>)</td><td>pcp.rs:115</td></tr>
+<tr><td>an error response's lifetime</td><td>30 s for the three short-lifetime codes and 1800 s for the rest</td><td>pcp.rs:419</td></tr>
+<tr><td>the discovery grace before NETWORK_FAILURE</td><td>10 s (<code>DISCOVERY_GRACE_S</code>)</td><td>upnpsvc.rs:3099</td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>The PCP result codes the codec names are <code>UNSUPP_VERSION</code> 1, <code>NOT_AUTHORIZED</code> 2, <code>MALFORMED_REQUEST</code> 3, <code>UNSUPP_OPCODE</code> 4, <code>UNSUPP_OPTION</code> 5, <code>MALFORMED_OPTION</code> 6, <code>NETWORK_FAILURE</code> 7, <code>NO_RESOURCES</code> 8, <code>UNSUPP_PROTOCOL</code> 9, <code>USER_EX_QUOTA</code> 10, <code>CANNOT_PROVIDE_EXTERNAL</code> 11, <code>ADDRESS_MISMATCH</code> 12 and <code>EXCESSIVE_REMOTE_PEERS</code> 13 (pcp.rs:60).</li>
+<li>The NAT-PMP result codes are <code>SUCCESS</code> 0, <code>UNSUPP_VERSION</code> 1, <code>NOT_AUTHORIZED</code> 2, <code>NETWORK_FAILURE</code> 3, <code>NO_RESOURCES</code> 4 and <code>UNSUPP_OPCODE</code> 5 (pcp.rs:75).</li>
+<li>The PCP opcodes are ANNOUNCE 0, MAP 1 and PEER 2 (pcp.rs:55).</li>
+<li>The PCP option codes read are THIRD_PARTY 1, PREFER_FAILURE 2 and FILTER 3 (pcp.rs:109).</li>
+<li>NAT-PMP's opcodes are the public-address request 0, map UDP 1 and map TCP 2, and a response sets bit 0x80 (pcp.rs:85).</li>
+<li>An IPv4 field must be in the IPv4-mapped IPv6 form with bytes 10 and 11 at 0xff, and a field outside that form reads as the unspecified address, which the caller's comparison refuses (pcp.rs:117).</li>
+<li>The response header is 24 octets: the version, the opcode with bit 0x80, a zero reserved byte, the result code, lifetime, epoch and 12 zero octets (pcp.rs:136).</li>
+<li>A MAP or PEER response body is the request's 12-octet nonce, the protocol byte, three zero octets, the internal port, the assigned external port and the 16-octet mapped address (pcp.rs:146).</li>
+<li>Options are walked with 4-octet padding, a remainder that does not consume the buffer answers <code>MALFORMED_REQUEST</code>, and an option whose declared length overruns the buffer answers <code>MALFORMED_OPTION</code> (pcp.rs:158).</li>
+<li>An option code with the top bit set is optional and an unknown one is ignored, and an unknown option with the top bit clear is refused with <code>UNSUPP_OPTION</code> (pcp.rs:176).</li>
+<li>A THIRD_PARTY or FILTER option with the wrong length answers <code>MALFORMED_OPTION</code> (pcp.rs:163).</li>
+<li>A FILTER with prefix length 0 clears the filters already requested and means no filter (pcp.rs:182).</li>
+<li>A response arriving at the server is dropped in silence, which stops a reply loop (pcp.rs:281).</li>
+<li>A datagram under 2 octets is dropped in silence, and a version 2 datagram under 24 octets is dropped in silence (pcp.rs:275, 288).</li>
+<li>The client address is compared against header bytes 8 to 24 (pcp.rs:296).</li>
+<li>A request whose length is not a multiple of 4 octets answers <code>MALFORMED_REQUEST</code> (pcp.rs:291).</li>
+<li>An unknown opcode answers <code>UNSUPP_OPCODE</code> with the request's opcode echoed (pcp.rs:346).</li>
+<li>A MAP with internal port 0 is the delete form and carries lifetime 0, and internal port 0 with a non-zero lifetime answers <code>MALFORMED_REQUEST</code> (pcp.rs:341).</li>
+<li>MAP request offsets are nonce 24 to 36, protocol 36, internal port 40 to 42, suggested external port 42 to 44 and suggested external address 44 to 60, and PEER adds peer port 60 to 62 with peer address 64 to 80 (pcp.rs:321).</li>
+<li>A PEER request needs 24 plus 36 plus 20 octets (pcp.rs:310).</li>
+<li>An ANNOUNCE request's lifetime is ignored on reception (pcp.rs:1000).</li>
+<li>An ANNOUNCE response is the 24-octet header alone with lifetime 0 (pcp.rs:389).</li>
+<li>A PEER response uses the MAP body layout (pcp.rs:375).</li>
+<li>An error response returns the request's own payload cut at 1100 octets and padded to four, and copies the client field into the reserved field so a client can match an answer to a request that did not parse (pcp.rs:395).</li>
+<li><code>CANNOT_PROVIDE_EXTERNAL</code> takes the long error lifetime because the AFTR owns the external port, so a retry answers the same (pcp.rs:425).</li>
+<li>A lifetime request of 0 is the delete form and answers 0, and any other request is capped at the dialect's ceiling (pcp.rs:435).</li>
+<li>The admission outcome maps Granted and Refreshed to <code>SUCCESS</code>, UserQuotaExceeded to <code>USER_EX_QUOTA</code> and TableFull to <code>NO_RESOURCES</code> (pcp.rs:443).</li>
+<li>The shared-port discriminator is the first octet, with 0 for NAT-PMP and 2 for PCP, and any other value is resolved by length: at least 24 octets reads as a PCP version to refuse with <code>UNSUPP_VERSION</code>, and under 24 reads as NAT-PMP (pcp.rs:453).</li>
+<li>A NAT-PMP request under 2 octets is dropped in silence, a response-bit opcode is dropped in silence, and a non-zero version answers <code>UNSUPP_VERSION</code> (pcp.rs:495).</li>
+<li>A NAT-PMP map request needs 12 octets, with the internal port at 4 to 6, the suggested external port at 6 to 8 and the lifetime at 8 to 12 (pcp.rs:506).</li>
+<li>A NAT-PMP map response is 16 octets: zero, the opcode with the response bit, the result code, epoch, internal port, external port and lifetime (pcp.rs:536).</li>
+<li>A NAT-PMP public-address response is 12 octets: zero, the opcode with the response bit, the result code, epoch and address (pcp.rs:553).</li>
+<li>A NAT-PMP version error is 8 octets with the opcode zeroed, and the result code marks it as an error (pcp.rs:562).</li>
+<li>A NAT-PMP unsupported-opcode response echoes the request with the response bit and code 5, and a request under 12 octets carries the code in the short public-address form (pcp.rs:570).</li>
+<li>An unknown NAT-PMP opcode is refused while a response is dropped in silence (pcp.rs:497).</li>
+<li>The PCP epoch is seconds since the facade's state was created, and a reboot resets it near zero, which tells a PCP client its mappings are gone (upnpsvc.rs:749).</li>
+<li>Discovery in flight means the datagram is dropped, and past the 10 s grace the answer is <code>NETWORK_FAILURE</code>, because a client's retransmission is the protocol's recovery (upnpsvc.rs:3097).</li>
+<li>The wait is recorded per bind port, with the second the wait began (upnpsvc.rs:212).</li>
+<li>The per-slot tuple lookup reads memory before the file, which keeps a PCP MAP answerable while the state directory is unwritable (upnpsvc.rs:760).</li>
+<li>Only UDP and TCP are mappings this datapath can hold, and the protocol field is read as sent so admission decides (upnpsvc.rs:3061).</li>
+<li>The listener is one socket on the LAN address, and the caller owns the bind so the service can be exercised off the production port (upnpsvc.rs:1089).</li>
+<li>A request from outside the LAN is refused by an explicit check beside the bind (upnpsvc.rs:1105).</li>
+<li>A PEER is answered with the mapping's own tuple when the operator enabled the opcode, and the filtering is endpoint-independent so nothing is installed (upnpsvc.rs:892, 909).</li>
+<li>THIRD_PARTY is gated on the containment lift, so a caller authenticated over DeviceProtection may map for another host (upnpsvc.rs:934).</li>
+<li>A delete with nothing to delete answers <code>SUCCESS</code> with lifetime 0 (upnpsvc.rs:7448).</li>
+<li>NAT-PMP's result codes are translated from the shared admission outcomes, so a NAT-PMP client reads its own numbering (upnpsvc.rs:3084).</li>
+<li>An error answer carries the request's suggested external port and address back (upnpsvc.rs:3072).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the result-code divergence with the RFC numbering, the correction that ANNOUNCE carries no tuple, the NAT-PMP version error's shape, FILTER refused with <code>EXCESSIVE_REMOTE_PEERS</code>, PREFER_FAILURE's 11, the shared port and the LAN-only bind, the drop-then-retry rule, the fixed 7200 lifetime, the opcode numbering with the response bit, and the epoch value are in the results file of plan/0009 and in MEMORY.</p>
+<h3 id="the-collision-and-supersession-rules"><a class="header" href="#the-collision-and-supersession-rules">The collision and supersession rules</a></h3>
+<ul>
+<li>The allocator's probe runs before a fresh allocation and steers around every live tuple the change-data-capture shows, a renewal allocates nothing so it reads nothing, and an unavailable mirror is reported (upnpsvc.rs:619).</li>
+<li>At most one pool-pressure eviction is permitted per Add (upnpsvc.rs:1122).</li>
+<li>A request that names no port has no handle to act on, so another mapping stays untouched (upnpsvc.rs:3214).</li>
+<li>A preferred port is honoured while another client holds it, and the wildcard is the one request that states no preference (upnpsvc.rs:2930).</li>
+<li>A device's flow onto a leased port wins: the probe runs first, the slot moves to a port nothing live holds, the substitution is reported, and the reported port stays the client's label so no event is invented; a PCP client learns the new assigned tuple on its next renewal (upnpsvc.rs:1695, 1768).</li>
+<li>The client-presence reap leaves a static alone, because a client's request is a promise to a device and a device that is gone has nothing to be promised (upnpsvc.rs:1703).</li>
+<li>The lease-policy backstop covers the pool-state case, with 24 h of client silence making a UDP grant reapeable and a 7-day sweep catching ghosts (upnpsvc.rs:65, 1870).</li>
+<li>An entry whose bind port is already the new slot is a stale index row to refresh in place (upnpsvc.rs:3202).</li>
+<li>A delete or a specific read resolves the caller's own mapping at that port or answers 714, and the range delete with <code>NewManage</code> is the bulk path to another client's entry (upnpsvc.rs:1218).</li>
+<li>The enumeration index addresses the visible list directly, because indexing a list of <code>(req_ext, proto)</code> keys and then looking up by those fields renders the earlier entry twice once the key is per client (upnpsvc.rs:1298).</li>
+<li>The cross-protocol supersession measured on 2026-09-20: a PCP lease was torn down two seconds after it was granted because the same client's NAT-PMP leg asked for the same no-preference key of 0, and the loser was the client's own mapping, so a library that sends both protocols loses one mapping per request (upnpsvc.rs:3198).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> call/0022's per-client port label, call/0027's collision rules with the probe and the steering log line, call/0028's late-collision yield, the client-presence reap that superseded the silence backstop, and the measured two-second loss are in MEMORY, plan/0009 and plan/0010.</p>
+<h3 id="specification-restatements-that-can-go"><a class="header" href="#specification-restatements-that-can-go">Specification restatements that can go</a></h3>
+<p>Each line below restates a transcription that stays available under <code>docs/upnp-dp1</code> or <code>docs/upnp-wip2</code>, so the collapse can drop it and the reader keeps the source.</p>
+<ul>
+<li>
+<p>The ceremony parameters and the authenticator MAC input (dp.rs:1), contract at DP-T:120-130.</p>
+</li>
+<li>
+<p>The identity field meanings with the 16-octet binary identity and its certificate mapping (dp.rs:150), DP-T:104 and DP-T:111.</p>
+</li>
+<li>
+<p>The user record of Salt and STORED with the roles of the Name (dp.rs:165), DP-T:120.</p>
+</li>
+<li>
+<p>The pending challenge (dp.rs:183), DP-T:125.</p>
+</li>
+<li>
+<p>The role set an action requires, with a name the brief gives (dp.rs:187):</p>
+<pre><code class="language-host-lint:ignore">the section 3.1 name, DP-T:141
+</code></pre>
+</li>
+<li>
+<p>SupportedProtocols with the mandated WPS introduction and PKCS5 login (dp.rs:246), DP-T:72.</p>
+</li>
+<li>
+<p>The ACL document shape (dp.rs:258), DP-T:99.</p>
+</li>
+<li>
+<p>The IdentityList document shape (dp.rs:278), DP-T:99.</p>
+</li>
+<li>
+<p>A fresh login challenge from a device-random nonce (dp.rs:290), DP-T:125.</p>
+</li>
+<li>
+<p>The PBKDF2 iteration count of 5000 (dp.rs:294), DP-T:121.</p>
+</li>
+<li>
+<p>STORED as the first 128 bits of T1 over the password and Name concatenated with Salt (dp.rs:298), DP-T:120.</p>
+</li>
+<li>
+<p>The authenticator comparison over STORED and the three bound identifiers (dp.rs:307), DP-T:127.</p>
+</li>
+<li>
+<p>The four fault codes with their per-action citations (dp.rs:336), DP-T:134.</p>
+</li>
+<li>
+<p>SetupReady and its completion rule (dp.rs:401), DP-T:34.</p>
+</li>
+<li>
+<p>GetUserLoginChallenge's known-Name rule with the challenge replacement (dp.rs:407), DP-T:125.</p>
+</li>
+<li>
+<p>UserLogin's verification against the challenge's user with the ACL identity rule and the role union (dp.rs:415), DP-T:131.</p>
+</li>
+<li>
+<p>UserLogout as a no-op when nothing is logged in (dp.rs:447), DP-T:59.</p>
+</li>
+<li>
+<p>AddIdentityList as a union add with the added set returned (dp.rs:633), DP-T:61.</p>
+</li>
+<li>
+<p>SetUserLoginPassword setting Stored and Salt (dp.rs:651), DP-T:63.</p>
+</li>
+<li>
+<p>AddRolesForIdentity and RemoveRolesForIdentity (dp.rs:680, 698), DP-T:64 and DP-T:65.</p>
+</li>
+<li>
+<p>SHA-256 padding, HMAC's 64-byte block, and PBKDF2 with HMAC-SHA-256 (dp.rs:44, 99, 112), textbook algorithm text in FIPS 180-4 and RFC 2104.</p>
+</li>
+<li>
+<p>GetUserLoginChallenge's PKCS5-only protocol and its Salt and Challenge outputs (upnpsvc.rs:2412), DP-T:57.</p>
+</li>
+<li>
+<p>UserLogin's argument list with no outputs (upnpsvc.rs:2433), DP-T:58.</p>
+</li>
+<li>
+<p>UserLogout's empty argument list (upnpsvc.rs:2452), DP-T:59.</p>
+</li>
+<li>
+<p>GetAssignedRoles as a space-separated list with Public for an unauthenticated session (upnpsvc.rs:2459), DP-T:55.</p>
+</li>
+<li>
+<p>GetACLData's embedded document output (upnpsvc.rs:2514), DP-T:60.</p>
+</li>
+<li>
+<p>AddIdentityList's result document (upnpsvc.rs:2524), DP-T:61.</p>
+</li>
+<li>
+<p>RemoveIdentity by Name with the 600 for an invalid identity (upnpsvc.rs:2548), DP-T:62.</p>
+</li>
+<li>
+<p>SetUserLoginPassword's admin rule with the logged-in user exception (upnpsvc.rs:2566), DP-T:63.</p>
+</li>
+<li>
+<p>AddRolesForIdentity and RemoveRolesForIdentity with the unknown-role refusal (upnpsvc.rs:2590), DP-T:64 and DP-T:65.</p>
+</li>
+<li>
+<p>The DP SCPD's thirteen actions and their argument tables (upnpsvc.rs:4120), DP-T:43 and the reassembled <code>&lt;scpd&gt;</code>.</p>
+</li>
+<li>
+<p>The DP state table with SetupReady the one evented variable and <code>A_ARG_TYPE_Base64</code> as <code>bin.base64</code> (upnpsvc.rs:5804), DP-T:21.</p>
+</li>
+<li>
+<p>The 21 v2 actions with 23 state variables and five evented (upnpsvc.rs:3996), W2-T:70 and W2-T:133.</p>
+</li>
+<li>
+<p>The fourteen REQUIRED actions of table 2-10 with their argument tables (upnpsvc.rs:5566), W2-T:133.</p>
+</li>
+<li>
+<p>Table 2-9's five evented variables with the mapping pair evented together (upnpsvc.rs:5717), W2-T:122.</p>
+</li>
+<li>
+<p>The response shapes for the connection control actions (upnpsvc.rs:2220, 2246), the spec's own action sections.</p>
+</li>
+<li>
+<p>The range actions' semantics with 730 and 733 (upnpsvc.rs:1390, 2694), the spec's own action sections.</p>
+</li>
+<li>
+<p>The PortListing fragment with the remaining lease of a query (upnpsvc.rs:1422), W2-T:375.</p>
+</li>
+<li>
+<p>The v2 lease reading of 0 as 604800 (upnpsvc.rs:2944), W2-T:59.</p>
+</li>
+<li>
+<p>The action wire names and the fault code and description pairs (upnp.rs:604, 1109), the spec's own tables.</p>
+</li>
+</ul>
+<h3 id="load-bearing-for-correctness"><a class="header" href="#load-bearing-for-correctness">Load-bearing for correctness</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>The shape</th><th>What a different shape breaks</th><th>Where</th></tr></thead><tbody>
+<tr><td>the PCP response header of 24 octets</td><td>a client reads the lifetime or the epoch from another field</td><td>pcp.rs:136</td></tr>
+<tr><td>the MAP and PEER body order of nonce, protocol, reserved, internal port, assigned external port, mapped address</td><td>every client's parse of an answer shifts by one field</td><td>pcp.rs:146</td></tr>
+<tr><td>the request offsets, nonce 24 to 36, protocol 36, internal port 40 to 42, suggested port 42 to 44, suggested address 44 to 60, peer port 60 to 62, peer address 64 to 80</td><td>the datapath maps a flow the client never named</td><td>pcp.rs:321</td></tr>
+<tr><td>the NAT-PMP map response of 16 octets</td><td>a client reads the lifetime from the wrong bytes and refreshes at the wrong time</td><td>pcp.rs:536</td></tr>
+<tr><td>the NAT-PMP version error of 8 octets with the opcode zeroed</td><td>a legacy client reads the result code from the wrong position and retries indefinitely</td><td>pcp.rs:562</td></tr>
+<tr><td>the shared-port discriminator by first octet and length</td><td>a future PCP version is answered as a NAT-PMP version error, or a NAT-PMP request is parsed as PCP</td><td>pcp.rs:453</td></tr>
+<tr><td>the error lifetime of 30 s and 1800 s</td><td>a client retries at the wrong cadence against a structural refusal</td><td>pcp.rs:419</td></tr>
+<tr><td>the client field copied into the error response's reserved bytes</td><td>a client cannot match an answer to its own request</td><td>pcp.rs:410</td></tr>
+<tr><td>the IPv4-mapped IPv6 form with bytes 10 and 11 at 0xff</td><td>the client check reads an address that never matches the source, so every request answers <code>ADDRESS_MISMATCH</code></td><td>pcp.rs:117</td></tr>
+<tr><td>the PCP version of 2 with the multiple-of-four length rule</td><td>a valid request is refused, or a malformed one is parsed</td><td>pcp.rs:40, 291</td></tr>
+<tr><td>the delete form of internal port 0 with lifetime 0</td><td>a delete carrying a non-zero lifetime removes a mapping the client meant to create</td><td>pcp.rs:341</td></tr>
+<tr><td>the authenticator MAC input order of Challenge, DeviceID and ControlPointID</td><td>every login fails, and a reordered binding is weaker than the spec's</td><td>dp.rs:307</td></tr>
+<tr><td>the PBKDF2 salt of Name concatenated with Salt at 5000 iterations</td><td>a stored password that no control point can reproduce</td><td>dp.rs:298</td></tr>
+<tr><td>the device ID derivation from the root UDN</td><td>device and control point derive different identifiers and the ceremony never binds</td><td>upnpsvc.rs:3521</td></tr>
+<tr><td>the all-zero ID marking a user identity</td><td>the login tries the all-zero identifier as a ControlPointID</td><td>dp.rs:483</td></tr>
+<tr><td>the two-level role map with an unknown role satisfying nothing</td><td>a widened match grants access on a role the device does not know</td><td>dp.rs:174</td></tr>
+<tr><td>the session idle ceiling of 1800 s with the five-failure limit</td><td>an expired session keeps its roles, or the failure backstop never fires</td><td>dp.rs:341, 345</td></tr>
+<tr><td>the base64 padding rule</td><td>a malformed Stored, Salt, Challenge or Authenticator is accepted</td><td>dp.rs:864</td></tr>
+<tr><td><code>xml_escape</code>'s five metacharacters</td><td>a description injects markup into the SOAP response, and the CDATA section closes early</td><td>upnpsvc.rs:3114, 3885</td></tr>
+<tr><td><code>parse_desc</code>'s control-character strip with the 64-byte bound</td><td>a label forges a second line in the persisted index</td><td>upnpsvc.rs:2952</td></tr>
+<tr><td><code>xml_tag</code>'s fail-closed corners with the whole-value CDATA rule</td><td>a partial value is accepted where the parse should refuse it</td><td>upnp.rs:857, 941</td></tr>
+<tr><td>the case-sensitive action names with the last-<code>#</code> rule</td><td>dispatch answers a different action</td><td>upnp.rs:631</td></tr>
+<tr><td>the <code>ns</code> token's 1 to 4 byte bound with the <code>&lt;ns&gt;-SOAPACTION</code> spelling</td><td>an M-POST action goes unresolved and the request answers 401</td><td>upnp.rs:471, 506</td></tr>
+<tr><td>the eventKey start of 0, its advance on delivery alone, and its 32-bit wrap</td><td>a subscriber enforcing monotonicity drops the first change event</td><td>upnpsvc.rs:1531, 1641</td></tr>
+<tr><td>the rule that a re-key leaves SystemUpdateID alone</td><td>an event invents a port change the client cannot see</td><td>upnpsvc.rs:1593</td></tr>
+<tr><td>the order that signals a mapping change before persisting the index</td><td>a subscriber reads the index and the event disagrees</td><td>upnpsvc.rs:740</td></tr>
+<tr><td>the SSDP fd flags with the by-index interface join</td><td>a blocking fd wedges the io driver, and an address-based join hears no br-lan multicast</td><td>upnpsvc.rs:3366, 3412</td></tr>
+<tr><td>the containment check before port resolution</td><td>a substitution silently widens a contained caller's request</td><td>upnpsvc.rs:1362</td></tr>
+<tr><td>the wildcard admitted for <code>AddAnyPortMapping</code> and refused for <code>AddPortMapping</code></td><td>a legacy client sends a request the v1 action never accepted</td><td>upnpsvc.rs:2749</td></tr>
+<tr><td>the range actions' 730 on empty and 733 on crossed</td><td>a control point's enumeration loop never terminates, or a malformed range is accepted</td><td>upnpsvc.rs:2694, 1403</td></tr>
+<tr><td>the lease reading of 0 as 604800 on v2 and as permanent on v1</td><td>a v2 client gets a static mapping where the spec reads the maximum</td><td>upnpsvc.rs:2944, 2260</td></tr>
+<tr><td>the one-eviction-per-Add limit with the probe before allocation</td><td>a retry loop evicts a working mapping, or a live punch is shared</td><td>upnpsvc.rs:1122, 619</td></tr>
+</tbody></table>
+</div>
+<h3 id="two-findings-and-they-are-defects"><a class="header" href="#two-findings-and-they-are-defects">Two findings, and they are defects</a></h3>
+<p><strong>The DeviceProtection XML builders interpolate control-point text with no escaping.</strong>
+<code>xml_escape</code> has two call sites, <code>upnpsvc.rs:1476</code> and <code>upnpsvc.rs:3148</code>, and
+both pass <code>e.desc</code>, the mapping description. <code>dp::acl_xml</code> at <code>dp.rs:259</code> and
+<code>dp::identity_list_xml</code> at <code>dp.rs:282</code> interpolate the identity name, the alias
+and each role. The name arrives from the wire: <code>dp_identity_names</code> at
+<code>upnpsvc.rs:2659</code> reads the <code>&lt;Name&gt;</code> text of each <code>&lt;Identity&gt;</code>,
+<code>dp_add_identities</code> at <code>upnpsvc.rs:2543</code> stores it, and <code>dp_get_acl</code> at
+<code>upnpsvc.rs:2521</code> returns <code>dp::acl_xml</code> inside the SOAP body, with GetACLData
+behind the Admin gate. The role path is safe, because <code>valid_role</code> at <code>dp.rs:753</code>
+admits <code>Admin</code> and <code>Basic</code> alone. Verified: the two call sites, the two
+interpolation sites and the wire reader were read in the source at <code>65acff8</code>,
+so the line at <code>upnpsvc.rs:3114</code> that says the description is the one field
+needing escape is inaccurate for the DeviceProtection documents. Not verified:
+no request was driven against a live facade, the alias arrives from the
+operator's <code>dp.tsv</code>, and the effect of a malformed document on a control point
+was not measured.</p>
+<p><strong>The dispatch-completeness proof claims totality and the harness checks seven actions.</strong>
+<code>upnp.rs:1719</code> says "every action's wire name parses back to the same action (the
+dispatch table is total over the enum)", and the loop at <code>upnp.rs:1720</code> lists
+seven variants: <code>GetExternalIpAddress</code>, <code>GetStatusInfo</code>,
+<code>GetConnectionTypeInfo</code>, <code>AddPortMapping</code>, <code>DeletePortMapping</code>,
+<code>GetSpecificPortMappingEntry</code> and <code>GetGenericPortMappingEntry</code>. The enum at
+<code>upnp.rs:563</code> carries 28 variants. The neighbouring <code>soap_classify_never_panics</code>
+proof is stronger in shape, because its round-trip assertion sits inside the
+<code>Soap</code> arm over any 64-byte head. Verified: the comment text, the loop's seven
+entries and the variant count were read at <code>65acff8</code>. Not verified: <code>cargo kani</code>
+was not run, so this is a reading of the harness source, and the round-trip for
+the twenty-one unchecked names was not established. The correction belongs to
+the line's claim, either by widening the list or by narrowing the sentence.</p>
+<p><strong>Disposition, 2026-09-23.</strong> The operator took both in this pass, so neither
+waits on a follow-up, and the collapse carried neither.</p>
+<p>The sanitising was fixed test-first, and both tests failed on the defect before
+the fix landed. One pins that a name carrying a tab and a newline cannot forge a
+row in the store the daemon writes and reloads; the other pins that a name
+holding markup is escaped in the ACL document and the identity list. The fix
+adds <code>dp::clean_name</code>, which drops control characters, and calls it where the
+name is read off the wire and at the store's two creation points, so a name keys
+the same identity on every call. It also shares <code>xml_escape</code> with the
+DeviceProtection module and applies it to the name and the alias, and corrects
+that function's own comment, which named the mapping description as the only
+field needing it. 220 tests pass, in <code>850eda1</code>.</p>
+<p>The proof's claim was corrected to its coverage, and the harness was left as it is:
+its comment now says the round trip holds for the seven actions it names and that
+the table holds 28, which was counted rather than assumed. Widening the loop to
+the whole table stays open as a follow-up, because it is a proof change and this
+pass is the comment collapse. The correction is in <code>ea90ab5</code>.</p>
+<h2 id="the-five-modules-the-first-pass-missed"><a class="header" href="#the-five-modules-the-first-pass-missed">The five modules the first pass missed</a></h2>
+<p>Five modules kept comment runs the first pass did not reach: <code>keepalive.rs</code>,
+<code>mapping.rs</code>, <code>presence.rs</code>, <code>carrier.rs</code> and <code>forward.rs</code>. The facts those runs
+stated with no other home are here. The line numbers are from the component
+worktree at <code>56294a5</code>, the tree the collapse read.</p>
+<h3 id="keepalivers-the-allowlists-policy-and-its-chain"><a class="header" href="#keepalivers-the-allowlists-policy-and-its-chain">keepalive.rs, the allowlist's policy and its chain</a></h3>
+<ul>
+<li>The two policy objects carry the project prefix because nft object names are
+global to the table, and <code>ip dslp</code> is shared with the rest of the datapath
+(keepalive.rs:38).</li>
+<li>The selection chain hooks at prerouting priority -150, the mangle hook after
+conntrack, and that hook is what attaches the policy at all: the same
+statement at a pre-conntrack priority left the entry at the default 60 s on
+this build (keepalive.rs:42, 108).</li>
+<li>The install is guarded by a read of the table listing, because re-adding an
+existing <code>ct timeout</code> object is an error under <code>nft -f</code> and the whole batch
+would then apply nothing (keepalive.rs:121, 135).</li>
+<li>Teardown deletes the chain first and the two policy objects after it
+(keepalive.rs:123).</li>
+<li>The install re-enters the table block that the named map and the CDC mirror
+already occupy, and it never flushes or deletes, so the rest of the datapath
+stays (keepalive.rs:239).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the 5m and 2h4m policy bodies with the RFC 4787 floor and
+the RFC 5382 established figure, the <code>protocol</code> keyword an object takes against
+the selection's <code>meta l4proto</code>, the inline address list, the empty allowlist
+leaving every flow at the router's own timeouts, and the address as the key with
+<code>ether saddr</code> unavailable are in MEMORY, call/0025, call/0026 and the results
+files of plan/0009.</p>
+<h3 id="mappingrs-the-tuple-health-machine"><a class="header" href="#mappingrs-the-tuple-health-machine">mapping.rs, the tuple health machine</a></h3>
+<ul>
+<li>The rotation proofs take a symbolic threshold of 1 through 8, and the unwind
+bounds are 10, 20 and 6 (mapping.rs:144, 165, 183).</li>
+<li><code>mark_suspect</code> moves at most one step, stays in range and resets the silence
+count, and a single server makes it a no-op (mapping.rs:70).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the three states with their meanings, the 3-cycle
+threshold of about 6 s, the majority vote marking a server suspect, and the
+<code>Instant</code> that keeps <code>note_response</code> out of the proofs are in plan/0004's README
+and IMPLEMENTATION.md.</p>
+<h3 id="presencers-the-presence-rule"><a class="header" href="#presencers-the-presence-rule">presence.rs, the presence rule</a></h3>
+<p>The rule this module implements is stated in call/0030 in full: the neighbour
+table as the instrument, the ICMP echo as a trigger alone, <code>FAILED</code> and
+<code>INCOMPLETE</code> as absence, a probe that cannot run answering present, the
+two-miss threshold, and a static mapping that presence never releases. No fact
+in these comments is recorded here.</p>
+<h3 id="carrierrs-the-watch-over-the-counter"><a class="header" href="#carrierrs-the-watch-over-the-counter">carrier.rs, the watch over the counter</a></h3>
+<ul>
+<li>The first poll adopts the counter's reading as the baseline, so a counter left
+by an earlier run is not reported as an arrival (carrier.rs:42, 97).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the mark's eight bytes with its <code>@th,64,64</code> match, the
+three-interval window, the alarm firing once with a probe clearing it, and the
+from-start form are in call/0033, in the helper the component ships under
+<code>deploy/</code>, and in the results files of plan/0010.</p>
+<h3 id="forwardrs-the-source-preserving-forward"><a class="header" href="#forwardrs-the-source-preserving-forward">forward.rs, the source-preserving forward</a></h3>
+<ul>
+<li><code>IP_TRANSPARENT</code> is 19, the Linux value for the option that lets the bind take
+a foreign source address (forward.rs:11).</li>
+<li><code>to_sockaddr_in</code> writes the port and the address in network byte order, which
+is the order the kernel reads a <code>sockaddr_in</code> in (forward.rs:63, 65).</li>
+</ul>
+<p><strong>Carried elsewhere:</strong> the per-datagram <code>IP_TRANSPARENT</code> forward with the peer's
+source address preserved is in plan/0004's IMPLEMENTATION.md and README.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../plan/0005-test-rig/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../plan/0005-test-rig/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

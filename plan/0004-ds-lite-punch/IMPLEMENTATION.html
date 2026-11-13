@@ -1,0 +1,853 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ds-lite-punch implementation brief v2: facades + observation rescue over one slot engine - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../../cast/client.html"><strong aria-hidden="true">1.3.</strong> Client: the remote member of the household</a></li><li class="chapter-item expanded "><a href="../../cast/operator.html"><strong aria-hidden="true">1.4.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../../PLAN.html"><strong aria-hidden="true">2.</strong> PLAN: milestone index</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/IMPLEMENTATION.html" class="active"><strong aria-hidden="true">2.1.1.</strong> ds-lite-punch implementation brief v2: facades + observation rescue over one slot engine</a></li><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html"><strong aria-hidden="true">2.1.2.</strong> RESULTS-2026-09-17-switch-nat-type: NAT type A on the Virgin Media line, and what earned it</a></li><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-23-comment-harvest.html"><strong aria-hidden="true">2.1.3.</strong> The comment harvest</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/ANALYSIS-2026-09-13.html"><strong aria-hidden="true">2.2.1.</strong> ANALYSIS-2026-09-13: soak timing, the AFTR refreshes its mappings on inbound</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13-A1.html"><strong aria-hidden="true">2.2.2.</strong> RESULTS-2026-09-13-A1: the reply-through-mapping leg (the sink shares the relay pin)</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13-run2.html"><strong aria-hidden="true">2.2.3.</strong> RESULTS-2026-09-13-run2: A3 keepalive-pause soak with the forward leg open</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13-run3.html"><strong aria-hidden="true">2.2.4.</strong> RESULTS-2026-09-13-run3: the probe-quiet pause (mapping survival under silence)</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/RESULTS-2026-09-13.html"><strong aria-hidden="true">2.2.5.</strong> RESULTS-2026-09-13: A3 keepalive-pause soak (first campaign)</a></li><li class="chapter-item expanded "><a href="../../plan/0005-test-rig/results/index.html"><strong aria-hidden="true">2.2.6.</strong> results</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0006-ps3-requirements/results/RESULTS-2026-09-13-exam.html"><strong aria-hidden="true">2.3.1.</strong> RESULTS-2026-09-13: PSN examination (organic failure, OS update, NAT Type 2)</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-13-c3.html"><strong aria-hidden="true">2.4.1.</strong> RESULTS-2026-09-13-c3: AFTR TCP mapping idle lifetime</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-13-pinning.html"><strong aria-hidden="true">2.4.2.</strong> RESULTS-2026-09-13-pinning: the 2 s keepalive and the external IP</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-13-tcp-datapath.html"><strong aria-hidden="true">2.4.3.</strong> RESULTS-2026-09-13-tcp-datapath: staged line verification</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-15-facade-review.html"><strong aria-hidden="true">2.4.4.</strong> RESULTS-2026-09-15-facade-review: the E1-E8 facade review and its fixes</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-15-ps3-facade.html"><strong aria-hidden="true">2.4.5.</strong> RESULTS-2026-09-15-ps3-facade: E6 console sign-off with the facade live</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.html"><strong aria-hidden="true">2.4.6.</strong> RESULTS-2026-09-17-kani-state: the Kani lane's true state and what is left in it</a></li><li class="chapter-item expanded "><a href="../../plan/0007-igd-facade/results/RESULTS-2026-10-07-the-kani-rung-on-a-runner.html"><strong aria-hidden="true">2.4.7.</strong> The Kani rung on a runner: the tree's own harnesses verify, and the facade's are in flight</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/RESULTS-2026-09-17-bench-matrix.html"><strong aria-hidden="true">2.5.1.</strong> T4 results: the client-class matrix on the deployed box</a></li><li class="chapter-item expanded "><a href="../../plan/0008-adaptive-igd-v1v2-facade/RESULTS-2026-09-17-miniupnpc-interop.html"><strong aria-hidden="true">2.5.2.</strong> RESULTS-2026-09-17-miniupnpc-interop: the reference client reads the v2 listing, and what it found</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/index.html"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/IMPLEMENTATION.html"><strong aria-hidden="true">2.6.1.</strong> Implementation plan: the mapping hold, its admission, and the signalling</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-17-implementation.html"><strong aria-hidden="true">2.6.2.</strong> Results: the hold, its admission, and the signalling, as built</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-acceptance.html"><strong aria-hidden="true">2.6.3.</strong> Results: the acceptance run on the router, and the two defects it found</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-collision-yield.html"><strong aria-hidden="true">2.6.4.</strong> A device's flow onto a leased port makes the daemon move that lease</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-field-session.html"><strong aria-hidden="true">2.6.5.</strong> Results: the field session, the hold under real play, and a state-directory incident</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-held-mapping-silence.html"><strong aria-hidden="true">2.6.6.</strong> A held mapping answers the outside across its client's silence</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-tuple-analysis.html"><strong aria-hidden="true">2.6.7.</strong> The uplink's tuple behaviour, read from the daemon's own log</a></li><li class="chapter-item expanded "><a href="../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-19-soak.html"><strong aria-hidden="true">2.6.8.</strong> The daemon over seventeen hours: flat, and no state write failed</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/index.html"><strong aria-hidden="true">2.7.</strong> Milestone: the carrier's filtering, proved and watched</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/PROCEDURE-2026-10-07-the-lobby-case.html"><strong aria-hidden="true">2.7.1.</strong> Procedure: the lobby case on a real console</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-alarm-proof.html"><strong aria-hidden="true">2.7.2.</strong> The watch counts the helper's probe, and silence raises the alarm</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-inbound-translation.html"><strong aria-hidden="true">2.7.3.</strong> An arrival at a slot port is translated to its client</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-slot-datapath-defects.html"><strong aria-hidden="true">2.7.4.</strong> Two datapath defects, written up</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-stranger-probe.html"><strong aria-hidden="true">2.7.5.</strong> The line forwards a stranger's datagram to a held mapping</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-21-the-probe-the-translation-hid.html"><strong aria-hidden="true">2.7.6.</strong> The probe the translation hid</a></li><li class="chapter-item expanded "><a href="../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-23-the-watch-that-lost-its-own-rule.html"><strong aria-hidden="true">2.7.7.</strong> The watch that lost its own rule</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0011-documentation/index.html"><strong aria-hidden="true">2.8.</strong> Milestone: the documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0011-documentation/results/RESULTS-2026-09-22-documentation.html"><strong aria-hidden="true">2.8.1.</strong> The documentation, delivered</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/index.html"><strong aria-hidden="true">2.9.</strong> Milestone: the front door</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-09-27-the-remap-disposition.html"><strong aria-hidden="true">2.9.1.</strong> The last receipt's blocker, and the two ways the doctrine offers out of it</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-09-28-the-canonical-build-and-the-lanes.html"><strong aria-hidden="true">2.9.2.</strong> The canonical build, and the lanes that did not match it</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-10-02-the-front-deployed-on-the-rig.html"><strong aria-hidden="true">2.9.3.</strong> The front, deployed on the rig</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/NOTE-2026-10-02-the-granted-tcp-slot-at-the-lan.html"><strong aria-hidden="true">2.9.4.</strong> The granted TCP slot at the LAN, and the wall outside it</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-26-stranger-arrival.html"><strong aria-hidden="true">2.9.5.</strong> The stranger's arrival: a held port admits its peers, not the world</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-front-door.html"><strong aria-hidden="true">2.9.6.</strong> The front door: what the line, the front and a deployment each hold</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-pinhole.html"><strong aria-hidden="true">2.9.7.</strong> The pinhole: a held port admits the peer the line has spoken to</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-return-path.html"><strong aria-hidden="true">2.9.8.</strong> The TCP fault is the client's return path, not the box's input path</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-slot-complete.html"><strong aria-hidden="true">2.9.9.</strong> The TCP slot's protocol is whole; a service host is what remains</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-tcp-slot.html"><strong aria-hidden="true">2.9.10.</strong> The TCP slot: a tuple that needed a server speaking over TCP</a></li><li class="chapter-item expanded "><a href="../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-tcp-syn.html"><strong aria-hidden="true">2.9.11.</strong> The TCP poke admits the SYN; the SYN-ACK is the fault that remains</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0013-the-fronts-two-views/index.html"><strong aria-hidden="true">2.10.</strong> The front's two views</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/index.html"><strong aria-hidden="true">2.11.</strong> The front's legs on the poked socket</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-corrected-the-datagram-leg-carries-traffic.html"><strong aria-hidden="true">2.11.1.</strong> Corrected: the datagram leg carries traffic, and the reply path is what is missing</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-admission-rules-so-far.html"><strong aria-hidden="true">2.11.2.</strong> The admission rules, so far</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-datagram-leg-at-the-front.html"><strong aria-hidden="true">2.11.3.</strong> The datagram leg at the front, and the edge that will not carry it</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-fold-installed-and-inert.html"><strong aria-hidden="true">2.11.4.</strong> The fold is installed and inert, and the lead is in the daemon's own log</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-pin-cannot-carry-a-services-reply.html"><strong aria-hidden="true">2.11.5.</strong> The pin cannot carry a service's reply, and what a front-door slot needs instead</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-round-trip-closes.html"><strong aria-hidden="true">2.11.6.</strong> The round trip closes: the front door carried a datagram both ways</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-closes.html"><strong aria-hidden="true">2.11.7.</strong> The TCP leg closes: the front door carried a TLS client to the service behind the line</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-is-one-fix-away.html"><strong aria-hidden="true">2.11.8.</strong> The TCP leg is one fix away, and the front's log names it</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-needs-a-tuple.html"><strong aria-hidden="true">2.11.9.</strong> The TCP leg needs a tuple the front does not have</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-07-the-admission-rules.html"><strong aria-hidden="true">2.11.10.</strong> The admission rules, measured</a></li><li class="chapter-item expanded "><a href="../../plan/0014-the-fronts-legs/results/NOTE-2026-10-07-the-release-and-both-legs.html"><strong aria-hidden="true">2.11.11.</strong> The release carries both legs, and the front's relay was the stale half</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0015-the-routers-name/index.html"><strong aria-hidden="true">2.12.</strong> The router's name on the LAN</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0015-the-routers-name/results/NOTE-2026-11-11-the-name-paths.html"><strong aria-hidden="true">2.12.1.</strong> The name's paths, measured</a></li></ol></li><li class="chapter-item expanded "><a href="../../plan/0016-the-carrier-environment/index.html"><strong aria-hidden="true">2.13.</strong> The carrier environment for end-to-end testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.html"><strong aria-hidden="true">2.13.1.</strong> Research: the carrier model, generalised</a></li><li class="chapter-item expanded "><a href="../../plan/0016-the-carrier-environment/results/RESULTS-2026-11-11-the-policy-rows-so-far.html"><strong aria-hidden="true">2.13.2.</strong> The policy rows so far: thirteen green, one open</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li><li class="chapter-item expanded "><a href="../../call/0026-tcp-keepalive-is-signalled-not-injected.html"><strong aria-hidden="true">4.15.</strong> The TCP half of the hold: what can be held, and what can only be said</a></li><li class="chapter-item expanded "><a href="../../call/0027-collisions-for-punched-ports.html"><strong aria-hidden="true">4.16.</strong> Collision rules for ports nobody allocated: the punch and the lease table</a></li><li class="chapter-item expanded "><a href="../../call/0028-a-shared-tuple-is-reachable-and-the-incumbent-keeps-it.html"><strong aria-hidden="true">4.17.</strong> A shared tuple is reachable, and the incumbent keeps it</a></li><li class="chapter-item expanded "><a href="../../call/0029-the-named-device-is-the-admission.html"><strong aria-hidden="true">4.18.</strong> The hold's admission is the named device, its liveness is the device and its peers, and a failed write is never fatal</a></li><li class="chapter-item expanded "><a href="../../call/0030-a-mapping-ends-with-its-device.html"><strong aria-hidden="true">4.19.</strong> A mapping asked for by a device ends when that device leaves, and never when it is quiet</a></li><li class="chapter-item expanded "><a href="../../call/0031-the-datapath-needs-no-listing.html"><strong aria-hidden="true">4.20.</strong> The datapath never needs a listing, and an intermittent nft crash is tolerated</a></li><li class="chapter-item expanded "><a href="../../call/0032-the-builder-of-record-is-the-lane.html"><strong aria-hidden="true">4.21.</strong> The builder of record is the CI lane, and a deployment takes its artifact</a></li><li class="chapter-item expanded "><a href="../../call/0033-the-filtering-is-watched-from-outside.html"><strong aria-hidden="true">4.22.</strong> The filtering is watched by a stranger's probe, and the daemon is told</a></li><li class="chapter-item expanded "><a href="../../call/0034-the-repositories-are-public-and-a-tag-is-the-release.html"><strong aria-hidden="true">4.23.</strong> The repositories are public, and a tag is the release</a></li><li class="chapter-item expanded "><a href="../../call/0035-plain-language-for-the-program.html"><strong aria-hidden="true">4.24.</strong> Plain language for the program: keepalive, owned, entry</a></li><li class="chapter-item expanded "><a href="../../call/0036-the-pin-names-the-tag-the-bytes-come-from.html"><strong aria-hidden="true">4.25.</strong> The release's bytes move with the version, so the pin names the tag</a></li><li class="chapter-item expanded "><a href="../../call/0037-comments-are-one-line-and-technical.html"><strong aria-hidden="true">4.26.</strong> Comments are one line, and technical</a></li><li class="chapter-item expanded "><a href="../../call/0038-the-front-door-is-a-held-port.html"><strong aria-hidden="true">4.27.</strong> A port is served from outside the line by a front the daemon tells</a></li><li class="chapter-item expanded "><a href="../../call/0039-the-control-channel-carries-a-tls-client.html"><strong aria-hidden="true">4.28.</strong> The control channel carries a TLS client, and the build carries a bundle</a></li><li class="chapter-item expanded "><a href="../../call/0040-admission-is-a-certificate-minted-on-the-line.html"><strong aria-hidden="true">4.29.</strong> A client's admission is a certificate the line minted</a></li><li class="chapter-item expanded "><a href="../../call/0041-the-fronts-proofs-are-the-components-lane.html"><strong aria-hidden="true">4.30.</strong> The front's proofs are the component's lane, and a deployment's are the recipe's</a></li><li class="chapter-item expanded "><a href="../../call/0042-the-poke-delivers-the-tuple.html"><strong aria-hidden="true">4.31.</strong> The poke delivers the tuple, so the push waits for a payload</a></li><li class="chapter-item expanded "><a href="../../call/0043-the-artifact-lanes-build-the-canonical-recipe.html"><strong aria-hidden="true">4.32.</strong> The artifact lanes build the canonical recipe</a></li><li class="chapter-item expanded "><a href="../../call/0044-a-granted-tcp-slot-is-served-by-the-daemons-own-connection.html"><strong aria-hidden="true">4.33.</strong> A granted TCP slot is served by the daemon's own connection</a></li><li class="chapter-item expanded "><a href="../../call/0045-the-control-channel-carries-the-tuple-the-front-sees.html"><strong aria-hidden="true">4.34.</strong> The control channel carries the tuple the front sees</a></li><li class="chapter-item expanded "><a href="../../call/0046-the-front-learns-from-the-poke-and-from-the-push.html"><strong aria-hidden="true">4.35.</strong> The front learns from the poke first, and the push names itself when it fills in</a></li><li class="chapter-item expanded "><a href="../../call/0048-a-slot-that-pokes-a-front-answers-as-the-peer.html"><strong aria-hidden="true">4.36.</strong> A slot that pokes a front answers its service as the peer</a></li><li class="chapter-item expanded "><a href="../../call/0049-the-fronts-legs-ride-the-poked-socket.html"><strong aria-hidden="true">4.37.</strong> The front's legs ride the poked socket, and the firewall's place carries the TCP one</a></li><li class="chapter-item expanded "><a href="../../call/0050-the-kani-rung-runs-on-a-runner.html"><strong aria-hidden="true">4.38.</strong> The Kani rung runs on a runner, and the tree's own harnesses gate it</a></li><li class="chapter-item expanded "><a href="../../call/0051-the-spine-moves-to-4c8ae9fd.html"><strong aria-hidden="true">4.39.</strong> The spine moves to 4c8ae9fd, and the ledger claims it</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../GOAL.html"><strong aria-hidden="true">6.1.</strong> The active goal</a></li><li class="chapter-item expanded "><a href="../../MIGRATION.html"><strong aria-hidden="true">6.2.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../../STRUCTURE.html"><strong aria-hidden="true">6.3.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../../UPGRADING.html"><strong aria-hidden="true">6.4.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../../plan/0004-ds-lite-punch/INVESTIGATION.html"><strong aria-hidden="true">8.</strong> INVESTIGATION: the Virgin Media ds-lite possibility space (superseded)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.1.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li><li class="chapter-item expanded "><a href="../../call/0047-a-front-door-slot-folds-its-services-replies.html"><strong aria-hidden="true">8.2.</strong> A front-door slot folds its service's replies (superseded)</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="ds-lite-punch-implementation-brief-v2-facades--observation-rescue-over-one-slot-engine"><a class="header" href="#ds-lite-punch-implementation-brief-v2-facades--observation-rescue-over-one-slot-engine">ds-lite-punch implementation brief v2: facades + observation rescue over one slot engine</a></h1>
+<p><strong>Audience:</strong> implementation agent. <strong>Repo:</strong> <code>ds-lite-punch</code>, Rust, musl-static,
+single process, one poll loop, procd-managed on ImmortalWrt (br-lan
+192.168.0.0/24, daemon at 192.168.0.21, IPv4 egress = DS-Lite tunnel to AFTR).
+<strong>[OPERATOR]</strong> = needs human/hardware; agent prepares scripts and analyzes
+output. This brief supersedes v1; changes are the observation engine (Phase G),
+expanded measurements (Phase C), invariant enforcement, and the quirk ledger
+(§11). Busybox router: no <code>nohup</code>/<code>pkill</code>/<code>timeout</code>; use <code>&amp;</code>, <code>pgrep</code>+<code>kill</code>,
+<code>tcpdump -c</code>. <code>/tmp</code> is tmpfs: self-restoring <code>trap</code>s in every script, router
+state clean after every run.</p>
+<blockquote>
+<p><strong>Reconciliation deltas (agent, 2026-08-31), read before implementing.</strong>
+Verified against the deployed source and the live router. Where the brief
+conflicts with deployed reality, the delta wins and this section is
+authoritative. Carried forward from v1, re-checked against v2:</p>
+<ol>
+<li><strong>No local <code>dsltun</code> interface.</strong> Router-side ds-lite (wan4o6) is disabled;
+the hub owns the softwire and the tunnel terminates there. The router's
+VM line is plain <code>eth1</code> (192.168.0.21/24, gateway 192.168.0.1). Capture on
+<strong><code>eth1</code></strong> everywhere the brief says "on the tunnel" (A0.2, A2, G8).
+The softwire to the AFTR exists; it just is not a local interface.</li>
+<li><strong>The v1 core's inbound forward is userspace <code>IP_TRANSPARENT</code>
+per-datagram</strong> (<code>forward.rs</code>), not TPROXY. No TPROXY rule set exists or
+is planned. The brief's "implement TPROXY as the fix if reply-path
+validation failed" maps to: debug the SNAT pin (rule order, <code>ip rule</code>
+priority, conntrack). There is no TPROXY variant to build.</li>
+<li><strong>Tokio stays (DECIDED 2026-08-31, David): hand-rolled epoll rejected.</strong>
+The v1 core ships tokio (single process, musl-static, about 640 KB). The
+brief constraint "no async runtime" (§2) reads as "no second process, no
+new heavy framework"; the runtime's single IO loop satisfies "one poll
+loop". Phase B must NOT rewrite the v1 IO path.</li>
+<li><strong><code>--gateway</code> + STUN host routes are load-bearing</strong> (<code>ip route replace &lt;stun-ip&gt; via 192.168.0.1</code>): without them the default route sends STUN
+down vdsl4 and maps the wrong NAT. Reproduce per slot's rotation; absent
+from the brief's config list, present in the v1 core's deployed CLI.</li>
+<li><strong>State paths.</strong> Published tuple stays at <code>/run/ds-lite-punch/tuple</code>
+(existing consumers); epoch + leases under <code>/tmp/dslp/</code> per B9/B10.
+Keep both, do not merge.</li>
+<li><strong>The v1 endpoint is the router itself</strong> (192.168.21.1:40001 sink).
+A2/G8 need a real second br-lan host (Arch LXC 192.168.21.10 or a
+laptop).</li>
+<li><strong>PCP + NAT-PMP share UDP 5351</strong> (RFC 6887 §6). Bind
+<code>192.168.21.1:5351/udp</code>, LAN-only, both protocols on it (D1/D5).</li>
+<li>Result codes: 0 to 8 per §A.3 as listed; <code>CANNOT_PROVIDE_EXTERNAL_PORT</code> =
+9; verify all nine numerics against the RFC during D3. Quota default 16
+(headroom under Juniper's 32/client max).</li>
+<li>Existing Kani: 8 harnesses / 192 checks / 0 failures; "8 existing + per
+phase new" at every gate. Allocator proof note: <code>BTreeSet</code> used-sets
+stalled the solver; the used set is a sorted <code>Vec</code> (at most 32 slots),
+which keeps the proof surface array-based (see <code>slot.rs</code>).</li>
+<li><strong>Phase G is in scope and assigned.</strong> The observation rescue engine
+(G1-G10) rides on the slot engine. CDC per G1 DECIDED (2026-09-01): one
+<code>Cdc</code> trait, three backends: nft <code>flow_obs</code> set mirror (primary), Aya TC
+hook (first-class performance tier, not an escalation), <code>/proc</code> polling
+(fallback). The conntrack-CDC evidence (netlink CT events silent on this
+build) is recorded; the Aya gate in the old §13 STOP list is removed.</li>
+</ol>
+</blockquote>
+<h2 id="0-mental-model-guides-all-design-decisions"><a class="header" href="#0-mental-model-guides-all-design-decisions">§0 Mental model (guides all design decisions)</a></h2>
+<p>The AFTR mapping table is authoritative and unreadable. Its key is the inner
+tuple (EIM); its TTL is 5 to 10 s. Write to it: any datagram from the inner
+tuple. Read it: STUN XOR-MAPPED-ADDRESS.</p>
+<p>The B4 NAPT (nft + conntrack): RFC 6333 assigns the router this role; it is
+fully ours. Pin / shadow-bind / DNAT = translation agreement. conntrack =
+change-data-capture.</p>
+<p>The slot table is a shadow replica of AFTR state plus leases. Admission:
+config | PCP | UPnP | observation.</p>
+<p>The daemon is a <strong>lifetime shim with admission control</strong>. On the LAN side it
+implements the behavioral contract the AFTR refuses to keep (RFC 6888
+lifetimes, reportable tuples, divergence notification). On the WAN side it
+changes nothing and owns exactly one property: the mappings do not die. Five
+verbs only: TTL-write (keepalive), read (STUN), translation-agreement (nft),
+CDC (conntrack), admission/eventing (facades + epoch).</p>
+<h2 id="1-facts-you-may-rely-on-measured-or-spec-do-not-re-derive"><a class="header" href="#1-facts-you-may-rely-on-measured-or-spec-do-not-re-derive">§1 Facts you may rely on (measured or spec; do not re-derive)</a></h2>
+<ol>
+<li>AFTR UDP idle timeout 5 to 10 s, node-dependent (RFC 6888 floor violated).
+No inbound IPv4 except via live mappings.</li>
+<li>UDP EIM+EIF proven. TCP EIF proven 2026-08-31 (5/5 probes vs 5/5
+ECONNREFUSED control). External ports always AFTR-chosen random-high,
+never equal to inner (RFC 6888 honors randomization; permanent and
+upstream). TCP external port space separate. TCP idle lifetime unmeasured.</li>
+<li><strong>EIM means any destination refreshes the same mapping</strong> (proven by the
+v1 core's rotating STUN). Corollary: STUN keepalive and tuple discovery
+are one packet; and all servers must return the same XOR-MAPPED-ADDRESS,
+because disagreement means churn or a lying server.</li>
+<li>TCP unmapped: AFTR RSTs (the dead-mapping signal exists for TCP only).
+UDP unmapped: assumed silent drop; ICMP behavior unknown (unmapped-ICMP
+probe).</li>
+<li>DS-Lite per RFC 6333: the B4 (router) performs NAPT. Our SNAT/shadow-bind
+work is the spec's role, not a hack.</li>
+<li>Linux: installing an nft rule does <strong>not</strong> re-translate existing conntrack
+entries. Conntrack entry death stops DNAT of inbound packets.</li>
+<li>The v1 core is deployed and clean; Kani 8 harnesses / 192 checks / 0
+failures. Its source-preserving inbound-forward mechanism is proven;
+reuse it verbatim wherever forwarding is needed.</li>
+</ol>
+<h2 id="2-binding-constraints-and-invariants"><a class="header" href="#2-binding-constraints-and-invariants">§2 Binding constraints and invariants</a></h2>
+<p><strong>Constraints (violation = stop):</strong> UDP only; no TCP grants until the TCP
+idle-lifetime test is measured.
+No console-shaped code (no MACs, no vendor ports, no client detection; PSN
+and Switch are acceptance workloads/observations only). Everything behind the
+router on br-lan. uk/us hosts never relay/backup paths. eBPF only as
+Rust/Aya, only after userspace paths are exhausted. UPnP IGDv1 only (PS3
+cannot discover v2-only gateways). Single process, one poll loop, no async
+runtime, no new heavy deps, parsers hand-rolled and tiny. No TLS.</p>
+<p><strong>Invariants (enforce in code + Kani):</strong></p>
+<ul>
+<li><strong>One holder per inner tuple.</strong> Precedence: static &gt; lease (PCP/UPnP
+share one table row) &gt; observation. The allocator refuses a second holder;
+observation never captures a tuple a lease/static holds. Split-brain equals
+tuple churn mid-session equals STOP condition.</li>
+<li><strong>Keepalives originate from the tuple as seen past the B4 NAPT.</strong>
+Config/lease slots: daemon socket at R. Observed flows: shadow socket at
+the conntrack-resolved post-NAT port. The SNAT pin is this invariant as a
+rule.</li>
+<li><strong>Clocks nest.</strong> 2 s keepalive sits below the 5 to 10 s AFTR TTL,
+which sits below the rescue window, which sits below the conntrack timeout,
+which sits below lease lifetimes. Record actual sysctls (conntrack-CDC
+test); document the table; every layer's recovery assumes the layer below
+does not die first. AFTR-before-conntrack death is what makes G's
+promotion structural, not contingent.</li>
+<li><strong>Honesty gradient per channel.</strong> PCP reports the true tuple (in-spec).
+UPnP reports requested-port plus true-IP (request-channel lie, never
+load-bearing because the SNAT pin makes the client's observed tuple equal
+the owned tuple). Observation is silent (no client to inform). Never
+synthesize port preservation anywhere.</li>
+<li><strong>Restoration cheaper than construction.</strong> Respawn = rebind + one STUN
+cycle; reboot = epoch reset + tmpfs wipe, aligned exactly with AFTR state
+death.</li>
+</ul>
+<h2 id="3-phase-map"><a class="header" href="#3-phase-map">§3 Phase map</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Phase</th><th>Content</th></tr></thead><tbody>
+<tr><td>A</td><td>v1 acceptance [OPERATOR-gated], blocks D/E sign-off, runs against the deployed v1 core</td></tr>
+<tr><td>B</td><td>Slot engine refactor, starts immediately, foundation for D/E/G</td></tr>
+<tr><td>C</td><td>Measurements: divergence, TPROXY, and idle-lifetime tests feed D/E; CDC, shadow-bind, rescue-timing, and signal checks gate G; unmapped-ICMP probe optional</td></tr>
+<tr><td>D</td><td>PCP facade, after B (+ A sign-off)</td></tr>
+<tr><td>E</td><td>UPnP IGDv1 facade, after D</td></tr>
+<tr><td>F</td><td>Switch observation [OPERATOR], anytime hardware available, zero product work</td></tr>
+<tr><td>G</td><td>Observation rescue engine, after B and the Phase C gate measurements; independent of D/E order</td></tr>
+</tbody></table>
+</div>
+<h2 id="4-phase-a-v1-acceptance-restated-from-v1"><a class="header" href="#4-phase-a-v1-acceptance-restated-from-v1">§4 Phase A: v1 acceptance (restated from v1)</a></h2>
+<ol>
+<li><strong>A0 preflight.</strong> Daemon alive under procd; STUN cadence about 2 s
+confirmed via <code>tcpdump -c 20</code> on eth1; nft ruleset present; <code>/tmp</code> clean.
+All green, or restore known-clean first.</li>
+<li><strong>A1 reply-path validation.</strong> A br-lan endpoint PC sends STUN from the v1
+endpoint tuple; assert its XOR-MAPPED-ADDRESS equals the daemon's
+discovered tuple (SNAT pin working). If a peer-scoped rule blocks this,
+use paired echo: external prober sends to the tuple, PC echoes, prober
+confirms. <strong>STOP</strong> if replies egress with a fresh port: debug rule order
+and <code>ip rule</code> priority before any facade work. The reply-path outcome
+also resolves the TPROXY question (TPROXY needed only if this validation
+failed).</li>
+<li><strong>A2 PSN NAT test [OPERATOR].</strong> DHCP-reserve console at the endpoint;
+capture br-lan + eth1 both sides during the console's connection test.
+<strong>Pass = NAT Type 2 AND</strong> pcaps show console egress SNAT'd to R and
+inbound probes forwarded with true peer source. <strong>Fail = forwarding model
+falsified, STOP everything.</strong></li>
+<li><strong>A3 keepalive-pause soak.</strong> <code>kill -STOP; sleep 12; kill -CONT</code>; expect
+churn, then detect, then republish; old tuple dead, new tuple
+inbound-reachable within a single keepalive interval. 3× at 12 s, 3× at
+20 s. This mechanism underwrites every lease and every GENA event (E4).</li>
+</ol>
+<h2 id="5-phase-b-slot-engine-v1-items--synthesis-additions"><a class="header" href="#5-phase-b-slot-engine-v1-items--synthesis-additions">§5 Phase B: slot engine (v1 items + synthesis additions)</a></h2>
+<ol>
+<li>Branch <code>p2-slot-engine</code>. With one static map configured, packet behavior
+byte-identical to the v1 core (pcap diff = bisection baseline).</li>
+<li>Core: <code>Slot { bind_port R, target, external: Option&lt;(IpAddr,u16)&gt;, stun_cursor, phase_ms, lease }</code>; <code>Lease = Static | Granted{client, int_port, proto, lifetime, expires_at}</code>. One table, keyed on inner tuple,
+with PCP index (proto, int_port, client) and UPnP bookkeeping external-port
+index.</li>
+<li>Config: repeatable <code>--static-map R=ip:port</code>; <code>--slot-port-range 30000-39999</code>; <code>--max-slots 32</code>; <code>--max-maps-per-client 16</code>.</li>
+<li><strong>Holder registry (one holder per inner tuple).</strong> Every allocation passes
+a single <code>holder_of(inner_tuple)</code> check; a duplicate is refused and
+logged. Kani property: no state reachable with two holders.</li>
+<li>nft dynamic state as <strong>named-map elements only</strong> (fixed rule set installed
+once): (src ip, src port) to R for the pin; inbound per the v1 core's
+proven mechanism unchanged. Slot create/delete = element add/delete,
+atomic.</li>
+<li><strong>STUN majority vote (new).</strong> The shared STUN client compares each
+XOR-MAPPED-ADDRESS against the cached tuple. At least 2 servers agree on a
+new value: churn and republish. Single-server disagreement marks the
+server suspect, rotates on, and does not republish. Log both paths. Kani:
+the vote logic.</li>
+<li>Stagger STUN: slot i at <code>(i × 2000/N) ms</code> offset. Per-slot independent
+server rotation.</li>
+<li>Persistence in <code>/tmp/dslp/</code>: <code>epoch</code> (creation ts, written on first
+start), <code>leases.tsv</code> (rewritten on change). Respawn rebinds the same Rs,
+re-STUNs all slots (startup burst allowed), re-adds elements: one-cycle
+restore. Test with <code>kill -9</code>.</li>
+<li>Epoch semantics: <code>epoch = now − creation_ts</code>; tmpfs survives respawn
+(continuous) but not reboot (reset), correct cache-invalidation alignment
+(the restoration-first rule). Feeds D5.</li>
+<li>GC: lease expired ×3 grace with no refresh and no observed traffic frees
+the slot. Unleased-undiscovered slots die at 60 s.</li>
+<li><strong>Record conntrack facts (feeds the conntrack-CDC test and the
+clocks-nest rule).</strong> Read
+<code>net.netfilter.nf_conntrack_udp_timeout</code> and <code>_stream</code> from sysctls; write
+them into the README clock-nesting table. Do not assume defaults.</li>
+<li>Acceptance: 3-slot 30-min soak (feeds the per-slot divergence test);
+kill-9 respawn restore; a pcap identical to the v1 core's; Kani (lease
+state machine, epoch monotonicity,
+allocator, holder uniqueness, majority vote).</li>
+</ol>
+<h2 id="6-phase-c-measurements"><a class="header" href="#6-phase-c-measurements">§6 Phase C: measurements</a></h2>
+<blockquote>
+<p><strong>RESULTS RECORDED 2026-08-31</strong> (full method + evidence in project memory
+<code>vm-aftr-dslite.md</code>; probe tool <code>tools/conntrack-probe</code>):</p>
+<ul>
+<li><strong>No per-slot IP divergence.</strong> 3-slot 30-min soak held
+<code>37.228.213.83</code> on all slots (59230/59346/59274), 0 churn post-confirm,
+0 disagreements. E3 returns the live value, no slot-0 caveat. Stagger
+verified on-wire (+0/+668/+1335 ms per 2 s cycle).</li>
+<li><strong>Netlink conntrack event multicast does NOT reach userspace</strong> on
+this 6.12.35 ImmortalWrt build (config=y, module loaded, CT_GET dump
+round-trips cleanly, groups 1-32 joined, <code>nf_conntrack_events</code> 0/1/2 all
+silent). Consequence: netlink CT events are not the CDC; see G1 for the
+layered design it drove. Conntrack clocks: 60/180/30 s (clocks-nest
+rule: the AFTR dies before conntrack, so promotion is structural).</li>
+<li><strong>G1 CDC DECIDED (2026-09-01, layered, not a fallback ladder):</strong>
+<ol>
+<li><strong>Primary: nft dynamic-set mirror</strong> <code>flow_obs</code> (<code>type ipv4_addr . inet_service</code>, <code>flags timeout</code>, about 15 s) in <code>table ip dslp</code>,
+populated by a filter-hook postrouting rule on <code>oifname eth1</code> UDP at
+priority 110. <strong>Gating test PASSED (2026-09-02, on-box):</strong> the
+observer sees the post-NAT source; elements are the shadow-bind tuples
+<code>(192.168.0.21, R_nat)</code> directly; no conntrack read for R_nat (tier 3,
+CT_GET assist, is dead). Two measured corrections to the brief: fw4's
+<code>srcnat</code> chain sits at the default <code>priority srcnat</code> = 100 (<strong>not
+-100</strong>), so the observer must be above 100 (110 used); and fw4's eth1
+NAT is a fixed <code>snat ip to 192.168.0.21</code> (port-preserving), so R_nat =
+the flow's original source port. Kernel keeps membership + expiry; the
+15 s element timeout IS the silence detector; userspace reads only
+live candidates each tick.</li>
+<li><strong>Performance: Aya TC hook on br-lan</strong> (about 50 LOC or less: parse
+eth/IP/UDP, key (saddr, sport), store ktime) into a BPF map, userspace
+drains: same candidate semantics with no nft read churn. <strong>A
+performance win when BTF is available, NOT a stretch goal</strong> (David,
+2026-09-01). Confirmed available here: <code>/sys/kernel/btf/vmlinux</code>
+present, <code>DEBUG_INFO_BTF=y</code>, and qosify already runs tc-hook + BPF
+maps in production on this router.</li>
+<li><strong>Assist: ctnetlink targeted CT_GET</strong> per candidate, only if the
+primary set lands on pre-NAT tuples (recovers R_nat). Dead if the
+post-NAT variant holds.</li>
+<li><strong>Fallback: <code>/proc/net/nf_conntrack</code> polling</strong> (existence +
+[UNREPLIED]/[ASSURED]), kept, last resort, <code>--cdc proc</code> (David: "I
+don't like 1, keep it as a fallback").
+Implemented as one <code>Cdc</code> trait with three backends (<code>nft</code> / <code>aya</code> /
+<code>proc</code>), same contract: live bidirectional UDP candidates with
+shadow-bind tuples at cadence at most 2 s. <strong>Aya is no longer listed in
+§13 as an escalation requiring justification; it is a first-class tier.</strong></li>
+</ol>
+</li>
+<li><strong>Shadow-bind feasibility: PASS.</strong> The relay's own keepalive socket IS a
+bound NAPT-translated tuple (soaked stable 30 min); the rescue-timing rig
+verified WAN-to-relay-socket delivery through the pin. (Its self-probe
+EADDRINUSE = a local-source artifact: the probe from the router's own IP
+collides with the relay's IP_TRANSPARENT bind; external sources cannot
+collide.)</li>
+<li><strong>Rescue timing.</strong> The mapping survives host silence at least 45 s
+(relay keepalive owns lifetime; probes arrived at relay socket at
+T+0/15/45). External echo
+round-trip half: globalping UDP traceroute does NOT honor fixed ports
+(probes 33434+n; identical on mapped/unmapped), so <strong>[OPERATOR] phone
+hotspot per G8.4</strong>. Do not fake it.</li>
+<li><strong>Keepalive: the liveness signal.</strong> (30-min stability; no additional
+probe needed).</li>
+<li><strong>Unmapped UDP on the pool: silent drop.</strong> No ICMP; contrast TCP,
+which RSTs. Dead-mapping detection: TCP has RST; UDP relies on
+shadow-STUN (G3e) + slot GC.</li>
+<li>Bonus: the AFTR re-issued the SAME external port to the same inner tuple
+after relay restart (twice). Recent-mapping reuse observed, noted.</li>
+<li>Deploy gotcha: manual (non-procd) instances LEAK nft pins + accepts on
+kill; production restore = single pin + one accept (verify with
+<code>nft list map ip dslp snat_map</code> after any manual instance).</li>
+</ul>
+</blockquote>
+<ol>
+<li><strong>Per-slot public IP divergence.</strong> Log per-slot XOR IP for 10 min, 3
+slots. Identical: GetExternalIPAddress returns the live value.
+Divergent: PCP stays per-slot-honest; UPnP uses slot-0 + documented
+limitation. Record the fact either way. <strong>[DONE: no divergence.]</strong></li>
+<li><strong>TPROXY decision.</strong> Resolved from the reply-path validation: a pass
+means "no fallback needed" recorded;
+fail means debug the SNAT pin (rule order / <code>ip rule</code> priority /
+conntrack) and re-run A1/A2. Never build both paths speculatively.
+<strong>[Resolved from A1/B10: SNAT pin works, no TPROXY path; see B10 pcap
+diff.]</strong></li>
+<li><strong>TCP idle lifetime (deferred, non-blocking).</strong> Hold UDP mirror;
+establish TCP mapping; probe mapped tuple at 15/30/60/120/300/600 s idle
+gaps; binary-search the death point. Gates TCP grants only.</li>
+<li><strong>Conntrack CDC read.</strong> Measure before building G: sysctl values (see
+B11) AND whether <code>netlink</code> conntrack events fire on activity from a br-lan
+host (use the rescue-timing rig); <code>/proc/net/nf_conntrack</code>
+existence/[UNREPLIED]/[ASSURED] polling as cross-check; also confirm
+on-activity state-change notifications reach userspace. Record the
+mechanism choice for G1. Do not assume netlink events fire on default
+kernels: the router's kernel is a custom ImmortalWrt build. <strong>[DONE:
+events do not deliver; G1 = /proc polling.]</strong></li>
+<li><strong>Shadow-bind feasibility</strong> (gate for the shadow-socket rescue step).
+From the router, <code>bind</code> a NAPT-translated (NAT addr, R_nat) tuple: the
+192.168.0.21:40000 v1-core socket is the existence proof; the
+rescue-timing rig re-proves it with a NAT'd port and a
+<em>second</em> flow, and checks the response path to a shadow socket.
+PASS/FAIL recorded. <strong>FAIL means the raw-injection rescue path is the
+route.</strong> <strong>[DONE: PASS, shadow-socket path.]</strong></li>
+<li><strong>Rescue-timing rig.</strong> A br-lan host sends UDP toward an external echo
+(e.g. <code>socat</code>/python on the vdsl4 line, or a public STUN server), then
+goes silent; measure at 0/2/5/10/15/60 s: (i) is the tunnel still mapping
+(external STUN from the same tuple sees the mapping), the rescue window
+edge; (ii) does an external prober reach the host through the existing pin
+(the lease slot's tuple), with pin-liveness tested separately from mapping
+liveness; (iii) the timing of both. Budget the rescue thresholds from this.
+PASS/FAIL for live-pin injection. <strong>[DONE: mapping survives 45 s of
+silence; echo half [OPERATOR].]</strong></li>
+<li><strong>Signal-of-life check.</strong> The managed daemon's STUN keepalive from the
+pinned tuple is itself evidence the mapping lives; any external delivery
+to the pinned tuple is the strongest. Record, don't chase. <strong>[DONE:
+keepalive is the signal.]</strong></li>
+<li><strong>ICMP-on-unmapped probe [optional].</strong> From the router send unmapped-tuple
+UDP and note ICMP behavior on both lines. Answer: silent drop or ICMP
+unreachable? Informs "dead mapping" detection for TCP and defers UDP
+detection (falls to G/slot GC). Record finding or defer. <strong>[DONE: silent
+drop.]</strong></li>
+</ol>
+<h2 id="7-phase-d-pcp-server"><a class="header" href="#7-phase-d-pcp-server">§7 Phase D: PCP server</a></h2>
+<ol>
+<li>Socket: <code>192.168.21.1:5351/udp</code> (br-lan; never 0.0.0.0). NAT-PMP behind
+<code>--natpmp</code> (default on), same port.</li>
+<li>Parser: hand-rolled; every length is checked against the remaining buffer
+<em>before</em> use; options skipped by length; no unguarded indexing. Kani owns
+the parser. <strong>The wire format sketch above is memory, not authority:
+verify every field, opcode, option type, and result code against RFC 6887
+§§6-9 and the A.3 table during implementation.</strong></li>
+<li>Dispatch. <strong>ANNOUNCE</strong>: epoch only. <strong>MAP UDP</strong>: existing key = refresh
+(extend, respond with <em>current</em> live tuple; this is how churn heals
+client-side); new = quota check (USER_EXQUOTED / NO_RESOURCES), then
+allocate R, add pin element, begin discovery. <strong>MAP TCP</strong>:
+UNSUPP_PROTOCOL (until the TCP idle-lifetime measure). <strong>PREFER_FAILURE</strong>: always
+CANNOT_PROVIDE_EXTERNAL_PORT, never substitute. <strong>Discovery in flight</strong>:
+silently drop the request (client retry is spec-expected;
+drop-not-queue). <strong>Discovery failed</strong>: NETWORK_FAILURE next request.
+<strong>PEER</strong>: SUCCESS no-op behind <code>--pcp-peer</code> (EIF = no per-peer gate; log
+first N). <strong>THIRD_PARTY</strong>: NOT_AUTHORIZED. Unknown/malformed:
+MALFORMED_REQUEST; parser never panics.</li>
+<li>SUCCESS MAP carries the <strong>real</strong> STUN tuple as assigned external (clients
+MUST accept assigned ≠ suggested; PCP is fully honest). Echo nonce.
+Granted lifetime = min(requested, <code>--pcp-max-lifetime</code> 600); document:
+bounds post-churn staleness (refresh reports the then-current tuple).
+Lifetime 0 = delete now.</li>
+<li>Epoch from B9 in every response. NAT-PMP behind <code>--natpmp</code> (default on):
+opcodes 0/1/2, response opcode req+128, fixed 7200, no epoch.</li>
+<li><strong>Before implementing lease reconciliation with E, read RFC 6886
+(IGD↔PCP interworking).</strong> Where IGD lease semantics and PCP lifetimes
+collide, follow 6886's mapping table rather than inventing. Verify section
+numbers during implementation.</li>
+<li>Kani: parser vectors (all truncation offsets, bad version, option length
+edges, 0/1-byte), dispatch, quota arithmetic, epoch continuity across a
+simulated respawn.</li>
+<li>Acceptance (in-repo test client): <strong>flagship: MAP's returned tuple equals
+what a STUN Binding sent by the client from (client_ip, int_port) itself
+observes</strong> (the pin makes the PCP answer and client self-observation
+identical). Plus: refresh extends; lifetime-0 frees (element gone);
+PREFER_FAILURE fails; THIRD_PARTY refused; NAT-PMP public-address matches.</li>
+<li>Non-goals: DHCP option 157, TCP success path, relay.</li>
+</ol>
+<h2 id="8-phase-e-upnp-igdv1-facade-v1-items--additions"><a class="header" href="#8-phase-e-upnp-igdv1-facade-v1-items--additions">§8 Phase E: UPnP IGDv1 facade (v1 items + additions)</a></h2>
+<ol>
+<li>SSDP: join 239.255.255.250:1900 on br-lan, REUSEPORT; M-SEARCH for the
+five v1 STs; responses delayed randomly within MX; alive NOTIFY at
+max-age/2; byebye on clean exit; stable persisted UDN; bootid.</li>
+<li>Description docs on <code>--upnp-port</code> (default 49152), br-lan only:
+the chain IGD, WANDevice, WANConnectionDevice, then WANIPConnection:1 (+
+WANPPPConnection:1 alias, default on). SCPDs cribbed from miniupnpd (BSD;
+attribution comment).</li>
+<li>SOAP: accept <strong>both POST and M-POST/MAN</strong> (PS3-era stacks). Actions:
+GetExternalIPAddress (<strong>live STUN value, never 0.0.0.0</strong>; pre-discovery =
+last known; on per-slot divergence: slot-0 + documented limitation);
+AddPortMapping (InternalClient in br-lan else InvalidArgs; <strong>UDP only</strong>;
+RemoteHost accepted + ignored (EIF); <strong>NewLeaseDuration=0 accepted as
+infinite</strong>, modeled as a max-life lease the engine self-refreshes; re-Add
+same key = upsert, never duplicate; external port grant is
+report-requested, documented); DeletePortMapping (absent faults; verify
+codes); GetSpecific/GetGenericPortMappingEntry (stable enumeration; past
+end faults; verify codes); GetStatusInfo (Connected);
+GetConnectionTypeInfo (IP_Routed).</li>
+<li><strong>Paired TCP+UDP Add quirk (live decision point).</strong> Consoles commonly Add
+both protocols. Default = honest TCP fault per scope. At E5, observe the
+real console: if it aborts its whole setup on the fault, switch to the
+documented fallback (silent no-op success for TCP Adds,
+"report-granted, no datapath", consistent with leases-advisory). Record
+the decision in the boundary file.</li>
+<li>GENA minimal: SUBSCRIBE/UNSUBSCRIBE, SID, initial NOTIFY, renewal, expiry
+at 2× timeout. <strong>Event ExternalIPAddress on every churn/republish</strong> (A3 is
+the proof this fires). Callback URLs http + br-lan only, validated.</li>
+<li>Conformance: <code>upnpc -l / -a / -d</code> full verb set (capture both sides);
+M-POST parity via curl with MAN header, assert identical dispatch. Then
+<strong>[OPERATOR]</strong> PS3/4/5 test (reuses the A2 chain; PS3 is the v1 acceptance
+client).</li>
+<li>Kani: SSDP header grammar, SOAP dispatch + fault paths, enumeration index
+math, SID/SEQ state machine.</li>
+<li>Documented-not-built: miniupnpd-WAN-deaf + lease_file tail escape
+hatch: one README paragraph. Hardening: size caps, LAN-only binds, no
+panics, capped logs.</li>
+</ol>
+<h2 id="9-phase-f-switch-observation-operator-zero-product-work"><a class="header" href="#9-phase-f-switch-observation-operator-zero-product-work">§9 Phase F: Switch observation [OPERATOR], zero product work</a></h2>
+<ol>
+<li>Record predictions <em>before</em> testing: VM line: NAT Type <strong>D</strong> (grader
+checks source-port preservation; AFTR randomizes; structurally unfixable
+at any layer we own). vdsl4 control: <strong>B</strong>. Test: Settings, Internet,
+Test Connection, each line.</li>
+<li>Lobby join on the VM line via stranger matchmaking (Pia/NEX title).
+Interpretation: D-to-B peer join works = boundary settled (grade measures
+preservation; gameplay runs on EIM+EIF observed-tuple exchange). D-to-D
+failure is ambiguous: both sides' NAT affects the outcome; do not
+conclude from it.</li>
+<li>Write the conclusion + residual uncertainties (does the grading probe
+share a socket with game traffic; hairpin unmeasured, needs a second VM
+vantage, mark untestable-now) into the boundary file.</li>
+<li><strong>Enforced non-actions:</strong> no Switch detection, no Switch-specific rules,
+no preservation emulation. Review rejects any. If the operator points a
+static map at the Switch's address, that is a README usage example of
+generic functionality, not code.</li>
+</ol>
+<h2 id="10-phase-g-observation-rescue-engine-new"><a class="header" href="#10-phase-g-observation-rescue-engine-new">§10 Phase G: observation rescue engine (new)</a></h2>
+<p>Rides on B (holder registry, STUN module, pin-element machinery). Gate: the
+conntrack-CDC record, shadow-bind PASS (else raw injection), and the
+rescue-timing margin measured. A-phase sign-off does <strong>not</strong>
+block G.</p>
+<ol>
+<li><strong>G1 CDC (DECIDED 2026-09-01, layered, not a fallback ladder).</strong> Netlink
+CT events are not used (measured silent; the conntrack-CDC record). One
+<code>Cdc</code> trait, three
+backends, same contract (live bidirectional UDP candidates +
+shadow-bind tuples at cadence at most 2 s): <strong>(a) nft <code>flow_obs</code>
+dynamic-set mirror</strong> (primary: kernel-managed membership + 15 s expiry,
+post-NAT tuples, gating test PASSED 2026-09-02, priority 110 above fw4
+srcnat 100; CT_GET assist dead); <strong>(b) Aya TC hook on br-lan</strong>
+(performance tier: BTF confirmed, qosify tc+BPF-map precedent live; <em>a
+performance win when available, not a stretch goal</em>); <strong>(c)
+<code>/proc/net/nf_conntrack</code> polling</strong> (fallback, <code>--cdc proc</code>). Full
+rationale in the Phase C results block. G2 uses no <code>silence budget</code>
+condition: the CDC's kernel-side timeout is the silence detector.</li>
+<li><strong>G2 policy predicate (console-agnostic, Kani truth table).</strong> proto UDP ∧
+src in br-lan ∧ dst off-LAN ∧ entry has seen reply (bidirectional;
+a mapping matters to a peer) ∧ inner tuple not held by static/lease (the
+one-holder rule) ∧ rescues below <code>--max-rescues</code> (8). No other condition. No
+hostname/MAC/port allowlists; review rejects any. (The <code>silence budget</code>
+clause is gone: the CDC's kernel-side set timeout is the silence
+detector; a silent flow evicts itself from the mirror; the predicate only
+sees live candidates.)</li>
+<li><strong>G3 rescue sequence (exact order).</strong> (a) Read the entry's translation:
+NAPT source address + R_nat from conntrack, never assumed. (b) Bind
+shadow socket (NAT addr, R_nat), gated on the shadow-bind test. (c)
+Install pin element
+(src_ip, src_port) targeted at R_nat, any-dst UDP: safe to install
+immediately; the no-retranslate quirk means the existing entry is
+untouched, and the pin targets the <em>same</em> R_nat, so present and future
+flows agree; any-dst scope makes all console traffic from that port share
+one AFTR inner tuple (full EIM, consistent with the v1 core). (d) Send
+STUN from the shadow socket: EIM means it refreshes the flow's mapping,
+the peer receives nothing. (e) Record XOR-MAPPED-ADDRESS = the flow's
+actual external tuple (free per-flow observability; a large slice of the
+deferred EIF-loss item). (f) 2 s cadence while active, staggered with
+slots.</li>
+<li><strong>G3b raw-injection fallback (only if shadow-bind failed).</strong> Craft a
+br-lan packet
+matching the entry's original direction (src = host:port, dst = entry's
+original peer), emit raw; the conntrack match applies the stored SNAT.
+Document the cost: the original peer sees a 0-byte UDP datagram. Prefer
+G3 whenever possible.</li>
+<li><strong>G4 promotion (structural, per the clocks-nest rule).</strong> Trigger =
+datagram receive on the shadow socket. Forward
+in the v1 style to the observed host:port (inbound works
+again; the peer sees the flow as alive). conntrack is never touched;
+forward is socket-level. Keepalive continues while active; mapping
+liveness = shadow STUN. This is the property: AFTR dies before local
+state does.</li>
+<li><strong>G5 exit.</strong> Budget exhausted (<code>--max-rescues</code> reached) | datagram
+received (promotion) | tuple claimed by static/lease | entry destroyed
+and no inbound for a grace period. On exit: close shadow socket, delete
+pin element, drop record. (Pin deletion can change the console's external
+tuple; acceptable only at budget-exit, flow presumed dead.)</li>
+<li><strong>G6 caps/logging.</strong> Max rescues; log the first 20 events fully, counters
+after.</li>
+<li><strong>G8 acceptance (scripted rig built on the rescue-timing setup).</strong>
+(1) Control: flow silent, no
+injection, tuple X dead by T+10. (2) Rescue: injection at measured
+threshold, X identical at T+10/T+60/T+300 (within budget) via shadow
+STUN. (3) Mid-rescue pin: a LAN host sends a <em>new</em> datagram from (host, P)
+toward a different destination; tunnel capture shows inner source port
+R_nat. (4) Promotion: delete the conntrack entry (<code>conntrack -D</code> if
+present, else netlink, else wait for natural timeout) mid-rescue, then an
+external UDP sender (globalping UDP traceroute to the live tuple if it
+accepts target ports; otherwise mark [OPERATOR] with any external UDP
+source, a phone hotspot works, and <strong>do not fake it</strong>): assert receipt on
+the shadow socket + forward to the LAN host in the daemon log.</li>
+</ol>
+<blockquote>
+<p><strong>G8 on-box record (2026-09-02, production daemon + <code>--observation</code>, rig =
+STUN from 192.168.21.1:41077 through the VM line).</strong> The no-claims
+assertion passed (no claims without rig traffic; the relay's own tuple is
+filtered out by the one-holder rule). The identical-tuple assertion passed
+on all five runs: the observed flow's external tuple
+<code>37.228.213.83:59213</code> was read identically from the shadow's XOR-MAPPED
+and from host re-STUNs at T+2.5 min of host silence (it would die at the
+5 to 10 s AFTR TTL without rescue); the claim held past the mirror's 15 s
+expiry with zero Stale exits once the fixes below were in. The pin-held
+assertion passed: the host-pin + self-pin elements
+live in <code>snat_map</code> for the claim's duration; the host's re-STUN rode the
+pin through the same inner tuple (proven by the identical mapping). The
+arrival leg passed end-to-end: a vdsl4-sourced probe to
+<code>37.228.213.83:59213</code> was delivered by the AFTR to the observed tuple on
+eth1 (<code>… .43999 &gt; 192.168.0.21.41077</code>, captured). The FORWARD leg cannot be
+completed from the router's own address: the forward's IP_TRANSPARENT bind
+of the probe's source collides with the probe's own socket, the plan's
+"self-probe EADDRINUSE" artifact (rescue timing); uk/us are not vantages
+(standing rule).
+<strong>[OPERATOR] per the plan: any genuinely external UDP sender (phone
+hotspot) to the live tuple completes the receipt-on-shadow +
+forward-to-host assertion.</strong></p>
+<p><strong>Measured integration fixes (all box-verified).</strong>
+(a) fw4 srcnat is <code>priority srcnat</code> = 100, <strong>not -100</strong>, so the mirror
+observer needs priority above 100 (110 used; gating test PASSED, elements
+are post-NAT <code>(192.168.0.21, orig_sport)</code>: fw4's eth1 NAT is a fixed
+<em>port-preserving</em> snat, so R_nat = the flow's original source port).
+(b) <strong>Self-pin.</strong> While the observed conntrack entry lives, the kernel
+NAPTs the shadow's keepalives to an ephemeral port (measured 41077 to
+1024), refreshing the WRONG mapping. An explicit (NAT, R_nat) to (NAT,
+R_nat) map element (the "self-pin") makes the keepalives egress under the
+observed tuple. The CT_DELETE alternative was bisected (<code>--ct-probe</code>, all
+family/nested/dir/zone encodings): EINVAL on this 6.12.35 build; no
+conntrack tool installable (no such apk package); recorded in <code>ct.rs</code>.
+(c) The mirror rule must use nft <strong><code>update</code></strong>, not <code>add</code>: <code>add</code> on an
+existing element does NOT refresh its timeout (element died every 15 s
+despite 2 s keepalive traffic, causing spurious Stale exits); <code>update</code> =
+insert-or-refresh (element pinned about 14 s forever).
+(d) The shadow sticks to one STUN server (rotate on failure only, relay
+pattern); concurrent flows from one source port get remapped too.
+(e) Input accepts at claim (B4-parallel): <code>ct state established</code> does not
+cover the promotion datagram (a genuinely NEW inbound flow), which fw4's
+input_wan would otherwise reject; the daemon installs <code>dslitepunch-&lt;R&gt;</code> per
+claim and removes it at exit.</p>
+</blockquote>
+<ol start="9">
+<li><strong>G9 Kani.</strong> Predicate truth table, budget arithmetic, precedence (never
+captures a owned tuple), exit state machine.</li>
+<li><strong>G10 README.</strong> What observation does (mapping never dies during
+lobby/loading silences; promotion keeps inbound alive) and does not
+(grade unaffected, D stays D; peer-side NAT expiry is not ours; hairpin
+out of scope). Switch benefit is a zero-config consequence of a generic
+policy; stated, never special-cased.</li>
+</ol>
+<h2 id="11-quirk-ledger-quirk-rule-where-it-lands"><a class="header" href="#11-quirk-ledger-quirk-rule-where-it-lands">§11 Quirk ledger (quirk, rule, where it lands)</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Quirk</th><th>Rule</th><th>Line</th></tr></thead><tbody>
+<tr><td>AFTR TTL 5 to 10 s, node-varying</td><td>2 s staggered cadence; rescue threshold from the rescue-timing rig</td><td>B7/B6, G3</td></tr>
+<tr><td>EIM any-dst refresh</td><td>STUN rotation legal; majority vote on disagreement</td><td>B6, G3e</td></tr>
+<tr><td>Random-high external ports, always</td><td>PREFER_FAILURE always fails; UPnP reports requested port; never emulate parity</td><td>D3, E3, §2</td></tr>
+<tr><td>XOR-MAPPED-ADDRESS is the only read</td><td>keepalive = discovery, one packet</td><td>§0, B</td></tr>
+<tr><td>TCP unmapped: RST; UDP unmapped: silent (ICMP unknown)</td><td>dead-signal asymmetry documented; the unmapped-ICMP probe informs v2</td><td>the ICMP probe</td></tr>
+<tr><td>Rule install does not re-translate existing entries</td><td>pin at rescue-start to the entry's own R_nat; mechanism-B (capture-to-slot) deferred for this reason</td><td>G3c</td></tr>
+<tr><td>Conntrack death stops DNAT</td><td>promotion = shadow socket receives, forwards in the v1 style</td><td>G4</td></tr>
+<tr><td>Lease-0 = infinite; lease-0 clients never refresh</td><td>self-refreshing max-life lease; respawn transparency load-bearing</td><td>E3, B8</td></tr>
+<tr><td>M-POST/MAN; paired TCP+UDP Adds</td><td>M-POST parity mandatory; TCP-fault vs no-op decided at E5, recorded</td><td>E3/E5</td></tr>
+<tr><td>NAT-PMP: no epoch field, +128, fixed 7200</td><td>as specified</td><td>D5</td></tr>
+<tr><td>PCP retry-expected</td><td>drop-not-queue during in-flight discovery</td><td>D3</td></tr>
+<tr><td>IGD↔PCP lease collision</td><td>follow RFC 6886, don't invent</td><td>D6</td></tr>
+<tr><td>Hairpin unmeasured</td><td>boundary file, untestable-now</td><td>F3</td></tr>
+</tbody></table>
+</div>
+<h2 id="12-merge-gates"><a class="header" href="#12-merge-gates">§12 Merge gates</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Phase</th><th>Criterion</th></tr></thead><tbody>
+<tr><td>all</td><td>Kani 0 failures (8 existing + per-phase new); router clean (pgrep/nft//tmp); tagged commit</td></tr>
+<tr><td>A</td><td>A2 Type 2 + pcap evidence; A3 3× churn-republish-recover</td></tr>
+<tr><td>B</td><td>B12 incl. a pcap identical to the v1 core's, kill-9 restore, holder-uniqueness proof</td></tr>
+<tr><td>C</td><td>divergence fact recorded; TPROXY decision recorded; CDC, shadow-bind, and rescue-timing records (gate G)</td></tr>
+<tr><td>D</td><td>D8 flagship: PCP answer matches the client's own STUN observation</td></tr>
+<tr><td>E</td><td>upnpc verb set + M-POST parity + [OPERATOR] PS3 Type 2</td></tr>
+<tr><td>F</td><td>predictions + lobby result in boundary file</td></tr>
+<tr><td>G</td><td>the four rig assertions (promotion may be [OPERATOR]-deferred if no external UDP sender) + G9</td></tr>
+</tbody></table>
+</div>
+<h2 id="13-global-stop-conditions"><a class="header" href="#13-global-stop-conditions">§13 Global STOP conditions</a></h2>
+<p>A2 failure (forwarding model falsified; nothing proceeds until root-caused and
+A1/A2 re-pass). Any Kani failure. Any console-shaped code. Any TCP grant path.
+Any UPnP v2 construct. Any process split or async runtime. <strong>Any state with
+two holders on one inner tuple.</strong> Any port-preservation emulation. Any
+relay/backup path via uk/us hosts. (Removed: "Aya adopted without the
+conntrack-CDC evidence of insufficiency": Aya is a first-class performance
+tier per the G1 decision, not an escalation requiring justification.)</p>
+<h2 id="14-open-items-carried-forward-do-not-silently-close"><a class="header" href="#14-open-items-carried-forward-do-not-silently-close">§14 Open items carried forward (do not silently close)</a></h2>
+<p>TCP idle lifetime (the deferred test, gates TCP grants only). EIF-loss
+detection v2 (informed by the unmapped-ICMP probe and the rescue sequence's
+free per-flow tuples). Hairpin behavior (second VM vantage
+required). ICMP-on-unmapped conclusion (the probe). Console behavior on
+paired-Add TCP fault (E5 decision record). Per-slot IP divergence policy if
+the divergence test says divergent. Whether the Switch's grading probe shares a socket with game
+traffic (F residual).</p>
+<h2 id="15-standards-sweep-nat-techniques-and-transition-schemes"><a class="header" href="#15-standards-sweep-nat-techniques-and-transition-schemes">§15 Standards sweep: NAT techniques and transition schemes</a></h2>
+<p>Audited 2026-09-12. Coverage frame: the RFCs that define NAT behavior
+classes, the NAT-traversal and keepalive technique corpus, and the IPv6
+transition schemes that could replace the DS-Lite path. RFCs outside that
+frame (media/SIP ALGs, DNS, transport internals) do not touch the
+AFTR-facing design and are out of scope. Each row asserts the disposition
+and the why; dispositions cite measured facts where a measurement exists.
+In-text cites elsewhere in the brief name the versions current when they
+were written (RFC 5389, 5766, 5245); the current versions are noted here.</p>
+<div class="table-wrapper"><table><thead><tr><th>RFC</th><th>Governs</th><th>Disposition and why</th></tr></thead><tbody>
+<tr><td>4787</td><td>UDP NAT behavior: mapping and filtering classes, lifetimes</td><td>Adopted as the taxonomy: the measured EIM+EIF is its full-cone class. Its minute-scale mapping lifetime guidance is violated by the AFTR, which is the reason for the 2 s cadence.</td></tr>
+<tr><td>7857</td><td>Updates to 4787/5382/5508: EIF refresh, 5-tuple mapping, randomization</td><td>Considered: its refinements change nothing here. Its §7 position (inbound does not refresh an EIF mapping) matches how we refresh, which is outbound-only.</td></tr>
+<tr><td>5382</td><td>TCP NAT behavior</td><td>Adopted for the TCP EIF characterization (measured 2026-08-31). TCP idle lifetime is unmeasured and gates TCP grants only.</td></tr>
+<tr><td>5508</td><td>ICMP NAT behavior</td><td>Considered: unmapped UDP is a silent drop with no ICMP (measured, the unmapped-ICMP probe); the relay never uses ICMP as a dead-mapping signal.</td></tr>
+<tr><td>6888</td><td>Common CGNAT requirements</td><td>Adopted as the violated floor: its 120 s UDP timeout vs the measured 5 to 10 s AFTR timeout. Its randomization honor shows in external ports that are always AFTR-chosen random-high.</td></tr>
+<tr><td>6269</td><td>IP address sharing issues</td><td>Considered: the AFTR re-issued the same external port after restart (observed); no design dependency.</td></tr>
+<tr><td>6056</td><td>Transport port randomization</td><td>Considered: random-high external ports are AFTR-chosen; parity emulation is rejected (never synthesize).</td></tr>
+<tr><td>3424</td><td>UNSAF and ALG critique</td><td>Considered: underwrites the zero-cooperation premise; no ALG sits in the encapsulating path.</td></tr>
+<tr><td>6333</td><td>DS-Lite</td><td>Adopted: the B4 NAPT role is the legal basis for the nft SNAT and shadow-bind design.</td></tr>
+<tr><td>6908</td><td>DS-Lite deployment considerations</td><td>Considered: behavior was verified empirically on this line; no deployment variant applies.</td></tr>
+<tr><td>7596 / 7597 / 7599</td><td>MAP-E / MAP-T / LW4o6</td><td>Closed: carrier provisioning is absent on this line (INVESTIGATION).</td></tr>
+<tr><td>5389 (8489 current)</td><td>STUN</td><td>Adopted: a Binding Request rather than an Indication because tuple observation is a co-equal job; the mechanics are unchanged between versions.</td></tr>
+<tr><td>5766 (8656 current)</td><td>TURN</td><td>Adopted as an analogue: the VPS relay is the TURN relay pattern; the control protocol itself does not apply, there is no control channel.</td></tr>
+<tr><td>5245 (8445 current)</td><td>ICE</td><td>Considered: consoles negotiate via ICE; the relay supplies the mapping ICE relies on and performs no ICE itself.</td></tr>
+<tr><td>5128</td><td>P2P traversal survey</td><td>Adopted as taxonomy: UDP hole punching, TCP simultaneous open, and relaying; port prediction rejected as fragile.</td></tr>
+<tr><td>6263</td><td>RTP media keepalive</td><td>Diverges deliberately: 2 s vs its 15 s envelope (measured AFTR timeout), Binding Request vs its Indication (observation), its recommended RTCP-mux does not apply (no RTP), and its not-recommended 0-byte packet is the raw-injection last resort.</td></tr>
+<tr><td>3489</td><td>Classic STUN</td><td>Obsolete (replaced by 5389/8489); its 15 s keepalive guidance is the same assumption that does not hold here.</td></tr>
+<tr><td>6887</td><td>PCP</td><td>Adopted as the LAN facade (phase D).</td></tr>
+<tr><td>6886</td><td>NAT-PMP / IGD interworking</td><td>Adopted as the facade and the reconciliation authority (phase E).</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../plan/0004-ds-lite-punch/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../plan/0004-ds-lite-punch/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

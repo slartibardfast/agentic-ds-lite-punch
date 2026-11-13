@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>RESULTS-2026-09-17-kani-state: the Kani lane&#x27;s true state and what is left in it - agentic-ds-lite-punch</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../index.html">agentic-ds-lite-punch</a></li><li class="chapter-item expanded affix "><li class="part-title">Cast: who</li><li class="chapter-item expanded "><a href="../../../cast/index.html"><strong aria-hidden="true">1.</strong> Cast: the project's Who</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../cast/agent.html"><strong aria-hidden="true">1.1.</strong> Agent: the agentic LLM developer</a></li><li class="chapter-item expanded "><a href="../../../cast/applying-personas.html"><strong aria-hidden="true">1.2.</strong> Applying personas during planning</a></li><li class="chapter-item expanded "><a href="../../../cast/client.html"><strong aria-hidden="true">1.3.</strong> Client: the remote member of the household</a></li><li class="chapter-item expanded "><a href="../../../cast/operator.html"><strong aria-hidden="true">1.4.</strong> Operator: the home edge network engineer</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Plan: what & when</li><li class="chapter-item expanded "><a href="../../../PLAN.html"><strong aria-hidden="true">2.</strong> PLAN: milestone index</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0004-ds-lite-punch/index.html"><strong aria-hidden="true">2.1.</strong> Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0004-ds-lite-punch/IMPLEMENTATION.html"><strong aria-hidden="true">2.1.1.</strong> ds-lite-punch implementation brief v2: facades + observation rescue over one slot engine</a></li><li class="chapter-item expanded "><a href="../../../plan/0004-ds-lite-punch/RESULTS-2026-09-17-switch-nat-type.html"><strong aria-hidden="true">2.1.2.</strong> RESULTS-2026-09-17-switch-nat-type: NAT type A on the Virgin Media line, and what earned it</a></li><li class="chapter-item expanded "><a href="../../../plan/0004-ds-lite-punch/RESULTS-2026-09-23-comment-harvest.html"><strong aria-hidden="true">2.1.3.</strong> The comment harvest</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/index.html"><strong aria-hidden="true">2.2.</strong> Milestone: test rig (ds-lite-punch acceptance harness)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/ANALYSIS-2026-09-13.html"><strong aria-hidden="true">2.2.1.</strong> ANALYSIS-2026-09-13: soak timing, the AFTR refreshes its mappings on inbound</a></li><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/RESULTS-2026-09-13-A1.html"><strong aria-hidden="true">2.2.2.</strong> RESULTS-2026-09-13-A1: the reply-through-mapping leg (the sink shares the relay pin)</a></li><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/RESULTS-2026-09-13-run2.html"><strong aria-hidden="true">2.2.3.</strong> RESULTS-2026-09-13-run2: A3 keepalive-pause soak with the forward leg open</a></li><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/RESULTS-2026-09-13-run3.html"><strong aria-hidden="true">2.2.4.</strong> RESULTS-2026-09-13-run3: the probe-quiet pause (mapping survival under silence)</a></li><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/RESULTS-2026-09-13.html"><strong aria-hidden="true">2.2.5.</strong> RESULTS-2026-09-13: A3 keepalive-pause soak (first campaign)</a></li><li class="chapter-item expanded "><a href="../../../plan/0005-test-rig/results/index.html"><strong aria-hidden="true">2.2.6.</strong> results</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0006-ps3-requirements/index.html"><strong aria-hidden="true">2.3.</strong> Milestone: PS3 requirements operation (A2 console acceptance)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0006-ps3-requirements/results/RESULTS-2026-09-13-exam.html"><strong aria-hidden="true">2.3.1.</strong> RESULTS-2026-09-13: PSN examination (organic failure, OS update, NAT Type 2)</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/index.html"><strong aria-hidden="true">2.4.</strong> Milestone: igd facade (full UPnP/SSDP answering and honouring, TCP plus UDP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-13-c3.html"><strong aria-hidden="true">2.4.1.</strong> RESULTS-2026-09-13-c3: AFTR TCP mapping idle lifetime</a></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-13-pinning.html"><strong aria-hidden="true">2.4.2.</strong> RESULTS-2026-09-13-pinning: the 2 s keepalive and the external IP</a></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-13-tcp-datapath.html"><strong aria-hidden="true">2.4.3.</strong> RESULTS-2026-09-13-tcp-datapath: staged line verification</a></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-15-facade-review.html"><strong aria-hidden="true">2.4.4.</strong> RESULTS-2026-09-15-facade-review: the E1-E8 facade review and its fixes</a></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-15-ps3-facade.html"><strong aria-hidden="true">2.4.5.</strong> RESULTS-2026-09-15-ps3-facade: E6 console sign-off with the facade live</a></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-17-kani-state.html" class="active"><strong aria-hidden="true">2.4.6.</strong> RESULTS-2026-09-17-kani-state: the Kani lane's true state and what is left in it</a></li><li class="chapter-item expanded "><a href="../../../plan/0007-igd-facade/results/RESULTS-2026-10-07-the-kani-rung-on-a-runner.html"><strong aria-hidden="true">2.4.7.</strong> The Kani rung on a runner: the tree's own harnesses verify, and the facade's are in flight</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0008-adaptive-igd-v1v2-facade/index.html"><strong aria-hidden="true">2.5.</strong> Milestone: adaptive UPnP IGD v1/v2 compatibility facade</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0008-adaptive-igd-v1v2-facade/RESULTS-2026-09-17-bench-matrix.html"><strong aria-hidden="true">2.5.1.</strong> T4 results: the client-class matrix on the deployed box</a></li><li class="chapter-item expanded "><a href="../../../plan/0008-adaptive-igd-v1v2-facade/RESULTS-2026-09-17-miniupnpc-interop.html"><strong aria-hidden="true">2.5.2.</strong> RESULTS-2026-09-17-miniupnpc-interop: the reference client reads the v2 listing, and what it found</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/index.html"><strong aria-hidden="true">2.6.</strong> Milestone: the mapping hold, its admission, and the signalling to clients</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/IMPLEMENTATION.html"><strong aria-hidden="true">2.6.1.</strong> Implementation plan: the mapping hold, its admission, and the signalling</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-17-implementation.html"><strong aria-hidden="true">2.6.2.</strong> Results: the hold, its admission, and the signalling, as built</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-acceptance.html"><strong aria-hidden="true">2.6.3.</strong> Results: the acceptance run on the router, and the two defects it found</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-collision-yield.html"><strong aria-hidden="true">2.6.4.</strong> A device's flow onto a leased port makes the daemon move that lease</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-field-session.html"><strong aria-hidden="true">2.6.5.</strong> Results: the field session, the hold under real play, and a state-directory incident</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-held-mapping-silence.html"><strong aria-hidden="true">2.6.6.</strong> A held mapping answers the outside across its client's silence</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-18-tuple-analysis.html"><strong aria-hidden="true">2.6.7.</strong> The uplink's tuple behaviour, read from the daemon's own log</a></li><li class="chapter-item expanded "><a href="../../../plan/0009-mapping-keepalive-and-signalling/results/RESULTS-2026-09-19-soak.html"><strong aria-hidden="true">2.6.8.</strong> The daemon over seventeen hours: flat, and no state write failed</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/index.html"><strong aria-hidden="true">2.7.</strong> Milestone: the carrier's filtering, proved and watched</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/PROCEDURE-2026-10-07-the-lobby-case.html"><strong aria-hidden="true">2.7.1.</strong> Procedure: the lobby case on a real console</a></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-alarm-proof.html"><strong aria-hidden="true">2.7.2.</strong> The watch counts the helper's probe, and silence raises the alarm</a></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-inbound-translation.html"><strong aria-hidden="true">2.7.3.</strong> An arrival at a slot port is translated to its client</a></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-slot-datapath-defects.html"><strong aria-hidden="true">2.7.4.</strong> Two datapath defects, written up</a></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-20-stranger-probe.html"><strong aria-hidden="true">2.7.5.</strong> The line forwards a stranger's datagram to a held mapping</a></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-21-the-probe-the-translation-hid.html"><strong aria-hidden="true">2.7.6.</strong> The probe the translation hid</a></li><li class="chapter-item expanded "><a href="../../../plan/0010-the-filtering-proved-and-watched/results/RESULTS-2026-09-23-the-watch-that-lost-its-own-rule.html"><strong aria-hidden="true">2.7.7.</strong> The watch that lost its own rule</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0011-documentation/index.html"><strong aria-hidden="true">2.8.</strong> Milestone: the documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0011-documentation/results/RESULTS-2026-09-22-documentation.html"><strong aria-hidden="true">2.8.1.</strong> The documentation, delivered</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/index.html"><strong aria-hidden="true">2.9.</strong> Milestone: the front door</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/NOTE-2026-09-27-the-remap-disposition.html"><strong aria-hidden="true">2.9.1.</strong> The last receipt's blocker, and the two ways the doctrine offers out of it</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/NOTE-2026-09-28-the-canonical-build-and-the-lanes.html"><strong aria-hidden="true">2.9.2.</strong> The canonical build, and the lanes that did not match it</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/NOTE-2026-10-02-the-front-deployed-on-the-rig.html"><strong aria-hidden="true">2.9.3.</strong> The front, deployed on the rig</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/NOTE-2026-10-02-the-granted-tcp-slot-at-the-lan.html"><strong aria-hidden="true">2.9.4.</strong> The granted TCP slot at the LAN, and the wall outside it</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-26-stranger-arrival.html"><strong aria-hidden="true">2.9.5.</strong> The stranger's arrival: a held port admits its peers, not the world</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-front-door.html"><strong aria-hidden="true">2.9.6.</strong> The front door: what the line, the front and a deployment each hold</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-pinhole.html"><strong aria-hidden="true">2.9.7.</strong> The pinhole: a held port admits the peer the line has spoken to</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-return-path.html"><strong aria-hidden="true">2.9.8.</strong> The TCP fault is the client's return path, not the box's input path</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-slot-complete.html"><strong aria-hidden="true">2.9.9.</strong> The TCP slot's protocol is whole; a service host is what remains</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-tcp-slot.html"><strong aria-hidden="true">2.9.10.</strong> The TCP slot: a tuple that needed a server speaking over TCP</a></li><li class="chapter-item expanded "><a href="../../../plan/0012-the-front-door/results/RESULTS-2026-09-27-the-tcp-syn.html"><strong aria-hidden="true">2.9.11.</strong> The TCP poke admits the SYN; the SYN-ACK is the fault that remains</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0013-the-fronts-two-views/index.html"><strong aria-hidden="true">2.10.</strong> The front's two views</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/index.html"><strong aria-hidden="true">2.11.</strong> The front's legs on the poked socket</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-corrected-the-datagram-leg-carries-traffic.html"><strong aria-hidden="true">2.11.1.</strong> Corrected: the datagram leg carries traffic, and the reply path is what is missing</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-admission-rules-so-far.html"><strong aria-hidden="true">2.11.2.</strong> The admission rules, so far</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-datagram-leg-at-the-front.html"><strong aria-hidden="true">2.11.3.</strong> The datagram leg at the front, and the edge that will not carry it</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-fold-installed-and-inert.html"><strong aria-hidden="true">2.11.4.</strong> The fold is installed and inert, and the lead is in the daemon's own log</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-pin-cannot-carry-a-services-reply.html"><strong aria-hidden="true">2.11.5.</strong> The pin cannot carry a service's reply, and what a front-door slot needs instead</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-round-trip-closes.html"><strong aria-hidden="true">2.11.6.</strong> The round trip closes: the front door carried a datagram both ways</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-closes.html"><strong aria-hidden="true">2.11.7.</strong> The TCP leg closes: the front door carried a TLS client to the service behind the line</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-is-one-fix-away.html"><strong aria-hidden="true">2.11.8.</strong> The TCP leg is one fix away, and the front's log names it</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-06-the-tcp-leg-needs-a-tuple.html"><strong aria-hidden="true">2.11.9.</strong> The TCP leg needs a tuple the front does not have</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-07-the-admission-rules.html"><strong aria-hidden="true">2.11.10.</strong> The admission rules, measured</a></li><li class="chapter-item expanded "><a href="../../../plan/0014-the-fronts-legs/results/NOTE-2026-10-07-the-release-and-both-legs.html"><strong aria-hidden="true">2.11.11.</strong> The release carries both legs, and the front's relay was the stale half</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0015-the-routers-name/index.html"><strong aria-hidden="true">2.12.</strong> The router's name on the LAN</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0015-the-routers-name/results/NOTE-2026-11-11-the-name-paths.html"><strong aria-hidden="true">2.12.1.</strong> The name's paths, measured</a></li></ol></li><li class="chapter-item expanded "><a href="../../../plan/0016-the-carrier-environment/index.html"><strong aria-hidden="true">2.13.</strong> The carrier environment for end-to-end testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.html"><strong aria-hidden="true">2.13.1.</strong> Research: the carrier model, generalised</a></li><li class="chapter-item expanded "><a href="../../../plan/0016-the-carrier-environment/results/RESULTS-2026-11-11-the-policy-rows-so-far.html"><strong aria-hidden="true">2.13.2.</strong> The policy rows so far: thirteen green, one open</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">Software: where</li><li class="chapter-item expanded "><a href="../../../where.html"><strong aria-hidden="true">3.</strong> Software</a></li><li class="chapter-item expanded affix "><li class="part-title">Call: why</li><li class="chapter-item expanded "><a href="../../../call/0000-use-markdown-decision-records.html"><strong aria-hidden="true">4.</strong> Use Markdown decision records (MADR)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../call/0011-redesign-vm-line-57-pd.html"><strong aria-hidden="true">4.1.</strong> Redesign the VM Ireland line for /57 delegation + DHCPv6-PD; retire router-side ds-lite</a></li><li class="chapter-item expanded "><a href="../../../call/0013-console-egress-virgin-line.html"><strong aria-hidden="true">4.2.</strong> Route the console's whole traffic through the Virgin line (eth1)</a></li><li class="chapter-item expanded "><a href="../../../call/0014-a2-acceptance-reframe.html"><strong aria-hidden="true">4.3.</strong> A2 acceptance reframe: fold-attributed PSN Type 2 is impossible by construction; the verdict takes organic Type 2 plus the A1 fold proof</a></li><li class="chapter-item expanded "><a href="../../../call/0015-phase-e-priority.html"><strong aria-hidden="true">4.4.</strong> Phase E priority: the IGD facade is not required for the console's NAT type on this line</a></li><li class="chapter-item expanded "><a href="../../../call/0016-repro-waiver-retired.html"><strong aria-hidden="true">4.5.</strong> Repro waiver retired: the crate landed with its build recipe</a></li><li class="chapter-item expanded "><a href="../../../call/0017-tcp-grants-permitted.html"><strong aria-hidden="true">4.6.</strong> TCP grants permitted: the C3 unlock and the protocol-dimension spike</a></li><li class="chapter-item expanded "><a href="../../../call/0018-igd-facade-honours-requests-as-reported.html"><strong aria-hidden="true">4.7.</strong> The IGD facade honours requests as reported, not as NATs do</a></li><li class="chapter-item expanded "><a href="../../../call/0019-facade-kani-deferred-to-larger-host.html"><strong aria-hidden="true">4.8.</strong> The facade Kani structural proofs are deferred to a larger host</a></li><li class="chapter-item expanded "><a href="../../../call/0020-deferred-ssdpall-classification.html"><strong aria-hidden="true">4.9.</strong> Deferred ssdp:all classification via bounded discovery bursts</a></li><li class="chapter-item expanded "><a href="../../../call/0021-wps-introduction-not-implemented.html"><strong aria-hidden="true">4.10.</strong> The WPS introduction protocol is not implemented</a></li><li class="chapter-item expanded "><a href="../../../call/0022-requested-port-is-a-per-client-label.html"><strong aria-hidden="true">4.11.</strong> The requested external port is a per-client label</a></li><li class="chapter-item expanded "><a href="../../../call/0023-the-operator-bootstraps-deviceprotection.html"><strong aria-hidden="true">4.12.</strong> The operator bootstraps DeviceProtection out of band</a></li><li class="chapter-item expanded "><a href="../../../call/0024-the-v2-authorization-policy.html"><strong aria-hidden="true">4.13.</strong> The v2 authorization policy: mutators gated, reads public, the caller contained</a></li><li class="chapter-item expanded "><a href="../../../call/0025-allowlist-is-admission-not-authority.html"><strong aria-hidden="true">4.14.</strong> The admission policy: an allowlist maintains mappings, it never authorizes</a></li><li class="chapter-item expanded "><a href="../../../call/0026-tcp-keepalive-is-signalled-not-injected.html"><strong aria-hidden="true">4.15.</strong> The TCP half of the hold: what can be held, and what can only be said</a></li><li class="chapter-item expanded "><a href="../../../call/0027-collisions-for-punched-ports.html"><strong aria-hidden="true">4.16.</strong> Collision rules for ports nobody allocated: the punch and the lease table</a></li><li class="chapter-item expanded "><a href="../../../call/0028-a-shared-tuple-is-reachable-and-the-incumbent-keeps-it.html"><strong aria-hidden="true">4.17.</strong> A shared tuple is reachable, and the incumbent keeps it</a></li><li class="chapter-item expanded "><a href="../../../call/0029-the-named-device-is-the-admission.html"><strong aria-hidden="true">4.18.</strong> The hold's admission is the named device, its liveness is the device and its peers, and a failed write is never fatal</a></li><li class="chapter-item expanded "><a href="../../../call/0030-a-mapping-ends-with-its-device.html"><strong aria-hidden="true">4.19.</strong> A mapping asked for by a device ends when that device leaves, and never when it is quiet</a></li><li class="chapter-item expanded "><a href="../../../call/0031-the-datapath-needs-no-listing.html"><strong aria-hidden="true">4.20.</strong> The datapath never needs a listing, and an intermittent nft crash is tolerated</a></li><li class="chapter-item expanded "><a href="../../../call/0032-the-builder-of-record-is-the-lane.html"><strong aria-hidden="true">4.21.</strong> The builder of record is the CI lane, and a deployment takes its artifact</a></li><li class="chapter-item expanded "><a href="../../../call/0033-the-filtering-is-watched-from-outside.html"><strong aria-hidden="true">4.22.</strong> The filtering is watched by a stranger's probe, and the daemon is told</a></li><li class="chapter-item expanded "><a href="../../../call/0034-the-repositories-are-public-and-a-tag-is-the-release.html"><strong aria-hidden="true">4.23.</strong> The repositories are public, and a tag is the release</a></li><li class="chapter-item expanded "><a href="../../../call/0035-plain-language-for-the-program.html"><strong aria-hidden="true">4.24.</strong> Plain language for the program: keepalive, owned, entry</a></li><li class="chapter-item expanded "><a href="../../../call/0036-the-pin-names-the-tag-the-bytes-come-from.html"><strong aria-hidden="true">4.25.</strong> The release's bytes move with the version, so the pin names the tag</a></li><li class="chapter-item expanded "><a href="../../../call/0037-comments-are-one-line-and-technical.html"><strong aria-hidden="true">4.26.</strong> Comments are one line, and technical</a></li><li class="chapter-item expanded "><a href="../../../call/0038-the-front-door-is-a-held-port.html"><strong aria-hidden="true">4.27.</strong> A port is served from outside the line by a front the daemon tells</a></li><li class="chapter-item expanded "><a href="../../../call/0039-the-control-channel-carries-a-tls-client.html"><strong aria-hidden="true">4.28.</strong> The control channel carries a TLS client, and the build carries a bundle</a></li><li class="chapter-item expanded "><a href="../../../call/0040-admission-is-a-certificate-minted-on-the-line.html"><strong aria-hidden="true">4.29.</strong> A client's admission is a certificate the line minted</a></li><li class="chapter-item expanded "><a href="../../../call/0041-the-fronts-proofs-are-the-components-lane.html"><strong aria-hidden="true">4.30.</strong> The front's proofs are the component's lane, and a deployment's are the recipe's</a></li><li class="chapter-item expanded "><a href="../../../call/0042-the-poke-delivers-the-tuple.html"><strong aria-hidden="true">4.31.</strong> The poke delivers the tuple, so the push waits for a payload</a></li><li class="chapter-item expanded "><a href="../../../call/0043-the-artifact-lanes-build-the-canonical-recipe.html"><strong aria-hidden="true">4.32.</strong> The artifact lanes build the canonical recipe</a></li><li class="chapter-item expanded "><a href="../../../call/0044-a-granted-tcp-slot-is-served-by-the-daemons-own-connection.html"><strong aria-hidden="true">4.33.</strong> A granted TCP slot is served by the daemon's own connection</a></li><li class="chapter-item expanded "><a href="../../../call/0045-the-control-channel-carries-the-tuple-the-front-sees.html"><strong aria-hidden="true">4.34.</strong> The control channel carries the tuple the front sees</a></li><li class="chapter-item expanded "><a href="../../../call/0046-the-front-learns-from-the-poke-and-from-the-push.html"><strong aria-hidden="true">4.35.</strong> The front learns from the poke first, and the push names itself when it fills in</a></li><li class="chapter-item expanded "><a href="../../../call/0048-a-slot-that-pokes-a-front-answers-as-the-peer.html"><strong aria-hidden="true">4.36.</strong> A slot that pokes a front answers its service as the peer</a></li><li class="chapter-item expanded "><a href="../../../call/0049-the-fronts-legs-ride-the-poked-socket.html"><strong aria-hidden="true">4.37.</strong> The front's legs ride the poked socket, and the firewall's place carries the TCP one</a></li><li class="chapter-item expanded "><a href="../../../call/0050-the-kani-rung-runs-on-a-runner.html"><strong aria-hidden="true">4.38.</strong> The Kani rung runs on a runner, and the tree's own harnesses gate it</a></li><li class="chapter-item expanded "><a href="../../../call/0051-the-spine-moves-to-4c8ae9fd.html"><strong aria-hidden="true">4.39.</strong> The spine moves to 4c8ae9fd, and the ledger claims it</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference: how</li><li class="chapter-item expanded "><a href="../../../AGENTS.html"><strong aria-hidden="true">5.</strong> AGENTS.md: operating manual for an agentic project</a></li><li class="chapter-item expanded "><a href="../../../CLAUDE.html"><strong aria-hidden="true">6.</strong> CLAUDE</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../GOAL.html"><strong aria-hidden="true">6.1.</strong> The active goal</a></li><li class="chapter-item expanded "><a href="../../../MIGRATION.html"><strong aria-hidden="true">6.2.</strong> MIGRATION.md: the process moved to the host repo</a></li><li class="chapter-item expanded "><a href="../../../STRUCTURE.html"><strong aria-hidden="true">6.3.</strong> Structure</a></li><li class="chapter-item expanded "><a href="../../../UPGRADING.html"><strong aria-hidden="true">6.4.</strong> UPGRADING.md: the version-to-version upgrade ledger</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Memory</li><li class="chapter-item expanded "><a href="../../../MEMORY.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item expanded affix "><li class="part-title">Archive / Record</li><li class="chapter-item expanded "><a href="../../../plan/0004-ds-lite-punch/INVESTIGATION.html"><strong aria-hidden="true">8.</strong> INVESTIGATION: the Virgin Media ds-lite possibility space (superseded)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../call/0012-adopt-agentic-host-methodology.html"><strong aria-hidden="true">8.1.</strong> Adopt the agentic-host methodology (host-template 41ba4e1) (superseded)</a></li><li class="chapter-item expanded "><a href="../../../call/0047-a-front-door-slot-folds-its-services-replies.html"><strong aria-hidden="true">8.2.</strong> A front-door slot folds its service's replies (superseded)</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">agentic-ds-lite-punch</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="results-2026-09-17-kani-state-the-kani-lanes-true-state-and-what-is-left-in-it"><a class="header" href="#results-2026-09-17-kani-state-the-kani-lanes-true-state-and-what-is-left-in-it">RESULTS-2026-09-17-kani-state: the Kani lane's true state and what is left in it</a></h1>
+<p>Status: the lane is open and handed to a peer over git. This record sets
+out what is verified, what the milestone documents still claimed wrongly,
+the steps that close the lane, and the branches the exchange runs on. It
+is the RESULTS record that the 2026-09-15 relocation handoff expected in
+this directory.</p>
+<h2 id="what-is-verified-on-this-host"><a class="header" href="#what-is-verified-on-this-host">What is verified on this host</a></h2>
+<ul>
+<li>This development host cannot run the suite. <code>free -h</code> reports 3843 MiB
+total and <code>nproc</code> reports four cores; <code>cargo kani 0.67.0</code> is installed
+and starts, so the limit is memory rather than tooling. The operator
+confirmed the limit on 2026-09-17.</li>
+<li>The suite was relocated and it ran. On the andromeda workstation
+(192 GiB physical, WSL2 soft-limited to 96 GiB, twelve threads on a
+Xeon X5650) a fresh clone at component 34d48c1 produced 37 of 40
+verdicts: 35 SUCCESSFUL, 2 FAILED, and three harnesses still solving at
+four hours. The authority for that result is the 2026-09-15 handoff
+entry in <code>MEMORY.md</code>.</li>
+<li>The raw evidence is not reachable from this host. It lives at
+<code>C:\Users\dconnolly\Development\kani-evidence-2026-09-16\</code> on the
+workstation; <code>/mnt/c/Users</code> here carries a <code>david</code> profile and no
+<code>dconnolly</code>, and there is no <code>~/kani-relocation</code>.</li>
+<li>Both failures are in <code>src/upnp.rs</code>: <code>entry_at_bounds_proof</code>, an
+indexing assertion at <code>idx = 3</code> with maximal field values whose
+captured counterexample replays green in plain Rust, and
+<code>mpost_post_parity</code>, an unwinding assertion where the M-POST head
+needs about 132 bytes of unroll against <code>unwind(96)</code>. Neither is
+recorded as a code defect.</li>
+<li>The relocation's remediation attempt was a branch and not a merge:
+<code>kani-favourable</code> at component 22b9677, one commit on top of 34d48c1.
+It rewrites <code>put</code> to <code>copy_from_slice</code>, raises both parity harnesses to
+<code>unwind(200)</code>, and adds <code>cex_replay::entry_at_cex_replay_idx3</code>, which
+replays the captured counterexample in real Rust. Its fold-test timings
+were never taken.</li>
+<li>The harness inventory on current <code>main</code> (0cc2b04) is identical to
+34d48c1: 40 proofs across eight modules (stun 6, slot 9, upnp 8, obs 5,
+vote 5, mapping 3, engine 2, tcpslot 2). Nothing was added after
+34d48c1.</li>
+<li>The component carries no <code>.obligations</code> manifest, no <code>.allium</code> or
+<code>.tla</code> spec, and no CI workflow, so no declared rung turns on this lane
+and <code>software --check</code> cannot red on it. The lane is the facade
+clause's ledger, run by hand.</li>
+</ul>
+<h2 id="what-the-34d48c1-verdicts-do-and-do-not-cover"><a class="header" href="#what-the-34d48c1-verdicts-do-and-do-not-cover">What the 34d48c1 verdicts do and do not cover</a></h2>
+<p>The verdicts were earned against the 34d48c1 tree. Six of the eight
+proof-bearing modules are byte-identical to it on <code>main</code>, so their 23
+verdicts carry over as they stand. Two do not:</p>
+<ul>
+<li><code>src/slot.rs</code> gained 211 lines: the last-seen lease policy added
+<code>stamp_activity_if_stale</code>, <code>gc_idle</code>, and <code>evict_idle_client</code>, and it
+stamps <code>last_activity_unix</code> on upsert, refresh, and restore. No harness
+covers any of the three new methods, and the nine slot proofs predate
+the policy.</li>
+<li><code>src/upnp.rs</code> changed the code under proof, 274 lines added and 17
+removed for the WANIPConnection:2 surface: <code>ST_NAMES</code> and <code>st_name</code>
+gained the v2 targets, <code>SidSet</code>'s <code>Default</code> changed,
+<code>service_of_path</code>, <code>soap_action_name</code>, <code>parse_soap_action</code>, and
+<code>classify</code> grew cases, <code>UpnpErr</code> gained faults 730, 731, 733, and 704,
+and <code>msearch_response</code> and <code>notify_payload</code> changed.</li>
+</ul>
+<p>So eight upnp proofs and nine slot proofs are stale against <code>main</code>, and
+three live policy methods have no proof at all. Neither the milestone
+ledger nor the Testing section recorded that before this record.</p>
+<h2 id="how-the-hand-off-runs-over-git"><a class="header" href="#how-the-hand-off-runs-over-git">How the hand-off runs over git</a></h2>
+<p>The exchange is branches and records, not messages.</p>
+<ul>
+<li><code>kani-remediation</code> at component 408457a is based on <code>main</code> at 0cc2b04
+and is pushed. It carries 22b9677's three changes ported onto current
+code, and <code>cargo test</code> is 121 passed, 0 failed, 1 ignored. Nothing has
+run it under Kani yet. <code>main</code> has since moved to ad69a49 for the v2
+listing fix that the miniupnpc interop probe found, and that commit
+touches <code>src/upnpsvc.rs</code> alone: no proof-bearing module differs between
+the branch's base and it, and the branch rebases with no conflicts, so
+verdicts earned from the branch stay meaningful either way.</li>
+<li><code>kani-favourable</code> at 22b9677 stays as the original artifact against
+34d48c1. Work from <code>kani-remediation</code>, which is its port onto current
+code, and leave <code>kani-favourable</code> unmerged.</li>
+<li>The peer's results come back the same way, as a component branch plus a
+revision of this record. The verdict counts live here, so the milestone
+ledger keeps one home for them.</li>
+<li>The pin moved to ad69a49 with that listing fix, so <code>software --check</code>
+attests a tree the proofs have not been run against. That is the honest
+state and this record says so.</li>
+<li>Run the suite with the component worktree on <code>kani-remediation</code>. While
+it sits there the host gate reports <code>DRIFT software/ds-lite-punch/main at &lt;the worktree's HEAD&gt; but pinned to ad69a4934494</code> and exits 1, which
+is the pin check doing its job. Return the worktree to <code>main</code> at the pin
+before you run <code>software --check</code>, or run the suite from a clone of your
+own and leave this worktree alone.</li>
+</ul>
+<h2 id="the-work-in-order-each-step-with-its-check"><a class="header" href="#the-work-in-order-each-step-with-its-check">The work, in order, each step with its check</a></h2>
+<ol>
+<li>Done: the port. Check met by <code>cargo test</code> at 121 passed on
+<code>kani-remediation</code>, and by both parity harnesses reading
+<code>unwind(200)</code>.</li>
+<li>Re-derive on the andromeda workstation, the 192 GiB machine where the
+relocation ran, from <code>kani-remediation</code>. Check:
+<code>cargo kani --jobs=4 --output-format=terse</code> (the tool requires terse
+with <code>--jobs</code>) reports a verdict for each of the 40, and the counts
+are written into this record. Before committing hours to it, confirm
+the guest is stable: the 2026-09-16 entry in <code>MEMORY.md</code> records that
+workstation's WSL guest restart-looping at idle on a 60-90 s cadence,
+which killed three runs mid-solve, and that it was blocked on
+<code>wsl --update</code>, a Windows reboot, or a distro repair. That entry
+stands until a later one retires it.</li>
+<li>Disposition the two known failures. Check: <code>entry_at_bounds_proof</code> is
+reshaped to concrete-index enumeration and passes, and the
+<code>mpost_post_parity</code> unwinding assertion is gone at the raised bound.
+If the counterexample replay is accepted in place of the reshape, say
+so here and name what the replay does not prove.</li>
+<li>Add proofs for the three slot policy methods in <code>src/slot.rs</code>. Check:
+the inventory grows to 43 and each new proof has a verdict. The
+properties to state:
+<ul>
+<li><code>stamp_activity_if_stale</code>: the stamp never moves backward, and it
+moves only to <code>now</code>, and only once the gap reached
+<code>min_interval_secs</code>. An absent bind port is a no-op.</li>
+<li><code>gc_idle</code>: exactly the granted UDP slots whose stamp is older than
+<code>backstop_secs</code> are freed, and statics and TCP grants never are.</li>
+<li><code>evict_idle_client</code>: the answer is none, or the longest-idle granted
+UDP slot of a client other than the requester. The requester's own
+grants are never the answer.</li>
+</ul>
+</li>
+<li>Decide the WIP2 surface's proof obligation. Check: either a harness
+per changed pure function, the parity harnesses' action list being the
+first candidate since <code>classify</code> and the action tables grew, or a
+recorded decision naming what is left to the unit suite.</li>
+<li>Only then write the supersession of
+<a href="../../../call/0019-facade-kani-deferred-to-larger-host.html">call/0019</a>.
+Check: <code>host-lifecycle validate .</code> accepts the new decision and
+<code>call/0019</code> reads <code>Status: superseded</code>.</li>
+</ol>
+<h2 id="dispositions-that-are-not-owed"><a class="header" href="#dispositions-that-are-not-owed">Dispositions that are not owed</a></h2>
+<ul>
+<li><code>call/0019</code> stands in force. The 2026-09-15 entry expected a
+<code>call/0020</code> supersession; that number went to the SSDP-all decision,
+and a re-derivation with two failures and three missing verdicts does
+not meet the decision's own terms in any case. Supersede it after step
+6, not before.</li>
+<li>Do not re-run the suite on this host. The operator closed that on
+2026-09-17 and the measurement above agrees with the closure.</li>
+<li><code>kani-favourable</code> sits 28 commits behind <code>main</code>, and <code>src/upnp.rs</code> has
+moved since. <code>kani-remediation</code> carries the port onto current code.</li>
+<li>Do not pass <code>--no-verify</code> past the commit gate to land any of this.</li>
+</ul>
+<h2 id="tooling-note"><a class="header" href="#tooling-note">Tooling note</a></h2>
+<p>After this host's reboot the built tools are not on PATH. They are in the
+tree at <code>tools/host-lifecycle/target/release/host-lifecycle</code> and
+<code>tools/host-lint/target/release/host-lint</code>.</p>
+<p>No access route to the andromeda workstation is recorded in this
+repository. The evidence path <code>C:\Users\dconnolly\Development\kani-evidence-2026-09-16\</code>
+is the only handle on it that these records carry.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-15-ps3-facade.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../plan/0007-igd-facade/results/RESULTS-2026-10-07-the-kani-rung-on-a-runner.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../plan/0007-igd-facade/results/RESULTS-2026-09-15-ps3-facade.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../plan/0007-igd-facade/results/RESULTS-2026-10-07-the-kani-rung-on-a-runner.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
