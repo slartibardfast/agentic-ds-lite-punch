@@ -4043,3 +4043,12 @@ stalls/fails locally on BOTH pre-rename and renamed code (a discriminator run on
 code reproduced the identical stall: a four-minute silent phase, EXPIRE, refill, no verdict), while CI's
 carrier-harness ran the same rows green — a local-machine sensitivity, recorded here as the standing
 reminder that the local lane is the flaky one and CI is the authority.
+
+The same sweep surfaced a real defect the receipts machinery was built to catch: `up-b4` — the receipted
+verify of plan/0016#b4-and-service — was broken by construction on a clean environment, because it
+started the echo with TLS certificates only the harness flow ever minted; every green `up-b4` before
+today leaned on leftover `/tmp/dslp-env` state. `cmd_up_b4` now calls `mint_service_cert()` per run
+(component 92f0260), the clean-slate run went green, and the three stale receipts re-recorded with
+fresh digests. The re-derive verb takes a directory, not an anchor: the working refresh is run the
+verify, then `tasks --record plan/0016#<anchor> --disposition done --record-digests --evidence ...`,
+and record LAST, after the final code state, or the record re-stales on its own edit.
