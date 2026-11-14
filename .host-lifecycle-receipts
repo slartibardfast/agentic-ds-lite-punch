@@ -188,3 +188,59 @@
     authorization = plan/0016
     tool = host-lifecycle@0.61.0
     recorded = 2026-11-12
+
+[receipt "ci" "host/prose"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/agentic-ds-lite-punch/actions/runs/43368907099
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 2ff0fe7764e1c652c35b848e1e77b6c2531f1e9d
+    conclusion = success
+
+[receipt "ci" "host/release-phase"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/agentic-ds-lite-punch/actions/runs/35713355935
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 2ff0fe7764e1c652c35b848e1e77b6c2531f1e9d
+    conclusion = success
+
+[receipt "ci" "host/reproducible-build"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/agentic-ds-lite-punch/actions/runs/43368907043
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 2ff0fe7764e1c652c35b848e1e77b6c2531f1e9d
+    conclusion = success
+
+[receipt "ci" "host/site"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/agentic-ds-lite-punch/actions/runs/43368907051
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 2ff0fe7764e1c652c35b848e1e77b6c2531f1e9d
+    conclusion = success
+
+[receipt "ci" "software/ds-lite-punch/main/ci"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/ds-lite-punch/actions/runs/43368817455
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 73d7de99cd148f956367f42ba9df84b3ad380469
+    conclusion = success
+
+[receipt "ci" "software/ds-lite-punch/main/kani"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/ds-lite-punch/actions/runs/43063101075
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 73d7de99cd148f956367f42ba9df84b3ad380469
+    conclusion = success
+
+[receipt "ci" "software/ds-lite-punch/main/release"]
+    disposition = done
+    evidence = https://github.com/slartibardfast/ds-lite-punch/actions/runs/43203252210
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    revision = 73d7de99cd148f956367f42ba9df84b3ad380469
+    conclusion = success
