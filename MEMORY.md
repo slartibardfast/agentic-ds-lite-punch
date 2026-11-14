@@ -4071,3 +4071,24 @@ operator's to set). What the refusal taught, in the order the sweep named it:
 - The ci receipts recipe: `host-lifecycle ci --record <lane> --run <run-url>` per declared lane, seven
   lanes in this host's case (host/prose, host/release-phase, host/reproducible-build, host/site,
   component ci, component kani, component release), each with its latest green run's URL.
+
+## 2026-11-14 — v0.6.3 cut and deployed; the router runs current
+
+v0.6.3 (pin 3972b3ed, tag v0.6.3, artifact 66e9a691 reproduced in the pinned image) carries everything
+post-v0.6.2: the regenerated man page (the declared regen ran by hand — the v0.63.0 release verb bumps
+but does not execute the regen command; run it between bump and commit until the verb learns to), the
+actor rename, the proofs.obligations declaration, and the up-b4 mint fix. The release receipt carries
+plan/0016 as its authorization. Two verb-contract notes: `receipt --record release` needs BOTH
+`--disposition done --authorization <ref>` and `--evidence`, and `ci --record <lane> --run <url>` takes
+the lane's phase-path form (host/prose, component ci).
+
+**The router now runs current**: /usr/bin/ds-lite-punch is v0.6.3, hash-verified on device against the
+recorded artifact before install; the 0.6.1 binary is kept at /usr/bin/ds-lite-punch.0.6.1 for rollback
+(ImmortalWrt's busybox has no `install`; cp+chmod). After the restart the daemon held a fresh mapping in
+seconds — tuple 37.228.213.60:43832 (the AFTR pool moved from .83 to .60) — and the front's relay table
+names the same tuple as the poke view, with upstreams.map routing on it. Verified from the VPS via the
+relay's local report endpoint (127.0.0.1:8448/table); the standing external monitor is not yet deployed
+to the vantage as a cron cadence, which is the one open operator nicety.
+
+The PLAN.md layout defect is filed upstream: connollydavid/host-lifecycle#46 (the goal verb and the
+coverage clause read root PLAN.md only; the template's room-side index can never complete a goal).
