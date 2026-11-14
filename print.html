@@ -18262,6 +18262,20 @@ relay's local report endpoint (127.0.0.1:8448/table); the standing external moni
 to the vantage as a cron cadence, which is the one open operator nicety.</p>
 <p>The PLAN.md layout defect is filed upstream: connollydavid/host-lifecycle#46 (the goal verb and the
 coverage clause read root PLAN.md only; the template's room-side index can never complete a goal).</p>
+<h2 id="2026-11-14--the-standing-correlation-pair-deployed-on-both-vantages"><a class="header" href="#2026-11-14--the-standing-correlation-pair-deployed-on-both-vantages">2026-11-14 — the standing correlation pair deployed on both vantages</a></h2>
+<p>The external monitor stands on the VPS as <code>dslp-external.service</code> (systemd, Restart=always, --interval
+60, JSON lines in <code>journalctl -u dslp-external</code>): script + ca.crt + the daemon's own client identity at
+<code>~/dslp-monitor/</code>, flags <code>--endpoint 170.9.238.141:8443 --protected front.rig --passthru 8443</code> — the
+production passthrough SNI is the literal <code>8443</code> (the October-era front's map is port-keyed; the current
+pipeline's SNI-map shape differs, so the deployed front would fail today's drift-check — a known gap,
+not yet reconciled). The router sampler stands as <code>/usr/bin/router-sampler.py</code> respawned by
+<code>/root/dslp-respawn.sh</code> under crond every minute (<code>--log /tmp/dslp/events.log --iface eth1 --interval 30</code>, JSONL at <code>/tmp/dslp/sampler.jsonl</code>). Both <code>--once</code> checks ran green this turn.</p>
+<p>Two lessons the deployment paid for: the shipped init did NOT write the event log the sampler's contract
+states (procd has no file sink; the init now wraps the daemon in <code>sh -c "exec ... &gt;&gt; /tmp/dslp/events.log 2&gt;&amp;1"</code>, component e8e98a4, shipped to the router as deploy content), and busybox crond kills a job's
+process group when the command line exits, so a backgrounded respawn dies instantly — the respawn lives
+in <code>/root/dslp-respawn.sh</code> (its own command line names nothing pgrep can match) with <code>setsid</code> detaching
+the sampler; a one-line cron respawn self-matches its own command text and can never fire the start.
+The b4-token grammar narrowing is proposed upstream at connollydavid/host-lint#34.</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
