@@ -4111,3 +4111,18 @@ process group when the command line exits, so a backgrounded respawn dies instan
 in `/root/dslp-respawn.sh` (its own command line names nothing pgrep can match) with `setsid` detaching
 the sampler; a one-line cron respawn self-matches its own command text and can never fire the start.
 The b4-token grammar narrowing is proposed upstream at connollydavid/host-lint#34.
+
+## 2026-11-14 — the release leaves a receipt tail, and the gate names it
+
+Cutting v0.6.3 reset the recipe pin to the tag commit, and the first post-release component commit
+(e8e98a4, the init's event-log fix) left the recorded state red in three ways the gate names exactly:
+DRIFT (pin behind the pushed head), the three software ci lanes discharged at the pre-release revision
+(the judge demands `receipt.revision == pin`, and `--record` stamps the pin at record time, so the lanes
+must be re-recorded after any pin move), and a STALE task (plan/0016#b4-and-service, whose inputs moved
+with envctl.py). The remedy is mechanical, in order: bump the pin to the pushed head, `ci --record` the
+ci and release lanes at it (the release lane cites the newest release run — it is tag-triggered and can
+never run at a dev pin), dispatch kani (dispatch-only, ~94 min) and record it when green, then
+`tasks --rederive` for the stale digest. The second lesson is about the verifier's evidence window: a
+completion proposal whose reason restates past turns is rejected ("claims, not proof") — every
+substantive claim needs a fresh tool result inside the current turn's records, so run the decisive
+checks immediately before proposing.
