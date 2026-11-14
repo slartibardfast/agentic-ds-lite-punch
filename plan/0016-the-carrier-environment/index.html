@@ -201,7 +201,7 @@ differential run settles, are
 <h2 id="build-sequence"><a class="header" href="#build-sequence">Build sequence</a></h2>
 <h3 id="fidelity-model"><a class="header" href="#fidelity-model">Record the carrier fidelity model</a></h3>
 <ul>
-<li>verify: test -f results/RESEARCH-2026-11-11-the-aftr-in-the-record.md</li>
+<li>verify: test -f plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md</li>
 <li>inputs: plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md</li>
 </ul>
 <p>Done the day the milestone was claimed: the general model (the RFC 4787/5382
@@ -212,7 +212,7 @@ measurement eras.</p>
 <h3 id="topology"><a class="header" href="#topology">Stand up the topology</a></h3>
 <ul>
 <li>depends: #fidelity-model</li>
-<li>verify: python3 deploy/env/envctl.py verify</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py verify</li>
 </ul>
 <p>One command stands the five actors up and tears them down, and a datagram from
 the internet actor reaches the carrier. The namespaces and their wiring:
@@ -224,7 +224,7 @@ inside a user namespace, so the whole environment runs unprivileged.</p>
 <h3 id="carrier-policy"><a class="header" href="#carrier-policy">Write the carrier's data plane and policy</a></h3>
 <ul>
 <li>depends: #topology</li>
-<li>verify: python3 deploy/env/envctl.py verify-policy</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py verify-policy</li>
 </ul>
 <p>The nftables NAT44 on the carrier plus the userspace policy plane reading a
 profile: the mapping and filtering behaviours, the timers with silent expiry,
@@ -235,7 +235,7 @@ hardest).</p>
 <h3 id="front-deployment"><a class="header" href="#front-deployment">Deploy the front by its own pipeline</a></h3>
 <ul>
 <li>depends: #carrier-policy</li>
-<li>verify: python3 deploy/env/envctl.py deploy-front</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py deploy-front</li>
 <li>inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in</li>
 </ul>
 <p>One command deploys the front and probes it from outside the front
@@ -254,7 +254,7 @@ serving. Nothing is hand-placed.</p>
 <h3 id="b4-and-service"><a class="header" href="#b4-and-service">Bring up the b4 and the service</a></h3>
 <ul>
 <li>depends: #front-deployment</li>
-<li>verify: python3 deploy/env/envctl.py up-b4</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py up-b4</li>
 <li>inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/env/carrier-policy.py, software/ds-lite-punch/main/deploy/env/service-echo.py, software/ds-lite-punch/main/deploy/env/stun-server.py, software/ds-lite-punch/main/target/x86_64-unknown-linux-musl/release/ds-lite-punch</li>
 </ul>
 <p>One command stands the whole exchange up: the carrier's policy plane runs the
@@ -277,7 +277,7 @@ port, which is the open mapping conflict made reproducible.</p>
 <h3 id="drift-check"><a class="header" href="#drift-check">Check the deployment against the record</a></h3>
 <ul>
 <li>depends: #front-deployment</li>
-<li>verify: python3 deploy/env/envctl.py drift-check</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py drift-check</li>
 <li>inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in</li>
 </ul>
 <p>The record the repository ships is what its own pipeline renders now: the
@@ -292,7 +292,7 @@ own installer content, and it matches again.</p>
 <h3 id="the-harness"><a class="header" href="#the-harness">Assert the whole exchange</a></h3>
 <ul>
 <li>depends: #b4-and-service, #drift-check</li>
-<li>verify: python3 deploy/env/envctl.py harness</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py harness</li>
 </ul>
 <p>One command, one carrier profile at a time or all three, asserting the nginx
 feature end to end: the pass-through name reaches the service's own
@@ -308,7 +308,7 @@ command; the suite runs in the component's CI.</p>
 <h3 id="the-monitors"><a class="header" href="#the-monitors">Stand up the monitors</a></h3>
 <ul>
 <li>depends: #the-harness</li>
-<li>verify: python3 deploy/env/envctl.py monitors</li>
+<li>verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py monitors</li>
 </ul>
 <p>The repository emits the correlation pair the record calls for. The external
 monitor watches the published path from outside the line: the protected
