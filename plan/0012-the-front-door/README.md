@@ -83,7 +83,7 @@ verify, and the mechanical ones re-run at the gate.
 
 ### Send from the slot, so a peer is admitted {#poke-the-front}
 
-- verify: cargo test --release --locked
+- verify: cargo test --release --locked --manifest-path software/ds-lite-punch/main/Cargo.toml
 - inputs: the send in `src/main.rs`, the state field in `src/mapping.rs`, the flag's definition in `tools/argdoc/src/main.rs`, `deploy/ds-lite-punch.init`
 
 The slot's own socket sends one datagram per interval to a nominated address.
@@ -215,7 +215,7 @@ control channel is what puts the configuration to work.
 ### Carry the routing table to the front {#control-channel}
 
 - depends: #hold-tcp-slot, #the-daemons-identity
-- verify: cargo test --release --locked
+- verify: cargo test --release --locked --manifest-path software/ds-lite-punch/main/Cargo.toml
 - inputs: the control channel module under `src/`, `Cargo.toml`, `Cargo.lock`
 
 The daemon opens HTTPS to the front's endpoint and pushes the table whole: each
