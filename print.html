@@ -18245,6 +18245,23 @@ green runs receipted.</li>
 lanes in this host's case (host/prose, host/release-phase, host/reproducible-build, host/site,
 component ci, component kani, component release), each with its latest green run's URL.</li>
 </ul>
+<h2 id="2026-11-14--v063-cut-and-deployed-the-router-runs-current"><a class="header" href="#2026-11-14--v063-cut-and-deployed-the-router-runs-current">2026-11-14 — v0.6.3 cut and deployed; the router runs current</a></h2>
+<p>v0.6.3 (pin 3972b3ed, tag v0.6.3, artifact 66e9a691 reproduced in the pinned image) carries everything
+post-v0.6.2: the regenerated man page (the declared regen ran by hand — the v0.63.0 release verb bumps
+but does not execute the regen command; run it between bump and commit until the verb learns to), the
+actor rename, the proofs.obligations declaration, and the up-b4 mint fix. The release receipt carries
+plan/0016 as its authorization. Two verb-contract notes: <code>receipt --record release</code> needs BOTH
+<code>--disposition done --authorization &lt;ref&gt;</code> and <code>--evidence</code>, and <code>ci --record &lt;lane&gt; --run &lt;url&gt;</code> takes
+the lane's phase-path form (host/prose, component ci).</p>
+<p><strong>The router now runs current</strong>: /usr/bin/ds-lite-punch is v0.6.3, hash-verified on device against the
+recorded artifact before install; the 0.6.1 binary is kept at /usr/bin/ds-lite-punch.0.6.1 for rollback
+(ImmortalWrt's busybox has no <code>install</code>; cp+chmod). After the restart the daemon held a fresh mapping in
+seconds — tuple 37.228.213.60:43832 (the AFTR pool moved from .83 to .60) — and the front's relay table
+names the same tuple as the poke view, with upstreams.map routing on it. Verified from the VPS via the
+relay's local report endpoint (127.0.0.1:8448/table); the standing external monitor is not yet deployed
+to the vantage as a cron cadence, which is the one open operator nicety.</p>
+<p>The PLAN.md layout defect is filed upstream: connollydavid/host-lifecycle#46 (the goal verb and the
+coverage clause read root PLAN.md only; the template's room-side index can never complete a goal).</p>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
