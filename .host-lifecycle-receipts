@@ -244,3 +244,10 @@
     recorded = 2026-11-14
     revision = 73d7de99cd148f956367f42ba9df84b3ad380469
     conclusion = success
+
+[receipt "goal" "complete"]
+    disposition = done
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
+    conclusion = closed by the composed gates: plan-row, tasks, software --check, ci, tree
+    target = plan/0016-the-carrier-environment
