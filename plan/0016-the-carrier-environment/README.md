@@ -33,7 +33,7 @@ differential run settles, are
 
 ### Record the carrier fidelity model {#fidelity-model}
 
-- verify: test -f results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
+- verify: test -f plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
 - inputs: plan/0016-the-carrier-environment/results/RESEARCH-2026-11-11-the-aftr-in-the-record.md
 
 Done the day the milestone was claimed: the general model (the RFC 4787/5382
@@ -45,7 +45,7 @@ measurement eras.
 ### Stand up the topology {#topology}
 
 - depends: #fidelity-model
-- verify: python3 deploy/env/envctl.py verify
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py verify
 
 One command stands the five actors up and tears them down, and a datagram from
 the internet actor reaches the carrier. The namespaces and their wiring:
@@ -58,7 +58,7 @@ inside a user namespace, so the whole environment runs unprivileged.
 ### Write the carrier's data plane and policy {#carrier-policy}
 
 - depends: #topology
-- verify: python3 deploy/env/envctl.py verify-policy
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py verify-policy
 
 The nftables NAT44 on the carrier plus the userspace policy plane reading a
 profile: the mapping and filtering behaviours, the timers with silent expiry,
@@ -70,7 +70,7 @@ hardest).
 ### Deploy the front by its own pipeline {#front-deployment}
 
 - depends: #carrier-policy
-- verify: python3 deploy/env/envctl.py deploy-front
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py deploy-front
 - inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/mint.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
 
 One command deploys the front and probes it from outside the front
@@ -90,7 +90,7 @@ serving. Nothing is hand-placed.
 ### Bring up the b4 and the service {#b4-and-service}
 
 - depends: #front-deployment
-- verify: python3 deploy/env/envctl.py up-b4
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py up-b4
 - inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/env/carrier-policy.py, software/ds-lite-punch/main/deploy/env/service-echo.py, software/ds-lite-punch/main/deploy/env/stun-server.py, software/ds-lite-punch/main/target/x86_64-unknown-linux-musl/release/ds-lite-punch
 
 One command stands the whole exchange up: the carrier's policy plane runs the
@@ -114,7 +114,7 @@ port, which is the open mapping conflict made reproducible.
 ### Check the deployment against the record {#drift-check}
 
 - depends: #front-deployment
-- verify: python3 deploy/env/envctl.py drift-check
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py drift-check
 - inputs: software/ds-lite-punch/main/deploy/env/envctl.py, software/ds-lite-punch/main/deploy/front-door/install.sh, software/ds-lite-punch/main/deploy/front-door/render.sh, software/ds-lite-punch/main/deploy/front-door/nginx.conf, software/ds-lite-punch/main/deploy/front-door/poke-listener.py, software/ds-lite-punch/main/deploy/front-door/front-door-nginx.service.in, software/ds-lite-punch/main/deploy/front-door/front-door-poke.service.in
 
 The record the repository ships is what its own pipeline renders now: the
@@ -130,7 +130,7 @@ own installer content, and it matches again.
 ### Assert the whole exchange {#the-harness}
 
 - depends: #b4-and-service, #drift-check
-- verify: python3 deploy/env/envctl.py harness
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py harness
 
 One command, one carrier profile at a time or all three, asserting the nginx
 feature end to end: the pass-through name reaches the service's own
@@ -147,7 +147,7 @@ command; the suite runs in the component's CI.
 ### Stand up the monitors {#the-monitors}
 
 - depends: #the-harness
-- verify: python3 deploy/env/envctl.py monitors
+- verify: python3 software/ds-lite-punch/main/deploy/env/envctl.py monitors
 
 The repository emits the correlation pair the record calls for. The external
 monitor watches the published path from outside the line: the protected

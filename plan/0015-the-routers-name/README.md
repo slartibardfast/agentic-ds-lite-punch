@@ -30,8 +30,8 @@ interface to every vantage at once, with dnsmasq's local zone unchanged.
 
 ### Record the name's paths {#name-paths}
 
-- verify: test -f results/NOTE-2026-11-11-the-name-paths.md
-- inputs: results/NOTE-2026-11-11-the-name-paths.md
+- verify: test -f plan/0015-the-routers-name/results/NOTE-2026-11-11-the-name-paths.md
+- inputs: plan/0015-the-routers-name/results/NOTE-2026-11-11-the-name-paths.md
 
 Done the day the milestone was claimed: every path's answer, where the public answer
 lands (the api box's default block, with the api certificate and the stock 404), the
