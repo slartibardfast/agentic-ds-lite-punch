@@ -4092,3 +4092,22 @@ to the vantage as a cron cadence, which is the one open operator nicety.
 
 The PLAN.md layout defect is filed upstream: connollydavid/host-lifecycle#46 (the goal verb and the
 coverage clause read root PLAN.md only; the template's room-side index can never complete a goal).
+
+## 2026-11-14 — the standing correlation pair deployed on both vantages
+
+The external monitor stands on the VPS as `dslp-external.service` (systemd, Restart=always, --interval
+60, JSON lines in `journalctl -u dslp-external`): script + ca.crt + the daemon's own client identity at
+`~/dslp-monitor/`, flags `--endpoint 170.9.238.141:8443 --protected front.rig --passthru 8443` — the
+production passthrough SNI is the literal `8443` (the October-era front's map is port-keyed; the current
+pipeline's SNI-map shape differs, so the deployed front would fail today's drift-check — a known gap,
+not yet reconciled). The router sampler stands as `/usr/bin/router-sampler.py` respawned by
+`/root/dslp-respawn.sh` under crond every minute (`--log /tmp/dslp/events.log --iface eth1 --interval
+30`, JSONL at `/tmp/dslp/sampler.jsonl`). Both `--once` checks ran green this turn.
+
+Two lessons the deployment paid for: the shipped init did NOT write the event log the sampler's contract
+states (procd has no file sink; the init now wraps the daemon in `sh -c "exec ... >> /tmp/dslp/events.log
+2>&1"`, component e8e98a4, shipped to the router as deploy content), and busybox crond kills a job's
+process group when the command line exits, so a backgrounded respawn dies instantly — the respawn lives
+in `/root/dslp-respawn.sh` (its own command line names nothing pgrep can match) with `setsid` detaching
+the sampler; a one-line cron respawn self-matches its own command text and can never fire the start.
+The b4-token grammar narrowing is proposed upstream at connollydavid/host-lint#34.
