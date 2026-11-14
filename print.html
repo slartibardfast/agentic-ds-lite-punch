@@ -10448,7 +10448,7 @@ ports belong to the api box, whose default block answers with a 404. Nothing ins
 the router's DNS points anywhere wrong; the public half of the name's life is
 incomplete.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-carrier-environment-for-end-to-end-testing"><a class="header" href="#the-carrier-environment-for-end-to-end-testing">The carrier environment for end-to-end testing</a></h1>
-<p><strong>Status:</strong> claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check, the harness and the monitors are receipted; the operator's attestations and the release remain. — complete 2026-11-14</p>
+<p><strong>Status:</strong> claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check, the harness and the monitors are receipted; the release is cut (v0.6.2) and the lanes carry the attestations. — complete 2026-11-14</p>
 <h2 id="what-this-milestone-is-10"><a class="header" href="#what-this-milestone-is-10">What this milestone is</a></h2>
 <p>The daemon cannot prove itself without the live line, and the November line-mode
 change showed what that costs: the rig's fixtures died with the box, the front's
@@ -18227,6 +18227,24 @@ today leaned on leftover <code>/tmp/dslp-env</code> state. <code>cmd_up_b4</code
 fresh digests. The re-derive verb takes a directory, not an anchor: the working refresh is run the
 verify, then <code>tasks --record plan/0016#&lt;anchor&gt; --disposition done --record-digests --evidence ...</code>,
 and record LAST, after the final code state, or the record re-stales on its own edit.</p>
+<h2 id="2026-11-14--plan0016-closes-and-the-goal-machinerys-real-contracts"><a class="header" href="#2026-11-14--plan0016-closes-and-the-goal-machinerys-real-contracts">2026-11-14 — plan/0016 closes, and the goal machinery's real contracts</a></h2>
+<p>The goal resumed and <code>goal complete</code> banked: the closure receipt is appended, the Status line carries
+<code>— complete 2026-11-14</code>, and the goal is retired (<code>goal show</code> reads no goal; the next one is the
+operator's to set). What the refusal taught, in the order the sweep named it:</p>
+<ul>
+<li>The plan-row check reads <code>PLAN.md</code> at the <strong>repository root</strong>, not the plan room — and its coverage
+clause reads the same file, so with the index at <code>plan/PLAN.md</code> the verb could never pass. The index
+moved to the root (feea07e), <code>plan/PLAN.md</code> is gone, and README.md points at the new path. This is an
+upstream-worthy finding: the template's own room-side index shape makes <code>goal complete</code> impossible
+without the move.</li>
+<li>The kani rung's declaration is a <code>*.obligations</code> manifest anywhere in the component whose
+non-comment lines carry <code>kani:</code> dispositions; the tree's 40 harnesses across eight modules are
+declared in <code>src/proofs.obligations</code> (component 9d8b6ed), with call/0050's lane as the gate and its
+green runs receipted.</li>
+<li>The ci receipts recipe: <code>host-lifecycle ci --record &lt;lane&gt; --run &lt;run-url&gt;</code> per declared lane, seven
+lanes in this host's case (host/prose, host/release-phase, host/reproducible-build, host/site,
+component ci, component kani, component release), each with its latest green run's URL.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><blockquote>
 <p><strong>Superseded.</strong> Retained as immutable history, not current guidance.</p>
 </blockquote>
