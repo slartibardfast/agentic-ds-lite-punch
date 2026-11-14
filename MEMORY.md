@@ -4052,3 +4052,22 @@ today leaned on leftover `/tmp/dslp-env` state. `cmd_up_b4` now calls `mint_serv
 fresh digests. The re-derive verb takes a directory, not an anchor: the working refresh is run the
 verify, then `tasks --record plan/0016#<anchor> --disposition done --record-digests --evidence ...`,
 and record LAST, after the final code state, or the record re-stales on its own edit.
+
+## 2026-11-14 — plan/0016 closes, and the goal machinery's real contracts
+
+The goal resumed and `goal complete` banked: the closure receipt is appended, the Status line carries
+`— complete 2026-11-14`, and the goal is retired (`goal show` reads no goal; the next one is the
+operator's to set). What the refusal taught, in the order the sweep named it:
+
+- The plan-row check reads `PLAN.md` at the **repository root**, not the plan room — and its coverage
+  clause reads the same file, so with the index at `plan/PLAN.md` the verb could never pass. The index
+  moved to the root (feea07e), `plan/PLAN.md` is gone, and README.md points at the new path. This is an
+  upstream-worthy finding: the template's own room-side index shape makes `goal complete` impossible
+  without the move.
+- The kani rung's declaration is a `*.obligations` manifest anywhere in the component whose
+  non-comment lines carry `kani:` dispositions; the tree's 40 harnesses across eight modules are
+  declared in `src/proofs.obligations` (component 9d8b6ed), with call/0050's lane as the gate and its
+  green runs receipted.
+- The ci receipts recipe: `host-lifecycle ci --record <lane> --run <run-url>` per declared lane, seven
+  lanes in this host's case (host/prose, host/release-phase, host/reproducible-build, host/site,
+  component ci, component kani, component release), each with its latest green run's URL.
