@@ -251,3 +251,10 @@
     recorded = 2026-11-14
     conclusion = closed by the composed gates: plan-row, tasks, software --check, ci, tree
     target = plan/0016-the-carrier-environment
+
+[receipt "release"]
+    disposition = done
+    evidence = release v0.6.3 at pin 3972b3ed: the verify gate green, the deps bundle staged and sha verified, the canonical artifact 66e9a691 reproduced in the digest-pinned musl image (verify-build: 1 build reproduced), and the man page regenerated per the declared regen
+    authorization = plan/0016
+    tool = host-lifecycle@0.61.0
+    recorded = 2026-11-14
