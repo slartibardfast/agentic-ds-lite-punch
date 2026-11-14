@@ -1,6 +1,6 @@
 # The carrier environment for end-to-end testing
 
-**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check, the harness and the monitors are receipted; the operator's attestations and the release remain. — complete 2026-11-14
+**Status:** claimed 11 November 2026, and the active goal. The carrier research, the topology, the carrier's policy plane, the front's deployment, the b4 with its service, the deployment drift check, the harness and the monitors are receipted; the release is cut (v0.6.2) and the lanes carry the attestations. — complete 2026-11-14
 
 ## What this milestone is
 
