@@ -199,7 +199,7 @@ work.</p>
 </tbody></table>
 </div>
 <h2 id="state"><a class="header" href="#state">State</a></h2>
-<p><a href="plan/PLAN.html">plan/PLAN.md</a> is the index, and each milestone's own README carries
+<p><a href="PLAN.html">PLAN.md</a> is the index, and each milestone's own README carries
 its state; this table is the one-line view.</p>
 <div class="table-wrapper"><table><thead><tr><th>Milestone</th><th>State</th></tr></thead><tbody>
 <tr><td><a href="plan/0004-ds-lite-punch/README.html">plan/0004</a></td><td>the v1 core, deployed and verified; multi-instance built; the UPnP control plane delivered by <a href="plan/0007-igd-facade/README.html">plan/0007</a> and <a href="plan/0008-adaptive-igd-v1v2-facade/README.html">plan/0008</a></td></tr>
@@ -399,25 +399,31 @@ hypotheses.</li>
 (<a href="cast/../call/0046-the-front-learns-from-the-poke-and-from-the-push.html">call/0046</a>).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="plan-milestone-index"><a class="header" href="#plan-milestone-index">PLAN: milestone index</a></h1>
 <p>The ordering authority. Milestones are listed here in the order they are worked;
-their folders are named <code>NNNN-slug</code> (zero-padded, and the number is identity, not a
-sort key; see <code>call/0000</code>). A milestone is a thin, persona-serving increment.</p>
+their folders are named <code>NNNN-slug</code> (zero-padded, and the number is identity, not
+a sort key; see <code>call/0000</code>). A milestone is a thin, persona-serving increment,
+and each milestone's own README carries its build sequence and record.</p>
 <ul>
-<li><a href="0004-ds-lite-punch/README.html">0004 ds-lite-punch</a></li>
-<li><a href="0005-test-rig/README.html">0005 test rig</a></li>
-<li><a href="0006-ps3-requirements/README.html">0006 ps3 requirements</a></li>
-<li><a href="0007-igd-facade/README.html">0007 igd facade</a></li>
-<li><a href="0008-adaptive-igd-v1v2-facade/README.html">0008 adaptive igd v1v2 facade</a></li>
-<li><a href="0009-mapping-keepalive-and-signalling/README.html">0009 mapping keepalive and signalling</a></li>
-<li><a href="0010-the-filtering-proved-and-watched/README.html">0010 the filtering proved and watched</a></li>
-<li><a href="0011-documentation/README.html">0011 documentation</a></li>
-<li><a href="0012-the-front-door/README.html">0012 the front door</a></li>
-<li><a href="0013-the-fronts-two-views/README.html">0013 the front's two views</a></li>
-<li><a href="0014-the-fronts-legs/README.html">0014 the front's legs on the poked socket</a></li>
-<li><a href="0015-the-routers-name/README.html">0015 the router's name on the LAN</a></li>
-<li><a href="0016-the-carrier-environment/README.html">0016 the carrier environment</a></li>
+<li><a href="plan/0004-ds-lite-punch/README.html">0004 ds-lite-punch</a></li>
+<li><a href="plan/0005-test-rig/README.html">0005 test rig</a></li>
+<li><a href="plan/0006-ps3-requirements/README.html">0006 ps3 requirements</a></li>
+<li><a href="plan/0007-igd-facade/README.html">0007 igd facade</a></li>
+<li><a href="plan/0008-adaptive-igd-v1v2-facade/README.html">0008 adaptive igd v1v2 facade</a></li>
+<li><a href="plan/0009-mapping-keepalive-and-signalling/README.html">0009 mapping keepalive and signalling</a></li>
+<li><a href="plan/0010-the-filtering-proved-and-watched/README.html">0010 the filtering proved and watched</a></li>
+<li><a href="plan/0011-documentation/README.html">0011 documentation</a></li>
+<li><a href="plan/0012-the-front-door/README.html">0012 the front door</a></li>
+<li><a href="plan/0013-the-fronts-two-views/README.html">0013 the front's two views</a></li>
+<li><a href="plan/0014-the-fronts-legs/README.html">0014 the front's legs on the poked socket</a></li>
+<li><a href="plan/0015-the-routers-name/README.html">0015 the router's name on the LAN</a></li>
+<li><a href="plan/0016-the-carrier-environment/README.html">0016 the carrier environment</a></li>
 </ul>
-<p>The next milestone number is allocated by <code>host-lifecycle next plan/</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-ds-lite-punch-a-cgnat-aware-udp-relay-for-the-virgin-media-line"><a class="header" href="#milestone-ds-lite-punch-a-cgnat-aware-udp-relay-for-the-virgin-media-line">Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></h1>
+<p>The next milestone number is allocated by <code>host-lifecycle next plan/</code>. The index
+lives at the repository root because the goal verb and the naming sweep read it
+there; the plan room holds the milestone documents.</p>
+<h2 id="follow-ups"><a class="header" href="#follow-ups">Follow-ups</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Follow-up</th><th>Named in</th><th>Disposition</th></tr></thead><tbody>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="milestone-ds-lite-punch-a-cgnat-aware-udp-relay-for-the-virgin-media-line"><a class="header" href="#milestone-ds-lite-punch-a-cgnat-aware-udp-relay-for-the-virgin-media-line">Milestone: ds-lite-punch, a CGNAT-aware UDP relay for the Virgin Media line</a></h1>
 <p><strong>Status:</strong> The v1 core is built, deployed, and formally verified
 (2026-08-29); multi-instance is built and its CLI contract is tested; the UPnP
 control plane this milestone named is delivered and exceeded by plan/0007 and
@@ -3693,7 +3699,7 @@ probe targets port 80 only, and this line never receives an
 AFTR-chosen external port 80 (no source-port preservation), so the
 API cannot address the mapping.</li>
 </ul>
-<h2 id="follow-ups"><a class="header" href="#follow-ups">Follow-ups</a></h2>
+<h2 id="follow-ups-1"><a class="header" href="#follow-ups-1">Follow-ups</a></h2>
 <ul>
 <li>The datapath receipt is recorded: the verify items are met (a granted
 TCP slot forwards an external TCP connection to the internal client
