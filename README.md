@@ -28,7 +28,7 @@ work.
 
 ## State
 
-[plan/PLAN.md](plan/PLAN.md) is the index, and each milestone's own README carries
+[PLAN.md](PLAN.md) is the index, and each milestone's own README carries
 its state; this table is the one-line view.
 
 | Milestone | State |
